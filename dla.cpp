@@ -4,6 +4,9 @@
 
 using namespace std;
 
+// macro to simplify the access to the grid nodes
+#define IDX(i, j, k) (i + j * N + k * N * N);
+
 class Rod
 {
 public:
@@ -13,14 +16,6 @@ public:
     int m_z;
 
     Rod(){}
-
-    Rod(int uid, int x, int y, int z)
-    {
-        m_uid = uid;
-        m_x = x;
-        m_y = y;
-        m_z = z;
-    }
 
     void show()
     {
@@ -49,6 +44,7 @@ int main(int argc, char *argv[])
 
     const int N = 100;
     vector<Node> grid(N * N * N);
+    
     printf("Hello!\n");
     return EXIT_SUCCESS;
 }
