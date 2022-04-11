@@ -1,5 +1,11 @@
-dla.bin: dla.cpp
+dla.bin: dla.cpp dla.h
 	g++ -g dla.cpp -o dla.bin
 
-clean: 
+run: dla.bin
+	./dla.bin
+
+viewer.bin: viewer.cpp
+	g++ -g viewer.cpp -o viewer.bin -lGL -lGLU -lglut
+
+clean:
 	rm -rf dla.bin
