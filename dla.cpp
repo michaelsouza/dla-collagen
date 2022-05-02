@@ -24,25 +24,31 @@ int main(int argc, char *argv[])
     N = 1000;
     int DMAX = N / 2;
     int ts = 10;
-    vector<int> grid(N * N * N, -1);
+    vector<int> grid(N * N * N, 0);
     vector<Point3D> cluster;
     char bind_mode = 'n';
     
-    // add first rod
-    Point3D origin(0, N / 2, N / 2, N / 2);
-    grid[IDX(origin.m_x, origin.m_y, origin.m_z)] = 0; // grid of possible locations
-    cluster.push_back(origin); // cluster is the aggregate of the rods
-    BBox bbox(origin); // bound box containing the cluster
+    // 0: empty
+    // 1: bind
+    // 2: non_bind
 
+    // add first rod
+    int uid = 0;
+    int x = N/2, y=N/2, z=N/2;
+    const int height = 18;
     const int xmin = 0;
-    const int xmax = N - 18;
+    const int xmax = N - height;
+
+    add_rod(grid, x, y, z, height, bind_mode);
+    
+    BBox bbox(x, y, z, height); // bound box containing the cluster
     
     FILE* fid = nullptr; 
     
     if(verbose) fid = fopen("dla.dat", "w");
 
-    cmd_add(fid, origin.m_uid, origin.m_x, origin.m_y, origin.m_z, 18 );
-    cmd_bind(fid, origin.m_uid);
+    cmd_add(fid, uid, x, y, z, height );
+    cmd_bind(fid, uid);
 
     // random walk
     srand(1);
@@ -59,40 +65,41 @@ int main(int argc, char *argv[])
         int y = N / 2 + radius * sin(theta) * sin(phi);
         int z = N / 2 + radius * cos(phi);
 
-        cmd_add(fid, uid, x, y, z, 18);
+        cmd_add(fid, uid, x, y, z, height);
 
         vector<int> p;
         p.push_back(x);
         p.push_back(y);
         p.push_back(z);
 
-        bool done = false;
-        bool is_bound = bind(bind_mode, bbox, grid, x, y, z);
-        while (done == false)
+        bool cluster_add = bind(bind_mode, bbox, grid, x, y, z, height);
+        while (cluster_add == false)
         {
-            bool updXYZ = random_walk(bbox, grid, x, y, z);
+            random_walk(x, y, z);
             p.push_back(x);
             p.push_back(y);
             p.push_back(z);
-            if ( updXYZ == false )
+            
+            // out of the grid?
+            if (x < xmin || x > xmax || y < xmin || y > xmax || z < xmin || z > xmax)
+                break;
+
+            // touch the bound box?
+            if( bbox.touch(x, y, z) == false )
                 continue;
 
-            const int dist = dist_origin(x, y, z);
-            
-            done = is_bound || dist >= DMAX;
-
-            if (x < xmin || x > xmax || y < xmin || y > xmax || z < xmin || z > xmax)
-                done = true;
+            // check bind
+            cluster_add = bind(bind_mode, bbox, grid, x, y, z, height);                        
         }
         
         for(int i = 3; i < p.size(); i+=3)
             cmd_move(fid, uid, p[i], p[i+1], p[i+2]);
 
-        if( is_bound )
+        if( cluster_add )
         {
             if (verbose) printf("surface_rolling\n");
             cmd_bind(fid, uid);         
-            surface_rolling(bbox, grid, ts, bind_mode, x, y, z);
+            surface_rolling(bbox, grid, height, ts, bind_mode, x, y, z);
             cmd_move(fid, uid, x, y, z);
             cluster.push_back(Point3D(uid, x, y, z));
             bbox.add(x, y, z);

@@ -59,15 +59,17 @@ public:
     int m_zmin;
     int m_zmax;
     int m_diameter;
+    int m_height;
 
-    BBox(Point3D &p)
+    BBox(int x, int y, int z, int height)
     {
-        m_xmin = p.m_x - 1;
-        m_ymin = p.m_y - 1;
-        m_zmin = p.m_z - 1;
-        m_xmax = p.m_x + 1;
-        m_ymax = p.m_y + 19;
-        m_zmax = p.m_z + 1;
+        m_height = height;
+        m_xmin = x - 1;
+        m_ymin = y - 1;
+        m_zmin = z - 1;
+        m_xmax = x + 1;
+        m_ymax = y + height + 1;
+        m_zmax = z + 1;
         update_diameter();
     }
 
@@ -89,9 +91,9 @@ public:
             m_ymin = y - 1;
             update = true;
         }
-        if (m_ymax <= y + 19)
+        if (m_ymax <= y + m_height + 1)
         {
-            m_ymax = y + 19;
+            m_ymax = y + m_height + 1;
             update = true;
         }
         if (m_zmin >= z)
@@ -105,19 +107,18 @@ public:
             update = true;
         }
 
-        if (update)
-            update_diameter();
+        if (update) update_diameter();
     }
 
     bool touch(int x, int y, int z) const
     {
-        if (m_xmin <= x && x <= m_xmax)
-            return true;
-        if (m_ymin <= y && y <= m_ymax)
-            return true;
-        if (m_zmin <= z && z <= m_zmax)
-            return true;
-        return false;
+        if (x < m_xmin || x > m_xmax)
+            return false;
+        if (y < m_ymin || y > m_ymax)
+            return false;
+        if (z < m_zmin || z > m_zmax)
+            return false;
+        return true;
     }
 
     void update_diameter()
@@ -134,22 +135,24 @@ public:
     }
 };
 
-bool random_walk(const BBox &bbox, const vector<int> &grid,
-                 int &x, int &y, int &z)
+void random_walk(int &x, int &y, int &z)
 {
     const int xOld = x;
     const int yOld = y;
     const int zOld = z;
 
     const int imove = rand() % 8;
-    if (imove == 0)
+    // (1, 0, 0 )
+    if (imove == 0) 
         ++x;
     else if (imove == 1)
         --x;
+    // (0, 1, 0)
     else if (imove == 2)
         ++y;
     else if (imove == 3)
         --y;
+    // (0, 1, 1)
     else if (imove == 4)
     {
         ++z;
@@ -157,33 +160,20 @@ bool random_walk(const BBox &bbox, const vector<int> &grid,
     }
     else if (imove == 5)
     {
-        ++z;
+        --z;
         --y;
     }
+    // (0, 1, -1)
     else if (imove == 6)
     {
-        --z;
         ++y;
+        --z;
     }
     else if (imove == 7)
     {
-        --z;
         --y;
-    }
-
-    // collision
-    if (bbox.touch(x, y, z) == false)
-        return true;
-
-    for (int i = 0; i < 17; ++i)
-        if (grid[IDX(x, y + i, z)] > -1)
-        {
-            x = xOld;
-            y = yOld;
-            z = zOld;
-            return false;
-        }
-    return true;
+        ++z;
+    }    
 }
 
 inline bool bind_specific(const BBox &bbox, const vector<int> &grid,
@@ -192,53 +182,68 @@ inline bool bind_specific(const BBox &bbox, const vector<int> &grid,
     return false;
 }
 
-inline bool bind_non_specific(const BBox &bbox, const vector<int> &grid,
+inline bool bind_non_specific(const BBox &bbox, const vector<int> &grid, int height,
                               const int x, const int y, const int z)
 {
-    //     .+------+
-    //   .' | N  .'|
-    //  +------+'  |
-    //  | W |  | E |
-    //  |  ,+--|---+
-    //  |.'  S | .'
-    //  +------+'
-
-    // TODO improve memory localization
-    if (bbox.touch(x, y, z) == false)
-        return false;
-
-    for (int i = -17; i <= 17; ++i)
+    //       .+------+
+    //   y .' | N  .'|
+    //    +------+'  |
+    //    | W |  | E |
+    //  x |  ,+--|---+
+    //    |.'  S | .'
+    //    +------+'
+    //        z
+    for (int i = -(height - 1); i <= (height - 1); ++i)
     {
-        // face W
+        // face W (XY)
         if (grid[IDX(x - 1, y + i, z)] > -1)
             return true;
         // face E
         if (grid[IDX(x + 1, y + i, z)] > -1)
             return true;
         // face S
-        int iloc = IDX(x - 1, y + i, z - 1);
+        int iloc = IDX(x, y + i, z - 1);
         if (grid[iloc] > -1)
             return true;
         // fase N
-        if (grid[IDX(x + 1, y + i, z + 1)] > -1)
+        if (grid[IDX(x, y + i, z + 1)] > -1)
             return true;
     }
     return false;
 }
 
-inline bool bind(char bind_mode, const BBox &bbox, const vector<int> &grid,
-                 const int x, const int y, const int z)
+inline bool bind(char bind_mode, const BBox &bbox, const vector<int> &grid, const int x, const int y, const int z, int height)
 {
-    if (bind_mode == 's')
-        return bind_specific(bbox, grid, x, y, z);
-    else if (bind_mode == 'n')
-        return bind_non_specific(bbox, grid, x, y, z);
-    else
-        throw runtime_error("Unsupported bind type.");
+    //       .+------+
+    //   y .' | N  .'|
+    //    +------+'  |
+    //    | W |  | E |
+    //  x |  ,+--|---+
+    //    |.'  S | .'
+    //    +------+'
+    //        z
+    if(bbox.touch(x, y, z) == false)
+        return false;
+
+    for (int i = 0; i < height; i += ((bind_mode == 'n') ? 4 : 1))
+    {
+        // face W (XY)
+        if (grid[IDX(x - 1, y + i, z)] == 1)
+            return true;
+        // face E
+        if (grid[IDX(x + 1, y + i, z)] == 1)
+            return true;
+        // face S
+        if (grid[IDX(x, y + i, z - 1)] == 1)
+            return true;
+        // fase N
+        if (grid[IDX(x, y + i, z + 1)] == 1)
+            return true;
+    }
+    return false;
 }
 
-int energy_surface(const vector<int> &grid,
-                   const char bind_mode, int &x, int &y, int &z)
+int energy_surface(const vector<int> &grid, int height, int &x, int &y, int &z)
 {
     //     .+------+
     //   .' | N  .'|
@@ -247,45 +252,21 @@ int energy_surface(const vector<int> &grid,
     //  |  ,+--|---+
     //  |.'  S | .'
     //  +------+'
-    int E = 4 * 18;       // energy surface
-    if (bind_mode == 'n') // non-specific
+    int E = 4 * height + 2; // max possible energy surface
+    for (int i = 0; i < height; i++)
     {
-        // face W
-        for (int i = -17; i <= 17; ++i)
-            if (grid[IDX(x - 1, y + i, z)] > -1)
-            {
-                E -= (i < 0) ? i + 18 : 18 - i;
-                // jump to the rod corner
-                i += 17;
-            }
+        // face W (XY)
+        if (grid[IDX(x - 1, y + i, z)] > 0)
+            --E;
         // face E
-        for (int i = -17; i <= 17; ++i)
-            if (grid[IDX(x + 1, y + i, z)] > -1)
-            {
-                E -= (i < 0) ? i + 18 : 18 - i;
-                // jump to the rod corner
-                i += 17;
-            }
+        if (grid[IDX(x + 1, y + i, z)] > 0)
+            --E;
         // face S
-        for (int i = -17; i <= 17; ++i)
-            if (grid[IDX(x, y + i, z - 1)] > -1)
-            {
-                E -= (i < 0) ? i + 18 : 18 - i;
-                // jump to the rod corner
-                i += 17;
-            }
-        // face S
-        for (int i = -17; i <= 17; ++i)
-            if (grid[IDX(x, y + i, z + 1)] > -1)
-            {
-                E -= (i < 0) ? i + 18 : 18 - i;
-                // jump to the rod corner
-                i += 17;
-            }
-    }
-    else
-    {
-        throw runtime_error("not implemented");
+        if (grid[IDX(x, y + i, z - 1)] > 0)
+            --E;
+        // fase N
+        if (grid[IDX(x, y + i, z + 1)] > 0)
+            --E;
     }
     return E;
 }
@@ -301,27 +282,27 @@ int energy_surface(const vector<int> &grid,
  * @param y
  * @param z
  */
-void surface_rolling(const BBox &bbox, const vector<int> &grid,
+void surface_rolling(const BBox &bbox, const vector<int> &grid, int height,
                      const int ts, const char bind_mode, int &x, int &y, int &z)
 {    
     int xopt = x, yopt = y, zopt = z;
-    int Emin = energy_surface(grid, bind_mode, x, y, z); // number of different neighs
+    int Emin = energy_surface(grid, height, x, y, z); // number of different neighs
 
     int xold = x, yold = y, zold = z;
     for (int i = 0; i < ts; ++i)
     {
-        const bool updXYZ = random_walk(bbox, grid, x, y, z);
+        random_walk(x, y, z);
 
         // rejected direction: the rod left the aggregate surface
-        if (bind_non_specific(bbox, grid, x, y, z) == false)
+        if (bind(bind_mode, bbox, grid, x, y, z, height) == false)
         {
-            x = xold,
+            x = xold;
             y = yold;
             z = zold;
-            continue;
         }
         // energy surface
-        const int E = energy_surface(grid, bind_mode, x, y, z);
+        const int E = energy_surface(grid, height, x, y, z);
+
         // update minimal energy site
         if (E < Emin)
         {
@@ -329,8 +310,7 @@ void surface_rolling(const BBox &bbox, const vector<int> &grid,
             yopt = y;
             zopt = z;
             Emin = E;
-            if (Emin = 0)
-                break;
+            if (Emin = 0) break;
         }
     }
 }
@@ -363,4 +343,18 @@ void cmd_del(FILE *fid, int uid)
     if (fid == nullptr)
         return;
     fprintf(fid, "del %03d\n", uid);
+}
+
+void add_rod(vector<int> &grid, int x, int y, int z, int height, char bind_mode)
+{
+    if (bind_mode == 'n')
+    {
+        for (int i = 0; i < height; ++i)
+        {
+            if (bind_mode == 'n')
+                grid[IDX(x, y + height, z)] = 1;
+            if (bind_mode == 's')
+                grid[IDX(x, y + height, z)] = (i % 4 == 0) ? 1 : 2;
+        }
+    }
 }
