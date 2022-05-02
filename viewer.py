@@ -50,5 +50,5 @@ for uid in df:
 
 # simulate random walk
 for uid in sorted(df):
-    b, p = B[uid] 
+    b, p = B[uid]
     random_walk(b, p, df[uid], 1000)

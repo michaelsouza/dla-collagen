@@ -1,7 +1,7 @@
-#include <cstdlib>
+#include <cmath>
 #include <cstdio>
 #include <vector>
-#include <cmath>
+#include <cstdlib>
 #include <stdexcept>
 #include <algorithm>
 
@@ -134,7 +134,8 @@ public:
     }
 };
 
-bool random_walk(const BBox &bbox, const vector<int> &grid, int &x, int &y, int &z)
+bool random_walk(const BBox &bbox, const vector<int> &grid,
+                 int &x, int &y, int &z)
 {
     const int xOld = x;
     const int yOld = y;
@@ -185,12 +186,14 @@ bool random_walk(const BBox &bbox, const vector<int> &grid, int &x, int &y, int 
     return true;
 }
 
-inline bool bind_specific(const BBox &bbox, const vector<int> &grid, const int x, const int y, const int z)
+inline bool bind_specific(const BBox &bbox, const vector<int> &grid,
+                          const int x, const int y, const int z)
 {
     return false;
 }
 
-inline bool bind_non_specific(const BBox &bbox, const vector<int> &grid, const int x, const int y, const int z)
+inline bool bind_non_specific(const BBox &bbox, const vector<int> &grid,
+                              const int x, const int y, const int z)
 {
     //     .+------+
     //   .' | N  .'|
@@ -223,7 +226,8 @@ inline bool bind_non_specific(const BBox &bbox, const vector<int> &grid, const i
     return false;
 }
 
-inline bool bind(char bind_mode, const BBox &bbox, const vector<int> &grid, const int x, const int y, const int z)
+inline bool bind(char bind_mode, const BBox &bbox, const vector<int> &grid,
+                 const int x, const int y, const int z)
 {
     if (bind_mode == 's')
         return bind_specific(bbox, grid, x, y, z);
@@ -233,7 +237,8 @@ inline bool bind(char bind_mode, const BBox &bbox, const vector<int> &grid, cons
         throw runtime_error("Unsupported bind type.");
 }
 
-int energy_surface(const vector<int> &grid, const char bind_mode, int &x, int &y, int &z)
+int energy_surface(const vector<int> &grid,
+                   const char bind_mode, int &x, int &y, int &z)
 {
     //     .+------+
     //   .' | N  .'|
@@ -296,8 +301,9 @@ int energy_surface(const vector<int> &grid, const char bind_mode, int &x, int &y
  * @param y
  * @param z
  */
-void surface_rolling(const BBox &bbox, const vector<int> &grid, const int ts, const char bind_mode, int &x, int &y, int &z)
-{
+void surface_rolling(const BBox &bbox, const vector<int> &grid,
+                     const int ts, const char bind_mode, int &x, int &y, int &z)
+{    
     int xopt = x, yopt = y, zopt = z;
     int Emin = energy_surface(grid, bind_mode, x, y, z); // number of different neighs
 

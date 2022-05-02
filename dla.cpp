@@ -1,6 +1,6 @@
 /**
  * @file dla.cpp
- * @author your name (you@domain.com)
+ * @author Michael Souza (michael@ufc.br)
  * @brief 
  * @version 0.1
  * @date 2022-04-04
@@ -8,11 +8,20 @@
  * @copyright Copyright (c) 2022
  * 
  */
+#include <cstring>
 #include "dla.h"
 
 int main(int argc, char *argv[])
 {
-    N = 700;
+    // read input 
+    bool verbose = false;
+    for (int i = 0; i < argc; ++i)
+    {
+        if (strcmp(argv[i], "-verbose"))
+            verbose = true;
+    }
+
+    N = 1000;
     int DMAX = N / 2;
     int ts = 10;
     vector<int> grid(N * N * N, -1);
@@ -27,8 +36,10 @@ int main(int argc, char *argv[])
 
     const int xmin = 0;
     const int xmax = N - 18;
-
-    FILE* fid = fopen("dla.dat", "w");
+    
+    FILE* fid = nullptr; 
+    
+    if(verbose) fid = fopen("dla.dat", "w");
 
     cmd_add(fid, origin.m_uid, origin.m_x, origin.m_y, origin.m_z, 18 );
     cmd_bind(fid, origin.m_uid);
@@ -74,19 +85,21 @@ int main(int argc, char *argv[])
                 done = true;
         }
         
-        for(int i = 3; i < p.size(); i+=3)         
+        for(int i = 3; i < p.size(); i+=3)
             cmd_move(fid, uid, p[i], p[i+1], p[i+2]);
 
         if( is_bound )
-        {               
-            cmd_bind(fid, uid);
+        {
+            if (verbose) printf("surface_rolling\n");
+            cmd_bind(fid, uid);         
             surface_rolling(bbox, grid, ts, bind_mode, x, y, z);
-            cmd_move(fid, uid, x, y, z);            
+            cmd_move(fid, uid, x, y, z);
             cluster.push_back(Point3D(uid, x, y, z));
             bbox.add(x, y, z);
+            printf("bind %d %d %d\n", x, y, z);
         }
     }
 
-    fclose(fid);
+    if(fid) fclose(fid);
     return EXIT_SUCCESS;
 }
