@@ -14,12 +14,15 @@
 int main(int argc, char *argv[])
 {
     // read input 
+    int num_rods = 100; // number of rods
     bool verbose = false;
     for (int i = 0; i < argc; ++i)
     {
-        if (strcmp(argv[i], "-verbose"))
+        if (strcmp(argv[i], "-verbose") == 0)
             verbose = true;
-    }
+        if (strcmp(argv[i], "-num_rods") == 0)
+            num_rods = atoi(argv[i+1]);
+    }    
 
     N = 1000;
     int DMAX = N / 2;
@@ -27,6 +30,12 @@ int main(int argc, char *argv[])
     vector<int> grid(N * N * N, 0);
     vector<Point3D> cluster;
     char bind_mode = 'n';
+
+    printf("Parameters\n");
+    printf("N .......... %d\n", N);
+    printf("ts ......... %d\n", ts);
+    printf("num_rods ... %d\n", num_rods);
+    printf("bind_mode .. %c\n", bind_mode);
     
     // 0: empty
     // 1: bind
@@ -52,7 +61,6 @@ int main(int argc, char *argv[])
 
     // random walk
     srand(1);
-    const int num_rods = 100; // number of rods
     for( int uid = 1; uid <= num_rods; ++uid )
     {
         // uniform distribution over sphere
