@@ -8,20 +8,25 @@
  * @copyright Copyright (c) 2022
  * 
  */
+#include <chrono>
 #include <cstring>
+#include <iostream>
 #include "dla.h"
+
 
 int main(int argc, char *argv[])
 {
+    std::chrono::steady_clock::time_point tic = std::chrono::steady_clock::now();    
+
     // read input 
-    int num_rods = 100; // number of rods
-    bool verbose = false;
+    int NUM_BINDS = 100; // number of binds
+    bool VERBOSE = false;
     for (int i = 0; i < argc; ++i)
     {
         if (strcmp(argv[i], "-verbose") == 0)
-            verbose = true;
-        if (strcmp(argv[i], "-num_rods") == 0)
-            num_rods = atoi(argv[i+1]);
+            VERBOSE = true;
+        if (strcmp(argv[i], "-num_binds") == 0)
+            NUM_BINDS = atoi(argv[i+1]);
     }    
 
     N = 1000;
@@ -32,10 +37,10 @@ int main(int argc, char *argv[])
     char bind_mode = 'n';
 
     printf("Parameters\n");
-    printf("N .......... %d\n", N);
-    printf("ts ......... %d\n", ts);
-    printf("num_rods ... %d\n", num_rods);
-    printf("bind_mode .. %c\n", bind_mode);
+    printf("N ........... %d\n", N);
+    printf("ts .......... %d\n", ts);
+    printf("num_binds ... %d\n", NUM_BINDS);
+    printf("bind_mode ... %c\n", bind_mode);
     
     // 0: empty
     // 1: bind
@@ -54,15 +59,18 @@ int main(int argc, char *argv[])
     
     FILE* fid = nullptr; 
     
-    if(verbose) fid = fopen("dla.dat", "w");
+    if(VERBOSE) fid = fopen("dla.dat", "w");
 
     cmd_add(fid, uid, x, y, z, height );
     cmd_bind(fid, uid);
 
     // random walk
-    srand(1);
-    for( int uid = 1; uid <= num_rods; ++uid )
+    srand(1);    
+    int num_binds = 1;
+    while( num_binds <= NUM_BINDS )
     {
+        ++uid;
+
         // uniform distribution over sphere
         // see: https://www.bogotobogo.com/Algorithms/uniform_distribution_sphere.php
         
@@ -105,13 +113,18 @@ int main(int argc, char *argv[])
 
         if( cluster_add )
         {
-            if (verbose) printf("surface_rolling\n");
+            ++num_binds;                                    
+            if (VERBOSE) printf("surface_rolling\n");
             cmd_bind(fid, uid);         
             surface_rolling(bbox, grid, height, ts, bind_mode, x, y, z);
             cmd_move(fid, uid, x, y, z);
             cluster.push_back(Point3D(uid, x, y, z));
             bbox.add(x, y, z);
-            printf("bind %d %d %d\n", x, y, z);
+            printf("bind num %d\n", num_binds);
+            printf("   uid ........ %d\n", uid);
+            printf("   (x, y,z) ... %d %d %d\n", x, y, z);
+            std::chrono::steady_clock::time_point toc = std::chrono::steady_clock::now();    
+            std::cout << "   Elapsed time " << std::chrono::duration_cast<std::chrono::seconds>(toc - tic).count() << " secs" << std::endl;
         }
     }
 
