@@ -13,32 +13,6 @@
 #include <iostream>
 #include "dla.h"
 
-void bind_rod(vector<int> &grid, vector<Point3D> &cluster, BBox &bbox, char bind_mode, int uid, int x, int y, int z, int height)
-{
-    if (bind_mode == 'n')
-    {
-        for (int i = 0; i < height; ++i)
-            grid[IDX(x, y + i, z)] = 1;
-    }
-    else if (bind_mode == 's')
-    {
-        for (int i = 0; i < height; ++i)
-            grid[IDX(x, y + i, z)] = (i % 4) ? 2 : 1;
-    }
-    else
-    {
-        printf("Error: non-supported bind_mode.\n");
-        exit(EXIT_FAILURE);
-    }
-    cluster.push_back(Point3D(uid, x, y, z));
-    bbox.add(x, y, z);
-}
-
-void test_001(vector<int> &grid, vector<Point3D> &cluster, BBox &bbox )
-{
-
-}
-
 int main(int argc, char *argv[])
 {
     std::chrono::steady_clock::time_point tic = std::chrono::steady_clock::now();    
@@ -52,13 +26,20 @@ int main(int argc, char *argv[])
             VERBOSE = true;
         if (strcmp(argv[i], "-num_binds") == 0)
             NUM_BINDS = atoi(argv[i+1]);
+    }
+
+    char fname[256] = "blalablba.dat";
+    FILE* fid = fopen(fname, "w");
+    if(fid == nullptr)
+    {
+        printf("The file %s could not be opened.", fname);
     }    
+    fflush(fid);
+    fclose(fid);
 
     N = 1000;
     int DMAX = N / 2;
     int ts = 10;
-    vector<int> grid(N * N * N, 0);
-    vector<Point3D> cluster;
     char bind_mode = 'n';
 
     printf("Parameters\n");
@@ -66,6 +47,9 @@ int main(int argc, char *argv[])
     printf("ts .......... %d\n", ts);
     printf("num_binds ... %d\n", NUM_BINDS);
     printf("bind_mode ... %c\n", bind_mode);
+    
+    vector<int> grid(N * N * N, 0);
+    vector<Point3D> cluster;
     
     // 0: empty
     // 1: bind

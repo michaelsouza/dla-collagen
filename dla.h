@@ -224,7 +224,15 @@ inline bool bind(char bind_mode, const BBox &bbox, const vector<int> &grid, cons
     //        z
     if(bbox.touch(x, y, z) == false)
         return false;
+    
+    // check overlap
+    for (int i = 0; i < height; i += ((bind_mode == 'n') ? 4 : 1))
+    {
+        if (grid[IDX(x, y + i, z)] > 0)
+            return false;
+    }
 
+    // check bind
     for (int i = 0; i < height; i += ((bind_mode == 'n') ? 4 : 1))
     {
         // face W (XY)
@@ -343,4 +351,25 @@ void cmd_del(FILE *fid, int uid)
     if (fid == nullptr)
         return;
     fprintf(fid, "del %03d\n", uid);
+}
+
+void bind_rod(vector<int> &grid, vector<Point3D> &cluster, BBox &bbox, char bind_mode, int uid, int x, int y, int z, int height)
+{
+    if (bind_mode == 'n')
+    {
+        for (int i = 0; i < height; ++i)
+            grid[IDX(x, y + i, z)] = 1;
+    }
+    else if (bind_mode == 's')
+    {
+        for (int i = 0; i < height; ++i)
+            grid[IDX(x, y + i, z)] = (i % 4) ? 2 : 1;
+    }
+    else
+    {
+        printf("Error: non-supported bind_mode.\n");
+        exit(EXIT_FAILURE);
+    }
+    cluster.push_back(Point3D(uid, x, y, z));
+    bbox.add(x, y, z);
 }
