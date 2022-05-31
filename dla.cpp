@@ -19,8 +19,8 @@ int main(int argc, char *argv[])
     std::chrono::steady_clock::time_point tic = std::chrono::steady_clock::now();    
 
     // read input 
-    int NUM_BINDS = 100; // number of binds
-    bool VERBOSE = false;
+    int NUM_BINDS = 3; // number of binds
+    bool VERBOSE = true;
     for (int i = 0; i < argc; ++i)
     {
         if (strcmp(argv[i], "-verbose") == 0)
@@ -55,14 +55,15 @@ int main(int argc, char *argv[])
 
     add_rod(grid, x, y, z, height, bind_mode);
     
-    BBox bbox(x, y, z, height); // bound box containing the cluster
+    // bound box containing the cluster
+    BBox bbox(x, y, z, height); 
     
     FILE* fid = nullptr; 
-    
-    if(VERBOSE) fid = fopen("dla.dat", "w");
 
+    if(VERBOSE) fid = fopen("dla.dat", "w");
+ 
     cmd_add(fid, uid, x, y, z, height );
-    cmd_bind(fid, uid);
+    cmd_bind(fid, uid, x, y, z);
 
     // random walk
     srand(1);    
@@ -115,7 +116,7 @@ int main(int argc, char *argv[])
         {
             ++num_binds;                                    
             if (VERBOSE) printf("surface_rolling\n");
-            cmd_bind(fid, uid);         
+            cmd_bind(fid, uid, x, y, z);         
             surface_rolling(bbox, grid, height, ts, bind_mode, x, y, z);
             cmd_move(fid, uid, x, y, z);
             cluster.push_back(Point3D(uid, x, y, z));
@@ -123,6 +124,9 @@ int main(int argc, char *argv[])
             printf("bind num %d\n", num_binds);
             printf("   uid ........ %d\n", uid);
             printf("   (x, y,z) ... %d %d %d\n", x, y, z);
+ 
+
+
             std::chrono::steady_clock::time_point toc = std::chrono::steady_clock::now();    
             std::cout << "   Elapsed time " << std::chrono::duration_cast<std::chrono::seconds>(toc - tic).count() << " secs" << std::endl;
         }

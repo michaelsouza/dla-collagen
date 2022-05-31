@@ -331,11 +331,11 @@ void cmd_move(FILE *fid, int uid, int x, int y, int z)
     fprintf(fid, "move %03d %d %d %d\n", uid, x, y, z);
 }
 
-void cmd_bind(FILE *fid, int uid)
+void cmd_bind(FILE *fid, int uid, int x, int y, int z)
 {
     if (fid == nullptr)
         return;
-    fprintf(fid, "bind %03d\n", uid);
+    fprintf(fid, "bind %03d %d %d %d\n", uid, x, y, z);
 }
 
 void cmd_del(FILE *fid, int uid)
