@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 
     // read input 
     int NUM_BINDS = 3; // number of binds
-    bool VERBOSE = true;
+    bool VERBOSE = false;
     for (int i = 0; i < argc; ++i)
     {
         if (strcmp(argv[i], "-verbose") == 0)

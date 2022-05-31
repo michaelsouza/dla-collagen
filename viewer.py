@@ -40,15 +40,30 @@ def random_walk(b, p, df, speed=10):
         b.visible = False
 
 # create invisible boxes
+print('read dat')
 df = read_dat('dla.dat')
+print('creating boxes')
 B = {}
 for uid in df:
     x, y, z = df[uid]['p'][0]
     p = vector(x, y, z)
-    b = box(pos=p, length=18, width=1, height=1, color=color.green, visible=False)
+    b = box(pos=p, length=1, width=1, height=18, color=color.green, visible=False)
     B[uid] = (b, p)
 
 # simulate random walk
+#for uid in sorted(df):
+#    b, p = B[uid]
+#    p = vector(x, y, z)
+#    random_walk(b, p, df[uid], 1000)
+
 for uid in sorted(df):
+    if not df[uid]['bind']:
+        continue
     b, p = B[uid]
-    random_walk(b, p, df[uid], 1000)
+    b.visible = True
+    x, y, z = df[uid]['p'][-1]
+    print('uid=', uid)
+    print('(x,y,z)=',x,y,z)
+    b.pos = vector(x, y, z)
+    time.sleep(0.1)
+#time.sleep(300)
