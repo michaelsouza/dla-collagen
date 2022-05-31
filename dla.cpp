@@ -13,6 +13,31 @@
 #include <iostream>
 #include "dla.h"
 
+void bind_rod(vector<int> &grid, vector<Point3D> &cluster, BBox &bbox, char bind_mode, int uid, int x, int y, int z, int height)
+{
+    if (bind_mode == 'n')
+    {
+        for (int i = 0; i < height; ++i)
+            grid[IDX(x, y + i, z)] = 1;
+    }
+    else if (bind_mode == 's')
+    {
+        for (int i = 0; i < height; ++i)
+            grid[IDX(x, y + i, z)] = (i % 4) ? 2 : 1;
+    }
+    else
+    {
+        printf("Error: non-supported bind_mode.\n");
+        exit(EXIT_FAILURE);
+    }
+    cluster.push_back(Point3D(uid, x, y, z));
+    bbox.add(x, y, z);
+}
+
+void test_001(vector<int> &grid, vector<Point3D> &cluster, BBox &bbox )
+{
+
+}
 
 int main(int argc, char *argv[])
 {
@@ -53,21 +78,21 @@ int main(int argc, char *argv[])
     const int xmin = 0;
     const int xmax = N - height;
 
-    add_rod(grid, x, y, z, height, bind_mode);
-    
     // bound box containing the cluster
-    BBox bbox(x, y, z, height); 
+    BBox bbox(x, y, z, height);
     
     FILE* fid = nullptr; 
 
     if(VERBOSE) fid = fopen("dla.dat", "w");
- 
+    
     cmd_add(fid, uid, x, y, z, height );
     cmd_bind(fid, uid, x, y, z);
 
     // random walk
-    srand(1);    
+    srand(1);
     int num_binds = 1;
+
+    bind_rod(grid, cluster, bbox, bind_mode, uid, x, y, z, height);
     while( num_binds <= NUM_BINDS )
     {
         ++uid;
@@ -119,13 +144,11 @@ int main(int argc, char *argv[])
             cmd_bind(fid, uid, x, y, z);         
             surface_rolling(bbox, grid, height, ts, bind_mode, x, y, z);
             cmd_move(fid, uid, x, y, z);
-            cluster.push_back(Point3D(uid, x, y, z));
-            bbox.add(x, y, z);
+            bind_rod(grid, cluster, bbox, bind_mode, uid, x, y, z, height);
+
             printf("bind num %d\n", num_binds);
             printf("   uid ........ %d\n", uid);
             printf("   (x, y,z) ... %d %d %d\n", x, y, z);
- 
-
 
             std::chrono::steady_clock::time_point toc = std::chrono::steady_clock::now();    
             std::cout << "   Elapsed time " << std::chrono::duration_cast<std::chrono::seconds>(toc - tic).count() << " secs" << std::endl;

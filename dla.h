@@ -344,17 +344,3 @@ void cmd_del(FILE *fid, int uid)
         return;
     fprintf(fid, "del %03d\n", uid);
 }
-
-void add_rod(vector<int> &grid, int x, int y, int z, int height, char bind_mode)
-{
-    if (bind_mode == 'n')
-    {
-        for (int i = 0; i < height; ++i)
-        {
-            if (bind_mode == 'n')
-                grid[IDX(x, y + height, z)] = 1;
-            if (bind_mode == 's')
-                grid[IDX(x, y + height, z)] = (i % 4 == 0) ? 1 : 2;
-        }
-    }
-}
