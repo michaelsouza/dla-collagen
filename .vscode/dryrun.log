@@ -1,0 +1,5 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory '/home/robert/gitrepos/dla-collagen'
+g++ -Wall -g dla.cpp -o dla.bin
+make: Leaving directory '/home/robert/gitrepos/dla-collagen'
+ 
