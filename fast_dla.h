@@ -1,20 +1,21 @@
 #include <vector>
+#include <algorithm>
+
+#define MAX(a, b) ((a) > (b) ? (a) : b)
 
 class fiber_t
 {
 public:
     int m_uid;
-    int m_x;
-    int m_y;
-    int m_z;
+    int m_x[3];
     int m_h;
 
     fiber_t(int uid, int x, int y, int z, int h)
     {
         m_uid = uid;
-        m_x = x;
-        m_y = y;
-        m_z = z;
+        m_x[0] = x;
+        m_x[1] = y;
+        m_x[2] = z;
         m_h = h;
     }
 };
@@ -23,22 +24,22 @@ class kdt_t
 {
 public:
 
-    int m_x;        
-    int m_y;
-    int m_z;
-    int m_dx;
-    int m_dy;
-    int m_dz;
+    int m_xmin[3];        
+    int m_xmax[3];    
+    int m_height;
     int m_max_num_uids;
     kdt_t *m_lft;
     kdt_t *m_rht;
     std::vector<int> m_uids;
+    bool m_splitted;
 
-    kdt_t(int x, int y , int z, int dx, int dy, int dz, int max_num_uids)
+    kdt_t(int max_num_uids, int height)
     {
         m_lft = nullptr;
         m_rht = nullptr;
         m_max_num_uids = max_num_uids;
+        m_height = height;
+        m_splitted = false;
     }
 
     ~kdt_t(){
@@ -52,10 +53,45 @@ public:
      * @param f 
      */
     void add(int uid, std::vector<fiber_t> &fibers)
-    {
-        m_uids.push_back(uid);
-        if (m_uids.size() > m_max_num_uids)
-            split(fibers);
+    {        
+        fiber_t &f = fibers[uid];
+        if (m_splitted == false && m_uids.size() == 0)
+        {
+            // inicializa o bounding box
+            for(int i = 0; i < 3; ++i)
+                m_xmin[i] = f.m_x[i];
+            m_xmax[0] = m_xmin[0] + 1;
+            m_xmax[1] = m_xmin[1] + m_height;
+            m_xmax[2] = m_xmin[2] + 1;
+        }
+        else
+        {
+            // atualiza o bounding box
+            for (int i = 0; i < 3; ++i)
+            {
+                if (m_xmin[i] > f.m_x[i])
+                    m_xmin[i] = f.m_x[i];
+                if (m_xmax[i] < f.m_x[i])
+                    m_xmax[i] = f.m_x[i];
+            }
+        }
+        if (m_splitted == false)
+            m_uids.push_back(uid);
+        else
+        {
+            // adiciona ao filho que menos é afetado pela entrada da nova fibra
+            int d, d_lft = 0, d_rht = 0;
+            for(int i = 0; i < 3; ++i)
+            {
+                d = MAX(MAX(m_lft->m_xmin[i] - f.m_x[i], f.m_x[i] - m_lft->m_xmax[i]), 0);
+                if(d_lft < d) d;
+            }
+            for(int i = 0; i < 3; ++i)
+            {
+                d = MAX(MAX(m_lft->m_xmin[i] - f.m_x[i], f.m_x[i] - m_lft->m_xmax[i]), 0);
+                if(d_rht < d) d;
+            }
+        }
     }
 
     /**
@@ -64,23 +100,58 @@ public:
      */
     void split(std::vector<fiber_t> &fibers){
         // aloca os filhos
-        m_lft = new kdt_t(x,y,z,dx,dy,dz);
-        m_rht = new kdt_t(x,y,z,dx,dy,dz);
+        m_lft = new kdt_t(m_max_num_uids, m_height);
+        m_rht = new kdt_t(m_max_num_uids, m_height);
 
-        // move as fibras para os filhos
-        for (auto &&i : fibers)
+        // identifica a direção do corte como sendo a maior
+        int dx = m_xmax - m_xmin;
+        int dy = m_ymax - m_ymin;
+        int dz = m_zmax - m_zmin;
+        int dmax = MAX(MAX(dx, dy), dz);
+        std::vector<int> v;
+        if (m_xmax == dmax)
         {
-            
+            for (auto &&uid : m_uids)
+                v.push_back(fibers[uid].m_x);
+            std::sort(v.begin(), v.end());
+            int x = v[v.size() / 2]; // mediana
+
+            // divide os filhos pela mediana
+            for(auto &&uid: m_uids)
+                fibers[uid].m_x < x ? m_lft->add(uid, fibers) : m_rht->add(uid, fibers);
         }
+        else if ( m_ymax == dmax )        {
+            for (auto &&uid : m_uids)
+                v.push_back(fibers[uid].m_y);
+            std::sort(v.begin(), v.end());
+            int y = v[v.size() / 2]; // median
+
+            for(auto &&uid: m_uids)
+                fibers[uid].m_y < y ? m_lft->add(uid, fibers) : m_rht->add(uid, fibers);
+        }
+        else if (m_zmax == dmax)
+        {
+            for (auto &&uid : m_uids)
+                v.push_back(fibers[uid].m_z);
+            std::sort(v.begin(), v.end());
+            int z = v[v.size() / 2]; // median
+
+            for (auto &&uid : m_uids)
+                fibers[uid].m_z < z ? m_lft->add(uid, fibers) : m_rht->add(uid, fibers);
+        }        
 
         // libera as fibras
         m_uids.clear();
     }
 
-    void get_neighs(int &n, int *neighs)
+    /**
+     * @brief Get the neighs object
+     * 
+     * @param n 
+     * @param neighs 
+     */
+    void get_neighs(fiber_t &f, int &n, int *neighs)
     {
-        // checa se está em contato com o kdt
-
         if (m_lft)
             m_lft->get_neighs(n, neighs);
         if (m_rht)
