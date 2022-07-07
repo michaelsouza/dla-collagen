@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <vector>
 #include <algorithm>
 
@@ -8,7 +9,7 @@ class fiber_t
 public:
     int m_uid;
     int m_x[3];
-    int m_h;
+    int m_height;
 
     fiber_t(int uid, int x, int y, int z, int h)
     {
@@ -16,7 +17,7 @@ public:
         m_x[0] = x;
         m_x[1] = y;
         m_x[2] = z;
-        m_h = h;
+        m_height = h;
     }
 };
 
@@ -26,13 +27,14 @@ public:
 
     int m_level;
     int m_xmin[3];        
-    int m_xmax[3];    
+    int m_xmax[3];
+    int m_dx[3];    
     int m_height;
     int m_max_num_uids;
     kdt_t *m_lft;
     kdt_t *m_rht;
-    std::vector<int> m_uids;
     bool m_splitted;
+    std::vector<int> m_uids;
 
     kdt_t(int max_num_uids, int height)
     {
@@ -42,6 +44,9 @@ public:
         m_max_num_uids = max_num_uids;
         m_height = height;
         m_splitted = false;
+        m_dx[0] = 1;
+        m_dx[1] = height;
+        m_dx[2] = 1;
     }
 
     ~kdt_t(){
@@ -52,19 +57,21 @@ public:
     /**
      * @brief 
      * 
-     * @param f 
+     * @param uid 
+     * @param fibers 
      */
     void add(int uid, std::vector<fiber_t> &fibers)
     {        
         fiber_t &f = fibers[uid];
+        // primeira fibra        
         if (m_splitted == false && m_uids.size() == 0)
         {
             // inicializa o bounding box
-            for(int i = 0; i < 3; ++i)
+            for (int i = 0; i < 3; ++i)
+            {
                 m_xmin[i] = f.m_x[i];
-            m_xmax[0] = m_xmin[0] + 1;
-            m_xmax[1] = m_xmin[1] + m_height;
-            m_xmax[2] = m_xmin[2] + 1;
+                m_xmax[i] = f.m_x[i] + m_dx[i];
+            }
         }
         else
         {
@@ -73,24 +80,28 @@ public:
             {
                 if (m_xmin[i] > f.m_x[i])
                     m_xmin[i] = f.m_x[i];
-                if (m_xmax[i] < f.m_x[i])
-                    m_xmax[i] = f.m_x[i];
+                if (m_xmax[i] < f.m_x[i] + m_dx[i])
+                    m_xmax[i] = f.m_x[i] + m_dx[i];
             }
         }
         if (m_splitted == false)
+        {
             m_uids.push_back(uid);
+            if(m_uids.size() > m_max_num_uids)
+                split(fibers);
+        }
         else
         {
             // adiciona ao filho que menos é afetado pela entrada da nova fibra
             int d, d_lft = 0, d_rht = 0;
             for(int i = 0; i < 3; ++i)
             {
-                d = MAX(m_lft->m_xmin[i] - f.m_x[i], f.m_x[i] - m_lft->m_xmax[i]);
+                d = MAX(m_lft->m_xmin[i] - f.m_x[i], f.m_x[i] + m_dx[i] - m_lft->m_xmax[i]);
                 if(d_lft < d) d_lft = d;
             }
             for(int i = 0; i < 3; ++i)
             {
-                d = MAX(m_rht->m_xmin[i] - f.m_x[i], f.m_x[i] - m_rht->m_xmax[i]);
+                d = MAX(m_rht->m_xmin[i] - f.m_x[i], f.m_x[i] + m_dx[i] - m_rht->m_xmax[i]);
                 if(d_rht < d) d_rht = d;
             }
 
@@ -104,6 +115,7 @@ public:
     /**
      * @brief 
      * 
+     * @param fibers 
      */
     void split(std::vector<fiber_t> &fibers)
     {
@@ -114,10 +126,10 @@ public:
         m_rht->m_level = m_level + 1;
 
         // identifica a direção do corte como sendo a mais longa
-        int d[3] = {m_xmax[0] - m_xmin[0],
-                    m_xmax[1] - m_xmin[1],
-                    m_xmax[2] - m_xmin[2]};
-        
+        int d[3] = {m_xmax[0] - m_xmin[0] - m_dx[0],
+                    m_xmax[1] - m_xmin[1] - m_dx[1],
+                    m_xmax[2] - m_xmin[2] - m_dx[2]};
+
         int imax = 0;
         for (int i = 0; i < 3; ++i)
             if (d[i] > d[imax])
@@ -132,6 +144,12 @@ public:
         // divide os filhos pela mediana
         for (auto &&uid : m_uids)
             fibers[uid].m_x[imax] < x ? m_lft->add(uid, fibers) : m_rht->add(uid, fibers);
+        
+        if(m_lft->m_uids.size() == 0 || m_rht->m_uids.size() == 0)
+        {
+            printf("split failed (empty child)\n");
+            exit(EXIT_FAILURE);
+        }
 
         // libera as fibras
         m_uids.clear();
@@ -140,24 +158,22 @@ public:
     /**
      * @brief Get the neighs object
      * 
-     * @param n 
-     * @param neighs 
+     * @param n número de vizinhas na lista neighs
+     * @param neighs lista dos uids do vizinhos
      */
     void get_neighs(fiber_t &f, int &n, std::vector<int>& neighs)
-    {
+    {   
+        // inicializacao do n
         if (m_level == 0)
             n = 0;
-        // se a fibra estiver em contato com uma face do bounding box,
-        // então ao menos uma componente de dxmin ou dxmax deve ser nula.
-        int fid = -1; // indice da face tocada
 
         bool touch = true;
         for (int i = 0; i < 3 && touch; ++i)
-            if (m_xmin[i] > f.m_x[i] || m_xmax[i] < f.m_x[i])
+            if (f.m_x[i] < (m_xmin[i] - m_dx[i]) || m_xmax[i] < (f.m_x[i] + m_dx[i]))
+            {
                 touch == false;
-        
-        if (touch == false)
-            return;
+                return;
+            }
 
         if (m_splitted)
         {
@@ -211,7 +227,8 @@ void bind_filter(fiber_t& f, int n, std::vector<int> uids, std::vector<fiber_t> 
 {
     // base e topo da fibra f (note que ftop é diferente de fmax)
     int fmin[3] = {f.m_x[0], f.m_x[1], f.m_x[2]};
-    int ftop[3] = {f.m_x[0], f.m_x[1] + f.m_h, f.m_x[2]};
+    int ftop[3] = {f.m_x[0], f.m_x[1] + f.m_height - 1, f.m_x[2]};
+    int fmax[3] = {f.m_x[0], f.m_x[1] + f.m_height - 1, f.m_x[2]};
     
     int k = 0; // número de fibras do cluster em contato com a fibra f
     for(int i = 0; i < n; ++i )
@@ -220,7 +237,7 @@ void bind_filter(fiber_t& f, int n, std::vector<int> uids, std::vector<fiber_t> 
         fiber_t& u = fibers[uid];
         // umin e umax definem o bounding box da fibra u
         int umin[3] = {u.m_x[0], u.m_x[1], u.m_x[2]};
-        int umax[3] = {u.m_x[0] + 1, f.m_x[1] + u.m_h, u.m_x[2]};
+        int umax[3] = {u.m_x[0] + 1, f.m_x[1] + u.m_height, u.m_x[2]};
 
         // check overlap
         // se as fibras estiverem em overlap, o topo (ftop) ou 
