@@ -1,3 +1,4 @@
+#include <math>
 #include <cstdio>
 #include <vector>
 #include <algorithm>
@@ -24,11 +25,10 @@ public:
 class kdt_t
 {
 public:
-
     int m_level;
-    int m_xmin[3];        
+    int m_xmin[3];
     int m_xmax[3];
-    int m_dx[3];    
+    int m_dx[3];
     int m_height;
     int m_max_num_uids;
     kdt_t *m_lft;
@@ -49,21 +49,22 @@ public:
         m_dx[2] = 1;
     }
 
-    ~kdt_t(){
+    ~kdt_t()
+    {
         delete m_lft;
         delete m_rht;
     }
 
     /**
-     * @brief 
-     * 
-     * @param uid 
-     * @param fibers 
+     * @brief
+     *
+     * @param uid
+     * @param fibers
      */
     void add(int uid, std::vector<fiber_t> &fibers)
-    {        
+    {
         fiber_t &f = fibers[uid];
-        // primeira fibra        
+        // primeira fibra
         if (m_splitted == false && m_uids.size() == 0)
         {
             // inicializa o bounding box
@@ -87,25 +88,27 @@ public:
         if (m_splitted == false)
         {
             m_uids.push_back(uid);
-            if(m_uids.size() > m_max_num_uids)
+            if (m_uids.size() > m_max_num_uids)
                 split(fibers);
         }
         else
         {
             // adiciona ao filho que menos é afetado pela entrada da nova fibra
             int d, d_lft = 0, d_rht = 0;
-            for(int i = 0; i < 3; ++i)
+            for (int i = 0; i < 3; ++i)
             {
                 d = MAX(m_lft->m_xmin[i] - f.m_x[i], f.m_x[i] + m_dx[i] - m_lft->m_xmax[i]);
-                if(d_lft < d) d_lft = d;
+                if (d_lft < d)
+                    d_lft = d;
             }
-            for(int i = 0; i < 3; ++i)
+            for (int i = 0; i < 3; ++i)
             {
                 d = MAX(m_rht->m_xmin[i] - f.m_x[i], f.m_x[i] + m_dx[i] - m_rht->m_xmax[i]);
-                if(d_rht < d) d_rht = d;
+                if (d_rht < d)
+                    d_rht = d;
             }
 
-            if(d_lft < d_rht)
+            if (d_lft < d_rht)
                 m_lft->add(uid, fibers);
             else
                 m_rht->add(uid, fibers);
@@ -113,9 +116,9 @@ public:
     }
 
     /**
-     * @brief 
-     * 
-     * @param fibers 
+     * @brief
+     *
+     * @param fibers
      */
     void split(std::vector<fiber_t> &fibers)
     {
@@ -144,8 +147,8 @@ public:
         // divide os filhos pela mediana
         for (auto &&uid : m_uids)
             fibers[uid].m_x[imax] < x ? m_lft->add(uid, fibers) : m_rht->add(uid, fibers);
-        
-        if(m_lft->m_uids.size() == 0 || m_rht->m_uids.size() == 0)
+
+        if (m_lft->m_uids.size() == 0 || m_rht->m_uids.size() == 0)
         {
             printf("split failed (empty child)\n");
             exit(EXIT_FAILURE);
@@ -157,12 +160,12 @@ public:
 
     /**
      * @brief Get the neighs object
-     * 
+     *
      * @param n número de vizinhas na lista neighs
      * @param neighs lista dos uids do vizinhos
      */
-    void get_neighs(fiber_t &f, int &n, std::vector<int>& neighs)
-    {   
+    void get_neighs(fiber_t &f, int &n, std::vector<int> &neighs)
+    {
         // inicializacao do n
         if (m_level == 0)
             n = 0;
@@ -178,11 +181,28 @@ public:
         if (m_splitted)
         {
             m_lft->get_neighs(f, n, neighs);
-            m_rht->get_neighs(f, n, neighs);            
+            m_rht->get_neighs(f, n, neighs);
         }
 
-        for(int i = 0; i < m_uids.size(); ++i)
+        // resize neighs
+        if ((m_uids.size() + n) > neigs.size())
+        {
+            neighs.resize(2 * (m_uids.size() + n));
+        }
+
+        for (int i = 0; i < m_uids.size(); ++i)
             neighs[n + i] = m_uids[i];
+    }
+
+    int diameter()
+    {
+        int diam = 0;
+        for (int i = 0; i < 3; ++i)
+        {
+            auto d = (m_xmax[i] m_xmin[0])
+                diam += d * d;
+        }
+        return int(std::sqrt())
     }
 };
 
@@ -212,38 +232,39 @@ inline bool share_face(int *umin, int *umax, int *p)
 }
 
 /**
- * @brief 
- * 
- * @param f 
- * @param n    Na entrada, n indica o número de elementos em uids. Na saída, se f estiver 
- *             em overlap com alguma fibra, então n == -1, caso contrário, n retorna o 
+ * @brief
+ *
+ * @param f    Fibra a ser avaliada.
+ * @param n    Na entrada, n indica o número de elementos em uids. Na saída, se f estiver
+ *             em overlap com alguma fibra, então n == -1, caso contrário, n retorna o
  *             número de elementos de uids que compartilham uma face com f.
  * @param uids Na entrada, os n primeiros elementos de uids são as índices das fibras que
- *             podem estar em contato com a fibra f. Na saída, n é atualizado e todos os 
+ *             podem estar em contato com a fibra f. Na saída, n é atualizado e todos os
  *             n primeiros índices estão efetivamente em contato com f.
  * @param fibers vetor de todas as fibras do cluster.
  */
-void bind_filter(fiber_t& f, int n, std::vector<int> uids, std::vector<fiber_t> fibers)
+void bind_filter(fiber_t &f, int n, std::vector<int> uids, std::vector<fiber_t> fibers)
 {
+    printf("neighs= ");
     // base e topo da fibra f (note que ftop é diferente de fmax)
     int fmin[3] = {f.m_x[0], f.m_x[1], f.m_x[2]};
     int ftop[3] = {f.m_x[0], f.m_x[1] + f.m_height - 1, f.m_x[2]};
     int fmax[3] = {f.m_x[0], f.m_x[1] + f.m_height - 1, f.m_x[2]};
-    
+
     int k = 0; // número de fibras do cluster em contato com a fibra f
-    for(int i = 0; i < n; ++i )
+    for (int i = 0; i < n; ++i)
     {
         int uid = uids[i];
-        fiber_t& u = fibers[uid];
+        fiber_t &u = fibers[uid];
         // umin e umax definem o bounding box da fibra u
         int umin[3] = {u.m_x[0], u.m_x[1], u.m_x[2]};
         int umax[3] = {u.m_x[0] + 1, f.m_x[1] + u.m_height, u.m_x[2]};
 
         // check overlap
-        // se as fibras estiverem em overlap, o topo (ftop) ou 
-        // a base (fmin) da fibra f estará contida no bounding 
+        // se as fibras estiverem em overlap, o topo (ftop) ou
+        // a base (fmin) da fibra f estará contida no bounding
         // box da fibra u.
-        bool overlap = true;        
+        bool overlap = true;
         for (int j = 0; j < 3; j++)
         {
             if (ftop[j] < umin[j] || ftop[j] > umax[j])
@@ -259,65 +280,285 @@ void bind_filter(fiber_t& f, int n, std::vector<int> uids, std::vector<fiber_t> 
         }
         if (overlap)
         {
+            printf("%d (overlap)\n", uid);
             n = -1;
             return;
         }
 
         // verificação/identificação da face em contato com a fxmin ou ftop
         //    (1,0,1) +-------------------------+ (1,h,1)
-        //          / |z                       /| 
+        //          / |z                       /|
         // (0,0,1) +--------------------------+ |
         //         |  |-----------------------|-+ (1,h,0)
-        //         | /x                       |/ 
+        //         | /x                       |/
         // (0,0,0) +--------------------------+ (0,h,0)
         //                       y
         // umin = (0,0,0)
-        // umax = (1,h,1)        
+        // umax = (1,h,1)
 
-        if(share_face(umin, umax, fmin))
-            uids[k++] = uid;
-        
-        if(share_face(umin, umax, ftop))
-            uids[k++] = uid;
+        if (share_face(umin, umax, fmin))
+        {
+            printf("%d ", uid;)
+                uids[k++] = uid;
+        }
+
+        if (share_face(umin, umax, ftop))
+        {
+            printf("%d ", uid;)
+                uids[k++] = uid;
+        }
     }
     n = k;
+    printf("\n");
 }
 
-bool test_kdt()
+void random_step(fibert_t &f)
+{
+    int &x = f.m_x[0];
+    int &y = f.m_x[1];
+    int &z = f.m_x[2];
+
+    const int imove = rand() % 8;
+    // (1, 0, 0)
+    if (imove == 0)
+        ++x;
+    else if (imove == 1)
+        --x;
+    // (0, 1, 0)
+    else if (imove == 2)
+        ++y;
+    else if (imove == 3)
+        --y;
+    // (0, 1, 1)
+    else if (imove == 4)
+    {
+        ++z;
+        ++y;
+    }
+    else if (imove == 5)
+    {
+        --z;
+        --y;
+    }
+    // (0, 1, -1)
+    else if (imove == 6)
+    {
+        ++y;
+        --z;
+    }
+    else if (imove == 7)
+    {
+        --y;
+        ++z;
+    }
+}
+
+inline bool check_out_sim(fiber_t &f, int max_dist, int radius)
+{
+    for (int i = 0; i < 3; ++i)
+        if (std::abs(f.m_x[i]) > max_dist * radius)
+            return true;
+    return false;
+}
+
+/**
+ * @brief
+ *
+ * @param f
+ * @param n
+ * @param uids
+ * @param fibers
+ * @param mode
+ * @return true
+ * @return false
+ */
+inline bool bind(fiber_t &f, int n, std::vector<int> &uids, std::vector<fiber_t> &fibers, char mode)
+{
+    if ('s')
+    {
+        if (n > 0)
+        {
+            for (int i = 0; i < n; ++i)
+            {
+                fiber_t &u = fibers[uids[i]];
+                // check header
+                for (int i = 0; i <= 4; ++i)
+                    if (u.m_x[1] == (f.m_x[1] + 4 * i))
+                        return true;
+
+                // check tail
+                for (int i = 0; i <= 4; ++i)
+                    if (u.m_x[1] == (f.m_x[1] + f.m_height + 4 * i))
+                        return true;
+            }
+        }
+        return false;
+    }
+    else
+        return n > 0;
+}
+
+int energy_surface(fiber_t &f, int n, std::vector<int> &uids, std::vector<fiber_t> &fibers)
+{
+    //     .+------+
+    //   .' | N  .'|
+    //  +------+'  |
+    //  | W |  | E |
+    //  |  ,+--|---+
+    //  |.'  S | .'
+    //  +------+'
+
+    //TODO A LISTA DE VIZINHOS DEVE SER ATUALIZADA A CADA NOVA POSIÇÃO, ENTÃO É PRECISO PASSAR A KDT COMO ARGUMENTO DE ENTRADA.
+    const int K = 4 * f.m_height + 2;
+    bool E[K];
+    for(int i = 0; i < K; ++i) 
+        E[false];
+
+    for (int i = 0; i < uids; i++)
+    {
+        fiber_t &u = fibers[uids[i]];        
+    }
+    return E;
+}
+
+void rolling_surface(fiber_t &f, int n, std::vector<int> &uids, std::vector<fiber_t> &fibers, char mode, int tmax)
+{
+    int xold[3] = {f.m_x[0], f.m_x[1], f.m_x[2]};
+    int xopt[3] = {f.m_x[0], f.m_x[1], f.m_x[2]};
+    int Emin = energy_surface(f, n, uids, fibers);
+    for(int ts = 0; ts < tmax; ++ts)
+    {
+        random_step(f);
+    }
+
+void surface_rolling(FILE *fid, int uid, const BBox &bbox, const vector<char> &grid, int height,
+                     const int ts, const char bind_mode, int &x, int &y, int &z, int xmin, int xmax)
+{    
+    int xopt = x, yopt = y, zopt = z;
+    int Emin = energy_surface(grid, height, x, y, z); // number of different neighs
+    int E = Emin;
+
+    // new data of rolling
+    cmd_rolling(fid, uid, x, y, z, 1, E);
+
+    int xold = x, yold = y, zold = z;
+    for (int i = 0; i < ts; ++i)
+    {
+        random_single_step(grid, x, y, z, height, xmin, xmax);
+
+        // rejected direction: the rod left the aggregate surface
+        if (bind(bind_mode, bbox, grid, x, y, z, height) == false)
+        {
+            cmd_rolling(fid, uid, x, y, z, 0, E);
+            x = xold;
+            y = yold;
+            z = zold;
+            continue;
+        }
+        xold = x;
+        yold = y;
+        zold = z;
+
+        // energy surface
+        E = energy_surface(grid, height, x, y, z);
+        
+        // new data of rolling
+        cmd_rolling(fid, uid, x, y, z, 1, E);
+
+        // update minimal energy site
+        if (E < Emin)
+        {            
+            xopt = x;
+            yopt = y;
+            zopt = z;
+            Emin = E;
+            if (Emin == 0) break;
+        }
+    }
+    x = xopt;
+    y = yopt;
+    z = zopt;
+
+}
+
+bool dla_collagen()
 {
     const int height = 18;
     int max_num_uids = 10;
     int num_bind = 10;
+    int max_dist = 10;
     std::vector<fiber_t> fibers;
 
+    // first fiber
     int uid = 0;
     int x = 0;
     int y = -height / 2;
     int z = 0;
     fibers.push_back(fiber_t(uid, x, y, z, height));
 
-    int dx = 1;
-    int dy = height;
-    int dz = 1;
-
     fiber_t &f = fibers[uid];
     kdt_t kdt(max_num_uids, height);
 
+    int num_neighs = 0;
+    std::vector<int> neighs_uid;
     bool new_fiber = true;
-    while(uid < num_bind)
-    {        
-        int x = 0; // rand
-        int y = -height / 2; // rand
-        int z = 0; // rand
-        if(new_fiber)
-            fibers.push_back(fiber_t(++uid, x, y, z, height));
-        else
+    int xold[3];
+    while (uid < num_bind)
+    {
+        const int radius = kdt.diameter();
+        while (true)
         {
-            fibers[uid].m_x[0] = x;
-            fibers[uid].m_x[1] = y;
-            fibers[uid].m_x[2] = z;
-        }
+            if (new_fiber)
+            {
+                const double theta = irand(0, 2 * PI);
+                const double phi = acos(irand(-1, 1));
+                xold[0] = radius * cos(theta) * sin(phi);
+                xold[1] = radius * sin(theta) * sin(phi);
+                xold[2] = radius * cos(phi);
+                fibers.push_back(fiber_t(++uid, xold[0], xold[1], xold[2], height));
+                new_fiber = false;
+            }
+            // save current position
+            for (int i = 0; i < 3; ++i)
+                xold[i] = fibers[uid].m_x[i];
 
-        kdt.add(uid, fibers);
+            // random walk
+            random_step(fibers[uid]);
+
+            // check out of simulation?
+            if (check_out_sim(fibers[uid], max_dist, radius))
+                break;
+
+            // get possible neighs
+            kdt.get_neighs(fibers[uid], num_neighs, neighs_uid);
+
+            // check overlap or bind?
+            if (num_neighs > 0)
+            {
+                bind_filter(fibers[uid], num_neighs, neighs_uid);
+
+                // check overlap
+                if (num_neighs == -1)
+                {
+                    printf("overlap\n");
+                    // restore x
+                    for (int i = 0; i < 3; ++i)
+                        fibers[uid].m_x[i] = xold[i];
+                    continue;
+                }
+
+                // check bind
+                if (num_neighs > 0)
+                {
+                    new_fiber = bind(fibers[uid], num_neighs, neighs_uids, fibers, 'n');
+
+                    if(new_fiber)
+                    {
+                        rolling_surface(fibers[uid], num_neighs, neighs_uids, fibers, 'n');
+                        break;
+                    }
+                }
+            }
+        }
     }
 }
