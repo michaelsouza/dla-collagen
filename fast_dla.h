@@ -74,23 +74,26 @@ public:
         if (m_splitted == false && m_uids.size() == 0)
         {
             // inicializa o bounding box
+            printf("ok \n");
             for (int i = 0; i < 3; ++i)
             {
                 m_xmin[i] = f.m_x[i];
                 m_xmax[i] = f.m_x[i] + m_dx[i];
+                printf("xmin: %d , xmax: %d \n", m_xmin[i], m_xmax[i]);
             }
         }
         else
         {
             // atualiza o bounding box
+            printf("Att bound\n");
             for (int i = 0; i < 3; ++i)
             {
                 if (m_xmin[i] > f.m_x[i])
                     m_xmin[i] = f.m_x[i];
                 if (m_xmax[i] < f.m_x[i] + m_dx[i])
                     m_xmax[i] = f.m_x[i] + m_dx[i];
+                printf("xmin: %d , xmax: %d \n", m_xmin[i], m_xmax[i]);
             }
-        }
         if (m_splitted == false)
         {
             m_uids.push_back(uid);
@@ -206,7 +209,9 @@ public:
         int diam = 0;
         for (int i = 0; i < 3; ++i)
         {
-            auto d = (m_xmax[i] - m_xmin[i]);
+            
+            auto d = (m_xmax[i] - m_xmin[i]);  /** faltava um sinal entre xmax e xmin, acho que era um menos **/
+                printf("xmin: %d , xmax: %d \n", m_xmin[i], m_xmax[i]);
                 diam += d * d;
         }
         return int(std::sqrt(diam));
@@ -362,6 +367,7 @@ void random_step(fiber_t &f)
 
 inline bool check_out_sim(fiber_t &f, int max_dist, int radius)
 {
+    
     for (int i = 0; i < 3; ++i)
         if (std::abs(f.m_x[i]) > max_dist * radius)
             return true;
@@ -537,33 +543,46 @@ bool dla_collagen(int num_bind, char s)
     std::vector<int> neighs_uid;
     bool new_fiber = true;
     int xold[3];
+    printf("INIT CODE\n");
     while (uid < num_bind)
     {
+        //Add first rod
+        kdt.add(uid,fibers); /** Adicionei o add, acho que o código não estava adicionando as fibras, por isso o boundbox nao atualiza**/
         const int radius = kdt.diameter();
         printf("uid: %d\n", uid);
+        printf("r cluister: %d\n", radius);
+   
 
         while (true)
         {
             //launch new fiber
             if (new_fiber)
             {
+                printf("launch");
                 const double theta = irand(0, 2 * PI);
                 const double phi = acos(irand(-1, 1));
                 xold[0] = radius * cos(theta) * sin(phi);
                 xold[1] = radius * sin(theta) * sin(phi);
                 xold[2] = radius * cos(phi);
                 fibers.push_back(fiber_t(++uid, xold[0], xold[1], xold[2], height));
+                //printf("New fiber initiate\n");
+                //printf("%d, %d, %d, %d", uid, xold[0], xold[1], xold[2]);
                 new_fiber = false;
+            
             }
+
+            printf("t1");
             // save current position
             for (int i = 0; i < 3; ++i)
                 xold[i] = fibers[uid].m_x[i];
 
             // random walk
             random_step(fibers[uid]);
+            printf("random step\n");
 
             // check out of simulation?
             if (check_out_sim(fibers[uid], max_dist, radius))
+                printf("out of simulation\n");
                 break;
 
             // get possible neighs
