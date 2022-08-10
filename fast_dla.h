@@ -1,9 +1,15 @@
-#include <math>
+#include <math.h>
+#include <cmath>
 #include <cstdio>
 #include <vector>
+#include <cstdlib>
+#include <stdexcept>
 #include <algorithm>
 
+
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
+
+const double PI = 3.141592654;
 
 class fiber_t
 {
@@ -185,7 +191,7 @@ public:
         }
 
         // resize neighs
-        if ((m_uids.size() + n) > neigs.size())
+        if ((m_uids.size() + n) > neighs.size())
         {
             neighs.resize(2 * (m_uids.size() + n));
         }
@@ -194,15 +200,16 @@ public:
             neighs[n + i] = m_uids[i];
     }
 
+    // calc diametro entre xmin e xmax
     int diameter()
     {
         int diam = 0;
         for (int i = 0; i < 3; ++i)
         {
-            auto d = (m_xmax[i] m_xmin[0])
+            auto d = (m_xmax[i] - m_xmin[i]);
                 diam += d * d;
         }
-        return int(std::sqrt())
+        return int(std::sqrt(diam));
     }
 };
 
@@ -298,13 +305,13 @@ void bind_filter(fiber_t &f, int n, std::vector<int> uids, std::vector<fiber_t> 
 
         if (share_face(umin, umax, fmin))
         {
-            printf("%d ", uid;)
+            printf("%d ", uid);
                 uids[k++] = uid;
         }
 
         if (share_face(umin, umax, ftop))
         {
-            printf("%d ", uid;)
+            printf("%d ", uid);
                 uids[k++] = uid;
         }
     }
@@ -312,7 +319,7 @@ void bind_filter(fiber_t &f, int n, std::vector<int> uids, std::vector<fiber_t> 
     printf("\n");
 }
 
-void random_step(fibert_t &f)
+void random_step(fiber_t &f)
 {
     int &x = f.m_x[0];
     int &y = f.m_x[1];
@@ -395,9 +402,25 @@ inline bool bind(fiber_t &f, int n, std::vector<int> &uids, std::vector<fiber_t>
         return false;
     }
     else
-        return n > 0;
-}
+        if (n > 0)
+        {
+            for (int i = 0; i < n; ++i)
+            {
+                fiber_t &u = fibers[uids[i]];
+                // check header
+                for (int i = 0; i <= 18; ++i)
+                    if (u.m_x[1] == (f.m_x[1] + i))
+                        return true;
 
+                // check tail
+                for (int i = 0; i <= 18; ++i)
+                    if (u.m_x[1] == (f.m_x[1] + f.m_height + i))
+                        return true;
+            }
+        }
+        return false;
+}
+/**
 int energy_surface(fiber_t &f, int n, std::vector<int> &uids, std::vector<fiber_t> &fibers)
 {
     //     .+------+
@@ -420,7 +443,9 @@ int energy_surface(fiber_t &f, int n, std::vector<int> &uids, std::vector<fiber_
     }
     return E;
 }
+**/
 
+/**
 void rolling_surface(fiber_t &f, int n, std::vector<int> &uids, std::vector<fiber_t> &fibers, char mode, int tmax)
 {
     int xold[3] = {f.m_x[0], f.m_x[1], f.m_x[2]};
@@ -430,7 +455,9 @@ void rolling_surface(fiber_t &f, int n, std::vector<int> &uids, std::vector<fibe
     {
         random_step(f);
     }
-
+}
+**/
+/**
 void surface_rolling(FILE *fid, int uid, const BBox &bbox, const vector<char> &grid, int height,
                      const int ts, const char bind_mode, int &x, int &y, int &z, int xmin, int xmax)
 {    
@@ -480,12 +507,19 @@ void surface_rolling(FILE *fid, int uid, const BBox &bbox, const vector<char> &g
     z = zopt;
 
 }
+**/
+// generate random number for the range (min, max)
+double irand(int imin, int imax)
+{
+    return (rand() / ((double)RAND_MAX)) * (imax - imin) + imin;
 
-bool dla_collagen()
+}
+
+bool dla_collagen(int num_bind, char s)
 {
     const int height = 18;
     int max_num_uids = 10;
-    int num_bind = 10;
+    //int num_bind = 10;
     int max_dist = 10;
     std::vector<fiber_t> fibers;
 
@@ -506,8 +540,11 @@ bool dla_collagen()
     while (uid < num_bind)
     {
         const int radius = kdt.diameter();
+        printf("uid: %d\n", uid);
+
         while (true)
         {
+            //launch new fiber
             if (new_fiber)
             {
                 const double theta = irand(0, 2 * PI);
@@ -535,7 +572,8 @@ bool dla_collagen()
             // check overlap or bind?
             if (num_neighs > 0)
             {
-                bind_filter(fibers[uid], num_neighs, neighs_uid);
+                bind_filter(fibers[uid], num_neighs, neighs_uid, fibers);
+                printf("touch boundbox");
 
                 // check overlap
                 if (num_neighs == -1)
@@ -550,13 +588,21 @@ bool dla_collagen()
                 // check bind
                 if (num_neighs > 0)
                 {
-                    new_fiber = bind(fibers[uid], num_neighs, neighs_uids, fibers, 'n');
+                    new_fiber = bind(fibers[uid], num_neighs, neighs_uid, fibers, s);
 
+                    if(new_fiber)
+                    {
+                        printf("fiber add");
+                        break;
+                    }
+
+                    /**
                     if(new_fiber)
                     {
                         rolling_surface(fibers[uid], num_neighs, neighs_uids, fibers, 'n');
                         break;
                     }
+                    **/
                 }
             }
         }
