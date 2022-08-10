@@ -10,6 +10,9 @@ viewer.bin: viewer.cpp
 dla.prf: dla.cpp dla.h
 	g++ -pg dla.cpp -o dla.prf
 
+dla_fast.bin: dla_fast.h dla_fast.cpp
+	g++ -pg dla_fast.cpp -o dla_fast.bin
+
 run_prf: dla.prf
 	./dla.prf
 	gprof dla.prf gmon.out > profiling.txt
