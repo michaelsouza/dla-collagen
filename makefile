@@ -10,8 +10,11 @@ viewer.bin: viewer.cpp
 dla.prf: dla.cpp dla.h
 	g++ -pg dla.cpp -o dla.prf
 
-dla_fast.bin: dla_fast.h dla_fast.cpp
-	g++ -pg dla_fast.cpp -o dla_fast.bin
+fast_dla.bin: fast_dla.h fast_dla.cpp
+	g++ -pg fast_dla.cpp -o fast_dla.bin
+
+run_fast: fast_dla.bin
+	./fast_dla.bin > fast_dla.log
 
 run_prf: dla.prf
 	./dla.prf

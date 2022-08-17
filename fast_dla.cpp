@@ -4,7 +4,7 @@
 #include <iostream>
 
 int main(int argc, char const *argv[]) {
-  const int num_bind = 10;
+  const int num_bind = 15;
   const char mode = 'n';
   const int tmax = 10;
 
@@ -22,6 +22,7 @@ int main(int argc, char const *argv[]) {
 
   kdt_t kdt(max_num_uids, height);
   kdt.add(uid, fibers);
+  fibers[uid].show();
 
   int num_neighs = 0;
   std::vector<int> neighs;
@@ -46,9 +47,11 @@ int main(int argc, char const *argv[]) {
 
       // random walk
       f.random_walk();
+      // printf(">> random_walk:"); f.show();
 
       // check out of simulation?
       if (check_out_sim(f, max_dist, radius)) {
+        printf(">> out_sim:"); f.show();
         reset_fiber = true;
         continue;
       }
@@ -61,13 +64,16 @@ int main(int argc, char const *argv[]) {
 
       // check bind
       if (check_bind(f, neighs, fibers, mode)) {
-        rolling_surface(f, kdt, fibers, mode, tmax);
+        printf(">> bind:"); f.show();
+        rolling_surface(f, neighs, fibers, mode, tmax, kdt);
         kdt.add(uid, fibers);
+        printf(">> rolling:"); f.show();
         break;
       }
 
       // check overlap
       if (f.m_state == OVERLAP) {
+        printf(">> overlap:"); f.show();
         // restore x
         for (int i = 0; i < 3; ++i)
           f.m_x[i] = xold[i];

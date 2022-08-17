@@ -81,6 +81,11 @@ public:
       ++z;
     }
   }
+
+  void show()
+  {
+    printf("uid: %d, x:(%d,%d,%d)\n", m_uid, m_x[0], m_x[1], m_x[2]);
+  }
 };
 
 class kdt_t {
@@ -120,25 +125,21 @@ public:
    * @param fibers
    */
   void add(int uid, std::vector<fiber_t> &fibers) {
-    fiber_t &f = fibers[uid];
+    fiber_t &f = fibers[uid];    
     // primeira fibra
     if (m_splitted == false && m_uids.size() == 0) {
       // inicializa o bounding box
-      printf("ok \n");
       for (int i = 0; i < 3; ++i) {
         m_xmin[i] = f.m_x[i];
         m_xmax[i] = f.m_x[i] + m_dx[i];
-        printf("xmin: %d , xmax: %d \n", m_xmin[i], m_xmax[i]);
       }
     } else {
       // atualiza o bounding box
-      printf("Att bound\n");
       for (int i = 0; i < 3; ++i) {
         if (m_xmin[i] > f.m_x[i])
           m_xmin[i] = f.m_x[i];
         if (m_xmax[i] < f.m_x[i] + m_dx[i])
           m_xmax[i] = f.m_x[i] + m_dx[i];
-        printf("xmin: %d , xmax: %d \n", m_xmin[i], m_xmax[i]);
       }
     }
 
@@ -262,8 +263,7 @@ public:
  * @return true
  * @return false
  */
-inline int num_shared_faces(const int umin[3], const int umax[3],
-                            const int p[3]) {
+inline int num_shared_faces(const int umin[3], const int umax[3], const int p[3]) {
   // verificação/identificação da face em contato com a fxmin ou ftop
   //           (1,0,1) +-------------------------+ (1,h,1) = umax
   //                 / |z                       /|
@@ -281,30 +281,34 @@ inline int num_shared_faces(const int umin[3], const int umax[3],
   const int umax_y = umax[1];
   const int umax_z = umax[2];
 
-  const int p_x = p[0];
-  const int p_y = p[1];
-  const int p_z = p[2];
+  const int h = umax_y - umin_y;
+  const int pmin_x = p[0];
+  const int pmin_y = p[1];
+  const int pmax_y = p[1] + h;
+  const int pmin_z = p[2];
+
 
   // não compartilha qualquer face
-  if (!(umin_y <= p_y && p_y < umax_y))
+  if (!(umin_y <= pmin_y && pmin_y < umax_y) &&
+      !(umin_y <= pmax_y && pmax_y < umax_y))
     return 0;
 
-  int num_faces = umax_y - p_y;
+  int num_faces = umax_y - pmin_y;
 
   // compartilha a face da frente
-  if ((umin_x - 1) == p_x && umin_z == p_z)
+  if ((umin_x - 1) == pmin_x && umin_z == pmin_z)
     return num_faces;
 
   // compartilha a face de cima
-  if (umin_x == p_x && umax_z == p_z)
+  if (umin_x == pmin_x && umax_z == pmin_z)
     return num_faces;
 
   // compartilha a face de trás
-  if (umax_x == p_x && umin_z == p_z)
+  if (umax_x == pmin_x && umin_z == pmin_z)
     return num_faces;
 
   // compartilha a face de baixo
-  if (umin_x == p_x && (umin_z - 1) == p_z)
+  if (umin_x == pmin_x && (umin_z - 1) == pmin_z)
     return num_faces;
 
   return 0;
@@ -321,7 +325,7 @@ inline int num_shared_faces(const int umin[3], const int umax[3],
  * efetivamente em contato com f.
  * @param fibers vetor de todas as fibras do cluster.
  */
-void filter_shared_faces(fiber_t &f, std::vector<int> uids, std::vector<fiber_t> &fibers) {
+void filter_shared_faces(fiber_t &f, std::vector<int>& uids, std::vector<fiber_t> &fibers) {
   // verificação/identificação da face em contato com a fxmin ou ftop
   //           (1,0,1) +-------------------------+ (1,h,1) = umax
   //                 / |z                       /|
@@ -331,11 +335,10 @@ void filter_shared_faces(fiber_t &f, std::vector<int> uids, std::vector<fiber_t>
   // umin = (0,0,0) +--------------------------+ (0,h,0)
   //                             y
 
-  printf("neighs= ");
   // base e topo da fibra f (note que ftop é diferente de fmax)
   int fmin[3] = {f.m_x[0], f.m_x[1], f.m_x[2]};
   int ftop[3] = {f.m_x[0], f.m_x[1] + f.m_height - 1, f.m_x[2]};
-  int fmax[3] = {f.m_x[0], f.m_x[1] + f.m_height - 1, f.m_x[2]};
+  int fmax[3] = {f.m_x[0], f.m_x[1] + f.m_height, f.m_x[2]};
 
   int k = 0; // número de fibras do cluster em contato com a fibra f
   for (int i = 0; i < uids.size(); ++i) {
@@ -343,23 +346,16 @@ void filter_shared_faces(fiber_t &f, std::vector<int> uids, std::vector<fiber_t>
     fiber_t &u = fibers[uid];
     // umin e umax definem o bounding box da fibra u
     int umin[3] = {u.m_x[0], u.m_x[1], u.m_x[2]};
-    int umax[3] = {u.m_x[0] + 1, f.m_x[1] + u.m_height, u.m_x[2] + 1};
+    int utop[3] = {u.m_x[0], u.m_x[1] + u.m_height - 1, u.m_x[2]};
+    int umax[3] = {u.m_x[0] + 1, u.m_x[1] + u.m_height, u.m_x[2] + 1};
 
     // check overlap
     // se as fibras estiverem em overlap, o topo (ftop) ou
     // a base (fmin) da fibra f estará contida no bounding
     // box da fibra u.
-    bool overlap = true;
-    for (int j = 0; j < 3; j++) {
-      if (ftop[j] < umin[j] || ftop[j] > umax[j]) {
-        overlap = false;
-        break;
-      }
-      if (fmin[j] < umin[j] || fmin[j] > umax[j]) {
-        overlap = false;
-        break;
-      }
-    }
+    bool overlap = (u.m_x[0] == f.m_x[0]) &&
+                   (u.m_x[2] == f.m_x[2]) &&
+                   (abs(u.m_x[1] - f.m_x[1]) < f.m_height);
     if (overlap) {
       f.m_state = fiber_state_t::OVERLAP;
       return;
@@ -401,7 +397,7 @@ inline bool check_out_sim(fiber_t &f, int max_dist, int radius) {
 }
 
 /**
- * @brief
+ * @brief Verifica se a fibra está em bind com o cluster.
  *
  * @param f
  * @param n
@@ -410,6 +406,7 @@ inline bool check_out_sim(fiber_t &f, int max_dist, int radius) {
  * @param mode
  * @return true
  * @return false
+ * @remark Se a fibra estiver em overlap, seu estado é alterado para OVERLAP.
  */
 inline bool check_bind(fiber_t &f, std::vector<int> &uids,
                        std::vector<fiber_t> &fibers, char mode) {
@@ -455,7 +452,7 @@ inline bool check_bind(fiber_t &f, std::vector<int> &uids,
  * @return int
  * @remark O número máximo de faces expostas é 4 * f.m_height.
  */
-int energy_surface(fiber_t &f, kdt_t &kdt, std::vector<fiber_t> &fibers) {
+int energy_surface(fiber_t &f, std::vector<int> &neighs, std::vector<fiber_t> &fibers, kdt_t &kdt) {
   //     .+------+
   //   .' | N  .'|
   //  +------+'  |
@@ -463,10 +460,7 @@ int energy_surface(fiber_t &f, kdt_t &kdt, std::vector<fiber_t> &fibers) {
   //  |  ,+--|---+
   //  |.'  S | .'
   //  +------+'
-
-  std::vector<int> neighs;
-  kdt.get_neighs(f, neighs);
-
+  
   const int xmax[] = {f.m_x[0] + 1, f.m_x[1] + f.m_height, f.m_x[2] + 1};
   int energy = 4 * f.m_height;
 
@@ -477,12 +471,43 @@ int energy_surface(fiber_t &f, kdt_t &kdt, std::vector<fiber_t> &fibers) {
   return energy;
 }
 
-void rolling_surface(fiber_t &f, kdt_t &kdt, std::vector<fiber_t> &fibers,
-                     char mode, int tmax) {
+void rolling_surface(fiber_t &f, std::vector<int>& neighs, std::vector<fiber_t> &fibers,
+                     char mode, int tmax, kdt_t &kdt) {
   int xold[3] = {f.m_x[0], f.m_x[1], f.m_x[2]};
   int xopt[3] = {f.m_x[0], f.m_x[1], f.m_x[2]};
-  int Emin = energy_surface(f, kdt, fibers);
-  for (int ts = 0; ts < tmax; ++ts) {
+  int Emin = energy_surface(f, neighs, fibers, kdt);
+  printf(">> Emin: %d " , Emin); f.show();
+  int E = 0;
+  for (int ts = 0; ts < tmax; ++ts) {    
     f.random_walk();
+    printf("rolling_walk:"); f.show();
+    
+    kdt.get_neighs(f, neighs);    
+    if (neighs.size() == 0){
+      for (auto i = 0; i < 3; ++i)
+        f.m_x[i] = xold[i];
+      continue;
+    }
+
+    if(check_bind(f, neighs, fibers, mode)){
+      E = energy_surface(f, neighs, fibers, kdt);
+      printf(">> E: %d\n" , E);
+      if(E < Emin){
+        Emin = E;
+        for (auto i = 0; i < 3; ++i)
+          xopt[i] = f.m_x[i];
+        printf(">> Emin: %d " , Emin); f.show();
+      }
+      for (auto i = 0; i < 3; ++i)
+        xold[i] = f.m_x[i];
+      continue;
+    }
+
+    f.m_x[0] = xold[0];
+    f.m_x[1] = xold[1];
+    f.m_x[2] = xold[2];    
   }
+  for (auto i = 0; i < 3; ++i)
+    f.m_x[i] = xopt[i];
+  printf(">> Emin: %d " , Emin); f.show();
 }
