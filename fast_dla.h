@@ -82,6 +82,78 @@ public:
     }
   }
 
+  /**
+ * @brief Retorna true se houver ao menos uma face compartilhada e false em caso
+ *        contrário.
+ *
+ * @param umin
+ * @param umax
+ * @param p
+ * @return true
+ * @return false
+ */
+inline int num_shared_faces(fiber_t& u) {
+  // verificação/identificação da face em contato com a fxmin ou ftop
+  //           (1,0,1) +-------------------------+ (1,h,1) = umax
+  //                 / |z                       /|
+  //        (0,0,1) +--------------------------+ |
+  //                |  +-----------------------|-+ (1,h,0)
+  //                | /x                       |/
+  // umin = (0,0,0) +--------------------------+ (0,h,0)
+  //                             y
+  const int umin_x = u.m_x[0];
+  const int umin_y = u.m_x[1];
+  const int umin_z = u.m_x[2];
+
+  const int umax_x = u.m_x[0] + 1;
+  const int umax_y = u.m_x[1] + m_height;
+  const int umax_z = u.m_x[2] + 1;
+
+  const int pmin_x = m_x[0];
+  const int pmin_y = m_x[1];
+  const int pmin_z = m_x[2];
+
+  const int pmax_x = m_x[0] + 1;
+  const int pmax_y = m_x[1] + m_height;
+  const int pmax_z = m_x[2] + 1;
+
+  // não compartilha qualquer face
+  const bool pmin_inside = umin_y <= pmin_y && pmin_y < umax_y;
+  const bool pmax_inside = umin_y < pmax_y && pmax_y <= umax_y;
+  if (!pmin_inside && !pmax_inside)
+    return 0;
+
+  if (pmin_x == umin_x && pmin_z == umin_z)
+  {
+    m_state = OVERLAP;
+    return 0;
+  }
+
+  int num_faces = 0;
+  if( pmin_inside )
+    num_faces = umax_y - pmin_y;
+  else // pmax_inside == true
+    num_faces = pmax_y - umin_y;
+
+  // compartilha a face da frente
+  if ((umin_x - 1) == pmin_x && umin_z == pmin_z)
+    return num_faces;
+
+  // compartilha a face de cima
+  if (umin_x == pmin_x && umax_z == pmin_z)
+    return num_faces;
+
+  // compartilha a face de trás
+  if (umax_x == pmin_x && umin_z == pmin_z)
+    return num_faces;
+
+  // compartilha a face de baixo
+  if (umin_x == pmin_x && (umin_z - 1) == pmin_z)
+    return num_faces;
+
+  return 0;
+}
+
   void show()
   {
     printf("uid: %d, x:(%d,%d,%d)\n", m_uid, m_x[0], m_x[1], m_x[2]);
@@ -95,27 +167,32 @@ public:
   int m_xmax[3];
   int m_dx[3];
   int m_height;
-  int m_max_num_uids;
+  int m_max_node_size;
   kdt_t *m_lft;
   kdt_t *m_rht;
-  bool m_splitted;
   std::vector<int> m_uids;
+  int m_id;
+  static int m_k; // number of created kdt entities
 
   kdt_t(int max_num_uids, int height) {
     m_level = 0;
     m_lft = nullptr;
     m_rht = nullptr;
-    m_max_num_uids = max_num_uids;
+    m_max_node_size = max_num_uids;
     m_height = height;
-    m_splitted = false;
     m_dx[0] = 1;
     m_dx[1] = height;
     m_dx[2] = 1;
+    m_id = kdt_t::m_k++;
   }
 
   ~kdt_t() {
-    delete m_lft;
+    if(m_lft != nullptr)
+      m_lft->~kdt_t();
+    if(m_rht != nullptr)
+      m_rht->~kdt_t();    
     delete m_rht;
+    delete m_lft;
   }
 
   /**
@@ -127,7 +204,7 @@ public:
   void add(int uid, std::vector<fiber_t> &fibers) {
     fiber_t &f = fibers[uid];    
     // primeira fibra
-    if (m_splitted == false && m_uids.size() == 0) {
+    if (m_uids.size() == 0 && m_lft == nullptr) {
       // inicializa o bounding box
       for (int i = 0; i < 3; ++i) {
         m_xmin[i] = f.m_x[i];
@@ -143,9 +220,10 @@ public:
       }
     }
 
-    if (m_splitted == false) {
+    // sem filhos
+    if (m_lft == nullptr) {
       m_uids.push_back(uid);
-      if (m_uids.size() > m_max_num_uids)
+      if (m_uids.size() > m_max_node_size)
         split(fibers);
     } else {
       // adiciona ao filho que menos é afetado pela entrada da nova fibra
@@ -177,8 +255,8 @@ public:
    */
   void split(std::vector<fiber_t> &fibers) {
     // aloca os filhos
-    m_lft = new kdt_t(m_max_num_uids, m_height);
-    m_rht = new kdt_t(m_max_num_uids, m_height);
+    m_lft = new kdt_t(m_max_node_size, m_height);
+    m_rht = new kdt_t(m_max_node_size, m_height);
     m_lft->m_level = m_level + 1;
     m_rht->m_level = m_level + 1;
 
@@ -213,33 +291,34 @@ public:
   }
 
   /**
-   * @brief Get the neighs object
+   * @brief Retorna os índices das fibras no kdtree que podem 
+   *        estar em contato com a fibra f.
    *
-   * @param n número de vizinhas na lista neighs
    * @param neighs lista dos uids do vizinhos
    */
-  void get_neighs(const fiber_t &f, std::vector<int> &neighs) {
+  void get_node_neighs(const fiber_t &f, std::vector<int> &neighs) {
     // inicializacao do n
     if (m_level == 0)
       neighs.clear();
 
     bool touch = true;
     for (int i = 0; i < 3 && touch; ++i)
-      if (f.m_x[i] < (m_xmin[i] - m_dx[i]) ||
-          m_xmax[i] < (f.m_x[i] + m_dx[i])) {
+      if ((f.m_x[i] < (m_xmin[i] - m_dx[i])) ||
+          (m_xmax[i] < f.m_x[i]))
+      {
         touch == false;
         return;
       }
 
-    if (m_splitted) {
-      m_lft->get_neighs(f, neighs);
-      m_rht->get_neighs(f, neighs);
+    if (m_uids.size() == 0) {
+      m_lft->get_node_neighs(f, neighs);
+      m_rht->get_node_neighs(f, neighs);
+      return;
     }
 
-    // resize neighs
-    for (int i = 0; i < m_uids.size(); ++i) {
-      neighs.push_back(m_uids[i]);
-    }
+    // add to neighs all uids
+    for (auto &&uid : m_uids)
+      neighs.push_back(uid);
   }
 
   // calc diametro entre xmin e xmax
@@ -252,67 +331,8 @@ public:
     return int(std::sqrt(diam)) + 1;
   }
 };
+int kdt_t::m_k = 0;
 
-/**
- * @brief Retorna true se houver ao menos uma face compartilhada e false em caso
- *        contrário.
- *
- * @param umin
- * @param umax
- * @param p
- * @return true
- * @return false
- */
-inline int num_shared_faces(const int umin[3], const int umax[3], const int p[3]) {
-  // verificação/identificação da face em contato com a fxmin ou ftop
-  //           (1,0,1) +-------------------------+ (1,h,1) = umax
-  //                 / |z                       /|
-  //        (0,0,1) +--------------------------+ |
-  //                |  +-----------------------|-+ (1,h,0)
-  //                | /x                       |/
-  // umin = (0,0,0) +--------------------------+ (0,h,0)
-  //                             y
-
-  const int umin_x = umin[0];
-  const int umin_y = umin[1];
-  const int umin_z = umin[2];
-
-  const int umax_x = umax[0];
-  const int umax_y = umax[1];
-  const int umax_z = umax[2];
-
-  const int h = umax_y - umin_y;
-  const int pmin_x = p[0];
-  const int pmin_y = p[1];
-  const int pmax_y = p[1] + h;
-  const int pmin_z = p[2];
-
-
-  // não compartilha qualquer face
-  if (!(umin_y <= pmin_y && pmin_y < umax_y) &&
-      !(umin_y <= pmax_y && pmax_y < umax_y))
-    return 0;
-
-  int num_faces = umax_y - pmin_y;
-
-  // compartilha a face da frente
-  if ((umin_x - 1) == pmin_x && umin_z == pmin_z)
-    return num_faces;
-
-  // compartilha a face de cima
-  if (umin_x == pmin_x && umax_z == pmin_z)
-    return num_faces;
-
-  // compartilha a face de trás
-  if (umax_x == pmin_x && umin_z == pmin_z)
-    return num_faces;
-
-  // compartilha a face de baixo
-  if (umin_x == pmin_x && (umin_z - 1) == pmin_z)
-    return num_faces;
-
-  return 0;
-}
 
 /**
  * @brief      Se f estiver em overlap com alguma fibra, seu estado é alterado
@@ -327,53 +347,27 @@ inline int num_shared_faces(const int umin[3], const int umax[3], const int p[3]
  */
 void filter_shared_faces(fiber_t &f, std::vector<int>& uids, std::vector<fiber_t> &fibers) {
   // verificação/identificação da face em contato com a fxmin ou ftop
-  //           (1,0,1) +-------------------------+ (1,h,1) = umax
-  //                 / |z                       /|
-  //        (0,0,1) +--------------------------+ |
-  //                |  |-----------------------|-+ (1,h,0)
-  //                | /x                       |/
-  // umin = (0,0,0) +--------------------------+ (0,h,0)
-  //                             y
+  //           (1,0,1) +-------------------+------+ (1,h,1) = umax
+  //                 / |z                 /|     /|
+  //        (0,0,1) +--------------------+-|----+ |
+  //                |  |-----------------|-+----|-+ (1,h,0)
+  //                | /x                 |/     |/
+  // umin = (0,0,0) +--------------------+-----+ (0,h,0)
+  //                             y       utop = (0,h-1,0)
 
-  // base e topo da fibra f (note que ftop é diferente de fmax)
-  int fmin[3] = {f.m_x[0], f.m_x[1], f.m_x[2]};
-  int ftop[3] = {f.m_x[0], f.m_x[1] + f.m_height - 1, f.m_x[2]};
-  int fmax[3] = {f.m_x[0], f.m_x[1] + f.m_height, f.m_x[2]};
-
+  f.m_state = FREE;
   int k = 0; // número de fibras do cluster em contato com a fibra f
-  for (int i = 0; i < uids.size(); ++i) {
+  for (int i = 0; i < uids.size(); ++i)
+  {
     int uid = uids[i];
     fiber_t &u = fibers[uid];
-    // umin e umax definem o bounding box da fibra u
-    int umin[3] = {u.m_x[0], u.m_x[1], u.m_x[2]};
-    int utop[3] = {u.m_x[0], u.m_x[1] + u.m_height - 1, u.m_x[2]};
-    int umax[3] = {u.m_x[0] + 1, u.m_x[1] + u.m_height, u.m_x[2] + 1};
-
-    // check overlap
-    // se as fibras estiverem em overlap, o topo (ftop) ou
-    // a base (fmin) da fibra f estará contida no bounding
-    // box da fibra u.
-    bool overlap = (u.m_x[0] == f.m_x[0]) &&
-                   (u.m_x[2] == f.m_x[2]) &&
-                   (abs(u.m_x[1] - f.m_x[1]) < f.m_height);
-    if (overlap) {
-      f.m_state = fiber_state_t::OVERLAP;
-      return;
+    int num_faces = f.num_shared_faces(u);
+    if (f.m_state == OVERLAP)
+    {
+      k = 0;
+      break;
     }
-
-    // verificação/identificação da face em contato com a fxmin ou ftop
-    //           (1,0,1) +-------------------------+ (1,h,1) = umax
-    //                 / |z                       /|
-    //        (0,0,1) +--------------------------+ |
-    //                |  |-----------------------|-+ (1,h,0)
-    //                | /x                       |/
-    // umin = (0,0,0) +--------------------------+ (0,h,0)
-    //                             y
-
-    if (num_shared_faces(umin, umax, fmin))
-      uids[k++] = uid;
-
-    if (num_shared_faces(umin, umax, ftop))
+    if (num_faces > 0)
       uids[k++] = uid;
   }
   uids.resize(k);
@@ -461,12 +455,10 @@ int energy_surface(fiber_t &f, std::vector<int> &neighs, std::vector<fiber_t> &f
   //  |.'  S | .'
   //  +------+'
   
-  const int xmax[] = {f.m_x[0] + 1, f.m_x[1] + f.m_height, f.m_x[2] + 1};
   int energy = 4 * f.m_height;
-
   for (auto &&uid : neighs) {
     fiber_t &u = fibers[uid];
-    energy -= num_shared_faces(f.m_x, xmax, u.m_x);
+    energy -= f.num_shared_faces(u);
   }
   return energy;
 }
@@ -476,14 +468,16 @@ void rolling_surface(fiber_t &f, std::vector<int>& neighs, std::vector<fiber_t> 
   int xold[3] = {f.m_x[0], f.m_x[1], f.m_x[2]};
   int xopt[3] = {f.m_x[0], f.m_x[1], f.m_x[2]};
   int Emin = energy_surface(f, neighs, fibers, kdt);
-  printf(">> Emin: %d " , Emin); f.show();
+  // printf(">> Emin: %d " , Emin); f.show();
   int E = 0;
   for (int ts = 0; ts < tmax; ++ts) {    
     f.random_walk();
-    printf("rolling_walk:"); f.show();
+    // printf("rolling_walk:"); f.show();
     
-    kdt.get_neighs(f, neighs);    
+    kdt.get_node_neighs(f, neighs);    
     if (neighs.size() == 0){
+      // restaura a solução anterior
+      f.m_state = BIND;
       for (auto i = 0; i < 3; ++i)
         f.m_x[i] = xold[i];
       continue;
@@ -491,12 +485,12 @@ void rolling_surface(fiber_t &f, std::vector<int>& neighs, std::vector<fiber_t> 
 
     if(check_bind(f, neighs, fibers, mode)){
       E = energy_surface(f, neighs, fibers, kdt);
-      printf(">> E: %d\n" , E);
+      // printf(">> E: %d\n" , E);
       if(E < Emin){
         Emin = E;
         for (auto i = 0; i < 3; ++i)
           xopt[i] = f.m_x[i];
-        printf(">> Emin: %d " , Emin); f.show();
+        // printf(">> Emin: %d " , Emin); f.show();
       }
       for (auto i = 0; i < 3; ++i)
         xold[i] = f.m_x[i];
@@ -509,5 +503,115 @@ void rolling_surface(fiber_t &f, std::vector<int>& neighs, std::vector<fiber_t> 
   }
   for (auto i = 0; i < 3; ++i)
     f.m_x[i] = xopt[i];
-  printf(">> Emin: %d " , Emin); f.show();
+  // printf(">> Emin: %d " , Emin); f.show();
+}
+
+
+int test_kdt()
+{
+  const int height = 18;
+  int max_node_size = 5;
+  std::vector<fiber_t> fibers;
+
+  // first fiber
+  int uid = 0;
+  int x = 0;
+  int y = -height / 2;
+  int z = 0;
+  fibers.push_back(fiber_t(uid, height, x, y, z));
+
+  kdt_t kdt(max_node_size, height);
+  kdt.add(uid, fibers);
+  fibers[uid].show();
+
+  std::vector<int> neighs;
+
+  for(int i = 1; i < 15; ++i){
+    ++uid;
+    fibers.push_back(fiber_t(uid, height, x + i, y, z));
+    fiber_t& f = fibers[uid];
+    kdt.get_node_neighs(f, neighs);
+    kdt.add(uid, fibers);
+  }
+  return EXIT_SUCCESS;
+}
+
+int run_dla(int argc, char const *argv[]) {
+  const int num_bind = 15;
+  const char mode = 'n';
+  const int tmax = 10;
+
+  const int height = 18;
+  int max_kdt_node_size = 15;
+  int max_dist = 10;
+  std::vector<fiber_t> fibers;
+
+  // first fiber
+  int uid = 0;
+  int x = 0;
+  int y = -height / 2;
+  int z = 0;
+  fibers.push_back(fiber_t(uid, height, x, y, z));
+
+  kdt_t kdt(max_kdt_node_size, height);
+  kdt.add(uid, fibers);
+  fibers[uid].show();
+
+  std::vector<int> neighs;
+  int xold[3];
+
+  while (uid < num_bind) {
+    const int radius = kdt.diameter();
+
+    fibers.push_back(fiber_t(++uid, height, radius));
+    fiber_t &f = fibers[uid];
+    bool reset_fiber = false;
+
+    while (true) {
+      if (reset_fiber) {
+        f.random_reset(radius);
+        reset_fiber = false;
+      }
+
+      // save current position
+      for (int i = 0; i < 3; ++i)
+        xold[i] = f.m_x[i];
+
+      // random walk
+      f.random_walk();
+      // printf(">> random_walk:"); f.show();
+
+      // check out of simulation?
+      if (check_out_sim(f, max_dist, radius)) {
+        // printf(">> out_sim:"); f.show();
+        reset_fiber = true;
+        continue;
+      }
+
+      // get possible neighs
+      kdt.get_node_neighs(f, neighs);
+
+      if (neighs.size() == 0)
+        continue;
+
+      // check bind
+      if (check_bind(f, neighs, fibers, mode)) {
+        printf(">> bind:");
+        rolling_surface(f, neighs, fibers, mode, tmax, kdt);
+        printf(">> rolling:"); f.show();
+        kdt.add(uid, fibers);
+        break;
+      }
+
+      // check overlap
+      if (f.m_state == OVERLAP) {
+        printf(">> overlap:"); f.show();
+        // restore x
+        for (int i = 0; i < 3; ++i)
+          f.m_x[i] = xold[i];
+        f.m_state = FREE;
+        continue;
+      }
+    }
+  }
 }
