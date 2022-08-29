@@ -5,6 +5,6 @@
 
 int main(int argc, char const *argv[])
 {
-  return test_kdt();
-  // return run_dla(argc, argv);
+  // return test_kdt();
+  return run_dla(argc, argv);
 }

@@ -5,6 +5,7 @@
 #include <math.h>
 #include <stdexcept>
 #include <vector>
+#include <memory>
 
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
@@ -168,31 +169,20 @@ public:
   int m_dx[3];
   int m_height;
   int m_max_node_size;
-  kdt_t *m_lft;
-  kdt_t *m_rht;
+  std::unique_ptr<kdt_t> m_lft;
+  std::unique_ptr<kdt_t> m_rht;
   std::vector<int> m_uids;
   int m_id;
   static int m_k; // number of created kdt entities
 
   kdt_t(int max_num_uids, int height) {
     m_level = 0;
-    m_lft = nullptr;
-    m_rht = nullptr;
     m_max_node_size = max_num_uids;
     m_height = height;
     m_dx[0] = 1;
     m_dx[1] = height;
     m_dx[2] = 1;
     m_id = kdt_t::m_k++;
-  }
-
-  ~kdt_t() {
-    if(m_lft != nullptr)
-      m_lft->~kdt_t();
-    if(m_rht != nullptr)
-      m_rht->~kdt_t();    
-    delete m_rht;
-    delete m_lft;
   }
 
   /**
@@ -255,8 +245,8 @@ public:
    */
   void split(std::vector<fiber_t> &fibers) {
     // aloca os filhos
-    m_lft = new kdt_t(m_max_node_size, m_height);
-    m_rht = new kdt_t(m_max_node_size, m_height);
+    m_lft = std::unique_ptr<kdt_t>(new kdt_t(m_max_node_size, m_height));
+    m_rht = std::unique_ptr<kdt_t>(new kdt_t(m_max_node_size, m_height));
     m_lft->m_level = m_level + 1;
     m_rht->m_level = m_level + 1;
 
@@ -614,4 +604,5 @@ int run_dla(int argc, char const *argv[]) {
       }
     }
   }
+  return EXIT_SUCCESS;
 }
