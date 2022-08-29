@@ -159,6 +159,13 @@ inline int num_shared_faces(fiber_t& u) {
   {
     printf("uid: %d, x:(%d,%d,%d)\n", m_uid, m_x[0], m_x[1], m_x[2]);
   }
+
+  void save(FILE *fid)
+  {
+    if (fid == nullptr)
+        return;
+    fprintf(fid, "uid: %d %d %d %d\n", m_uid, m_x[0], m_x[1], m_x[2]);
+  }
 };
 
 class kdt_t {
@@ -527,11 +534,18 @@ int test_kdt()
 }
 
 int run_dla(int argc, char const *argv[]) {
-  const int num_bind = 15;
+
+  // parametros
+  const int num_bind = 10000;
   const char mode = 'n';
   const int tmax = 10;
-
   const int height = 18;
+
+  // inir data file
+  FILE* fid = nullptr;
+  fid = fopen("dla_fast.dat", "w");
+
+
   int max_kdt_node_size = 15;
   int max_dist = 10;
   std::vector<fiber_t> fibers;
@@ -589,6 +603,7 @@ int run_dla(int argc, char const *argv[]) {
         printf(">> bind:");
         rolling_surface(f, neighs, fibers, mode, tmax, kdt);
         printf(">> rolling:"); f.show();
+        f.save(fid);
         kdt.add(uid, fibers);
         break;
       }
