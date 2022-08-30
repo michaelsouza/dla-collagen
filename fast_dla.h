@@ -238,6 +238,8 @@ public:
           d_rht = d;
       }
 
+      /**Não seria preciso resetar o launch aqui apos o bound boz aumentar?**/
+
       if (d_lft < d_rht)
         m_lft->add(uid, fibers);
       else
@@ -533,21 +535,24 @@ int test_kdt()
   return EXIT_SUCCESS;
 }
 
-int run_dla(int argc, char const *argv[]) {
+void run_dla(int tmax, char mode) {
 
   // parametros
-  const int num_bind = 10000;
-  const char mode = 'n';
-  const int tmax = 10;
+  const int num_bind = 100;
+  //const char mode = 'n';
+  //const int tmax = 10;
   const int height = 18;
+  char arquivo[50];
+  if(mode=='n') sprintf(arquivo,"dla_fast_ts:%d_n.dat",tmax);
+  if(mode=='s') sprintf(arquivo,"dla_fast_ts:%d_s.dat",tmax);
 
-  // inir data file
+  // init data file
   FILE* fid = nullptr;
-  fid = fopen("dla_fast.dat", "w");
+  fid = fopen(arquivo, "w");
 
 
   int max_kdt_node_size = 15;
-  int max_dist = 10;
+  int max_dist = 2;
   std::vector<fiber_t> fibers;
 
   // first fiber
@@ -560,6 +565,7 @@ int run_dla(int argc, char const *argv[]) {
   kdt_t kdt(max_kdt_node_size, height);
   kdt.add(uid, fibers);
   fibers[uid].show();
+  fprintf(fid, "uid: %d %d %d %d\n", uid, x, y, z);
 
   std::vector<int> neighs;
   int xold[3];
@@ -574,6 +580,7 @@ int run_dla(int argc, char const *argv[]) {
     while (true) {
       if (reset_fiber) {
         f.random_reset(radius);
+        //printf("radius: %d\n", radius);
         reset_fiber = false;
       }
 
@@ -619,5 +626,5 @@ int run_dla(int argc, char const *argv[]) {
       }
     }
   }
-  return EXIT_SUCCESS;
+  //return EXIT_SUCCESS;
 }

@@ -9,7 +9,8 @@
                 "-g",
                 "${workspaceFolder}/fast_dla.cpp",
                 "-o",
-                "${workspaceFolder}/fast_dla.bin"
+                "${workspaceFolder}/fast_dla.bin",
+                "-O"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
