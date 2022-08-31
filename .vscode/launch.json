@@ -5,7 +5,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/fast_dla.dbg",
-            "args": [],
+            "args": ["-seed", "0", "-tmax", "200", "-num_bind", "100", "-mode", "s"],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [],

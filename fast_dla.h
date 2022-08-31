@@ -401,26 +401,19 @@ inline bool check_out_sim(fiber_t &f, int max_dist, int radius) {
  * @return false
  * @remark Se a fibra estiver em overlap, seu estado é alterado para OVERLAP.
  */
-inline bool check_bind(fiber_t &f, std::vector<int> &uids,
-                       std::vector<fiber_t> &fibers, char mode) {
+inline bool check_bind(fiber_t &f, std::vector<int> &uids, std::vector<fiber_t> &fibers, char mode) {
   filter_shared_faces(f, uids, fibers);
   if (f.m_state == OVERLAP || uids.size() == 0)
     return false;
 
   if (mode == 's') {
-    for (auto &&uid : uids) {
+    for (auto &&uid : uids)
+    {
       fiber_t &u = fibers[uid];
-      // checa se a base de u está em bind com f
-      for (int i = 0; i <= 4; ++i)
-        if (u.m_x[1] == (f.m_x[1] + 4 * i))
-          printf("%d, %d, %d bind com %d, %d, %d em pos %d\n", f.m_x[0], f.m_x[1], f.m_x[2], u.m_x[0], u.m_x[1], u.m_x[2], 4*i);
-          return true;
-
-      // checa se a base de f está em bind com u
-      for (int i = 0; i <= 4; ++i)
-        if (f.m_x[1] == (u.m_x[1] + 4 * i))
-          printf("%d, %d, %d bind com %d, %d, %d em pos %d\n", f.m_x[0], f.m_x[1], f.m_x[2], u.m_x[0], u.m_x[1], u.m_x[2], 4*i);
-          return true;
+      const int fy = f.m_x[1];
+      const int uy = u.m_x[1];
+      if ((fy - uy) % 4 == 0)
+        return true;
     }
   } else if (mode == 'n') {
     for (auto &&uid : uids) {
@@ -537,12 +530,49 @@ int test_kdt()
   return EXIT_SUCCESS;
 }
 
-void run_dla(int tmax, int num_bind, char mode) {
+int test_overlap_mode_s()
+{
+  const int height = 18;
+  int max_node_size = 5;
+  char mode = 's';
+  std::vector<fiber_t> fibers;
+
+  // first fiber
+  int uid = 0;
+  int x = 0;
+  int y = -height / 2;
+  int z = 0;
+  fibers.push_back(fiber_t(uid, height, x, y, z));
+
+  kdt_t kdt(max_node_size, height);
+  kdt.add(uid, fibers);
+  fibers[uid].show();
+
+  std::vector<int> neighs;
+
+  ++uid;
+  fibers.push_back(fiber_t(uid, height, 0, 1, 1));
+  fiber_t &f = fibers[uid];
+  kdt.get_node_neighs(f, neighs);
+  bool isBind = check_bind(f, neighs, fibers, mode);
+
+
+  return EXIT_SUCCESS;
+}
+
+void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
+  printf("Arguments\n");
+  printf("mode ....... %c\n", mode);
+  printf("tmax ....... %d\n", tmax);
+  printf("num_bind ... %d\n", num_bind);
+  printf("seed ....... %d\n", seed);
+
+  srand(seed);
+  printf("rand() = %d\n", rand());
 
   const int height = 18;
   char arquivo[50];
-  if(mode=='n') sprintf(arquivo,"dla_mode_n_ts:%d.dat",tmax);
-  if(mode=='s') sprintf(arquivo,"dla_mode_s_ts:%d.dat",tmax);
+  sprintf(arquivo, "dla_mode_%c_ts_%d_nb_%d_seed_%d_.dat", mode, tmax, num_bind, seed);
 
   // init data file
   FILE* fid = nullptr;
