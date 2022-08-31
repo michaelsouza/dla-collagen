@@ -11,7 +11,7 @@ dla.prf: dla.cpp dla.h
 	g++ -pg dla.cpp -o dla.prf
 
 fast_dla.bin: fast_dla.h fast_dla.cpp
-	g++ -pg fast_dla.cpp -o fast_dla.bin
+	g++ -O3 fast_dla.cpp -o fast_dla.bin
 
 run_fast: fast_dla.bin
 	./fast_dla.bin > fast_dla.log

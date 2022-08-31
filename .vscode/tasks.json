@@ -2,15 +2,15 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "build fast_dla.bin",
+            "label": "build fast_dla.dbg",
             "command": "/usr/bin/g++",
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
                 "${workspaceFolder}/fast_dla.cpp",
                 "-o",
-                "${workspaceFolder}/fast_dla.bin",
-                "-O"
+                "${workspaceFolder}/fast_dla.dbg",
+                "-Og"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"

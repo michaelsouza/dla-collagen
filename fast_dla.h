@@ -413,11 +413,13 @@ inline bool check_bind(fiber_t &f, std::vector<int> &uids,
       // checa se a base de u está em bind com f
       for (int i = 0; i <= 4; ++i)
         if (u.m_x[1] == (f.m_x[1] + 4 * i))
+          printf("%d, %d, %d bind com %d, %d, %d em pos %d\n", f.m_x[0], f.m_x[1], f.m_x[2], u.m_x[0], u.m_x[1], u.m_x[2], 4*i);
           return true;
 
       // checa se a base de f está em bind com u
       for (int i = 0; i <= 4; ++i)
         if (f.m_x[1] == (u.m_x[1] + 4 * i))
+          printf("%d, %d, %d bind com %d, %d, %d em pos %d\n", f.m_x[0], f.m_x[1], f.m_x[2], u.m_x[0], u.m_x[1], u.m_x[2], 4*i);
           return true;
     }
   } else if (mode == 'n') {
@@ -535,16 +537,12 @@ int test_kdt()
   return EXIT_SUCCESS;
 }
 
-void run_dla(int tmax, char mode) {
+void run_dla(int tmax, int num_bind, char mode) {
 
-  // parametros
-  const int num_bind = 100;
-  //const char mode = 'n';
-  //const int tmax = 10;
   const int height = 18;
   char arquivo[50];
-  if(mode=='n') sprintf(arquivo,"dla_fast_ts:%d_n.dat",tmax);
-  if(mode=='s') sprintf(arquivo,"dla_fast_ts:%d_s.dat",tmax);
+  if(mode=='n') sprintf(arquivo,"dla_mode_n_ts:%d.dat",tmax);
+  if(mode=='s') sprintf(arquivo,"dla_mode_s_ts:%d.dat",tmax);
 
   // init data file
   FILE* fid = nullptr;
@@ -607,7 +605,7 @@ void run_dla(int tmax, char mode) {
 
       // check bind
       if (check_bind(f, neighs, fibers, mode)) {
-        printf(">> bind:");
+        printf(">> bind:"); f.show();
         rolling_surface(f, neighs, fibers, mode, tmax, kdt);
         printf(">> rolling:"); f.show();
         f.save(fid);
