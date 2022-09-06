@@ -157,7 +157,7 @@ inline int num_shared_faces(fiber_t& u) {
 
   void show()
   {
-    printf("uid: %d, x:(%d,%d,%d)\n", m_uid, m_x[0], m_x[1], m_x[2]);
+    printf("uid: %d\n", m_uid);
   }
 
   void save(FILE *fid)
@@ -464,7 +464,7 @@ void rolling_surface(fiber_t &f, std::vector<int>& neighs, std::vector<fiber_t> 
   int Emin = energy_surface(f, neighs, fibers, kdt);
   // printf(">> Emin: %d " , Emin); f.show();
   int E = 0;
-  for (int ts = 0; ts < tmax; ++ts) {    
+  for (int tmax = 0; tmax < tmax; ++tmax) {    
     f.random_walk();
     // printf("rolling_walk:"); f.show();
     
@@ -561,14 +561,14 @@ int test_overlap_mode_s()
 }
 
 void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
-  printf("Arguments\n");
+  //printf("Arguments\n");
   printf("mode ....... %c\n", mode);
-  printf("tmax ....... %d\n", tmax);
+  printf("tmax ......... %d\n", tmax);
   printf("num_bind ... %d\n", num_bind);
   printf("seed ....... %d\n", seed);
 
   srand(seed);
-  printf("rand() = %d\n", rand());
+  //printf("rand() = %d\n", rand());
 
   const int height = 18;
   char arquivo[50];
@@ -635,7 +635,7 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
 
       // check bind
       if (check_bind(f, neighs, fibers, mode)) {
-        printf(">> bind:"); f.show();
+        printf(">> bind:"); 
         rolling_surface(f, neighs, fibers, mode, tmax, kdt);
         printf(">> rolling:"); f.show();
         f.save(fid);
@@ -645,7 +645,7 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
 
       // check overlap
       if (f.m_state == OVERLAP) {
-        printf(">> overlap:"); f.show();
+        //printf(">> overlap:"); f.show();
         // restore x
         for (int i = 0; i < 3; ++i)
           f.m_x[i] = xold[i];
