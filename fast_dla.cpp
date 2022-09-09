@@ -29,19 +29,19 @@ int main(int argc, char const *argv[])
 {
   // test_overlap_mode_s();
   // return test_kdt()  
-  std::chrono::steady_clock::time_point tic = std::chrono::steady_clock::now();      
+  //std::chrono::steady_clock::time_point tic = std::chrono::steady_clock::now();      
 
   // default arguments
   char mode = 's';
   int num_bind = 1000;
   int tmax = 10;
-  unsigned int seed = 5;
+  unsigned int seed = 565;
 
   // read arguments
   read_args(argc, argv,tmax, mode, num_bind, seed);
   
   run_dla (tmax, num_bind, mode, seed);
 
-  std::chrono::steady_clock::time_point toc = std::chrono::steady_clock::now();    
-  std::cout << "   Elapsed time " << std::chrono::duration_cast<std::chrono::seconds>(toc - tic).count() << " secs" << std::endl;
+  //std::chrono::steady_clock::time_point toc = std::chrono::steady_clock::now();    
+  //std::cout << "   Elapsed time " << std::chrono::duration_cast<std::chrono::seconds>(toc - tic).count() << " secs" << std::endl;
 }

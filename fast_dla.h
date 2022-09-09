@@ -572,7 +572,7 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
 
   const int height = 18;
   char arquivo[50];
-  sprintf(arquivo, "dla_mode_%c_ts_%d_nb_%d_seed_%d_.dat", mode, tmax, num_bind, seed);
+  sprintf(arquivo, "./files/dla_mode_%c_ts_%d_nb_%d_seed_%d_.dat", mode, tmax, num_bind, seed);
 
   // init data file
   FILE* fid = nullptr;
@@ -592,7 +592,7 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
 
   kdt_t kdt(max_kdt_node_size, height);
   kdt.add(uid, fibers);
-  fibers[uid].show();
+  //fibers[uid].show();
   fprintf(fid, "uid: %d %d %d %d\n", uid, x, y, z);
 
   std::vector<int> neighs;
@@ -635,9 +635,9 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
 
       // check bind
       if (check_bind(f, neighs, fibers, mode)) {
-        printf(">> bind:"); 
+        //printf(">> bind:"); 
         rolling_surface(f, neighs, fibers, mode, tmax, kdt);
-        printf(">> rolling:"); f.show();
+        //printf(">> rolling:"); f.show();
         f.save(fid);
         kdt.add(uid, fibers);
         break;
