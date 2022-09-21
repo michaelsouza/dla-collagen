@@ -114,9 +114,7 @@ inline int num_shared_faces(fiber_t& u) {
   const int pmin_y = m_x[1];
   const int pmin_z = m_x[2];
 
-  const int pmax_x = m_x[0] + 1;
   const int pmax_y = m_x[1] + m_height;
-  const int pmax_z = m_x[2] + 1;
 
   // não compartilha qualquer face
   const bool pmin_inside = umin_y <= pmin_y && pmin_y < umax_y;
@@ -175,7 +173,7 @@ public:
   int m_xmax[3];
   int m_dx[3];
   int m_height;
-  int m_max_node_size;
+  size_t m_max_node_size;
   std::unique_ptr<kdt_t> m_lft;
   std::unique_ptr<kdt_t> m_rht;
   std::vector<int> m_uids;
@@ -238,8 +236,6 @@ public:
           d_rht = d;
       }
 
-      /**Não seria preciso resetar o launch aqui apos o bound boz aumentar?**/
-
       if (d_lft < d_rht)
         m_lft->add(uid, fibers);
       else
@@ -300,12 +296,9 @@ public:
     if (m_level == 0)
       neighs.clear();
 
-    bool touch = true;
-    for (int i = 0; i < 3 && touch; ++i)
-      if ((f.m_x[i] < (m_xmin[i] - m_dx[i])) ||
-          (m_xmax[i] < f.m_x[i]))
+    for (int i = 0; i < 3; ++i)
+      if ((f.m_x[i] < (m_xmin[i] - m_dx[i])) || (m_xmax[i] < f.m_x[i]))
       {
-        touch == false;
         return;
       }
 
@@ -356,7 +349,7 @@ void filter_shared_faces(fiber_t &f, std::vector<int>& uids, std::vector<fiber_t
 
   f.m_state = FREE;
   int k = 0; // número de fibras do cluster em contato com a fibra f
-  for (int i = 0; i < uids.size(); ++i)
+  for (size_t i = 0; i < uids.size(); ++i)
   {
     int uid = uids[i];
     fiber_t &u = fibers[uid];
@@ -464,7 +457,7 @@ void rolling_surface(fiber_t &f, std::vector<int>& neighs, std::vector<fiber_t> 
   int Emin = energy_surface(f, neighs, fibers, kdt);
   // printf(">> Emin: %d " , Emin); f.show();
   int E = 0;
-  for (int tmax = 0; tmax < tmax; ++tmax) {    
+  for (int ts = 0; ts < tmax; ++ts) {    
     f.random_walk();
     // printf("rolling_walk:"); f.show();
     
@@ -533,8 +526,7 @@ int test_kdt()
 int test_overlap_mode_s()
 {
   const int height = 18;
-  int max_node_size = 5;
-  char mode = 's';
+  int max_node_size = 30;
   std::vector<fiber_t> fibers;
 
   // first fiber
@@ -554,7 +546,8 @@ int test_overlap_mode_s()
   fibers.push_back(fiber_t(uid, height, 0, 1, 1));
   fiber_t &f = fibers[uid];
   kdt.get_node_neighs(f, neighs);
-  bool isBind = check_bind(f, neighs, fibers, mode);
+  // char mode = 's';
+  // bool isBind = check_bind(f, neighs, fibers, mode);
 
 
   return EXIT_SUCCESS;
@@ -563,7 +556,7 @@ int test_overlap_mode_s()
 void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
   //printf("Arguments\n");
   printf("mode ....... %c\n", mode);
-  printf("tmax ......... %d\n", tmax);
+  printf("tmax ....... %d\n", tmax);
   printf("num_bind ... %d\n", num_bind);
   printf("seed ....... %d\n", seed);
 
@@ -571,15 +564,19 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
   //printf("rand() = %d\n", rand());
 
   const int height = 18;
-  char arquivo[50];
+  char arquivo[256];
   sprintf(arquivo, "./files/dla_mode_%c_ts_%d_nb_%d_seed_%d_.dat", mode, tmax, num_bind, seed);
 
   // init data file
   FILE* fid = nullptr;
   fid = fopen(arquivo, "w");
+  if (fid == nullptr)
+  {
+    printf("The file %s could not be opened.\n", arquivo);
+    exit(EXIT_FAILURE);
+  }
 
-
-  int max_kdt_node_size = 15;
+  int max_kdt_node_size = 100;
   int max_dist = 2;
   std::vector<fiber_t> fibers;
 
@@ -654,5 +651,7 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
       }
     }
   }
+
+  fclose(fid);
   //return EXIT_SUCCESS;
 }

@@ -9,7 +9,8 @@
                 "-g",
                 "${workspaceFolder}/fast_dla.cpp",
                 "-o",
-                "${workspaceFolder}/fast_dla.dbg",
+                "${workspaceFolder}/fast_dla.dbg",                
+                "-Wall",
                 "-O0"
             ],
             "options": {
