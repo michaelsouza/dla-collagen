@@ -1,4 +1,4 @@
-#include "fast_dla.h"
+#include "fast_dla_2d.h"
 #include <chrono>
 #include <cstring>
 #include <iostream>
@@ -55,8 +55,9 @@ int main(int argc, char const *argv[])
   // default arguments
   char mode = 'n';
   int num_bind = 10000;
-  int tmax = 1000;
-  unsigned int seed = 1024;
+  int tmax = 1; 
+  unsigned int seed = 93;
+
 
   // read arguments
   read_args(argc, argv, tmax, mode, num_bind, seed);
