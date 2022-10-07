@@ -54,6 +54,7 @@ public:
     int &y = m_x[1];
     int &z = m_x[2];
 
+    
     const int imove = rand() % 10;
     // (1, 0, 0)
     if (imove == 0)
@@ -87,6 +88,7 @@ public:
 
     else if (imove == 9)
       ++y;
+
   }
 
   /**
@@ -172,6 +174,7 @@ inline int num_shared_faces(fiber_t& u) {
   }
 };
 
+
 class kdt_t {
 public:
   int m_level;
@@ -196,6 +199,62 @@ public:
     m_id = kdt_t::m_k++;
   }
 
+  static kdt_t *add_uid(kdt_t *node, int uid, std::vector<fiber_t> &fibers)
+  {
+    fiber_t &f = fibers[uid];
+    // primeira fibra
+    if (node->m_uids.size() == 0 && node->m_lft == nullptr)
+    {
+      // inicializa o bounding box
+      for (int i = 0; i < 3; ++i)
+      {
+        node->m_xmin[i] = f.m_x[i];
+        node->m_xmax[i] = f.m_x[i] + node->m_dx[i];
+      }
+    }
+    else
+    {
+      // atualiza o bounding box
+      for (int i = 0; i < 3; ++i)
+      {
+        if (node->m_xmin[i] > f.m_x[i])
+          node->m_xmin[i] = f.m_x[i];
+        if (node->m_xmax[i] < f.m_x[i] + node->m_dx[i])
+          node->m_xmax[i] = f.m_x[i] + node->m_dx[i];
+      }
+    }
+
+    // sem filhos
+    if (node->m_lft == nullptr)
+    {
+      node->m_uids.push_back(uid);
+      if (node->m_uids.size() > node->m_max_node_size)
+        node->split(fibers);
+      return nullptr;
+    }
+    else
+    {
+      // adiciona ao filho que menos é afetado pela entrada da nova fibra
+      int d, d_lft = 0, d_rht = 0;
+      for (int i = 0; i < 3; ++i)
+      {
+        d = MAX(node->m_lft->m_xmin[i] - f.m_x[i],
+                f.m_x[i] + node->m_dx[i] - node->m_lft->m_xmax[i]);
+        if (d_lft < d)
+          d_lft = d;
+      }
+      for (int i = 0; i < 3; ++i)
+      {
+        d = MAX(node->m_rht->m_xmin[i] - f.m_x[i],
+                f.m_x[i] + node->m_dx[i] - node->m_rht->m_xmax[i]);
+        if (d_rht < d)
+          d_rht = d;
+      }
+
+      return (d_lft < d_rht) ? node->m_lft.get() : node->m_rht.get();
+    }
+  }
+
   /**
    * @brief
    *
@@ -203,49 +262,10 @@ public:
    * @param fibers
    */
   void add(int uid, std::vector<fiber_t> &fibers) {
-    fiber_t &f = fibers[uid];    
-    // primeira fibra
-    if (m_uids.size() == 0 && m_lft == nullptr) {
-      // inicializa o bounding box
-      for (int i = 0; i < 3; ++i) {
-        m_xmin[i] = f.m_x[i];
-        m_xmax[i] = f.m_x[i] + m_dx[i];
-      }
-    } else {
-      // atualiza o bounding box
-      for (int i = 0; i < 3; ++i) {
-        if (m_xmin[i] > f.m_x[i])
-          m_xmin[i] = f.m_x[i];
-        if (m_xmax[i] < f.m_x[i] + m_dx[i])
-          m_xmax[i] = f.m_x[i] + m_dx[i];
-      }
-    }
-
-    // sem filhos
-    if (m_lft == nullptr) {
-      m_uids.push_back(uid);
-      if (m_uids.size() > m_max_node_size)
-        split(fibers);
-    } else {
-      // adiciona ao filho que menos é afetado pela entrada da nova fibra
-      int d, d_lft = 0, d_rht = 0;
-      for (int i = 0; i < 3; ++i) {
-        d = MAX(m_lft->m_xmin[i] - f.m_x[i],
-                f.m_x[i] + m_dx[i] - m_lft->m_xmax[i]);
-        if (d_lft < d)
-          d_lft = d;
-      }
-      for (int i = 0; i < 3; ++i) {
-        d = MAX(m_rht->m_xmin[i] - f.m_x[i],
-                f.m_x[i] + m_dx[i] - m_rht->m_xmax[i]);
-        if (d_rht < d)
-          d_rht = d;
-      }
-
-      if (d_lft < d_rht)
-        m_lft->add(uid, fibers);
-      else
-        m_rht->add(uid, fibers);
+    kdt_t *node = this;
+    while (node != nullptr)
+    {
+      node = kdt_t::add_uid(node, uid, fibers);
     }
   }
 
@@ -532,7 +552,7 @@ int test_kdt()
 int test_overlap_mode_s()
 {
   const int height = 18;
-  int max_node_size = 300;
+  int max_node_size = 30;
   std::vector<fiber_t> fibers;
 
   // first fiber
@@ -571,7 +591,7 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
 
   const int height = 18;
   char arquivo[256];
-  sprintf(arquivo, "./files/dla_mode_%c_ts_%d_nb_%d_seed_%d_1.dat", mode, tmax, num_bind, seed);
+  sprintf(arquivo, "./files/dla_mode_%c_ts_%d_nb_%d_seed_%d_.dat", mode, tmax, num_bind, seed);
 
   // init data file
   FILE* fid = nullptr;
@@ -627,7 +647,7 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
       if (check_out_sim(f, max_dist, radius)) {
         // printf(">> out_sim:"); f.show();
         reset_fiber = true;
-        continue;
+        continue; //break;??
       }
 
       // get possible neighs

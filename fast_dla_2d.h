@@ -42,10 +42,10 @@ public:
 
   void random_reset(double radius) {
     const double theta = irand(0, 2 * PI);
-    const double phi = acos(irand(-1, 1));
-    m_x[0] = radius * cos(theta) * sin(phi);
-    m_x[1] = radius * sin(theta) * sin(phi);
-    m_x[2] = radius * cos(phi);
+    //const double phi = acos(irand(-1, 1));
+    m_x[0] = radius * cos(theta);
+    m_x[2] = radius * sin(theta);
+    m_x[1] = 0;
     m_state = fiber_state_t::FREE;
   }
 
@@ -54,7 +54,7 @@ public:
     int &y = m_x[1];
     int &z = m_x[2];
 
-    const int imove = rand() % 10;
+    const int imove = rand() % 8;
     // (1, 0, 0)
     if (imove == 0)
       ++x;
@@ -82,11 +82,10 @@ public:
       --x;
       ++z;
     }
-    else if (imove == 8)
-      --y;
 
-    else if (imove == 9)
-      ++y;
+
+
+  
   }
 
   /**
@@ -161,7 +160,7 @@ inline int num_shared_faces(fiber_t& u) {
 
   void show()
   {
-    printf("uid: %d\n", m_uid);
+    printf("uid: %d %d %d %d\n", m_uid, m_x[0], m_x[1], m_x[2]);
   }
 
   void save(FILE *fid)
@@ -532,7 +531,7 @@ int test_kdt()
 int test_overlap_mode_s()
 {
   const int height = 18;
-  int max_node_size = 300;
+  int max_node_size = 30;
   std::vector<fiber_t> fibers;
 
   // first fiber
@@ -569,9 +568,9 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
   srand(seed);
   //printf("rand() = %d\n", rand());
 
-  const int height = 18;
+  const int height = 1;
   char arquivo[256];
-  sprintf(arquivo, "./files/dla_mode_%c_ts_%d_nb_%d_seed_%d_1.dat", mode, tmax, num_bind, seed);
+  sprintf(arquivo, "./files/teste2d_2.txt");
 
   // init data file
   FILE* fid = nullptr;
@@ -589,7 +588,7 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
   // first fiber
   int uid = 0;
   int x = 0;
-  int y = -height / 2;
+  int y = 0;
   int z = 0;
   fibers.push_back(fiber_t(uid, height, x, y, z));
 
@@ -638,9 +637,9 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
 
       // check bind
       if (check_bind(f, neighs, fibers, mode)) {
-        //printf(">> bind:"); 
+        printf(">> bind: "); f.show(); printf("\n");
         rolling_surface(f, neighs, fibers, mode, tmax, kdt);
-        printf(">> rolling:"); f.show();
+        //printf(">> rolling:"); f.show();
         f.save(fid);
         kdt.add(uid, fibers);
         break;
