@@ -1,5 +1,6 @@
 {
     "configurations": [
+
         {
             "name": "(gdb) fast_dla.bin",
             "type": "cppdbg",
@@ -24,5 +25,7 @@
                 }
             ]
         }
+
+        
     ]
 }

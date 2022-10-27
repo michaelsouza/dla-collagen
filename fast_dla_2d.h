@@ -54,7 +54,7 @@ public:
     int &y = m_x[1];
     int &z = m_x[2];
 
-    const int imove = rand() % 8;
+    const int imove = rand() % 4;
     // (1, 0, 0)
     if (imove == 0)
       ++x;
@@ -560,8 +560,8 @@ int test_overlap_mode_s()
 
 void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
   //printf("Arguments\n");
-  printf("mode ....... %c\n", mode);
-  printf("tmax ....... %d\n", tmax);
+  
+  printf("Dla:");
   printf("num_bind ... %d\n", num_bind);
   printf("seed ....... %d\n", seed);
 
@@ -570,7 +570,7 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
 
   const int height = 1;
   char arquivo[256];
-  sprintf(arquivo, "./files/teste2d_2.txt");
+  sprintf(arquivo, "./files/dla/dla_%d", seed);
 
   // init data file
   FILE* fid = nullptr;
@@ -638,7 +638,7 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
       // check bind
       if (check_bind(f, neighs, fibers, mode)) {
         printf(">> bind: "); f.show(); printf("\n");
-        rolling_surface(f, neighs, fibers, mode, tmax, kdt);
+        //rolling_surface(f, neighs, fibers, mode, tmax, kdt);
         //printf(">> rolling:"); f.show();
         f.save(fid);
         kdt.add(uid, fibers);

@@ -91,6 +91,43 @@ public:
 
   }
 
+  void rolling_random_walk() {
+    int &x = m_x[0];
+    int &y = m_x[1];
+    int &z = m_x[2];
+
+    
+    const int imove = rand() % 8;
+    // (1, 0, 0)
+    if (imove == 0)
+      ++x;
+    else if (imove == 1)
+      --x;
+    // (0,0,1)
+    else if (imove == 2)
+      ++z;
+    else if (imove == 3)
+      --z;
+
+    else if (imove == 4){
+      ++x;
+      ++z;
+    }
+    else if (imove == 5){
+      ++x;
+      --z;
+    }
+    else if (imove == 6){
+      --x;
+      --z;
+    }
+    else if (imove == 7){
+      --x;
+      ++z;
+    }
+
+
+  }
   /**
  * @brief Retorna true se houver ao menos uma face compartilhada e false em caso
  *        contrário.
@@ -484,7 +521,7 @@ void rolling_surface(fiber_t &f, std::vector<int>& neighs, std::vector<fiber_t> 
   // printf(">> Emin: %d " , Emin); f.show();
   int E = 0;
   for (int ts = 0; ts < tmax; ++ts) {    
-    f.random_walk();
+    f.rolling_random_walk();
     // printf("rolling_walk:"); f.show();
     
     kdt.get_node_neighs(f, neighs);    
@@ -591,7 +628,7 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
 
   const int height = 18;
   char arquivo[256];
-  sprintf(arquivo, "./files/dla_mode_%c_ts_%d_nb_%d_seed_%d_.dat", mode, tmax, num_bind, seed);
+  sprintf(arquivo, "./files/dla_mode_%c_ts_%d_nb_%d_seed_%d_teste.dat", mode, tmax, num_bind, seed);
 
   // init data file
   FILE* fid = nullptr;
@@ -660,7 +697,7 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
       if (check_bind(f, neighs, fibers, mode)) {
         //printf(">> bind:"); 
         rolling_surface(f, neighs, fibers, mode, tmax, kdt);
-        printf(">> rolling:"); f.show();
+        //printf(">> rolling:"); f.show();
         f.save(fid);
         kdt.add(uid, fibers);
         break;

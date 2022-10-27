@@ -18,6 +18,11 @@
 ./fast_dla.bin -num_bind 10000 -mode n -ts 1000 -seed 27
 ./fast_dla.bin -num_bind 10000 -mode n -ts 1000 -seed 28
 ./fast_dla.bin -num_bind 10000 -mode n -ts 1000 -seed 29
+./fast_dla.bin -num_bind 10000 -mode n -ts 10000 -seed 62
+./fast_dla.bin -num_bind 10000 -mode n -ts 10000 -seed 60
+./fast_dla.bin -num_bind 10000 -mode n -ts 10000 -seed 56
+./fast_dla.bin -num_bind 10000 -mode n -ts 10000 -seed 58
+./fast_dla.bin -num_bind 10000 -mode n -ts 10000 -seed 52
 ./fast_dla.bin -num_bind 10000 -mode s -ts 1 -seed 30
 ./fast_dla.bin -num_bind 10000 -mode s -ts 1 -seed 31
 ./fast_dla.bin -num_bind 10000 -mode s -ts 1 -seed 32
@@ -38,3 +43,8 @@
 ./fast_dla.bin -num_bind 10000 -mode s -ts 1000 -seed 47
 ./fast_dla.bin -num_bind 10000 -mode s -ts 1000 -seed 48
 ./fast_dla.bin -num_bind 10000 -mode s -ts 1000 -seed 49
+./fast_dla.bin -num_bind 10000 -mode s -ts 10000 -seed 66
+./fast_dla.bin -num_bind 10000 -mode s -ts 10000 -seed 67
+./fast_dla.bin -num_bind 10000 -mode s -ts 10000 -seed 68
+./fast_dla.bin -num_bind 10000 -mode s -ts 10000 -seed 69
+./fast_dla.bin -num_bind 10000 -mode s -ts 10000 -seed 70
