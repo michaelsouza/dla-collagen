@@ -570,7 +570,7 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
 
   const int height = 1;
   char arquivo[256];
-  sprintf(arquivo, "./files/dla/dla_%d", seed);
+  sprintf(arquivo, "./files/dla/dla_%d.dat", seed);
 
   // init data file
   FILE* fid = nullptr;

@@ -188,3 +188,8 @@ cmd.txt
 fast_dla.dbg
 fast_dla.dbg
 img/output.png
+dla_mode_s_ts_10000_nb_10000_seed_69_.dat
+dla_mode_s_ts_1_nb_10000_seed_30_.dat
+dla_mode_n_ts_10000_nb_10000_seed_58_.dat
+dla_mode_n_ts_1_nb_10000_seed_11_.dat
+.gitignore
