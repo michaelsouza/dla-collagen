@@ -5,11 +5,11 @@ import tqdm
 
 ARGV = []
 ##read cmds from .txt
-with open('cmd.txt', 'r') as fid:
+with open('cmd_dla.txt', 'r') as fid:
     for row in fid.readlines():
         ARGV.append(row)
 
-pool = mp.Pool(mp.cpu_count())
+pool = mp.Pool(mp.cpu_count()-1)
 
 print('cpu n°:%d' %mp.cpu_count())
 for _ in tqdm.tqdm(pool.imap_unordered(os.system, ARGV), total=len(ARGV)):
