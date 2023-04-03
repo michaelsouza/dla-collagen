@@ -607,7 +607,7 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
 
   const int height = 18;
   char arquivo[256];
-  sprintf(arquivo, "./files/dla_mode_%c_ts_%d_nb_%d_seed_%d_.dat", mode, tmax, num_bind, seed);
+  sprintf(arquivo, "/home/robert/collagen_fibril/data/files/dla_mode_%c_ts_%d_nb_%d_seed_%d_.dat", mode, tmax, num_bind, seed);
 
   // init data file
   FILE* fid = nullptr;
