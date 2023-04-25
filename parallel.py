@@ -5,7 +5,7 @@ import tqdm
 
 ARGV = []
 ##read cmds from .txt
-with open('cmd_dla.txt', 'r') as fid:
+with open('cmd.txt', 'r') as fid:
     for row in fid.readlines():
         ARGV.append(row)
 
