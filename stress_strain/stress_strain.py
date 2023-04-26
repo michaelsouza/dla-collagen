@@ -6,7 +6,7 @@ import random
 #from line_profiler import LineProfiler
 
 
-def filter_backbone(bb: dict, map_pids_rod: dict, map_pids_layer: dict, ascending: bool = True):
+def filter_backbone(bb: dict, dict, m_neig_pid:dict, m_pids_layer: dict, active_rids:set, ascending: bool = True):
     if len(bb) == 0:
         return dict(), dict() # empty dictionary
     
@@ -17,124 +17,100 @@ def filter_backbone(bb: dict, map_pids_rod: dict, map_pids_layer: dict, ascendin
     # current layer
     layer = layer_min if ascending else layer_max
 
-    # find all particles in the current layer
-    pids_prev = map_pids_layer[layer]
+    # activate first layer    
+    for pid_A in m_pids_layer[layer]:
+        active_rids.add(bb[pid_A]['rid'])
     
-    # set of active particles
-    pids_active = list(pids_prev)
-    for layer in sorted(map_pids_layer.keys(), reverse=not ascending):
+    for layer in sorted(m_pids_layer.keys(), reverse=not ascending):
         # update the current layer
         layer += 1 if ascending else -1
         # if the current layer is out of the range of y coordinates, skip
         if layer < layer_min or layer > layer_max:
             continue
-        # find all particles in the current layer
-        pids_layer = map_pids_layer[layer]
-        # for all particle in the current layer, check if they are neighbors of the previous layer
-        pids_add = [] # list of indices of particles to be added, because they are neighbors of the previous layer
-        for pid_A in pids_layer:
-            xz_A = bb[pid_A]['xz']
-            for pid_B in pids_prev:
-                xz_B = bb[pid_B]['xz']
-                # if the particle is above (or below) another particle in the previous layer
-                if np.sum(np.abs(xz_A-xz_B)) == 0:
-                    pids_add.append(pid_A)
-                    break
-
-        # if no particle is found in the current layer, raise an exception
-        if len(pids_add) == 0:
-            return dict(), dict() # empty dictionary
-        
-        # IdxL is the list of particle indices in the level but not in ids_part_add
-        pids_layer = list(set(pids_layer) - set(pids_add))
-        for pid_A in pids_layer:
-            xz_A = bb[pid_A]['xz']
-            # searching for neighbors of each particle in the current layer
-            for pid_B in pids_add:
-                xz_B = bb[pid_B]['xz']
-                if np.sum(np.abs(xz_A-xz_B)) == 1:
-                    # there is a neighbor in the current layer
-                    pids_add.append(pid_A)
-                    break
-
-        # add the particles in ids_part_add to the active particles
-        pids_active += pids_add
-
-        # update the list of particles in the current layer
-        map_pids_layer[layer] = pids_add
-        
-        # update the list of particles in the previous layer
-        pids_prev = pids_add
+        # pids in the current layer
+        pids_layer = m_pids_layer[layer]
+        for pid_A in pids_layer:            
+            for rid_B in m_neig_pid[pid_A]:
+                if rid_B in active_rids:                
+                    rid_A = bb[pid_A]['rid']
+                    active_rids.add(rid_A)
+                    break        
     
-    # drop keys from the dictionary that are not in the list of active particles    
-    bb = {pid: p for pid, p in bb.items() if pid in pids_active}
+    return active_rids
 
-    rids = set([p['rid'] for p in bb.values()])
-    
-    map_pids_rod = {rid:pids for rid, pids in map_pids_rod.items() if rid in rids}
-
-    return bb, map_pids_rod
-
-def create_maps(bb: pd.DataFrame):
+def create_maps(bb: pd.DataFrame, F:float, sigma_cte: float, m: float):
     # create maps
-    # map_rod_particles[id_rod] = list of particles in the rod
-    map_pids_rod = {}
-    # map_layer_particles[layer] = list of particles in the layer
-    map_pids_layer = {}
+    # m_rod_particles[rid] = list of particles in the rod
+    m_pids_rod = {}
+    # m_layer_particles[layer] = list of particles in the layer
+    m_pids_layer = {}
     for pid, p in bb.items():
         rid = p['rid'] # rod id
         layer = p['layer'] # layer
-        if rid not in map_pids_rod:
-            map_pids_rod[rid] = []
-        if layer not in map_pids_layer:
-            map_pids_layer[layer] = []
-        map_pids_rod[rid].append(pid)
-        map_pids_layer[layer].append(pid)
-    return map_pids_rod, map_pids_layer
+        if rid not in m_pids_rod:
+            m_pids_rod[rid] = []
+        if layer not in m_pids_layer:
+            m_pids_layer[layer] = [] # TODO: use set instead of list?
+        m_pids_rod[rid].append(pid)
+        m_pids_layer[layer].append(pid)
 
-
-def random_remove(bb: dict, map_pids_rod: dict, map_pids_layer: dict, F: float = 1, sigma_cte: float = 1, m: int = 2):
+    # m_rods_particles[pid] = list of rods neighboring the particle
+    m_neig_pid = {}
+    # m_rod_values[rid] = (N, sigma_mean)
+    prob_rod = {}
     rods_id = np.unique([p['rid'] for p in bb.values()])
-    # add_rods = rods to be added to the backbone
-    # rem_rods = rods to be removed from the backbone
-    add_rods = set()
-    rem_rods = set()
     for rid in rods_id:
-        pids_rod = map_pids_rod[rid]
-        n = [] # n[i] is the number of particles in the layer i
+        pids_rod = m_pids_rod[rid] 
         N = 0 # number of neighbor particles of the rod
+        n = [] # number of particles in each layer of the rod
         for pid_A in pids_rod:
-            if pid_A not in bb:
-                continue
             p_A = bb[pid_A]
             # get the coordinates x and z of the particle A
             xz_A = p_A['xz']
             # get the particles in the same layer of A (same coordinate y)
-            pids_layer = map_pids_layer[p_A['layer']]
+            pids_layer = m_pids_layer[p_A['layer']]
             n.append(len(pids_layer))
             for pid_B in pids_layer:
-                # if the particle is the same as A or it is not in the backbone, skip
-                if pid_B == pid_A or pid_B not in bb:
-                    continue
                 # get the coordinates x and z of the particle B
                 xz_B = bb[pid_B]['xz']
                 # check if B is a neighbor of A
                 if np.sum(np.abs(xz_A-xz_B)) == 1:                    
+                    if pid_B not in m_neig_pid:
+                        m_neig_pid[pid_B] = set()
+                    m_neig_pid[pid_B].append(rid)
                     N += 1
+        sigma_mean = F / np.mean(n)
+        prob_rod[rid] = {'N': N, 'sigma_mean': sigma_mean, 'p': (sigma_mean / (N * sigma_cte))**m}
+    return m_pids_rod, m_pids_layer, m_neig_pid, prob_rod
+
+
+def update_force(bb, m_pids_layer, m_pids_rod, prob_rod, F_new, F_old, add_rod, sigma_cte, m):
+    # update the values of the rods that were not removed
+    for rid_A in add_rod:
+        A_vals = prob_rod[rid_A]
+        N, sigma_mean = A_vals['N'], A_vals['sigma_mean']        
+        n = [] # number of particles in each layer of the rod
+        for pid_A in m_pids_rod[rid_A]:
+            n.append(len(m_pids_layer[bb[pid_A]['layer']]))
+        sigma_mean *= (F_new / F_old)
+        A_vals['sigma_mean'] = sigma_mean
+        A_vals['p'] = (sigma_mean / (N * sigma_cte))**m
+
+
+def update_maps(bb, active_rids, m_pids_layer, m_pids_rod, m_neig_pid, prob_rod):
+    del_rids = set(m_pids_rod.keys()) - active_rids
+    prob_rod = {rid: prob_rod[rid] for rid in active_rids}
+    # some rods were removed
+    for rid_A in del_rids:
+        for pid_A in m_pids_rod[rid_A]:
+            # reduce number of neighbors of the particles in the rod            
+            for rid_B in m_neig_pid[pid_A]:
+                if rid_B not in prob_rod:
                     continue
-        
-        # calculate the probability of adding or removing the rod
-        n = np.array(n)
-        sigma = F/n 
-        sigma_mean = np.mean(sigma)
-        P = (sigma_mean/(N*sigma_cte))**m # probability of adding the rod
-        r = np.random.random() # random number between 0 and 1
-        if (r > P):
-            add_rods.add(rid)
-        else:
-            rem_rods.add(rid)
-    
-    return add_rods, rem_rods
+                prob_rod[rid_B]['N'] -= 1
+            # remove pid_A from the m_pids_layer
+            m_pids_layer[bb[pid_A]['layer']].remove(pid_A)
+            
 
 
 def read_backbone(fn: str):
@@ -164,40 +140,54 @@ def stress_strain(fn: str, m: int = 2):
     bb = read_backbone(fn) # bb1[rod_id, x, y, z]    
     toc = time.time()
     print(f"   Elapsed time: {toc-tic:.2f} s")
-    print('Number of particles:', len(bb))
+    active_rids = np.unique([p['rid'] for _, p in bb.items()])
+    print('Number of rods:', len(active_rids))
     
     # create maps
+    F_new = 1 # applied force
+    sigma_cte = 1 # constant to calculate the stress
+    m = 2 # exponent of the stress
     print('Creating maps')
     tic = time.time()
-    map_pids_rod, map_pids_layer = create_maps(bb)
+    m_pids_rod, m_pids_layer, m_neig_pid, prob_rod = create_maps(bb, F_new, sigma_cte, m)
     toc = time.time()
     print(f"   Elapsed time: {toc-tic:.2f} s")
 
     ## backbone filtering
     tic = time.time()
     print('Filtering backbone')
-    bb, map_pids_rod = filter_backbone(bb, map_pids_rod, map_pids_layer, ascending=True)
-    bb, map_pids_rod = filter_backbone(bb, map_pids_rod, map_pids_layer, ascending=False)
-    toc = time.time()    
+    active_rids = set()
+    filter_backbone(bb, m_neig_pid, m_pids_rod, m_pids_layer, active_rids, ascending=True)
+    filter_backbone(bb, m_neig_pid, m_pids_rod, m_pids_layer, active_rids, ascending=False)
+    toc = time.time()
     print(f"   Elapsed time: {toc-tic:.2f} s")
 
-    F = 0 # applied force
-    forces = [F] # list of applied forces
-    num_part_bb_active = [len(bb)] # list of number of particles in the backbone after each force    
-    rem_rods_all = [[]] # list of rods removed from the backbone after each force
-
-    #bb_len = len(bb)
+    update_maps(bb, active_rids, m_pids_layer, m_pids_rod, m_neig_pid, prob_rod)
+    update_force(bb, m_pids_layer, m_pids_rod, prob_rod, F_new, F_new, sigma_cte, m)
+    
+    print('Force:', F_new, '=================================')
     while True:        
         print('Number of particles:', len(bb))
+
         print('Random remove')
         tic = time.time()
-        add_rods, rem_rods = random_remove(bb, map_pids_rod, map_pids_layer, F, 1, m)
+        # sort k random float numbers in the range [0,1]
+        r = np.random.random(len(active_rids))
+        rem_rods = []
+        for i, rid in enumerate(active_rids):
+            if r[i] < prob_rod[rid]['p']:
+                rem_rods.append(rid)                
+        # clean bb by keeping only the particles with pid on active_rids
+        bb = {pid: p for pid, p in bb.items() if p['rid'] in active_rids}
         toc = time.time()
         print(f"   Elapsed time: {toc-tic:.2f} s")
       
         if len(rem_rods) == 0:
-            F += 0.5 # increment the force
+            F_old = F_new
+            F_new += 0.5 # increment the force
             print('Force:', F, '=================================')
+            update_force(bb, m_pids_layer, m_pids_rod, prob_rod, F, F-0.5, add_rods, sigma_cte, m)
+            continue
         else:
             # clean bb by keeping only the particles with pid in add_rods
             print('Clean bb')
@@ -206,17 +196,17 @@ def stress_strain(fn: str, m: int = 2):
             toc = time.time()
             print(f"   Elapsed time: {toc-tic:.2f} s")
 
-            # clean map_pids_layer
-            print('Clean map_pids_layer')
+            # clean m_pids_layer
+            print('Clean m_pids_layer')
             tic = time.time()
-            map_pids_layer = {layer: [pid for pid in pids if pid in bb] for layer, pids in map_pids_layer.items()}
+            m_pids_layer = {layer: [pid for pid in pids if pid in bb] for layer, pids in m_pids_layer.items()}
             toc = time.time()
             print(f"   Elapsed time: {toc-tic:.2f} s")
                         
             print('Filtering backbone')
             tic = time.time()
-            bb, map_pids_rod = filter_backbone(bb, map_pids_rod, map_pids_layer, ascending=True)            
-            bb, map_pids_rod = filter_backbone(bb, map_pids_rod, map_pids_layer, ascending=False)
+            bb, m_pids_rod = filter_backbone(bb, m_pids_rod, m_pids_layer, ascending=True)            
+            bb, m_pids_rod = filter_backbone(bb, m_pids_rod, m_pids_layer, ascending=False)
             toc = time.time()
             print(f"   Elapsed time: {toc-tic:.2f} s")
             
