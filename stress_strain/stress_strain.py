@@ -3,118 +3,125 @@ import time
 import numpy as np
 import pandas as pd 
 import random
-#from line_profiler import LineProfiler
 
+RODS = {}
+LAYERS = {}
+PARTICLES = {}
 
-def filter_backbone(bb: dict, dict, m_neig_pid:dict, m_pids_layer: dict, active_rids:set, ascending: bool = True):
-    if len(bb) == 0:
-        return dict(), dict() # empty dictionary
-    
-    # min and max y coordinates
-    layer_min = np.min([p['layer'] for p in bb.values()])
-    layer_max = np.max([p['layer'] for p in bb.values()])
-    
-    # current layer
-    layer = layer_min if ascending else layer_max
+class Particle:
+    def __init__(self, pid, rid, layer, xz):
+        self.pid = pid
+        self.rid = rid
+        self.layer = layer
+        self.xz = xz
+        self.active = True
+        self.neighs = set()
 
-    # activate first layer    
-    for pid_A in m_pids_layer[layer]:
-        active_rids.add(bb[pid_A]['rid'])
-    
-    for layer in sorted(m_pids_layer.keys(), reverse=not ascending):
-        # update the current layer
-        layer += 1 if ascending else -1
-        # if the current layer is out of the range of y coordinates, skip
-        if layer < layer_min or layer > layer_max:
-            continue
-        # pids in the current layer
-        pids_layer = m_pids_layer[layer]
-        for pid_A in pids_layer:            
-            for rid_B in m_neig_pid[pid_A]:
-                if rid_B in active_rids:                
-                    rid_A = bb[pid_A]['rid']
-                    active_rids.add(rid_A)
-                    break        
-    
-    return active_rids
+    def add_neigh(self, rid):
+        self.neighs.add(rid)
+        rod : Rod = RODS[rid]
+        rod.add_neigh(self.pid)
 
-def create_maps(bb: pd.DataFrame, F:float, sigma_cte: float, m: float):
-    # create maps
-    # m_rod_particles[rid] = list of particles in the rod
-    m_pids_rod = {}
-    # m_layer_particles[layer] = list of particles in the layer
-    m_pids_layer = {}
-    for pid, p in bb.items():
-        rid = p['rid'] # rod id
-        layer = p['layer'] # layer
-        if rid not in m_pids_rod:
-            m_pids_rod[rid] = []
-        if layer not in m_pids_layer:
-            m_pids_layer[layer] = [] # TODO: use set instead of list?
-        m_pids_rod[rid].append(pid)
-        m_pids_layer[layer].append(pid)
+    def del_neigh(self, rid):
+        self.neighs.remove(rid)
 
-    # m_rods_particles[pid] = list of rods neighboring the particle
-    m_neig_pid = {}
-    # m_rod_values[rid] = (N, sigma_mean)
-    prob_rod = {}
-    rods_id = np.unique([p['rid'] for p in bb.values()])
-    for rid in rods_id:
-        pids_rod = m_pids_rod[rid] 
-        N = 0 # number of neighbor particles of the rod
-        n = [] # number of particles in each layer of the rod
-        for pid_A in pids_rod:
-            p_A = bb[pid_A]
-            # get the coordinates x and z of the particle A
-            xz_A = p_A['xz']
-            # get the particles in the same layer of A (same coordinate y)
-            pids_layer = m_pids_layer[p_A['layer']]
-            n.append(len(pids_layer))
-            for pid_B in pids_layer:
-                # get the coordinates x and z of the particle B
-                xz_B = bb[pid_B]['xz']
-                # check if B is a neighbor of A
-                if np.sum(np.abs(xz_A-xz_B)) == 1:                    
-                    if pid_B not in m_neig_pid:
-                        m_neig_pid[pid_B] = set()
-                    m_neig_pid[pid_B].append(rid)
-                    N += 1
-        sigma_mean = F / np.mean(n)
-        prob_rod[rid] = {'N': N, 'sigma_mean': sigma_mean, 'p': (sigma_mean / (N * sigma_cte))**m}
-    return m_pids_rod, m_pids_layer, m_neig_pid, prob_rod
+    def get_neighs(self):
+        return self.neighs
 
+    def innactive(self):
+        self.active = False
+        for rid in self.neighs:
+            rod: Rod = RODS[rid]
+            rod.del_neigh(self.rid)
+            layer: Layer = LAYERS[self.layer]
+            layer.del_pid(self.r)
 
-def update_force(bb, m_pids_layer, m_pids_rod, prob_rod, F_new, F_old, add_rod, sigma_cte, m):
-    # update the values of the rods that were not removed
-    for rid_A in add_rod:
-        A_vals = prob_rod[rid_A]
-        N, sigma_mean = A_vals['N'], A_vals['sigma_mean']        
-        n = [] # number of particles in each layer of the rod
-        for pid_A in m_pids_rod[rid_A]:
-            n.append(len(m_pids_layer[bb[pid_A]['layer']]))
-        sigma_mean *= (F_new / F_old)
-        A_vals['sigma_mean'] = sigma_mean
-        A_vals['p'] = (sigma_mean / (N * sigma_cte))**m
+class Rod:
+    def __init__(self, rid):
+        self.rid = rid
+        self.active = True
+        self.pids = set()
+        self.N = 0
+        self.p = 0
+        self.F = 0
+        self.m = 2
+        self.sigma_cte = 1
+        self.sigma_mean = 0
+        self.updated = False
+        self.neigh_pids = set()
 
+    def add_pid(self, pid):
+        self.pids.add(pid)
+        self.updated = False
 
-def update_maps(bb, active_rids, m_pids_layer, m_pids_rod, m_neig_pid, prob_rod):
-    del_rids = set(m_pids_rod.keys()) - active_rids
-    prob_rod = {rid: prob_rod[rid] for rid in active_rids}
-    # some rods were removed
-    for rid_A in del_rids:
-        for pid_A in m_pids_rod[rid_A]:
-            # reduce number of neighbors of the particles in the rod            
-            for rid_B in m_neig_pid[pid_A]:
-                if rid_B not in prob_rod:
-                    continue
-                prob_rod[rid_B]['N'] -= 1
-            # remove pid_A from the m_pids_layer
-            m_pids_layer[bb[pid_A]['layer']].remove(pid_A)
+    def del_neigh(self, pid):
+        self.neigh_pids.remove(pid)
+        self.updated = False
+
+    def add_neigh(self, pid):
+        self.neigh_pids.add(pid)
+        self.updated = False
+
+    def inactivate(self, bb):
+        self.active = False
+        for pid in self.pids:
+            particle:Particle = PARTICLES[pid]
+            particle.innactive()
+
+    def update_force(self, F):
+        self.N = len(self.neigh_pids)
+        self.sigma_mean *= (F / self.F)
+        self.p = (self.sigma_mean / self.N * self.sigma_cte)**self.m
+        self.F = F
+        return self.p
+
+    def update_sigma(self, F):
+        n = []
+        for pid_A in self.pids:
+            particle: Particle = PARTICLES[pid]
+            n.append(particle.layer.size())
+        self.sigma_mean = np.mean(self.F / np.array(n))
+        self.updated = True
+        return self.update_force(F)
             
+    def del_prob(self, F):
+        if self.updated:
+            return self.update_force(F)
+        else:
+            return self.update_sigma(F)
+                    
+    
+class Layer:
+    def __init__(self, layer:int):
+        self.layer = layer
+        self.pids = set()
+
+    def size(self):
+        return len(self.pids)
+
+    def add_pid(self, pid):
+        self.pids.add(pid)
+
+    def del_pid(self, pid):
+        self.pids.remove(pid)
+
+def create_connections():
+    # create connections
+    print('Creating connections')
+    for pid_A in PARTICLES:
+        particle_A: Particle = PARTICLES[pid_A]
+        for pid_B in LAYERS[particle_A.layer].pids:
+            if pid_A == pid_B:
+                continue
+            particle_B: Particle = PARTICLES[pid_B]
+            # check if the particles are neighbors
+            if np.linalg.norm(particle_A.xz - particle_B.xz) <= 1:
+                particle_A.add_neigh(particle_B.rid)
+                particle_B.add_neigh(particle_A.rid)
 
 
-def read_backbone(fn: str):
-    # Read backbone file
+def read_particles(fn: str):
+    # Read particles file
     print('Reading', fn)
     bb = {}  # backbone
     pid = 0
@@ -128,109 +135,139 @@ def read_backbone(fn: str):
                 if -8 <= int(row[4]) <= 8:
                     if -100 <= int(row[3]) <= 100:
                         # add particle to the backbone
-                        p = {'pid': pid, 'rid': int(row[1]), 'layer': int(row[3]),  'xz': np.array([int(row[2]), int(row[4])])}
-                        bb[pid] = p
+                        rid = int(row[1])
+                        layer = int(row[3])
+                        xz = np.array([int(row[2]), int(row[4])])
+                        p = Particle(pid, rid, layer, xz)
+                        # add particle to the backbone
+                        PARTICLES[pid] = p
+                        # add particle to the rod
+                        if rid not in RODS:
+                            RODS[rid] = Rod(rid)
+                        RODS[rid].add_particle(pid)
+                        # add particle to the layer
+                        if layer not in LAYERS:
+                            LAYERS[layer] = Layer(layer, set())
+                        LAYERS[layer].add_particle(pid)
                         pid += 1
-    return bb
+
+
+def filter_rids(active_rids:set, ascending: bool = True):
+    if len(PARTICLES) == 0:
+        return dict(), dict() # empty dictionary
+    
+    # min and max y coordinates
+    layer_min = np.min(LAYERS)
+    layer_max = np.max(LAYERS)
+    
+    # current layer
+    layer = layer_min if ascending else layer_max
+
+    # active first layer 
+    for pid_A in LAYERS[layer].pids:
+        particle_A: Particle = PARTICLES[pid_A]
+        active_rids.add(particle_A.rid)
+    
+    for layer in sorted(LAYERS, reverse=not ascending):
+        # update the current layer
+        layer += 1 if ascending else -1
+        # if the current layer is out of the range of y coordinates, skip
+        if layer < layer_min or layer > layer_max:
+            continue
+        # pids in the current layer
+        layer_pids = LAYERS[layer].pids
+        for pid_A in layer_pids:
+            particle_A: Particle = PARTICLES[pid_A]            
+            for rid_B in particle_A.get_neighs():
+                if rid_B in active_rids:
+                    active_rids.add(particle_A.rid)
+                    break
 
 
 def stress_strain(fn: str, m: int = 2):
     # read backbone
     tic = time.time()
-    bb = read_backbone(fn) # bb1[rod_id, x, y, z]    
+    read_particles(fn)    
     toc = time.time()
     print(f"   Elapsed time: {toc-tic:.2f} s")
-    active_rids = np.unique([p['rid'] for _, p in bb.items()])
-    print('Number of rods:', len(active_rids))
     
+    # create connections
+    tic = time.time()
+    create_connections()
+    toc = time.time()
+    print(f"   Elapsed time: {toc-tic:.2f} s")
+    
+    # filter rods
+    print('Filtering rods')
+    tic = time.time()
+    active_rids = set() # active rods
+    filter_rids(active_rids, ascending=True)
+    filter_rids(active_rids, ascending=False)
+    toc = time.time()
+    print(f"   Elapsed time: {toc-tic:.2f} s")
+
+    # inactivate rods
+    print('Inactivating rods')
+    tic = time.time()
+    for rid in RODS:
+        if rid not in active_rids:
+            RODS[rid].inactivate() 
+    RODS = {rid: RODS[rid] for rid in active_rids} # update rods
+    toc = time.time()
+    print(f"   Elapsed time: {toc-tic:.2f} s")
+
     # create maps
-    F_new = 1 # applied force
-    sigma_cte = 1 # constant to calculate the stress
-    m = 2 # exponent of the stress
-    print('Creating maps')
-    tic = time.time()
-    m_pids_rod, m_pids_layer, m_neig_pid, prob_rod = create_maps(bb, F_new, sigma_cte, m)
-    toc = time.time()
-    print(f"   Elapsed time: {toc-tic:.2f} s")
-
-    ## backbone filtering
-    tic = time.time()
-    print('Filtering backbone')
-    active_rids = set()
-    filter_backbone(bb, m_neig_pid, m_pids_rod, m_pids_layer, active_rids, ascending=True)
-    filter_backbone(bb, m_neig_pid, m_pids_rod, m_pids_layer, active_rids, ascending=False)
-    toc = time.time()
-    print(f"   Elapsed time: {toc-tic:.2f} s")
-
-    update_maps(bb, active_rids, m_pids_layer, m_pids_rod, m_neig_pid, prob_rod)
-    update_force(bb, m_pids_layer, m_pids_rod, prob_rod, F_new, F_new, sigma_cte, m)
-    
+    F = 1 # applied force
     print('Force:', F_new, '=================================')
     while True:        
-        print('Number of particles:', len(bb))
-
+        print('Number of rods:', len(RODS))
         print('Random remove')
         tic = time.time()
         # sort k random float numbers in the range [0,1]
         r = np.random.random(len(active_rids))
-        rem_rods = []
-        for i, rid in enumerate(active_rids):
-            if r[i] < prob_rod[rid]['p']:
-                rem_rods.append(rid)                
+        del_rods = False # rods to be deleted
+        for i, rid in enumerate(RODS):
+            rod: Rod = RODS[rid]
+            if r[i] < rod.del_prob(F):
+                del_rods = True
+                rod.inactivate()
         # clean bb by keeping only the particles with pid on active_rids
-        bb = {pid: p for pid, p in bb.items() if p['rid'] in active_rids}
+        RODS = {rid: RODS[rid] for rid, rod in RODS.elements() if rod.active} # update rods
         toc = time.time()
         print(f"   Elapsed time: {toc-tic:.2f} s")
       
-        if len(rem_rods) == 0:
-            F_old = F_new
-            F_new += 0.5 # increment the force
+        if del_rods == 0:
+            F += 0.5 # increment the force
             print('Force:', F, '=================================')
-            update_force(bb, m_pids_layer, m_pids_rod, prob_rod, F, F-0.5, add_rods, sigma_cte, m)
-            continue
         else:
-            # clean bb by keeping only the particles with pid in add_rods
-            print('Clean bb')
+            print('Filtering rods')
             tic = time.time()
-            bb = {pid: p for pid, p in bb.items() if p['rid'] in add_rods}
+            active_rids = set() # active rods
+            filter_rids(active_rids, ascending=True)
+            filter_rids(active_rids, ascending=False)
             toc = time.time()
             print(f"   Elapsed time: {toc-tic:.2f} s")
 
-            # clean m_pids_layer
-            print('Clean m_pids_layer')
-            tic = time.time()
-            m_pids_layer = {layer: [pid for pid in pids if pid in bb] for layer, pids in m_pids_layer.items()}
-            toc = time.time()
-            print(f"   Elapsed time: {toc-tic:.2f} s")
-                        
-            print('Filtering backbone')
-            tic = time.time()
-            bb, m_pids_rod = filter_backbone(bb, m_pids_rod, m_pids_layer, ascending=True)            
-            bb, m_pids_rod = filter_backbone(bb, m_pids_rod, m_pids_layer, ascending=False)
-            toc = time.time()
-            print(f"   Elapsed time: {toc-tic:.2f} s")
-            
-            if not bool(bb): # if the backbone is empty, stop                
+             # if the backbone is empty, stop
+            if len(active_rods) == 0:                
                 break
+
+            # inactivate rods
+            print('Inactivating rods')
+            tic = time.time()
+            for rid in RODS:
+                if rid not in active_rids:
+                    RODS[rid].inactivate() 
+            RODS = {rid: RODS[rid] for rid in active_rids} # update rods
+            toc = time.time()
+            print(f"   Elapsed time: {toc-tic:.2f} s")
+
+            # check if there is any empty layer
+            for layer in LAYERS:
+                if len(LAYERS[layer].pids) == 0:
+                    break
             
-        #brokenBonds =  numParticles - restParticles
-        #num_part_removed.append(brokenBonds)
-        #rem_rods.append(list_removed)
 
-        
-
-    print(F)
-    #print(part_in_skeleton)
-
-    #print(len(force))
-    #print(len(part_in_skeleton))
-
-    
-    ##Save number of broken bonds
-    num_part_bb_active = np.array(num_part_bb_active)/num_part_bb_active[0] * 100
-    num_part_bb_active = num_part_bb_active.tolist()
-    #return forces, num_part_removed, num_part_bb_active, rem_rods
- 
 def main(fn:str, m:int = 2):    
     ts = int(fn.split('ts_')[1].split('_')[0])
     # lp = LineProfiler()
