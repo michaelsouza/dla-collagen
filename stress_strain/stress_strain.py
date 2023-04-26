@@ -4,25 +4,26 @@ import numpy as np
 import pandas as pd 
 import random
 
+# global variables
 RODS = {}
 LAYERS = {}
 PARTICLES = {}
 
 class Particle:
-    def __init__(self, pid, rid, layer, xz):
+    def __init__(self, pid:int, rid:int, lid:int, xz):
         self.pid = pid
         self.rid = rid
-        self.layer = layer
+        self.lid = lid
         self.xz = xz
         self.active = True
         self.neighs = set()
 
-    def add_neigh(self, rid):
+    def add_neigh(self, rid:int):
         self.neighs.add(rid)
         rod : Rod = RODS[rid]
         rod.add_neigh(self.pid)
 
-    def del_neigh(self, rid):
+    def del_neigh(self, rid:int):
         self.neighs.remove(rid)
 
     def get_neighs(self):
@@ -33,76 +34,80 @@ class Particle:
         for rid in self.neighs:
             rod: Rod = RODS[rid]
             rod.del_neigh(self.rid)
-            layer: Layer = LAYERS[self.layer]
-            layer.del_pid(self.r)
+            layer: Layer = LAYERS[self.lid]
+            layer.del_pid(self.pid)
 
 class Rod:
-    def __init__(self, rid):
+    def __init__(self, rid:int):
         self.rid = rid
         self.active = True
         self.pids = set()
-        self.N = 0
-        self.p = 0
-        self.F = 0
-        self.m = 2
-        self.sigma_cte = 1
-        self.sigma_mean = 0
         self.updated = False
         self.neigh_pids = set()
 
-    def add_pid(self, pid):
+        # force parameters
+        self.m = 2
+        self.sigma_cte = 1
+
+        # force variables
+        self.N = 0
+        self.p = 0
+        self.F = 0
+        self.sigma_mean = 0
+        
+    def add_pid(self, pid:int):
         self.pids.add(pid)
         self.updated = False
 
-    def del_neigh(self, pid):
+    def del_neigh(self, pid:int):
         self.neigh_pids.remove(pid)
         self.updated = False
 
-    def add_neigh(self, pid):
+    def add_neigh(self, pid:int):
         self.neigh_pids.add(pid)
         self.updated = False
 
-    def inactivate(self, bb):
+    def inactivate(self):
         self.active = False
         for pid in self.pids:
             particle:Particle = PARTICLES[pid]
             particle.innactive()
 
-    def update_force(self, F):
+    def update_force(self, F:float):
         self.N = len(self.neigh_pids)
         self.sigma_mean *= (F / self.F)
         self.p = (self.sigma_mean / self.N * self.sigma_cte)**self.m
         self.F = F
         return self.p
 
-    def update_sigma(self, F):
-        n = []
-        for pid_A in self.pids:
+    def update_sigma(self, F:float):
+        n = np.zeros(len(self.pids))
+        for i, pid_A in enumerate(self.pids):
             particle: Particle = PARTICLES[pid]
-            n.append(particle.layer.size())
-        self.sigma_mean = np.mean(self.F / np.array(n))
+            n[i] = len(LAYERS[particle.lid])
+        self.sigma_mean = np.mean(self.F / n)
         self.updated = True
         return self.update_force(F)
             
-    def del_prob(self, F):
+    def del_prob(self, F:float):
         if self.updated:
             return self.update_force(F)
         else:
             return self.update_sigma(F)
                     
-    
+
 class Layer:
-    def __init__(self, layer:int):
-        self.layer = layer
+    def __init__(self, lid:int):
+        self.lid = lid
         self.pids = set()
 
     def size(self):
         return len(self.pids)
 
-    def add_pid(self, pid):
+    def add_pid(self, pid:int):
         self.pids.add(pid)
 
-    def del_pid(self, pid):
+    def del_pid(self, pid:int):
         self.pids.remove(pid)
 
 def create_connections():
@@ -110,7 +115,7 @@ def create_connections():
     print('Creating connections')
     for pid_A in PARTICLES:
         particle_A: Particle = PARTICLES[pid_A]
-        for pid_B in LAYERS[particle_A.layer].pids:
+        for pid_B in LAYERS[particle_A.lid].pids:
             if pid_A == pid_B:
                 continue
             particle_B: Particle = PARTICLES[pid_B]
@@ -131,25 +136,31 @@ def read_particles(fn: str):
             row = row.split()
             # extract the fiber center (rectangular trapezoid)
             v = np.zeros(5)
-            if -8 <= int(row[2]) <= 8:
-                if -8 <= int(row[4]) <= 8:
-                    if -100 <= int(row[3]) <= 100:
-                        # add particle to the backbone
-                        rid = int(row[1])
-                        layer = int(row[3])
-                        xz = np.array([int(row[2]), int(row[4])])
-                        p = Particle(pid, rid, layer, xz)
-                        # add particle to the backbone
-                        PARTICLES[pid] = p
-                        # add particle to the rod
-                        if rid not in RODS:
-                            RODS[rid] = Rod(rid)
-                        RODS[rid].add_particle(pid)
-                        # add particle to the layer
-                        if layer not in LAYERS:
-                            LAYERS[layer] = Layer(layer, set())
-                        LAYERS[layer].add_particle(pid)
-                        pid += 1
+            x = int(row[2])
+            y = int(row[3])
+            z = int(row[4])
+            if np.abs(x) > 8:
+                continue
+            if np.abs(y) > 100:
+                continue
+            if np.abs(z) > 8:
+                continue
+            # add particle to the backbone
+            rid = int(row[1])
+            lid = y
+            xz = np.array([x, z])
+            p = Particle(pid, rid, lid, xz)
+            # add particle to the backbone
+            PARTICLES[pid] = p
+            # add particle to the rod
+            if rid not in RODS:
+                RODS[rid] = Rod(rid)
+            RODS[rid].add_particle(pid)
+            # add particle to the layer
+            if lid not in LAYERS:
+                LAYERS[lid] = Layer(lid)
+            LAYERS[lid].add_pid(pid)
+            pid += 1
 
 
 def filter_rids(active_rids:set, ascending: bool = True):
@@ -157,26 +168,26 @@ def filter_rids(active_rids:set, ascending: bool = True):
         return dict(), dict() # empty dictionary
     
     # min and max y coordinates
-    layer_min = np.min(LAYERS)
-    layer_max = np.max(LAYERS)
+    lid_min = np.min(LAYERS)
+    lid_max = np.max(LAYERS)
     
     # current layer
-    layer = layer_min if ascending else layer_max
+    lid = lid_min if ascending else lid_max
 
     # active first layer 
-    for pid_A in LAYERS[layer].pids:
+    for pid_A in LAYERS[lid].pids:
         particle_A: Particle = PARTICLES[pid_A]
         active_rids.add(particle_A.rid)
     
-    for layer in sorted(LAYERS, reverse=not ascending):
+    for lid in sorted(LAYERS, reverse=not ascending):
         # update the current layer
-        layer += 1 if ascending else -1
+        lid += 1 if ascending else -1
         # if the current layer is out of the range of y coordinates, skip
-        if layer < layer_min or layer > layer_max:
+        if lid < lid_min or lid > lid_max:
             continue
         # pids in the current layer
-        layer_pids = LAYERS[layer].pids
-        for pid_A in layer_pids:
+        lid_pids = LAYERS[lid].pids
+        for pid_A in lid_pids:
             particle_A: Particle = PARTICLES[pid_A]            
             for rid_B in particle_A.get_neighs():
                 if rid_B in active_rids:
@@ -218,21 +229,22 @@ def stress_strain(fn: str, m: int = 2):
 
     # create maps
     F = 1 # applied force
-    print('Force:', F_new, '=================================')
+    print('Force:', F, '=================================')
     while True:        
         print('Number of rods:', len(RODS))
         print('Random remove')
         tic = time.time()
         # sort k random float numbers in the range [0,1]
-        r = np.random.random(len(active_rids))
-        del_rods = False # rods to be deleted
+        r = np.random.random(len(RODS))
+        del_rids = [] # rods to be deleted
         for i, rid in enumerate(RODS):
             rod: Rod = RODS[rid]
+            #TODO Question: can we delete the rods from the first or last layers?
             if r[i] < rod.del_prob(F):
-                del_rods = True
+                del_rids.append(rid)
                 rod.inactivate()
         # clean bb by keeping only the particles with pid on active_rids
-        RODS = {rid: RODS[rid] for rid, rod in RODS.elements() if rod.active} # update rods
+        RODS = {rid: RODS[rid] for rid, rod in RODS.items() if rod.active} # update rods
         toc = time.time()
         print(f"   Elapsed time: {toc-tic:.2f} s")
       
