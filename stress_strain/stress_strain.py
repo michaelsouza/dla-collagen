@@ -115,7 +115,7 @@ class Layer:
 
     def del_pid(self, pid:int):
         self.pids.remove(pid)
-
+                   
 def create_connections():
     # create connections
     print('Creating connections')
@@ -218,7 +218,7 @@ def stress_strain(fn: str, m: int = 2):
     filter_rids(active_rids, ascending=True)
     filter_rids(active_rids, ascending=False)
     toc = time.time()
-    print(f"   Elapsed time: {toc-tic:.2f} s")
+    #print(f"   Elapsed time: {toc-tic:.2f} s")
 
     # inactivate rods
     print('Inactivating rods')
@@ -228,13 +228,15 @@ def stress_strain(fn: str, m: int = 2):
             RODS[rid].inactivate()
     RODS = {rid: RODS[rid] for rid in active_rids} # update rods
     toc = time.time()
-    print(f"   Elapsed time: {toc-tic:.2f} s")
+    #print(f"   Elapsed time: {toc-tic:.2f} s")
 
     # create maps
     F = 1 # applied force
     print('Force:', F, '=================================')
+    list_removed_rids = []
     while True:        
         print('Number of rods:', len(RODS))
+        print('Force:', F, '=================================')
         print('Applying force')
         tic = time.time()
         # sort k random float numbers in the range [0,1]
@@ -250,13 +252,16 @@ def stress_strain(fn: str, m: int = 2):
 
         print('Remove broken rods')
         tic = time.time()
+        #print(del_rids)
         for rid in del_rids:
+            print("rid to be removed: %d" %rid)
             RODS[rid].inactivate()
+        
         RODS = {rid: RODS[rid] for rid, rod in RODS.items() if rod.active} # update rods
         toc = time.time()
-        print(f"   Elapsed time: {toc-tic:.2f} s")
-      
-        if del_rids == 0:
+        #print(f"   Elapsed time: {toc-tic:.2f} s")
+        list_removed_rids+=del_rids
+        if len(del_rids) == 0:
             F += 0.5 # increment the force
             print('Force:', F, '=================================')
         else:
@@ -266,29 +271,39 @@ def stress_strain(fn: str, m: int = 2):
             filter_rids(active_rids, ascending=True)
             filter_rids(active_rids, ascending=False)
             toc = time.time()
-            print(f"   Elapsed time: {toc-tic:.2f} s")
+            #print(f"   Elapsed time: {toc-tic:.2f} s")
 
              # if the backbone is empty, stop
             if len(active_rids) == 0:                
                 break
 
             # inactivate rods
-            print('Inactivating rods')
+            #print('Inactivating rods')
             tic = time.time()
+            #print(active_rids)
+
             for rid in RODS:
                 if rid not in active_rids:
+                    #TODO: Por alguma razão, acontece de um rod, chamar sua lista de vizinhos
+                    #      e esa lista conter alguem que ja foi removido, da erro e o codigo quebra.
+                    #      Algo semelhante acontece na hora de pegar vizinho na camada em alguns casos
+                    print('rid to be removed: ', rid)
                     RODS[rid].inactivate() 
-            RODS = {rid: RODS[rid] for rid in active_rids} # update rods
+            RODS = {rid: RODS[rid] for rid, rod in RODS.items() if rod.active}
+
+
+            #RODS = {rid: RODS[rid] for rid in active_rids} # update rods
             toc = time.time()
-            print(f"   Elapsed time: {toc-tic:.2f} s")
+            #print(f"   Elapsed time: {toc-tic:.2f} s")
 
             # check if there is any empty layer
-            print('Check if fibril was broken')
+            #print('Check if fibril was broken')
             tic = time.time()
             for layer in LAYERS:
                 if len(LAYERS[layer].pids) == 0:
                     tic = time.time()
-                    print(f"   Elapsed time: {toc-tic:.2f} s")
+                    print("fibril broken!!!")
+                    #print(f"   Elapsed time: {toc-tic:.2f} s")
                     break
             
 
