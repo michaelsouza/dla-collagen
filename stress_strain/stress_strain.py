@@ -78,7 +78,9 @@ class Rod:
     def update_force(self, F:float):
         self.N = len(self.neigh_pids)
         if self.N == 0:
-            raise Exception(f'N == 0 (rid={self.rid})')
+            self.p = 1 # if rod not have neighs, the prob
+            return self.p
+            #raise Exception(f'N == 0 (rid={self.rid})')
         self.sigma_mean *= (F / self.F)
         self.p = (self.sigma_mean / (self.N * self.sigma_cte))**self.m
         self.F = F # update the force
@@ -254,7 +256,7 @@ def stress_strain(fn: str, m: int = 2):
         toc = time.time()
         print(f"   Elapsed time: {toc-tic:.2f} s")
       
-        if del_rods == 0:
+        if del_rids == 0:
             F += 0.5 # increment the force
             print('Force:', F, '=================================')
         else:
@@ -267,7 +269,7 @@ def stress_strain(fn: str, m: int = 2):
             print(f"   Elapsed time: {toc-tic:.2f} s")
 
              # if the backbone is empty, stop
-            if len(active_rods) == 0:                
+            if len(active_rids) == 0:                
                 break
 
             # inactivate rods
@@ -281,8 +283,12 @@ def stress_strain(fn: str, m: int = 2):
             print(f"   Elapsed time: {toc-tic:.2f} s")
 
             # check if there is any empty layer
+            print('Check if fibril was broken')
+            tic = time.time()
             for layer in LAYERS:
                 if len(LAYERS[layer].pids) == 0:
+                    tic = time.time()
+                    print(f"   Elapsed time: {toc-tic:.2f} s")
                     break
             
 
@@ -319,11 +325,12 @@ if __name__ == '__main__':
     
 
     files = [
-        'mode_s_ts_1_nb_20000_seed_101_.dat',
+        '/home/robert/Dropbox/data/files/particles/mode_s_ts_1_nb_20000_seed_101_.dat',
+
         # 'mode_s_ts_10_nb_20000_seed_102_.dat',
         # 'mode_s_ts_100_nb_20000_seed_103_.dat',
         # 'mode_s_ts_1000_nb_20000_seed_104_.dat',
-        'stress_strain/mode_s_ts_10000_nb_20000_seed_105_.dat',
+        #'stress_strain/mode_s_ts_10000_nb_20000_seed_105_.dat',
     ]
 
     # power exponent
