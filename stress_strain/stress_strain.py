@@ -3,6 +3,7 @@ import time
 import numpy as np
 import pandas as pd 
 import random
+import json
 
 # global variables
 RODS = {}
@@ -10,6 +11,7 @@ LAYERS = {}
 PARTICLES = {}
 LID_MIN = None
 LID_MAX = None
+
 
 class Particle:
     def __init__(self, pid:int, rid:int, lid:int, xz):
@@ -25,23 +27,42 @@ class Particle:
         rod : Rod = RODS[rid]
         rod.add_neigh_pid(self.pid)
 
-    def del_neigh(self, rid:int):
+    def del_neigh_rid(self, rid:int):
         self.neigh_rids.remove(rid)
 
-    def get_neighs(self):
+    def get_neigh_rids(self):
         return self.neigh_rids
 
     def innactive(self):
         self.active = False
+        # remove the particle from the layer
+        layer: Layer = LAYERS[self.lid]
+        layer.del_pid(self.pid)
         for rid in self.neigh_rids:
+            # remove the particle from the neigh rods
             rod: Rod = RODS[rid]
             rod.del_neigh_pid(self.pid)
-            layer: Layer = LAYERS[self.lid]
-            layer.del_pid(self.pid)
-            for pid in rod.pids:
-                #print('entrou: %d'%pid)
-                Pd: Particle = PARTICLES[pid]
-                Pd.neigh_rids = {x for x in Pd.neigh_rids if x != self.rid}
+
+    def to_str(self):
+        s = f'"pid": {self.pid}, "rid": {self.rid}, "lid": {self.lid}, "xz": [{self.xz[0]}, {self.xz[1]}]'
+        s += ', "neigh_rids": ['
+        for rid in self.neigh_rids:
+            s += f'{rid},'
+        s += ']'
+        s = '{' + s.replace(',]', ']') + '}'        
+        return s
+
+    @staticmethod
+    def parse(row:str):
+        row = json.loads(row)
+        pid = row['pid']
+        rid = row['rid']
+        lid = row['lid']
+        xz = np.array(row['xz'], dtype=float)
+        particle = Particle(pid, rid, lid, xz)
+        particle.neigh_rids = set(row['neigh_rids'])
+        particle.active = True
+        return particle
 
 class Rod:
     def __init__(self, rid:int):
@@ -79,12 +100,15 @@ class Rod:
             particle:Particle = PARTICLES[pid]
             particle.innactive()
 
+        for pid in self.neigh_pids:
+            particle:Particle = PARTICLES[pid]
+            particle.del_neigh_rid(self.rid)
+
     def update_force(self, F:float):
         self.N = len(self.neigh_pids)
         if self.N == 0:
             self.p = 1 # if rod not have neighs, the prob
-            return self.p
-            #raise Exception(f'N == 0 (rid={self.rid})')
+            return self.p            
         self.sigma_mean *= (F / self.F)
         self.p = (self.sigma_mean / (self.N * self.sigma_cte))**self.m
         self.F = F # update the force
@@ -104,6 +128,28 @@ class Rod:
             return self.update_force(F)
         else:
             return self.update_sigma(F)
+    
+    def to_str(self):
+        s = f'"rid": {self.rid}, "pids": ['
+        for pid in self.pids:
+            s += f'{pid},'
+        s += '], "neigh_pids": ['
+        for pid in self.neigh_pids:
+            s += f'{pid},'
+        s += ']'
+        s = '{' + s.replace(',]', ']') + '}'
+        return s
+
+    @staticmethod
+    def parse(row:str):
+        row = json.loads(row)
+        rid = row['rid']
+        rod = Rod(rid)
+        rod.pids = set(row['pids'])
+        rod.neigh_pids = set(row['neigh_pids'])
+        rod.active = True
+        rod.updated = False
+        return rod
                     
 
 class Layer:
@@ -118,9 +164,27 @@ class Layer:
         self.pids.add(pid)
 
     def del_pid(self, pid:int):
-        self.pids.remove(pid)
-                   
-def create_connections():
+        if pid in self.pids:
+            self.pids.remove(pid)
+
+    def to_str(self):
+        s = f'"lid": {self.lid}, "pids": ['
+        for pid in self.pids:
+            s += f'{pid},'
+        s += ']'
+        s = '{' + s.replace(',]', ']') + '}'
+        return s
+    
+    @staticmethod
+    def parse(row:str):
+        row = json.loads(row)
+        lid = row['lid']
+        layer = Layer(lid)
+        layer.pids = set(row['pids'])
+        return layer
+
+
+def create_neighs():    
     # create connections
     print('Creating connections')
     for pid_A in PARTICLES:
@@ -137,7 +201,24 @@ def create_connections():
 
 def read_particles(fn: str):
     global LID_MAX
-    global LID_MIN
+    global LID_MIN    
+
+    if os.path.exists(fn.replace('.dat', '.db')):
+        print('Reading database')
+        with open(fn.replace('.dat', '.db'), 'r') as fid:
+            for row in fid:
+                if row.startswith('{"pid":'):                    
+                    particle = Particle.parse(row)
+                    PARTICLES[particle.pid] = particle
+                if row.startswith('{"rid":'):
+                    rod = Rod.parse(row)
+                    RODS[rod.rid] = rod
+                if row.startswith('{"lid":'):
+                    layer = Layer.parse(row)
+                    LAYERS[layer.lid] = layer
+        LID_MIN = min(LAYERS.keys())
+        LID_MAX = max(LAYERS.keys())
+        return
 
     # Read particles file
     print('Reading', fn)
@@ -177,12 +258,20 @@ def read_particles(fn: str):
     LID_MAX = np.max(LAYERS.keys())
     LID_MIN = np.min(LAYERS.keys())
 
+    create_neighs()
 
-def filter_rids(active_rids:set, ascending: bool = True):
-    if len(PARTICLES) == 0:
-        return dict(), dict() # empty dictionary
-    
-    for i, lid in enumerate(sorted(LAYERS, reverse=not ascending)):
+    # save the database
+    with open(fn.replace('.dat','.db'), 'w') as fid:
+        for pid in PARTICLES:
+            fid.write(PARTICLES[pid].to_str() + '\n')
+        for rid in RODS:
+            fid.write(RODS[rid].to_str() + '\n')
+        for lid in LAYERS:
+            fid.write(LAYERS[lid].to_str() + '\n')
+
+
+def filter_rids(active_rids:set, reverse: bool = True):
+    for i, lid in enumerate(sorted(range(LID_MIN, LID_MAX + 1), reverse=reverse)):
         if i == 0:
             # all rods in the first layer are active
             for pid_A in LAYERS[lid].pids:
@@ -192,15 +281,21 @@ def filter_rids(active_rids:set, ascending: bool = True):
         
         # pids in the current layer
         lid_pids = LAYERS[lid].pids
+        
+        # layer is empty
+        if len(lid_pids) == 0:
+            active_rids.clear()
+            return 
+
         for pid_A in lid_pids:
             particle_A: Particle = PARTICLES[pid_A]            
-            for rid_B in particle_A.get_neighs():
+            for rid_B in particle_A.get_neigh_rids():
                 if rid_B in active_rids:
                     active_rids.add(particle_A.rid)
                     break
 
 
-def stress_strain(fn: str, m: int = 2):
+def stress_strain(fn: str, m: int = 2, verbose: bool = True):
     global RODS
 
     # read backbone
@@ -209,18 +304,12 @@ def stress_strain(fn: str, m: int = 2):
     toc = time.time()
     print(f"   Elapsed time: {toc-tic:.2f} s")
     
-    # create connections
-    tic = time.time()
-    create_connections()
-    toc = time.time()
-    print(f"   Elapsed time: {toc-tic:.2f} s")
-    
     # filter rods
     print('Filtering rods')
     tic = time.time()
     active_rids = set() # active rods
-    filter_rids(active_rids, ascending=True)
-    filter_rids(active_rids, ascending=False)
+    filter_rids(active_rids, reverse=False)
+    filter_rids(active_rids, reverse=True)
     toc = time.time()
     #print(f"   Elapsed time: {toc-tic:.2f} s")
 
@@ -232,16 +321,17 @@ def stress_strain(fn: str, m: int = 2):
             RODS[rid].inactivate()
     RODS = {rid: RODS[rid] for rid in active_rids} # update rods
     toc = time.time()
-    #print(f"   Elapsed time: {toc-tic:.2f} s")
+    print(f"   Elapsed time: {toc-tic:.2f} s")
 
     # create maps
     F = 1 # applied force
     print('Force:', F, '=================================')
     list_removed_rids = []
-    while True:        
-        print('Number of rods:', len(RODS))
-        print('Force:', F, '=================================')
-        print('Applying force')
+    while True:
+        if verbose:  
+            print('Number of rods:', len(RODS))
+            print('Force:', F, '=================================')
+            print('Applying force')
         tic = time.time()
         # sort k random float numbers in the range [0,1]
         r = np.random.random(len(RODS))
@@ -252,15 +342,14 @@ def stress_strain(fn: str, m: int = 2):
             if r[i] < rod.prob_break(F):
                 del_rids.append(rid)
         toc = time.time()
-        print(f"   Elapsed time: {toc-tic:.2f} s")
+        if verbose:
+            print(f"   Elapsed time: {toc-tic:.2f} s")
 
         print('Remove broken rods')
         tic = time.time()
-        #print(del_rids)
         for rid in del_rids:
             print("rid to be removed: %d" %rid)
             RODS[rid].inactivate()
-        
         RODS = {rid: RODS[rid] for rid, rod in RODS.items() if rod.active} # update rods
         toc = time.time()
         #print(f"   Elapsed time: {toc-tic:.2f} s")
@@ -272,33 +361,24 @@ def stress_strain(fn: str, m: int = 2):
             print('Filtering rods')
             tic = time.time()
             active_rids = set() # active rods
-            filter_rids(active_rids, ascending=True)
-            filter_rids(active_rids, ascending=False)
+            filter_rids(active_rids, reverse=True)
+            filter_rids(active_rids, reverse=False)
             toc = time.time()
-            #print(f"   Elapsed time: {toc-tic:.2f} s")
+            print(f"   Elapsed time: {toc-tic:.2f} s")
 
-             # if the backbone is empty, stop
+            # if the backbone is empty, stop
             if len(active_rids) == 0:                
                 break
 
             # inactivate rods
-            #print('Inactivating rods')
+            print('Inactivating rods')
             tic = time.time()
-            #print(active_rids)
-
             for rid in RODS:
                 if rid not in active_rids:
-                    #TODO: Por alguma razão, acontece de um rod, chamar sua lista de vizinhos
-                    #      e esa lista conter alguem que ja foi removido, da erro e o codigo quebra.
-                    #      Algo semelhante acontece na hora de pegar vizinho na camada em alguns casos
-                    print('rid to be removed: ', rid)
-                    RODS[rid].inactivate() 
-            RODS = {rid: RODS[rid] for rid, rod in RODS.items() if rod.active}
-
-
-            #RODS = {rid: RODS[rid] for rid in active_rids} # update rods
+                    RODS[rid].inactivate()
+            RODS = {rid: RODS[rid] for rid in active_rids} # update rods
             toc = time.time()
-            #print(f"   Elapsed time: {toc-tic:.2f} s")
+            print(f"   Elapsed time: {toc-tic:.2f} s")
 
             # check if there is any empty layer
             #print('Check if fibril was broken')
@@ -319,7 +399,7 @@ def main(fn:str, m:int = 2):
     # lp.print_stats()
 
     #random.seed(1234)
-    stress_strain(fn, m)
+    stress_strain(fn, m, verbose=True)
 
     # Save number of broken bonds
     # with open('broken_bonds_%d_m%d.txt' %(ts, m), 'w') as fid:
@@ -344,7 +424,7 @@ if __name__ == '__main__':
     
 
     files = [
-        '/home/robert/Dropbox/data/files/particles/mode_s_ts_1_nb_20000_seed_101_.dat',
+        'mode_s_ts_1_nb_20000_seed_101_.dat',
 
         # 'mode_s_ts_10_nb_20000_seed_102_.dat',
         # 'mode_s_ts_100_nb_20000_seed_103_.dat',
