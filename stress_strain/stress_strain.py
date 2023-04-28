@@ -38,6 +38,10 @@ class Particle:
             rod.del_neigh_pid(self.pid)
             layer: Layer = LAYERS[self.lid]
             layer.del_pid(self.pid)
+            for pid in rod.pids:
+                #print('entrou: %d'%pid)
+                Pd: Particle = PARTICLES[pid]
+                Pd.neigh_rids = {x for x in Pd.neigh_rids if x != self.rid}
 
 class Rod:
     def __init__(self, rid:int):
