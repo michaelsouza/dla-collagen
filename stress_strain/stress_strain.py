@@ -295,6 +295,18 @@ def filter_rids(active_rids:set, reverse: bool = True):
                     break
 
 
+def clear_rods(active_rids: set):
+    # inactivate rods
+    print('Inactivating rods')
+    tic = time.time()
+    for rid in RODS:
+        if rid not in active_rids:
+            RODS[rid].inactivate()
+    RODS = {rid: RODS[rid] for rid in active_rids} # update rods
+    toc = time.time()
+    print(f"   Elapsed time: {toc-tic:.2f} s")
+
+
 def stress_strain(fn: str, m: int = 2, verbose: bool = True):
     global RODS
 
@@ -305,23 +317,13 @@ def stress_strain(fn: str, m: int = 2, verbose: bool = True):
     print(f"   Elapsed time: {toc-tic:.2f} s")
     
     # filter rods
-    print('Filtering rods')
-    tic = time.time()
     active_rids = set() # active rods
     filter_rids(active_rids, reverse=False)
+    clear_rods(active_rids)
+        
+    active_rids = set() # active rods
     filter_rids(active_rids, reverse=True)
-    toc = time.time()
-    #print(f"   Elapsed time: {toc-tic:.2f} s")
-
-    # inactivate rods
-    print('Inactivating rods')
-    tic = time.time()
-    for rid in RODS:
-        if rid not in active_rids:
-            RODS[rid].inactivate()
-    RODS = {rid: RODS[rid] for rid in active_rids} # update rods
-    toc = time.time()
-    print(f"   Elapsed time: {toc-tic:.2f} s")
+    clear_rods(active_rids)
 
     # create maps
     F = 1 # applied force
@@ -358,13 +360,13 @@ def stress_strain(fn: str, m: int = 2, verbose: bool = True):
             F += 0.5 # increment the force
             print('Force:', F, '=================================')
         else:
-            print('Filtering rods')
-            tic = time.time()
+            active_rids = set() # active rods
+            filter_rids(active_rids, reverse=False)
+            clear_rods(active_rids)
+                
             active_rids = set() # active rods
             filter_rids(active_rids, reverse=True)
-            filter_rids(active_rids, reverse=False)
-            toc = time.time()
-            print(f"   Elapsed time: {toc-tic:.2f} s")
+            clear_rods(active_rids)
 
             # if the backbone is empty, stop
             if len(active_rids) == 0:                
