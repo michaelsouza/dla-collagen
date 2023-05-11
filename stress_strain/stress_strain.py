@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd 
 import random
 import json
+import sys
 
 # global variables
 RODS = {}
@@ -204,7 +205,7 @@ def read_particles(fn: str):
     global LID_MIN    
 
     if os.path.exists(fn.replace('.dat', '.db')):
-        print('Reading database')
+        print('Reading database %s' % fn)
         with open(fn.replace('.dat', '.db'), 'r') as fid:
             for row in fid:
                 if row.startswith('{"pid":'):                    
@@ -271,7 +272,7 @@ def read_particles(fn: str):
 
 
 def filter_rids(active_rids:set, reverse: bool = True):
-    for i, lid in enumerate(sorted(range(LID_MIN, LID_MAX + 1), reverse=reverse)):
+    for i, lid in enumerate(sorted(range(int(LID_MIN), int(LID_MAX) + 1), reverse=reverse)):
         if i == 0:
             # all rods in the first layer are active
             for pid_A in LAYERS[lid].pids:
@@ -294,42 +295,69 @@ def filter_rids(active_rids:set, reverse: bool = True):
                     active_rids.add(particle_A.rid)
                     break
 
-
-def clear_rods(active_rids: set):
+def clear_rods(active_rids: set,  list = False):
+    global RODS
     # inactivate rods
-    print('Inactivating rods')
-    tic = time.time()
+    removed_rods = []
     for rid in RODS:
         if rid not in active_rids:
             RODS[rid].inactivate()
+            removed_rods.append(rid)
     RODS = {rid: RODS[rid] for rid in active_rids} # update rods
-    toc = time.time()
-    print(f"   Elapsed time: {toc-tic:.2f} s")
+    if list:
+        return removed_rods
 
+def count():
+    global PARTICLES
+    cont = 0
 
-def stress_strain(fn: str, m: int = 2, verbose: bool = True):
+    for particle in PARTICLES.values():
+        if particle.active:
+            cont +=1
+     
+
+    return cont
+
+def stress_strain(fn: str, m: int = 2, verbose: bool = False):
     global RODS
+    map_force_partsInSkeleton = {} # Num of parts in skeleton
+    map_force_rodsRemoved = {} # Num of rids removed from skeleton by a force
+    
 
     # read backbone
     tic = time.time()
     read_particles(fn)    
     toc = time.time()
-    print(f"   Elapsed time: {toc-tic:.2f} s")
+    if verbose:
+        print(f"   Elapsed time: {toc-tic:.2f} s")
+
+    print("Backbone size init: %d" %len(RODS))
     
     # filter rods
+    print('Filtering rods')
+
     active_rids = set() # active rods
     filter_rids(active_rids, reverse=False)
     clear_rods(active_rids)
-        
-    active_rids = set() # active rods
+    active_rids = set()
     filter_rids(active_rids, reverse=True)
     clear_rods(active_rids)
+    #print(f"   Elapsed time: {toc-tic:.2f} s")
+
+    print("Backbone filtred: %d" %len(RODS))
 
     # create maps
-    F = 1 # applied force
+    init = count()
+    map_force_partsInSkeleton[0] = [(init/init)*100]
+    map_force_rodsRemoved[0] = []
+ 
+    F = 0.5 # applied force
     print('Force:', F, '=================================')
-    list_removed_rids = []
+    
+
     while True:
+        removed = []
+        list_removed_rids = []
         if verbose:  
             print('Number of rods:', len(RODS))
             print('Force:', F, '=================================')
@@ -347,94 +375,184 @@ def stress_strain(fn: str, m: int = 2, verbose: bool = True):
         if verbose:
             print(f"   Elapsed time: {toc-tic:.2f} s")
 
-        print('Remove broken rods')
+        if verbose:
+            print('Remove broken rods')
         tic = time.time()
+
         for rid in del_rids:
-            print("rid to be removed: %d" %rid)
+            if verbose:
+                print("rid to be removed: %d" %rid)
+
             RODS[rid].inactivate()
         RODS = {rid: RODS[rid] for rid, rod in RODS.items() if rod.active} # update rods
         toc = time.time()
         #print(f"   Elapsed time: {toc-tic:.2f} s")
         list_removed_rids+=del_rids
+    
+        tic = time.time()
+
         if len(del_rids) == 0:
             F += 0.5 # increment the force
             print('Force:', F, '=================================')
+            
+            #print("sairam %d particulas" %R)
+
+            cont = count()
+
+
+            if F in map_force_rodsRemoved:
+                # if key is in dictionary, append a value to its list
+                map_force_rodsRemoved[F].append(list_removed_rids)
+            else:
+                # if key is not in dictionary, add the key and a value for it
+                map_force_rodsRemoved[F] = list_removed_rids
+
+            if F in map_force_partsInSkeleton:
+                # if key is in dictionary, append a value to its list
+                map_force_partsInSkeleton[F].append((cont/init)*100)
+            else:
+                # if key is not in dictionary, add the key and a value for it
+                map_force_partsInSkeleton[F] = [(cont/init)*100]
+
         else:
+
+            if verbose:
+                print('Filtering rods')
             active_rids = set() # active rods
             filter_rids(active_rids, reverse=False)
-            clear_rods(active_rids)
-                
-            active_rids = set() # active rods
-            filter_rids(active_rids, reverse=True)
-            clear_rods(active_rids)
-
+            removed = clear_rods(active_rids, list = True)
+            list_removed_rids+=removed
+            
             # if the backbone is empty, stop
-            if len(active_rids) == 0:                
+            if len(active_rids) == 0:    
+
+                
+                if F in map_force_rodsRemoved:
+                    # if key is in dictionary, append a value to its list
+                    map_force_rodsRemoved[F].append(list_removed_rids)
+                else:
+                    # if key is not in dictionary, add the key and a value for it
+                    map_force_rodsRemoved[F] = list_removed_rids
+
+                if F in map_force_partsInSkeleton:
+                    # if key is in dictionary, append a value to its list
+                    map_force_partsInSkeleton[F].append(0)
+                else:
+                    # if key is not in dictionary, add the key and a value for it
+                    map_force_partsInSkeleton[F] = [0]
+
+                RODS.clear()
+                PARTICLES.clear()
+                LAYERS.clear()
+
+                print('active_rids null!!')            
                 break
 
-            # inactivate rods
-            print('Inactivating rods')
-            tic = time.time()
-            for rid in RODS:
-                if rid not in active_rids:
-                    RODS[rid].inactivate()
-            RODS = {rid: RODS[rid] for rid in active_rids} # update rods
-            toc = time.time()
-            print(f"   Elapsed time: {toc-tic:.2f} s")
+            active_rids = set()
+            filter_rids(active_rids, reverse=True)
+            removed = clear_rods(active_rids, list = True)
+            list_removed_rids+=removed
 
-            # check if there is any empty layer
-            #print('Check if fibril was broken')
-            tic = time.time()
-            for layer in LAYERS:
-                if len(LAYERS[layer].pids) == 0:
-                    tic = time.time()
-                    print("fibril broken!!!")
-                    #print(f"   Elapsed time: {toc-tic:.2f} s")
-                    break
+            # if the backbone is empty, stop
+            if len(active_rids) == 0:    
+
+
+                if F in map_force_rodsRemoved:
+                    # if key is in dictionary, append a value to its list
+                    map_force_rodsRemoved[F].append(list_removed_rids)
+                else:
+                    # if key is not in dictionary, add the key and a value for it
+                    map_force_rodsRemoved[F] = list_removed_rids
+
+                if F in map_force_partsInSkeleton:
+                    # if key is in dictionary, append a value to its list
+                    map_force_partsInSkeleton[F].append(0)
+                else:
+                    # if key is not in dictionary, add the key and a value for it
+                    map_force_partsInSkeleton[F] = [0]
+
+                RODS.clear()
+                PARTICLES.clear()
+                LAYERS.clear()
+
+                print('active_rids null!!')            
+                break
+                   
             
+            cont = count()
+
+
+            if F in map_force_rodsRemoved:
+                # if key is in dictionary, append a value to its list
+                map_force_rodsRemoved[F].append(list_removed_rids)
+            else:
+                # if key is not in dictionary, add the key and a value for it
+                map_force_rodsRemoved[F] = [list_removed_rids]
+
+            if F in map_force_partsInSkeleton:
+                # if key is in dictionary, append a value to its list
+                map_force_partsInSkeleton[F].append((cont/init)*100)
+            else:
+                # if key is not in dictionary, add the key and a value for it
+                map_force_partsInSkeleton[F] = [(cont/init)*100]
+
+    return map_force_partsInSkeleton, map_force_rodsRemoved
 
 def main(fn:str, m:int = 2):    
     ts = int(fn.split('ts_')[1].split('_')[0])
-    # lp = LineProfiler()
-    # lp_wrapper = lp(stress_strain)
-    # force, Broken, part_in_skeleton, Removed = lp_wrapper(fn, m)
-    # lp.print_stats()
 
-    #random.seed(1234)
-    stress_strain(fn, m, verbose=True)
+    # receive a seed from command line
+    # Loop through the command line arguments
+    for i in range(len(sys.argv)):
+        # Check if the argument starts with "-seed"
+        if sys.argv[i].startswith("-seed"):
+            # Try to convert the next argument to an integer
+            try:
+                seed = int(sys.argv[i+1]) + p
+                print(f"Seed value is {seed}")
+            except (IndexError, ValueError):
+                print("Invalid seed value")
+                sys.exit(1)
+            break
+    else:
+        # No "-seed" argument found
+        print("No seed value provided")
+        sys.exit(1)
 
-    # Save number of broken bonds
-    # with open('broken_bonds_%d_m%d.txt' %(ts, m), 'w') as fid:
-    #         fid.write(f"force\tbroken\n")
-    #         for x,y in zip(force,Broken):
-    #             fid.write(f"{x}\t{y}\n")
+    #random.seed(seed)
+    np.random.seed(seed)
 
-    # # Save porcent. of particles in skeleton 
-    # with open('porcet_parts_%d_m%d.txt' %(ts, m), 'w') as fid:
-    #     # Write each pair of values to a new    line in the file
-    #     for x, y in zip(force, part_in_skeleton):
-    #         fid.write(f"{x}\t{y}\n")
+    tic = time.time()
+    map_force_partsInSkeleton, map_force_rodsRemoved = stress_strain(fn, m, verbose=False)
+    toc = time.time()
+    print(f"   Elapsed time: {toc-tic:.2f} s")
+    #print(map_force_partsInSkeleton)
+    ##Save porcent. of particles in skeleton 
+    with open('/home/robert/Dropbox/data/parts_removed%d_m%d_seed%d.txt' %(ts, m, seed), 'w') as fid:
 
-    # # Save removed rods
-    # with open('removed_parts_%d_m%d.txt' %(ts, m), 'w') as fid:
-    #     # Write each pair of values to a new    line in the file
-    #     for x, y in zip(force, Removed):
-    #         fid.write(f"{x}\t{y}\n")
-
+        fid.write(f"force\tnumParts\trodsRemoved\n")
+        for j in map_force_partsInSkeleton.keys():
+            k = map_force_partsInSkeleton[j][-1]
+            l = map_force_rodsRemoved[j]
+            fid.write(f"{j}\t{k}\t{l}\n")
+    
+    
 if __name__ == '__main__':
     # set seed
     
 
     files = [
-        'mode_s_ts_1_nb_20000_seed_101_.dat',
-
-        # 'mode_s_ts_10_nb_20000_seed_102_.dat',
-        # 'mode_s_ts_100_nb_20000_seed_103_.dat',
-        # 'mode_s_ts_1000_nb_20000_seed_104_.dat',
-        #'stress_strain/mode_s_ts_10000_nb_20000_seed_105_.dat',
+        '/home/robert/Dropbox/data/files/particles/mode_s_ts_1_nb_20000_seed_101_.dat',
+        '/home/robert/Dropbox/data/files/particles/mode_s_ts_10_nb_20000_seed_102_.dat',
+        '/home/robert/Dropbox/data/files/particles/mode_s_ts_100_nb_20000_seed_103_.dat',
+        '/home/robert/Dropbox/data/files/particles/mode_s_ts_1000_nb_20000_seed_104_.dat',
+        '/home/robert/Dropbox/data/files/particles/mode_s_ts_10000_nb_20000_seed_105_.dat',
     ]
 
     # power exponent
-    m = 2    
+    m =2
+    p = 0
     for fn in files:
-        main(fn, m)        
+        
+        main(fn, m) 
+        p+=1     
