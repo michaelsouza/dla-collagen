@@ -1,2 +1,0 @@
-./fast_dla.bin -num_bind 20000 -mode s -ts 1000 -seed 104
-./fast_dla.bin -num_bind 20000 -mode s -ts 10000 -seed 105
