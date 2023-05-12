@@ -195,3 +195,7 @@ dla_mode_n_ts_1_nb_10000_seed_11_.dat
 .gitignore
 bb3.txt
 particles_in_skeleton.png
+density_particles_skelento.txt
+density_particles_skeleton_10000.txt
+miguel.txt
+stress_strain.py
