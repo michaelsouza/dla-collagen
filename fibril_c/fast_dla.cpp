@@ -1,4 +1,4 @@
-#include "fast_dla.h"
+#include "fast_dla copy.h"
 //#include "fast_dla_2d.h"
 //#include "dla_teste.h"
 #include <chrono>
