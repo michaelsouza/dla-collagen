@@ -256,8 +256,10 @@ def read_particles(fn: str):
                 LAYERS[lid] = Layer(lid)
             LAYERS[lid].add_pid(pid)
             pid += 1
-    LID_MAX = np.max(LAYERS.keys())
-    LID_MIN = np.min(LAYERS.keys())
+    LID = list(LAYERS.keys())
+    LID_MAX = int(max(LID)) 
+    LID_MIN = int(min(LID))
+    
 
     create_neighs()
 
@@ -272,7 +274,7 @@ def read_particles(fn: str):
 
 
 def filter_rids(active_rids:set, reverse: bool = True):
-    for i, lid in enumerate(sorted(range(int(LID_MIN), int(LID_MAX) + 1), reverse=reverse)):
+    for i, lid in enumerate(sorted(range(LID_MIN, LID_MAX + 1), reverse=reverse)):
         if i == 0:
             # all rods in the first layer are active
             for pid_A in LAYERS[lid].pids:
@@ -348,7 +350,7 @@ def stress_strain(fn: str, m: int = 2, verbose: bool = False):
 
     # create maps
     init = count()
-    map_force_partsInSkeleton[0] = [(init/init)*100]
+    map_force_partsInSkeleton[0] = [init]
     map_force_rodsRemoved[0] = []
  
     F = 0.5 # applied force
@@ -409,10 +411,10 @@ def stress_strain(fn: str, m: int = 2, verbose: bool = False):
 
             if F in map_force_partsInSkeleton:
                 # if key is in dictionary, append a value to its list
-                map_force_partsInSkeleton[F].append((cont/init)*100)
+                map_force_partsInSkeleton[F].append(cont)
             else:
                 # if key is not in dictionary, add the key and a value for it
-                map_force_partsInSkeleton[F] = [(cont/init)*100]
+                map_force_partsInSkeleton[F] = [cont]
 
         else:
 
@@ -491,12 +493,27 @@ def stress_strain(fn: str, m: int = 2, verbose: bool = False):
 
             if F in map_force_partsInSkeleton:
                 # if key is in dictionary, append a value to its list
-                map_force_partsInSkeleton[F].append((cont/init)*100)
+                map_force_partsInSkeleton[F].append(cont)
             else:
                 # if key is not in dictionary, add the key and a value for it
-                map_force_partsInSkeleton[F] = [(cont/init)*100]
+                map_force_partsInSkeleton[F] = [cont]
 
     return map_force_partsInSkeleton, map_force_rodsRemoved
+
+def listar_arquivos_em_pasta(caminho_da_pasta):
+    files = []  # Lista para armazenar os caminhos completos dos arquivos
+
+    # Verifica se o caminho especificado é uma pasta válida
+    if os.path.isdir(caminho_da_pasta):
+        # Percorre todos os arquivos e pastas dentro do caminho especificado
+        for root, _, filenames in os.walk(caminho_da_pasta):
+            for filename in filenames:
+                caminho_completo = os.path.join(root, filename)
+                files.append(caminho_completo)
+
+    return files
+
+
 
 def main(fn:str, m:int = 2):    
     ts = int(fn.split('ts_')[1].split('_')[0])
@@ -528,26 +545,29 @@ def main(fn:str, m:int = 2):
     print(f"   Elapsed time: {toc-tic:.2f} s")
     #print(map_force_partsInSkeleton)
     ##Save porcent. of particles in skeleton 
-    with open('/home/robert/Dropbox/data/parts_removed%d_m%d_seed%d.txt' %(ts, m, seed), 'w') as fid:
+    with open('/home/robert/data_fibril/stress/parts_removed%d_m%d_seed%d.txt' %(ts, m, seed), 'w') as fid:
 
-        fid.write(f"force\tnumParts\trodsRemoved\n")
+        fid.write(f"force\tnumParts\tpartsRemoved\trodsRemoved\n")
+        f = 0
         for j in map_force_partsInSkeleton.keys():
-            k = map_force_partsInSkeleton[j][-1]
+            k = (map_force_partsInSkeleton[j][-1]/map_force_partsInSkeleton[0][-1])*100
             l = map_force_rodsRemoved[j]
-            fid.write(f"{j}\t{k}\t{l}\n")
+            f = map_force_partsInSkeleton[0][-1] - map_force_partsInSkeleton[j][-1]
+            fid.write(f"{j}\t{k}\t{f}\t{l}\n")
     
     
 if __name__ == '__main__':
     # set seed
     
 
-    files = [
-        '/home/robert/Dropbox/data/files/particles/mode_s_ts_1_nb_20000_seed_101_.dat',
-        '/home/robert/Dropbox/data/files/particles/mode_s_ts_10_nb_20000_seed_102_.dat',
-        '/home/robert/Dropbox/data/files/particles/mode_s_ts_100_nb_20000_seed_103_.dat',
-        '/home/robert/Dropbox/data/files/particles/mode_s_ts_1000_nb_20000_seed_104_.dat',
-        '/home/robert/Dropbox/data/files/particles/mode_s_ts_10000_nb_20000_seed_105_.dat',
-    ]
+    # Especifica o caminho da pasta que deseja listar os arquivos
+    caminho_da_pasta = "/home/robert/Dropbox/data/files/particles"
+
+    # Chama a função para listar os arquivos na pasta especificada
+    files = listar_arquivos_em_pasta(caminho_da_pasta)
+
+    # Imprime a lista de arquivos encontrados
+    print(files)
 
     # power exponent
     m =2
