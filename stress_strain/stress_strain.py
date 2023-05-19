@@ -333,10 +333,10 @@ def stress_strain(fn: str, m: int = 2, verbose: bool = False):
     if verbose:
         print(f"   Elapsed time: {toc-tic:.2f} s")
 
-    print("Backbone size init: %d" %len(RODS))
+    #print("Backbone size init: %d" %len(RODS))
     
     # filter rods
-    print('Filtering rods')
+    #print('Filtering rods')
 
     active_rids = set() # active rods
     filter_rids(active_rids, reverse=False)
@@ -346,7 +346,7 @@ def stress_strain(fn: str, m: int = 2, verbose: bool = False):
     clear_rods(active_rids)
     #print(f"   Elapsed time: {toc-tic:.2f} s")
 
-    print("Backbone filtred: %d" %len(RODS))
+    #print("Backbone filtred: %d" %len(RODS))
 
     # create maps
     init = count()
@@ -354,7 +354,7 @@ def stress_strain(fn: str, m: int = 2, verbose: bool = False):
     map_force_rodsRemoved[0] = []
  
     F = 0.5 # applied force
-    print('Force:', F, '=================================')
+    #print('Force:', F, '=================================')
     
 
     while True:
@@ -395,7 +395,7 @@ def stress_strain(fn: str, m: int = 2, verbose: bool = False):
 
         if len(del_rids) == 0:
             F += 0.5 # increment the force
-            print('Force:', F, '=================================')
+            #print('Force:', F, '=================================')
             
             #print("sairam %d particulas" %R)
 
@@ -567,7 +567,7 @@ if __name__ == '__main__':
     files = listar_arquivos_em_pasta(caminho_da_pasta)
 
     # Imprime a lista de arquivos encontrados
-    print(files)
+    print("There are %d files in this folder. "%(len(files)))
 
     # power exponent
     m =2
