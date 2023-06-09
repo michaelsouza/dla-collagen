@@ -1,0 +1,7 @@
+python teste/stress_copy.py -m 2 -file /home/michael/gitrepos/dla-collagen/mode_s_ts_2_nb_30000_seed_130_.dat
+python teste/stress_copy.py -m 3 -file /home/michael/gitrepos/dla-collagen/mode_s_ts_2_nb_30000_seed_130_.dat
+python teste/stress_copy.py -m 4 -file /home/michael/gitrepos/dla-collagen/mode_s_ts_2_nb_30000_seed_130_.dat
+python teste/stress_copy.py -m 5 -file /home/michael/gitrepos/dla-collagen/mode_s_ts_2_nb_30000_seed_130_.dat
+python teste/stress_copy.py -m 6 -file /home/michael/gitrepos/dla-collagen/mode_s_ts_2_nb_30000_seed_130_.dat
+python teste/stress_copy.py -m 7 -file /home/michael/gitrepos/dla-collagen/mode_s_ts_2_nb_30000_seed_130_.dat
+python teste/stress_copy.py -m 8 -file /home/michael/gitrepos/dla-collagen/mode_s_ts_2_nb_30000_seed_130_.dat

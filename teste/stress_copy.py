@@ -1,33 +1,111 @@
 import os 
 import time
-import numpy as np
-import pandas as pd 
-import random
 import json
-import sys
 import argparse
-import copy
+import numpy as np
 
-# global variables
-OR_RODS = {}
-OR_LAYERS = {}
-OR_PARTICLES = {}
-LID_MIN = None
-LID_MAX = None
+
+class StressStrainData:
+    def __init__(self) -> None:
+        self.rods = {}
+        self.layers = {}
+        self.particles = {}
+        self.lid_min = +np.inf
+        self.lid_max = -np.inf
+
+    def copy(self):
+        ssd = StressStrainData()
+        for rid, rod in self.rods.items():
+            ssd.rods[rid] = rod.copy()
+            ssd.rods[rid].ssd = ssd
+        
+        for pid, particle in self.particles.items():
+            ssd.particles[pid] = particle.copy()
+            ssd.particles[pid].ssd = ssd
+        
+        for lid, layer in self.layers.items():
+            ssd.layers[lid] = layer.copy()
+
+        ssd.lid_min = self.lid_min
+        ssd.lid_max = self.lid_max
+        return ssd
+
+    def num_active_particles(self):
+        k = 0
+        for particle in self.particles.values():
+            if particle.active:
+                k +=1
+        return k
+    
+    def filter_rids(self, reverse: bool = True):
+        active_rids = set()
+        for i, lid in enumerate(sorted(range(self.lid_min, self.lid_max + 1), reverse=reverse)):
+            # pids in the current layer
+            lid_pids = self.layers[lid].pids
+
+            if i == 0:
+                for pid_A in lid_pids:
+                    particle_A: Particle = self.particles[pid_A]
+                    active_rids.add(particle_A.rid)                    
+                continue
+            
+            # layer is empty
+            if len(lid_pids) == 0:
+                active_rids.clear()
+                return active_rids, self.rods.keys()
+
+            for pid_A in lid_pids:
+                particle_A: Particle = self.particles[pid_A]
+                for rid_B in particle_A.get_neigh_rids():
+                    if rid_B in active_rids:
+                        active_rids.add(particle_A.rid)
+                        break
+        deleted_rids = self.clear_rids(active_rids)
+        return active_rids, deleted_rids
+
+    def clear_rids(self, active_rids:set):
+        # inactive rods        
+        deleted_rids = set()
+        for rid in self.rods:
+            if rid not in active_rids:
+                self.rods[rid].inactivate()                
+                deleted_rids.add(rid)
+        # update rods
+        self.rods = {rid: self.rods[rid] for rid in self.rods if rid not in deleted_rids}
+        return deleted_rids
+    
+    def drop_rids(self, to_drop: set):
+        # inactivate rods        
+        for rid in self.rods:
+            if rid in to_drop:
+                self.rods[rid].inactivate()
+        # update rods
+        self.rods = {rid: self.rods[rid] for rid in self.rods if rid not in to_drop}
+    
+    def set_rods_exponent(self, m:int):
+        for rod in self.rods.values():
+            rod.m = m
 
 
 class Particle:
-    def __init__(self, pid:int, rid:int, lid:int, xz):
+    def __init__(self, ssd:StressStrainData, pid: int, rid: int, lid: int, xz):
         self.pid = pid
         self.rid = rid
         self.lid = lid
         self.xz = xz
         self.active = True
         self.neigh_rids = set()
+        self.ssd = ssd
+
+    def copy(self):
+        particle = Particle(self.ssd, self.pid, self.rid, self.lid, self.xz.copy())
+        particle.active = self.active
+        particle.neigh_rids = self.neigh_rids.copy()
+        return particle
 
     def add_neigh_rid(self, rid:int):
         self.neigh_rids.add(rid)
-        rod : Rod = OR_RODS[rid]
+        rod : Rod = self.ssd.rods[rid]
         rod.add_neigh_pid(self.pid)
 
     def del_neigh_rid(self, rid:int):
@@ -39,11 +117,11 @@ class Particle:
     def innactive(self):
         self.active = False
         # remove the particle from the layer
-        layer: Layer = OR_LAYERS[self.lid]
+        layer: Layer = self.ssd.layers[self.lid]
         layer.del_pid(self.pid)
         for rid in self.neigh_rids:
             # remove the particle from the neigh rods
-            rod: Rod = OR_RODS[rid]
+            rod: Rod = self.ssd.rods[rid]
             rod.del_neigh_pid(self.pid)
 
     def to_str(self):
@@ -56,19 +134,21 @@ class Particle:
         return s
 
     @staticmethod
-    def parse(row:str):
+    def parse(ssd: StressStrainData, row: str):
         row = json.loads(row)
         pid = row['pid']
         rid = row['rid']
         lid = row['lid']
         xz = np.array(row['xz'], dtype=float)
-        particle = Particle(pid, rid, lid, xz)
+        particle = Particle(ssd, pid, rid, lid, xz)
         particle.neigh_rids = set(row['neigh_rids'])
         particle.active = True
         return particle
 
+
 class Rod:
-    def __init__(self, rid:int):
+    def __init__(self, ssd:StressStrainData, rid:int):
+        self.ssd = ssd
         self.rid = rid
         self.active = True
         self.pids = set()
@@ -84,6 +164,25 @@ class Rod:
         self.p = 0
         self.F = 1
         self.sigma_mean = 0
+
+    def copy(self):
+        rod = Rod(self.ssd, self.rid)
+        rod.active = self.active
+        rod.pids = self.pids.copy()
+        rod.updated = self.updated
+        rod.neigh_pids = self.neigh_pids.copy()
+
+        # force parameters
+        rod.m = self.m
+        rod.sigma_cte = self.sigma_cte
+
+        # force variables
+        rod.N = self.N
+        rod.p = self.p
+        rod.F = self.F
+        rod.sigma_mean = self.sigma_mean
+
+        return rod
         
     def add_pid(self, pid:int):
         self.pids.add(pid)
@@ -100,11 +199,11 @@ class Rod:
     def inactivate(self):
         self.active = False
         for pid in self.pids:
-            particle:Particle = OR_PARTICLES[pid]
+            particle:Particle = self.ssd.particles[pid]
             particle.innactive()
 
         for pid in self.neigh_pids:
-            particle:Particle = OR_PARTICLES[pid]
+            particle:Particle = self.ssd.particles[pid]
             particle.del_neigh_rid(self.rid)
 
     def update_force(self, F:float):
@@ -117,11 +216,11 @@ class Rod:
         self.F = F # update the force
         return self.p
 
-    def update_sigma(self, F:float):
+    def update_sigma(self, F: float):
         n = np.zeros(len(self.pids)) # number of neigh_pids per layer
         for i, pid_A in enumerate(self.pids):
-            particle: Particle = OR_PARTICLES[pid_A]
-            n[i] = OR_LAYERS[particle.lid].len()
+            particle: Particle = self.ssd.particles[pid_A]
+            n[i] = self.ssd.layers[particle.lid].len()
         self.sigma_mean = np.mean(self.F / n)
         self.updated = True
         return self.update_force(F)
@@ -141,13 +240,13 @@ class Rod:
             s += f'{pid},'
         s += ']'
         s = '{' + s.replace(',]', ']') + '}'
-        return s
+        return s    
 
     @staticmethod
-    def parse(row:str):
+    def parse(ssd: StressStrainData, row: str):
         row = json.loads(row)
         rid = row['rid']
-        rod = Rod(rid)
+        rod = Rod(ssd, rid)
         rod.pids = set(row['pids'])
         rod.neigh_pids = set(row['neigh_pids'])
         rod.active = True
@@ -159,6 +258,11 @@ class Layer:
     def __init__(self, lid:int):
         self.lid = lid
         self.pids = set()
+
+    def copy(self):
+        layer = Layer(self.lid)
+        layer.pids = self.pids.copy()
+        return layer
 
     def len(self):
         return len(self.pids)
@@ -187,59 +291,52 @@ class Layer:
         return layer
 
 
-def create_neighs():    
+def create_neighs(layers: dict, particles: dict):
     # create connections
     print('Creating connections')
-    for pid_A in OR_PARTICLES:
-        particle_A: Particle = OR_PARTICLES[pid_A]
-        for pid_B in OR_LAYERS[particle_A.lid].pids:
+    for pid_A in particles:
+        particle_A: Particle = particles[pid_A]
+        for pid_B in layers[particle_A.lid].pids:
             if pid_A == pid_B:
                 continue
-            particle_B: Particle = OR_PARTICLES[pid_B]
+            particle_B: Particle = particles[pid_B]
             # check if the particles are neighbors
             if np.linalg.norm(particle_A.xz - particle_B.xz) <= 1:
                 particle_A.add_neigh_rid(particle_B.rid)
                 particle_B.add_neigh_rid(particle_A.rid)
 
 
-def read_particles(fn_dat: str):
-    global LID_MAX
-    global LID_MIN    
+def read_or_create_ssd(fn_dat: str):
+    fn_db = fn_dat.replace('.dat','.db')
+    ssd = StressStrainData()
 
-
-    #print('CHECK', fn_dat)
-    fn_db = fn_dat.rsplit('.dat', 1)[0] + '.db'
-    #print('CHECK', fn_db)
     if os.path.exists(fn_db):
-        #print('Reading database %s' % fn_db)
+        print('Reading ', fn_db)
         tic = time.time()
         with open(fn_db, 'r') as fid:
             for row in fid:
-                if row.startswith('{"pid":'):                    
-                    particle = Particle.parse(row)
-                    OR_PARTICLES[particle.pid] = particle
+                if row.startswith('{"pid":'):
+                    particle = Particle.parse(ssd, row)
+                    ssd.particles[particle.pid] = particle
                 if row.startswith('{"rid":'):
-                    rod = Rod.parse(row)
-                    OR_RODS[rod.rid] = rod
+                    rod = Rod.parse(ssd, row)
+                    ssd.rods[rod.rid] = rod
                 if row.startswith('{"lid":'):
                     layer = Layer.parse(row)
-                    OR_LAYERS[layer.lid] = layer
-        LID_MIN = min(OR_LAYERS.keys())
-        LID_MAX = max(OR_LAYERS.keys())
+                    ssd.layers[layer.lid] = layer
+        ssd.lid_min = min(ssd.layers.keys())
+        ssd.lid_max = max(ssd.layers.keys())
         toc = time.time() - tic
-        #print('   Elapsed %.2f secs' % toc)
-        return
+        print(f'   tElapsed {fn_db} in {toc:.2f} s')
+        return ssd
 
-    # Read particles file
-    #print('Reading', fn_dat)
-    bb = {}  # backbone
+    print('Creating ', fn_db)
     pid = 0
     with open(fn_dat, 'r') as fid:
         # each line is a particle and a rod is a set of particles
         for row in fid:
             row = row.split()
             # extract the fiber center (rectangular trapezoid)
-            v = np.zeros(5)
             x = int(row[2])
             y = int(row[3])
             z = int(row[4])
@@ -255,328 +352,153 @@ def read_particles(fn_dat: str):
             xz = np.array([x, z])
             p = Particle(pid, rid, lid, xz)
             # add particle to the backbone
-            OR_PARTICLES[pid] = p
+            ssd.particles[pid] = p
             # add particle to the rod
-            if rid not in OR_RODS:
-                OR_RODS[rid] = Rod(rid)
-            OR_RODS[rid].add_pid(pid)
+            if rid not in ssd.rods:
+                ssd.rods[rid] = Rod(rid)
+            ssd.rods[rid].add_pid(pid)
             # add particle to the layer
-            if lid not in OR_LAYERS:
-                OR_LAYERS[lid] = Layer(lid)
-            OR_LAYERS[lid].add_pid(pid)
+            if lid not in ssd.layers:
+                ssd.layers[lid] = Layer(lid)
+            ssd.layers[lid].add_pid(pid)
             pid += 1
-    LID = list(OR_LAYERS.keys())
-    LID_MAX = int(max(LID)) 
-    LID_MIN = int(min(LID))
+    lid = list(ssd.layers.keys())
+    ssd.lid_max = int(max(lid)) 
+    ssd.lid_min = int(min(lid))
     
-
-    create_neighs()
+    create_neighs(ssd.layers, ssd.particles)
 
     # save the database
-    #print('Saving', fn_db)
     with open(fn_db, 'w') as fid:
-        for pid in OR_PARTICLES:
-            fid.write(OR_PARTICLES[pid].to_str() + '\n')
-        for rid in OR_RODS:
-            fid.write(OR_RODS[rid].to_str() + '\n')
-        for lid in OR_LAYERS:
-            fid.write(OR_LAYERS[lid].to_str() + '\n')
+        for pid in ssd.particles:
+            fid.write(ssd.particles[pid].to_str() + '\n')
+        for rid in ssd.rods:
+            fid.write(ssd.rods[rid].to_str() + '\n')
+        for lid in ssd.layers:
+            fid.write(ssd.layers[lid].to_str() + '\n')
+
+    return ssd
 
 
-def filter_rids(active_rids:set, reverse: bool = True):
-    for i, lid in enumerate(sorted(range(LID_MIN, LID_MAX + 1), reverse=reverse)):
-        if i == 0:
-            # all rods in the first layer are active
-            for pid_A in OR_LAYERS[lid].pids:
-                particle_A: Particle = OR_PARTICLES[pid_A]
-                active_rids.add(particle_A.rid)
-            continue
-        
-        # pids in the current layer
-        lid_pids = OR_LAYERS[lid].pids
-        
-        # layer is empty
-        if len(lid_pids) == 0:
-            active_rids.clear()
-            return 
+def random_deleted_rids(ssd: StressStrainData, F):
+    # sort k random float numbers in the range [0,1]
+    r = np.random.random(len(ssd.rods))
+    del_rids = []  # rods to be deleted
+    for i, rid in enumerate(ssd.rods):
+        rod: Rod = ssd.rods[rid]
+        #TODO Question: can we delete the rods from the first or last layers?
+        if r[i] < rod.prob_break(F):
+            del_rids.append(rid)
+    return del_rids
 
-        for pid_A in lid_pids:
-            particle_A: Particle = OR_PARTICLES[pid_A]            
-            for rid_B in particle_A.get_neigh_rids():
-                if rid_B in active_rids:
-                    active_rids.add(particle_A.rid)
-                    break
 
-def clear_rods(active_rids: set,  list = False):
-    global OR_RODS
-    # inactivate rods
-    removed_rods = []
-    for rid in OR_RODS:
-        if rid not in active_rids:
-            OR_RODS[rid].inactivate()
-            removed_rods.append(rid)
-    OR_RODS = {rid: OR_RODS[rid] for rid in active_rids} # update rods
-    if list:
-        return removed_rods
+class Logger:
+    def __init__(self):
+        self.F = []
+        self.num_active_particles = []
+        self.num_deleted_rods = []
 
-def count():
-    global OR_PARTICLES
-    cont = 0
+    def log(self, F, num_active_particles, num_deleted_rods):
+        self.F.append(F)
+        self.num_active_particles.append(num_active_particles)
+        self.num_deleted_rods.append(num_deleted_rods)
 
-    for particle in OR_PARTICLES.values():
-        if particle.active:
-            cont +=1
-     
+    def save(self, fn):
+        with open(fn, 'w') as fid:
+            fid.write('F, num_active_particles, num_deleted_rods\n')
+            for i in range(len(self.F)):
+                fid.write(f'{self.F[i]}, {self.num_active_particles[i]}, {self.num_deleted_rods[i]}\n')
 
-    return cont
 
-def stress_strain(fn: str, m: int = 2, verbose: bool = False):
-    global OR_RODS
-    map_force_partsInSkeleton = {} # Num of parts in skeleton
-    map_force_rodsRemoved = {} # Num of rids removed from skeleton by a force
+def stress_strain(ssd: StressStrainData, verbose: bool = False) -> Logger:
+    # sweep the layers from up to down
+    active_rids, deleted_rids = ssd.filter_rids(reverse=False)    
     
-     # read backbone
-    
-    #print("Backbone size init: %d" %len(RODS))
-    
-    # filter rods
-    #print('Filtering rods')
+    # sweep the layers from down to up
+    active_rids, deleted_rids = ssd.filter_rids(reverse=True)    
 
-    active_rids = set() # active rods
-    filter_rids(active_rids, reverse=False)
-    clear_rods(active_rids)
-    active_rids = set()
-    filter_rids(active_rids, reverse=True)
-    clear_rods(active_rids)
-    #print(f"   Elapsed time: {toc-tic:.2f} s")
+    # init logger
+    logger = Logger()    
+    logger.log(0, ssd.num_active_particles(), 0) 
 
-    #print("Backbone filtred: %d" %len(RODS))
-
-    # create maps
-    init = count()
-    map_force_partsInSkeleton[0] = [init]
-    map_force_rodsRemoved[0] = []
- 
+    all_deleted_rids = []
     F = 0.5 # applied force
-    #print('Force:', F, '=================================')
-    
-
     while True:
-        removed = []
-        list_removed_rids = []
         if verbose:  
-            print('Number of rods:', len(OR_RODS))
+            print('Number of rods:', len(ssd.rods))
             print('Force:', F, '=================================')
             print('Applying force')
-        tic = time.time()
-        # sort k random float numbers in the range [0,1]
-        r = np.random.random(len(OR_RODS))
-        del_rids = [] # rods to be deleted
-        for i, rid in enumerate(OR_RODS):
-            rod: Rod = OR_RODS[rid]
-            #TODO Question: can we delete the rods from the first or last layers?
-            if r[i] < rod.prob_break(F):
-                del_rids.append(rid)
-        toc = time.time()
-        if verbose:
-            print(f"   Elapsed time: {toc-tic:.2f} s")
 
-        if verbose:
-            print('Remove broken rods')
-        tic = time.time()
-
-        for rid in del_rids:
-            if verbose:
-                print("rid to be removed: %d" %rid)
-
-            OR_RODS[rid].inactivate()
-        OR_RODS = {rid: OR_RODS[rid] for rid, rod in OR_RODS.items() if rod.active} # update rods
-        toc = time.time()
-        #print(f"   Elapsed time: {toc-tic:.2f} s")
-        list_removed_rids+=del_rids
-    
-        tic = time.time()
-
-        if len(del_rids) == 0:
+        # random rods inactivation
+        deleted_rids = random_deleted_rids(ssd, F)
+        if len(deleted_rids) == 0:
+            logger.log(F, ssd.num_active_particles(), len(all_deleted_rids))
             F += 0.5 # increment the force
-            #print('Force:', F, '=================================')
-            
-            #print("sairam %d particulas" %R)
+            continue
 
-            cont = count()
-
-
-            if F in map_force_rodsRemoved:
-                # if key is in dictionary, append a value to its list
-                map_force_rodsRemoved[F].append(list_removed_rids)
-            else:
-                # if key is not in dictionary, add the key and a value for it
-                map_force_rodsRemoved[F] = list_removed_rids
-
-            if F in map_force_partsInSkeleton:
-                # if key is in dictionary, append a value to its list
-                map_force_partsInSkeleton[F].append(cont)
-            else:
-                # if key is not in dictionary, add the key and a value for it
-                map_force_partsInSkeleton[F] = [cont]
-
-        else:
-
-            if verbose:
-                print('Filtering rods')
-            active_rids = set() # active rods
-            filter_rids(active_rids, reverse=False)
-            removed = clear_rods(active_rids, list = True)
-            list_removed_rids+=removed
-            
-            # if the backbone is empty, stop
-            if len(active_rids) == 0:    
-
-                
-                if F in map_force_rodsRemoved:
-                    # if key is in dictionary, append a value to its list
-                    map_force_rodsRemoved[F].append(list_removed_rids)
-                else:
-                    # if key is not in dictionary, add the key and a value for it
-                    map_force_rodsRemoved[F] = list_removed_rids
-
-                if F in map_force_partsInSkeleton:
-                    # if key is in dictionary, append a value to its list
-                    map_force_partsInSkeleton[F].append(0)
-                else:
-                    # if key is not in dictionary, add the key and a value for it
-                    map_force_partsInSkeleton[F] = [0]
-
-                OR_RODS.clear()
-                OR_PARTICLES.clear()
-                OR_LAYERS.clear()
-
-                #print('active_rids null!!')            
-                break
-
-            active_rids = set()
-            filter_rids(active_rids, reverse=True)
-            removed = clear_rods(active_rids, list = True)
-            list_removed_rids+=removed
-
-            # if the backbone is empty, stop
-            if len(active_rids) == 0:    
-
-
-                if F in map_force_rodsRemoved:
-                    # if key is in dictionary, append a value to its list
-                    map_force_rodsRemoved[F].append(list_removed_rids)
-                else:
-                    # if key is not in dictionary, add the key and a value for it
-                    map_force_rodsRemoved[F] = list_removed_rids
-
-                if F in map_force_partsInSkeleton:
-                    # if key is in dictionary, append a value to its list
-                    map_force_partsInSkeleton[F].append(0)
-                else:
-                    # if key is not in dictionary, add the key and a value for it
-                    map_force_partsInSkeleton[F] = [0]
-
-                OR_RODS.clear()
-                OR_PARTICLES.clear()
-                OR_LAYERS.clear()
-
-                #print('active_rids null!!')            
-                break
-                   
-            
-            cont = count()
-
-
-            if F in map_force_rodsRemoved:
-                # if key is in dictionary, append a value to its list
-                map_force_rodsRemoved[F].append(list_removed_rids)
-            else:
-                # if key is not in dictionary, add the key and a value for it
-                map_force_rodsRemoved[F] = [list_removed_rids]
-
-            if F in map_force_partsInSkeleton:
-                # if key is in dictionary, append a value to its list
-                map_force_partsInSkeleton[F].append(cont)
-            else:
-                # if key is not in dictionary, add the key and a value for it
-                map_force_partsInSkeleton[F] = [cont]
-
-    return map_force_partsInSkeleton, map_force_rodsRemoved
-
-def get_dat_files(caminho_da_pasta):
-    files = []  # Lista para armazenar os caminhos completos dos arquivos
-
-    # Verifica se o caminho especificado é uma pasta válida
-    if os.path.isdir(caminho_da_pasta):
-        # Percorre todos os arquivos e pastas dentro do caminho especificado
-        for root, _, filenames in os.walk(caminho_da_pasta):
-            for filename in filenames:
-                caminho_completo = os.path.join(root, filename)
-                if caminho_completo.endswith('.dat'):
-                    files.append(caminho_completo)
-
-    return files
-
-
-
-def main(m:int = 2):    
+        ssd.drop_rids(deleted_rids)
+        all_deleted_rids += deleted_rids        
     
-    p, m = 0, 2
-    
+        if verbose:
+            print('Filtering rods')
+        
+        # sweep the layers from up to down        
+        active_rids, deleted_rids = ssd.filter_rids(reverse=False)
+        all_deleted_rids += deleted_rids
+        
+        # if the backbone is empty, stop
+        if len(active_rids) == 0:    
+            break
+        
+        # sweep the layers from down to up        
+        active_rids, deleted_rids = ssd.filter_rids(reverse=True)        
+        all_deleted_rids += deleted_rids
+
+        # if the backbone is empty, stop
+        if len(active_rids) == 0:
+            break
+    logger.log(F, ssd.num_active_particles(), len(all_deleted_rids))
+    return logger
+
+
+def main():
     # Create an argument parser
-    parser = argparse.ArgumentParser(description='Process command line arguments.')
+    parser = argparse.ArgumentParser(
+        description='Process command line arguments.')
 
-    # Add the desired command-line arguments
-    parser.add_argument('-seed', type=int, help='Seed argument description')
-    parser.add_argument('-file', type=str, help='File argument description')
+    # Add the desired command-line arguments    
+    parser.add_argument('-file', type=str, help='File argument description', default='/home/michael/gitrepos/dla-collagen/mode_s_ts_2_nb_30000_seed_130_.dat')
+    parser.add_argument('-m', type=int, help='Exponent of the rods', default=2)
 
     # Parse the command-line arguments
     args = parser.parse_args()
 
-    # Access the values of the arguments
-    seed = args.seed + p
-    fn = args.file 
+    # Access the values of the arguments    
+    fn = args.file
+    m = args.m
 
-    ts = int(fn.split('ts_')[1].split('_')[0])    
-    #print("rodada: %d" %p)
-    #random.seed(seed)
-    np.random.seed(seed)
+    np.random.seed(4321)
 
+    # Read particles
     tic = time.time()
-    read_particles(fn)    
+    ssd = read_or_create_ssd(fn)
     toc = time.time()
     print(f"   Elapsed time: {toc-tic:.2f} s")
 
-    RODS = copy.deepcopy(OR_RODS)
+    ssd.set_rods_exponent(m)
     
-
-    for i in range(0,1000):
-        print("rodada: %d" %p)
+    for k in range(0, 1000):
+        ssd_copy = ssd.copy()
+        print("rodada: %d" % k)
         tic = time.time()
-        OR_RODS = copy.deepcopy(RODS)
-        map_force_partsInSkeleton, map_force_rodsRemoved = stress_strain(fn, m, verbose=False)
+        logger = stress_strain(ssd_copy, verbose=False)
         toc = time.time()
         print(f"   Elapsed time: {toc-tic:.2f} s")
-        #print(map_force_partsInSkeleton)
-        ##Save porcent. of particles in skeleton 
-        wdir = '/home/robert/collagen_fibril/dla-collagen/teste/'
-        if not os.path.exists(wdir):
-            print(f'Folder not found ({wdir})')
-        fn1 = os.path.join(wdir, 'parts_removed%d_m%d_seed%d.txt' %(ts, m, seed))
-        #print('Writing', fn)
-        with open(fn1, 'w') as fid:
+        
+        # Save porcent. of particles in skeleton
+        fn_log = fn.replace('.dat', f'_m_{m}_k_{k}.csv')
+        logger.save(fn_log)
 
-            fid.write(f"force\tnumParts\tpartsRemoved\trodsRemoved\n")
-            f = 0
-            for j in map_force_partsInSkeleton.keys():
-                k = (map_force_partsInSkeleton[j][-1]/map_force_partsInSkeleton[0][-1])*100
-                l = map_force_rodsRemoved[j]
-                f = map_force_partsInSkeleton[0][-1] - map_force_partsInSkeleton[j][-1]
-                fid.write(f"{j}\t{k}\t{f}\t{l}\n")
-        
-        
-        p+= 1
-        
-    
-main(2)
+
+if __name__ == '__main__':
+    main()

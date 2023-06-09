@@ -199,3 +199,4 @@ density_particles_skelento.txt
 density_particles_skeleton_10000.txt
 miguel.txt
 stress_strain.py
+venv/*
