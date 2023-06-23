@@ -348,23 +348,31 @@ def read_or_create_ssd(fn_dat: str):
                 continue
             # add particle to the backbone
             rid = int(row[1])
+            if rid not in ssd.rods:
+                ssd.rods[rid] = Rod(ssd, rid)
             lid = y
             xz = np.array([x, z])
-            p = Particle(pid, rid, lid, xz)
-            # add particle to the backbone
-            ssd.particles[pid] = p
-            # add particle to the rod
-            if rid not in ssd.rods:
-                ssd.rods[rid] = Rod(rid)
-            ssd.rods[rid].add_pid(pid)
-            # add particle to the layer
-            if lid not in ssd.layers:
-                ssd.layers[lid] = Layer(lid)
-            ssd.layers[lid].add_pid(pid)
-            pid += 1
+            # extend the rod
+            for _ in range(18):
+                p = Particle(ssd, pid, rid, lid, xz)
+                # add particle to the backbone
+                ssd.particles[pid] = p
+                # add particle to the rod
+                ssd.rods[rid].add_pid(pid)
+                # add particle to the layer
+                if lid not in ssd.layers:
+                    ssd.layers[lid] = Layer(lid)
+                ssd.layers[lid].add_pid(pid)
+                pid += 1
+                lid += 1
     lid = list(ssd.layers.keys())
-    ssd.lid_max = int(max(lid)) 
+    ssd.lid_max = int(max(lid))
     ssd.lid_min = int(min(lid))
+
+    # check if there is any empty layer
+    for lid in range(-100, 101):
+        if lid not in ssd.layers or ssd.layers[lid].len() == 0:
+            raise Exception(f'Layer {lid} is empty')
     
     create_neighs(ssd.layers, ssd.particles)
 
