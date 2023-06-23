@@ -338,22 +338,23 @@ def read_or_create_ssd(fn_dat: str):
             row = row.split()
             # extract the fiber center (rectangular trapezoid)
             x = int(row[2])
-            y = int(row[3])
+            y = int(row[3])            
             z = int(row[4])
             if np.abs(x) > 8:
-                continue
-            if np.abs(y) > 100:
-                continue
+                continue            
             if np.abs(z) > 8:
                 continue
             # add particle to the backbone
             rid = int(row[1])
             if rid not in ssd.rods:
                 ssd.rods[rid] = Rod(ssd, rid)
-            lid = y
+            lid = y - 1
             xz = np.array([x, z])
             # extend the rod
             for _ in range(18):
+                lid += 1
+                if np.abs(lid) > 100:
+                    continue
                 p = Particle(ssd, pid, rid, lid, xz)
                 # add particle to the backbone
                 ssd.particles[pid] = p
@@ -364,7 +365,6 @@ def read_or_create_ssd(fn_dat: str):
                     ssd.layers[lid] = Layer(lid)
                 ssd.layers[lid].add_pid(pid)
                 pid += 1
-                lid += 1
     lid = list(ssd.layers.keys())
     ssd.lid_max = int(max(lid))
     ssd.lid_min = int(min(lid))
