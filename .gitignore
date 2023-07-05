@@ -200,3 +200,5 @@ density_particles_skeleton_10000.txt
 miguel.txt
 stress_strain.py
 venv/*
+analysis/data_dat/*
+analysis/data_csv/*
