@@ -362,7 +362,7 @@ def read_or_create_ssd(fn_dat: str):
             ssd.layers[lid].add_pid(pid)
             pid += 1
     lid = list(ssd.layers.keys())
-    ssd.lid_max = int(max(lid)) 
+    ssd.lid_max = int(max(lid))                                         
     ssd.lid_min = int(min(lid))
     
     create_neighs(ssd.layers, ssd.particles)
