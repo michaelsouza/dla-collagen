@@ -1,1 +1,0 @@
-./python3 stress.py -file /data_particles/mode_s_ts_4096_nb_30000_seed_6040_.dat
