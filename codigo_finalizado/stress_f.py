@@ -403,8 +403,8 @@ class Logger:
         self.num_deleted_rods.append(num_deleted_rods)
 
     def save(self, fn, k):
-        new_folder = '/home/robert/Documentos/Data_zurik/Stress/'
-        fn_= fn.replace('/home/robert/Documentos/Data_zurik/', '/home/robert/Documentos/Data_zurik/Stress/')
+        new_folder = '/home/robert/Datas/Stress_030124/Ext'
+        fn_= fn.replace('/home/robert/Datas/Zurik_030124/Ext', '/home/robert/Documentos/Datas/Stress_030124/')
         with open(fn_, 'a') as fid:
 
             if k == 0:

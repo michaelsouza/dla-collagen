@@ -1,0 +1,10 @@
+python3 stress_f.py -file /home/robert/Datas/Zurik_030124/Ext/ts_32_seed_10075.dat -n 10000
+python3 stress_f.py -file /home/robert/Datas/Zurik_030124/Ext/ts_32_seed_10015.dat -n 10000
+python3 stress_f.py -file /home/robert/Datas/Zurik_030124/Ext/ts_32_seed_10045.dat -n 10000
+python3 stress_f.py -file /home/robert/Datas/Zurik_030124/Ext/ts_32_seed_10135.dat -n 10000
+python3 stress_f.py -file /home/robert/Datas/Zurik_030124/Ext/ts_32_seed_10105.dat -n 10000
+python3 stress_f.py -file /home/robert/Datas/Zurik_030124/Ext/ts_32_seed_10030.dat -n 10000
+python3 stress_f.py -file /home/robert/Datas/Zurik_030124/Ext/ts_32_seed_10060.dat -n 10000
+python3 stress_f.py -file /home/robert/Datas/Zurik_030124/Ext/ts_32_seed_10120.dat -n 10000
+python3 stress_f.py -file /home/robert/Datas/Zurik_030124/Ext/ts_32_seed_10000.dat -n 10000
+python3 stress_f.py -file /home/robert/Datas/Zurik_030124/Ext/ts_32_seed_10090.dat -n 10000

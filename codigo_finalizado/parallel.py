@@ -10,7 +10,7 @@ def run_command(command):
         return None
     except subprocess.CalledProcessError as e:
         return e
-path = '/home/robert/Documentos/Data_zurik/Cmds/cmd_.txt'
+path = './cmd_10000.txt'
 def main(num_cores):
     if not os.path.exists(path):
         print("Error: cmd.txt not found.")
