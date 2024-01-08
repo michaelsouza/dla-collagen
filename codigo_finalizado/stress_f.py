@@ -404,7 +404,7 @@ class Logger:
 
     def save(self, fn, k):
         new_folder = '/home/robert/Datas/Stress_030124/Ext'
-        fn_= fn.replace('/home/robert/Datas/Zurik_030124/Ext', '/home/robert/Documentos/Datas/Stress_030124/')
+        fn_= fn.replace('/home/robert/Datas/Zurik_030124/Ext', '/home/robert/Datas/Stress_030124/')
         with open(fn_, 'a') as fid:
 
             if k == 0:
