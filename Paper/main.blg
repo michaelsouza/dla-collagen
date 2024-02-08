@@ -3,7 +3,6 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: plain.bst
 Database file #1: ref.bib
-Warning--I didn't find a database entry for ""
 Warning--to sort, need author, editor, or key in 2013
 Warning--empty author and editor in 2013
 You've used 16 entries,
@@ -47,4 +46,4 @@ warning$ -- 2
 while$ -- 56
 width$ -- 18
 write$ -- 177
-(There were 3 warnings)
+(There were 2 warnings)
