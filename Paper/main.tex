@@ -80,19 +80,27 @@ As fibrilas apresentam um formato alongado, com a sua região mais densa sendo a
 
 
     \subsection{Propriedades das fibrilas}
-
-
         
         Para analisar as propriedades mecânicas das fibrilas, utilizamos um modelo mecânico probabilístico, visto que os agregados gerados 
-        não possuem um carácter elástico para ser estudado usando modelos de molas\cite{Parkinson1997}. 
+        não possuem um carácter elástico para ser estudado usando modelos baseado em molas\cite{Parkinson1997,Saitoh2020MolecularDS}. 
 
         Primeiramente, iniciamos realizando o corte de um tronco de dimensão 17 x 201 x 17 em uma fibrila. Apos isso, nos fazemos uma limpeza 
-        para garantir que nao ocorra a presença de moléculas desafixadas. Para isso, nos consideramos que o tronco é dividido em 201 camadas e que
-        cada molécula tem pedaços em mais de uma camada. Iniciando pela primeira camada, marcamos todas as moleculas como ativas, em seguida, 
-        verificamos se, em uma camada superior, uma particula pertencente a uma molecula ativa possui uma particula vizinha inativa, se sim, ela
-        é considerada ativada bem como todas as particulas, tanto acima quanto abaixo, pertencentes aquela molécula. Repetimos esse procedimento 
-        até atingir a ultima camada. Com essa seleção de moléculas ativas, nos repetimos o procedimento, agora de cima para baixo, nesse conjunto 
-        até obtermos o esqueleto ativo, o conjunto de moléculas pela qual uma força aplicada é capaz de percolar. 
+        para garantir que nao ocorra a presença de moléculas desafixadas e determinar o esqueleto ativo. Para isso, nos consideramos que o 
+        tronco é dividido em 201 camadas e que cada molécula possui parcelas, de tamanho unitario, em mais de uma camada. Iniciando pela primeira 
+        camada, marcamos todas as moleculas como ativas, em seguida, verificamos se, em uma camada superior, uma particula pertencente a uma molecula 
+        ativa possui uma particula vizinha inativa, se sim, ela é considerada ativada bem como todas as particulas, tanto acima quanto abaixo, pertencentes 
+        aquela molécula. Repetimos esse procedimento até atingir a ultima camada. Esse procedimento pode ser visto na Figura \ref{M3}. Com essa 
+        seleção de moléculas ativas, nos repetimos o procedimento, agora de cima para baixo, nesse conjunto até obtermos o esqueleto ativo, o conjunto 
+        de moléculas pela qual uma força aplicada é capaz de percolar. 
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=\textwidth]{figures/esqueleto.png}
+    
+            \caption{.} 
+    
+            \label{M3}
+        \end{figure}
 
         Uma vez que obtivemos o esqueleto ativo, nos atribuimos uma probabilidade $P_{R}$ a cada molécula. Uma vez que aplicamos uma força ao agregado,
         cada molécula sente uma fraça da mesma, onde ela é diminuida pelo número de particulas em uma dada camada. Dessa forma, todas as $M$ particulas 
@@ -101,7 +109,7 @@ As fibrilas apresentam um formato alongado, com a sua região mais densa sendo a
         \begin{equation}
             \sigma_{i} = \frac{F}{M_{i}},
         \end{equation}
-        \noindent com isso, a força que uma molécula sente no agregado é a media dos seus \sigma_{i}.
+        \noindent com isso, a força que uma molécula sente no agregado é a media dos seus $\sigma_{i}$.
 
         As moléculas de colágeno possuem uma estrtura em tripla helice\cite{BRODSKY1997545}, dessa forma, a ruptura da propria molécula é mais imporvavel 
         de acontecer do que a quebra das ligações entre as moléculas\cite{Parkinson1997}. Portanto, nos consideramos uma probabilidade de ruptura para uma
@@ -114,7 +122,7 @@ As fibrilas apresentam um formato alongado, com a sua região mais densa sendo a
             P_{R} = (\frac{<\sigma>}{N\sigma_{s}})^{m},
         \end{equation}
 
-        \noindent $N$ é o número de ligações que uma dada molécula possui, \sigma_{s} é a força das ligações entre as moléculas e m é um fator de 
+        \noindent $N$ é o número de ligações que uma dada molécula possui, $\sigma_{s}$ é a força das ligações entre as moléculas e m é um fator de 
         amortecimento da energia\cite{Parkinson1997,2013}. Para todas as simulações, nos utilizamos $m$ = 2.
 
         A simulação consiste em aplicarmos umas força no esqueleto ativo, com isso, calculamos as probabilidades de cada molécula ser removida e sortíamos um número para ver se ocorre a ruptura. Caso ocorra pelo menos uma única quebra, repetimos o procedimento para uma dada força até que não mais ocorra rupturas. Nesse ponto, incrementamos a força em meio e repetimos a simulação. A fibrila se quebra se ocorrer a existência de pelo menos uma camada vazia.
