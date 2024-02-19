@@ -125,9 +125,28 @@ As fibrilas apresentam um formato alongado, com a sua região mais densa sendo a
         \noindent $N$ é o número de ligações que uma dada molécula possui, $\sigma_{s}$ é a força das ligações entre as moléculas e m é um fator de 
         amortecimento da energia\cite{Parkinson1997,2013}. Para todas as simulações, nos utilizamos $m$ = 2.
 
-        A simulação consiste em aplicarmos umas força no esqueleto ativo, com isso, calculamos as probabilidades de cada molécula ser removida e sortíamos um número para ver se ocorre a ruptura. Caso ocorra pelo menos uma única quebra, repetimos o procedimento para uma dada força até que não mais ocorra rupturas. Nesse ponto, incrementamos a força em meio e repetimos a simulação. A fibrila se quebra se ocorrer a existência de pelo menos uma camada vazia.
+        A simulação consiste em aplicarmos umas força no esqueleto ativo, tentando reproduzir comportamentos observados em experimento de distensão. 
+        Com isso, calculamos a probabilidade de remoção para cada molecula. Apos isso, sorteamos um valor entre 0 e 1 e comparamos com o $P_{R}$ de uma
+        dada molécula, se for $\leq$, ela então é removida e continuamos esse processo até varrer todo o agregado.  Nos repetimoso procedimento de calcular
+        $P_{R}$ para todo o agregado restante, mantendo a mesma força fixa, até que pare de ocorrer quebras. Nesse momento, incrementamos a força em meia 
+        unidade e repetimos o procedimento listado anteriormente. Nos consideramos que a fibrila se quebrou se houver a existência de pelo menos uma camada
+        vazia, de forma que o esqueleto ativo deixe de ser um agregado percolante. Nós observamos como ocorre o processo de remoção de moléculas contando 
+        quantas saem para uma dada força e tambem qual a tensão limite suportada antes de ocorrer a ruptura.
 
-        (fazer uma figura disso)
+
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=\textwidth]{figures/simulaçao (1).png}
+    
+            \caption{.} 
+    
+            \label{M4}
+        \end{figure}
+
+        Nos consideramos a quantidade de moleculas rompidas como uma medida para a deformação da nossa molécula. Nos tambem determinamos a tensão com relação 
+        as forças calculadas, afim de aproximar a simlação de uma fibrila real. Consideramos que a força para quebrar uma ligação é dada por e usamos o diaâmetro 
+        médio para determinar a tensão.
 
         Com isso, realizamos, para cada fibrila com um determinado valor de $T_{s}$, mil experimentos. Guardamos informações dos valores, para cada força, do número removido do esqueleto, bem quantas restaram.
 
