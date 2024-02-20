@@ -2,6 +2,10 @@
 \usepackage{graphicx} % Required for 
 \usepackage{natbib} % For bibliography
 \usepackage{float} % Add this in your preamble
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+
 
 
 \title{paper collagen}
@@ -29,126 +33,152 @@ As fibrilas apresentam um formato alongado, com a sua região mais densa sendo a
 
 \section{Metodologia}
 
-    Em nosso trabalho, nos desenvolvemos o estudo em duas etapas: Modelo para formação de fibrilas e Morfologia e 
-    propriedades mecânicas das fibrilas.
+    No presente estudo, desenvolvemos a investigação em duas etapas principais: na primeira, usamos um modelo para a formação de 
+    fibrilas de colágeno para estudar sua estrutura; na segunda, analisamos as propriedades mecânicas desses agregados. 
 
-    \subsection{Formação de fibrilas}
+    \subsection{Estrutura das fibrilas}
 
-        Nos utilizamos um modelo baseado em DLA(difusion limited aggregation)\cite{Witten1983} em três dimensões para 
-        simular a formação de fibrilas de colágeno. Nos consideramos as moléculas de colágeno como  sendo paralelepitedos 
-        regulares de dimensções 1 x 18 x 1. Usando uma rede regular cúbica, nos definimos o centro como a origem e fixamos
-        a primeira molécula do agregado, chamada de seed, em seguida, novas moléculas são lançadas de uma distância $R$ do 
-        centro  do agregado e se difundem até encontrarem o agregado e serem capturadas ou atingirem 
-        uma distância  $2R$ com relação ao centro, de modo que a simulação é reiniciada caso isso ocorra, esse processo está 
-        esquematizado na Figura \ref{M1}. 
+    Utilizamos um modelo baseado em Agregação Limitada por Difusão (\textit{Diffusion Limited Aggregation} - DLA) \cite{Witten1983} 
+    em três dimensões para simular a formação de fibrilas de colágeno. Consideramos as moléculas de colágeno como paralelepípedos 
+    regulares de dimensões \(1 \times 18 \times 1\). Empregando uma rede regular cúbica, definimos o centro como a origem e fixamos 
+    a primeira molécula do agregado, denominada \textit{seed}. Em seguida, novas moléculas são lançadas a partir de uma distância 
+    \(R\) do centro do agregado e se difundem até que ocorra uma das seguintes situações: serem capturadas pelo agregado ou atingirem 
+    uma distância \(2R\) em relação ao centro, caso em que a simulação é reiniciada. Esse processo está esquematizado na Figura \ref{M1}. 
 
         \begin{figure}[H]
             \centering
             \includegraphics[width=\textwidth]{figures/DLA.png}
     
-            \caption{.} 
+            \caption{Consideramos as moléculas de colágeno como paralelepípedos regulares de dimensões \(1 \times 18 \times 1\). 
+            Estas moléculas são lançadas a partir de uma distância \(R\) da \textit{seed}, que representa a primeira molécula fixada 
+            no agregado. As moléculas podem se difundir até serem capturadas pelo agregado ou atingirem uma distância \(2R\) da \textit{seed}, 
+            fora da zona de interesse, o que leva à reinicialização da simulação.} 
     
             \label{M1}
         \end{figure}
     
-        O processo de difusão dessas moléculas acontece mediante um random walk tridimensional.  As moléculas podem caminhar
-        para os primeiros e os segundos vizinhos, no plano X-Z, no eixo Y, elas realizam movimento para frente e para tras. As moléculas 
-        de colageno reais se agregam de forma lateral e em posições escalonadas com relação ao comprimento D = 67 nm. Dessa forma,
-        ao atingir o agregado, a molécula é capturada apenas se ela estiver em uma posições especificas, multiplos de D = 4, com relação 
-        a uma molécula pertencente ao agregado\cite{Parkinson1995}.  Dessa forma, visto o tamanho 18 da nossa representação,temos cinco 
-        configurações possiveis para que uma molécula seja captura, na Figura \ref{M2} podemos ver cada posição possivel. 
+        O processo de difusão das moléculas é modelado por um \textit{random walk} tridimensional, permitindo movimentos para os primeiros e 
+        segundos vizinhos no plano X-Z, enquanto no eixo Y, o movimento é restrito para frente e para trás. Na realidade, as moléculas de colágeno 
+        agregam-se lateralmente e em posições escalonadas, com um comprimento característico \(D = 67 \, \text{nm}\). Assim, uma molécula é 
+        capturada pelo agregado somente em posições específicas, que são múltiplos de \(D = 4\), em relação a uma molécula já pertencente ao 
+        agregado \cite{Parkinson1995}. Levando em conta o tamanho representativo de 18 da nossa modelagem, identificamos cinco configurações 
+        possíveis para a captura de uma molécula. A Figura \ref{M2} ilustra cada uma dessas posições possíveis, conforme descrito pela regra de 
+        agregação específica. 
 
         \begin{figure}[H]
             \centering
             \includegraphics[width=\textwidth]{figures/specific_bind.png}
     
-            \caption{.} 
+            \caption{Em fibrilas reais, observa-se que as moléculas estão alinhadas de forma escalonada, com um espaçamento característico de 
+            \(D = 67 \, \text{nm}\). Visando uma modelagem mais precisa do fenômeno, implementamos uma regra de agregação que reproduz esse 
+            processo, na qual novas moléculas são capturadas pelo agregado apenas se conectarem em posições que são múltiplos de \(D = 4\). 
+            Assim, resultam cinco configurações possíveis de agregação para as novas moléculas.}  
     
             \label{M2}
         \end{figure}
 
-        O processo de formação das fibrilas reais é dirigido por uma força hidrofóbica devido a interação entre as moléculas, de modo que elas 
-        tentam minimizar sua superfície exposta para tal\cite{Kadler1987,Parkinson1995}. Para representar esse processo, utilizamos um algoritmo
-        de difusão lateral sobre a superfície, que permite uma molécula recém agregada possa explorar a superfície, mantendo seu y fixo, para 
-        encontrar um local que minimize sua superfície exposta\cite{GarcaRuiz1991}. Caso ocorra mais de um local, a primeira posição é mantida. 
-        Esse movimento é controlado pelo parâmetro $T_{s}$ que define o número de tentativas que a molécula tem para explorar a superfície do 
-        agregado\cite{Parkinson1995}.
-     
+        A formação de fibrilas reais é impulsionada por forças hidrofóbicas resultantes das interações entre as moléculas, as quais buscam 
+        minimizar sua superfície exposta \cite{Kadler1987,Parkinson1995}. Para simular esse fenômeno, empregamos um algoritmo de difusão lateral
+        na superfície, permitindo que uma molécula recém-agregada explore a superfície, mantendo sua coordenada \(y\) fixa, a fim de localizar 
+        uma posição que minimize sua superfície exposta \cite{GarcaRuiz1991}. Em situações onde mais de uma posição minimiza a superfície, a 
+        molécula permanece na primeira posição encontrada. Este mecanismo é regulado pelo parâmetro \(T_{s}\), que determina o número de 
+        tentativas disponíveis para a molécula explorar a superfície do agregado \cite{Parkinson1995}.
 
-        Com esse algorítimo, geramos $50$ fibrilas contendo $30.000$ bastões para diferentes valores de $T_{s}$ a fim de ver o efeito desse 
-        parâmetro na morfologia das fibrilas. 
+        Com este algoritmo, geramos \(50\) fibrilas, cada uma contendo \(30.000\) bastões, para diferentes valores de \(T_{s}\), a fim de 
+        investigar o efeito desse parâmetro na morfologia das fibrilas. 
 
 
-    \subsection{Propriedades das fibrilas}
-        
-        Para analisar as propriedades mecânicas das fibrilas, utilizamos um modelo mecânico probabilístico, visto que os agregados gerados 
-        não possuem um carácter elástico para ser estudado usando modelos baseado em molas\cite{Parkinson1997,Saitoh2020MolecularDS}. 
+    \subsection{Propriedades Mecânicas} 
 
-        Primeiramente, iniciamos realizando o corte de um tronco de dimensão 17 x 201 x 17 em uma fibrila. Apos isso, nos fazemos uma limpeza 
-        para garantir que nao ocorra a presença de moléculas desafixadas e determinar o esqueleto ativo. Para isso, nos consideramos que o 
-        tronco é dividido em 201 camadas e que cada molécula possui parcelas, de tamanho unitario, em mais de uma camada. Iniciando pela primeira 
-        camada, marcamos todas as moleculas como ativas, em seguida, verificamos se, em uma camada superior, uma particula pertencente a uma molecula 
-        ativa possui uma particula vizinha inativa, se sim, ela é considerada ativada bem como todas as particulas, tanto acima quanto abaixo, pertencentes 
-        aquela molécula. Repetimos esse procedimento até atingir a ultima camada. Esse procedimento pode ser visto na Figura \ref{M3}. Com essa 
-        seleção de moléculas ativas, nos repetimos o procedimento, agora de cima para baixo, nesse conjunto até obtermos o esqueleto ativo, o conjunto 
-        de moléculas pela qual uma força aplicada é capaz de percolar. 
+        Para a análise das propriedades mecânicas das fibrilas, adotamos um modelo mecânico probabilístico. Esta abordagem é necessária, uma vez
+        que os agregados gerados não apresentam propriedades elásticas adequadas para serem estudados por modelos baseados em molas, por exemplo
+        \cite{Parkinson1997,Saitoh2020MolecularDS}.
+
+        Primeiramente, realizamos o corte de um tronco de dimensão \(17 \times 201 \times 17\) em uma fibrila. Após este corte, procedemos com 
+        uma limpeza para assegurar a ausência de moléculas desafixadas devido ao corte e para determinar o esqueleto ativo. Consideramos que o 
+        tronco é composto por \(201\) camadas, e cada molécula, dividida em parcelas de tamanho unitário, pode estender-se por mais de uma camada.
+        Iniciamos pela primeira camada, marcando todas as moléculas como ativas. Em seguida, verificamos nas camadas superiores se alguma 
+        partícula de uma molécula ativa possui vizinhança inativa; caso afirmativo, a partícula é ativada, assim como todas as partículas 
+        associadas à mesma molécula, tanto acima quanto abaixo. Este procedimento é repetido até alcançarmos a última camada, conforme ilustrado 
+        na Figura \ref{M3}. Com essa seleção de moléculas ativas, repetimos o processo agora de cima para baixo até obtermos o esqueleto ativo, 
+        que é o conjunto de moléculas através do qual uma força aplicada pode percolar. 
 
         \begin{figure}[H]
             \centering
             \includegraphics[width=\textwidth]{figures/esqueleto.png}
     
-            \caption{.} 
+            \caption{A) Para análise das fibrilas, realizamos inicialmente o corte de um tronco com dimensões \(17 \times 201 \times 17\). B) 
+            Procedemos com um processo de limpeza nesse tronco a fim de obter o esqueleto ativo, que efetivamente conduz a força na fibrila. 
+            Iniciamos pela primeira camada do tronco, marcando como ativas todas as moléculas que possuem ao menos um segmento nesta camada. Em 
+            seguida, avançamos para as camadas superiores e, para cada segmento ativo em uma dada camada, verificamos a existência de vizinhos 
+            ativos. Caso existam, a molécula correspondente é marcada como ativa. Este procedimento é repetido até alcançarmos a última camada. 
+            Com o conjunto de moléculas ativas identificado, as inativas são descartadas e o processo é então repetido, agora iniciando da 
+            camada 201 e procedendo em direção à primeira camada.}  
     
             \label{M3}
         \end{figure}
 
-        Uma vez que obtivemos o esqueleto ativo, nos atribuimos uma probabilidade $P_{R}$ a cada molécula. Uma vez que aplicamos uma força ao agregado,
-        cada molécula sente uma fraça da mesma, onde ela é diminuida pelo número de particulas em uma dada camada. Dessa forma, todas as $M$ particulas 
-        na i-ésima camada sentem uma força na forma 
+        Após a determinação do esqueleto ativo, definimos para cada molécula uma probabilidade \(P_{R}\), influenciada tanto pela configuração de
+        sua vizinhança quanto pela magnitude da força total aplicada ao agregado. Quando uma tensão é aplicada, cada molécula no agregado é 
+        afetada por uma parcela dessa força total, proporcional ao número de partículas presentes em sua respectiva camada. Consequentemente, em 
+        uma dada \(i\)-ésima camada contendo \(M\) partículas, a força por partícula é dada por:  
 
         \begin{equation}
             \sigma_{i} = \frac{F}{M_{i}},
         \end{equation}
-        \noindent com isso, a força que uma molécula sente no agregado é a media dos seus $\sigma_{i}$.
+            
 
-        As moléculas de colágeno possuem uma estrtura em tripla helice\cite{BRODSKY1997545}, dessa forma, a ruptura da propria molécula é mais imporvavel 
-        de acontecer do que a quebra das ligações entre as moléculas\cite{Parkinson1997}. Portanto, nos consideramos uma probabilidade de ruptura para uma
-        molécula ao inves de cada particula que a compõe. Nos tambem consideramos que o numero de ligações, responsaveis por manter a molécula presa no 
-        esqueleto ativo, é igual somatorio do numero de particulas vizinhas em cada camada que a molécula está presente.
+        onde \(\sigma_{i}\) representa a força por partícula na \(i\)-ésima camada e \(F\) é a força total aplicada ao agregado. A força sentida 
+        por uma molécula individual no agregado é, portanto, a média dos \(\sigma_{i}\) correspondentes às camadas em que a molécula está presente. 
 
-        Com isso, nossa probabilidade é determinada pela equação
+        As moléculas de colágeno são caracterizadas por sua estrutura em tripla hélice \cite{BRODSKY1997545}, o que torna a ruptura intramolecular 
+        menos provável em comparação com a quebra das ligações intermoleculares \cite{Parkinson1997}. Dessa forma, consideramos a probabilidade 
+        de ruptura para a molécula como um todo, ao invés de para cada partícula individual que a compõe. Adicionalmente, assumimos que o número de 
+        ligações responsáveis por manter a molécula fixada no esqueleto ativo é igual ao somatório do número de partículas vizinhas em cada camada 
+        onde a molécula está presente. 
+
+        Com base nesses pressupostos, definimos nossa probabilidade de ruptura pela equação 
 
         \begin{equation}
-            P_{R} = (\frac{<\sigma>}{N\sigma_{s}})^{m},
+            P_{R} = \left(\frac{\langle \sigma_{i} \rangle}{N \sigma_{s}}\right)^{m},
         \end{equation}
 
-        \noindent $N$ é o número de ligações que uma dada molécula possui, $\sigma_{s}$ é a força das ligações entre as moléculas e m é um fator de 
-        amortecimento da energia\cite{Parkinson1997,2013}. Para todas as simulações, nos utilizamos $m$ = 2.
+        onde \(N\) representa o número de ligações de uma dada molécula, \(\sigma_{s}\) denota a força das ligações entre as moléculas, e \(m\) é um 
+        fator que modula a dissipação de energia \cite{Parkinson1997,2013}. Em todas as simulações, adotamos \(m = 2\). 
 
-        A simulação consiste em aplicarmos umas força no esqueleto ativo, tentando reproduzir comportamentos observados em experimento de distensão. 
-        Com isso, calculamos a probabilidade de remoção para cada molecula. Apos isso, sorteamos um valor entre 0 e 1 e comparamos com o $P_{R}$ de uma
-        dada molécula, se for $\leq$, ela então é removida e continuamos esse processo até varrer todo o agregado.  Nos repetimoso procedimento de calcular
-        $P_{R}$ para todo o agregado restante, mantendo a mesma força fixa, até que pare de ocorrer quebras. Nesse momento, incrementamos a força em meia 
-        unidade e repetimos o procedimento listado anteriormente. Nos consideramos que a fibrila se quebrou se houver a existência de pelo menos uma camada
-        vazia, de forma que o esqueleto ativo deixe de ser um agregado percolante. Nós observamos como ocorre o processo de remoção de moléculas contando 
-        quantas saem para uma dada força e tambem qual a tensão limite suportada antes de ocorrer a ruptura.
-
+        A simulação é conduzida aplicando-se uma força ao esqueleto ativo, em uma tentativa de emular os comportamentos observados em experimentos de 
+        distensão. Inicialmente, calculamos a probabilidade de remoção \(P_{R}\) para cada molécula. Em seguida, realizamos um sorteio de um valor 
+        entre 0 e 1 para cada molécula; se o valor sorteado for menor ou igual a \(P_{R}\), a molécula é removida. Este processo é repetido para 
+        todas as moléculas do agregado. Após a primeira varredura, recalculamos \(P_{R}\) para as moléculas remanescentes sob a mesma força aplicada 
+        e continuamos o processo até que não ocorram mais quebras. A força é então incrementada em meia unidade, e o procedimento é repetido. 
+        Consideramos que a fibrila se rompe quando ao menos uma camada fica vazia, indicando que o esqueleto ativo não mais forma um agregado 
+        percolante. Esse procedimento está esquematizado na Figura \ref{M4}. Monitoramos o processo de remoção das moléculas, registrando a quantidade 
+        de moléculas removidas para uma dada força e a tensão máxima suportada antes da ruptura. 
 
 
         \begin{figure}[H]
             \centering
             \includegraphics[width=\textwidth]{figures/simulaçao (1).png}
     
-            \caption{.} 
+            \caption{A) Com o esqueleto ativo definido, simulamos um teste mecânico na fibrila, análogo à aplicação de uma força axial ao longo do eixo 
+            \(y\), estendendo-a. Dada a ausência de propriedades elásticas na fibrila, recorremos a um modelo mecânico probabilístico. Neste modelo, 
+            atribuímos a cada molécula uma probabilidade de remoção \(P_{R}\), que depende tanto da força aplicada ao agregado quanto do número de 
+            ligações que a molécula mantém. B) Iniciamos a simulação atribuindo \(P_{R}\) a cada molécula e sorteando uma probabilidade \(P_{i}\). Se 
+            \(P_{i} \leq P_{R}\), a molécula é removida do agregado. Este processo é repetido até que todas as moléculas sejam avaliadas, seguido pelo 
+            recálculo de \(P_{R}\) para as moléculas remanescentes. A força é incrementada em meio após cada ciclo no qual não ocorrem mais remoções. C) 
+            A simulação termina quando identificamos uma camada vazia no agregado, momento no qual consideramos a fibrila como rompida.} 
     
             \label{M4}
         \end{figure}
 
-        Nos consideramos a quantidade de moleculas rompidas como uma medida para a deformação da nossa molécula. Nos tambem determinamos a tensão com relação 
-        as forças calculadas, afim de aproximar a simlação de uma fibrila real. Consideramos que a força para quebrar uma ligação é dada por e usamos o diaâmetro 
-        médio para determinar a tensão.
+      
+        Consideramos a quantidade de moléculas rompidas como um indicador da deformação da nossa fibrila. Além disso, determinamos a tensão em relação 
+        às forças calculadas para aproximar a simulação a uma fibrila real. A força necessária para romper uma ligação é considerada constante, e 
+        utilizamos o diâmetro médio das fibrilas para calcular a tensão. 
 
-        Com isso, realizamos, para cada fibrila com um determinado valor de $T_{s}$, mil experimentos. Guardamos informações dos valores, para cada força, do número removido do esqueleto, bem quantas restaram.
+        Para cada valor de \(T_{s}\), selecionamos 10 fibrilas para submeter ao procedimento de simulação. Para cada fibrila, realizamos mil experimentos. 
+        Registramos, para cada nível de força aplicada, o número de moléculas removidas do esqueleto e quantas permaneceram. 
+        
 
 
 \section{Resultados}

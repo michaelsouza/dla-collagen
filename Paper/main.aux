@@ -7,51 +7,51 @@
 \citation{Witten1983}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {2}Metodologia}{1}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Formação de fibrilas}{1}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Estrutura das fibrilas}{1}{}\protected@file@percent }
 \citation{Parkinson1995}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces .}}{2}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Consideramos as moléculas de colágeno como paralelepípedos regulares de dimensões \(1 \times 18 \times 1\). Estas moléculas são lançadas a partir de uma distância \(R\) da \textit  {seed}, que representa a primeira molécula fixada no agregado. As moléculas podem se difundir até serem capturadas pelo agregado ou atingirem uma distância \(2R\) da \textit  {seed}, fora da zona de interesse, o que leva à reinicialização da simulação.}}{2}{}\protected@file@percent }
 \newlabel{M1}{{1}{2}}
 \citation{Kadler1987,Parkinson1995}
 \citation{GarcaRuiz1991}
 \citation{Parkinson1995}
 \citation{Parkinson1997,Saitoh2020MolecularDS}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces .}}{3}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Em fibrilas reais, observa-se que as moléculas estão alinhadas de forma escalonada, com um espaçamento característico de \(D = 67 \, \text  {nm}\). Visando uma modelagem mais precisa do fenômeno, implementamos uma regra de agregação que reproduz esse processo, na qual novas moléculas são capturadas pelo agregado apenas se conectarem em posições que são múltiplos de \(D = 4\). Assim, resultam cinco configurações possíveis de agregação para as novas moléculas.}}{3}{}\protected@file@percent }
 \newlabel{M2}{{2}{3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Propriedades das fibrilas}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Propriedades Mecânicas}{3}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces A) Para análise das fibrilas, realizamos inicialmente o corte de um tronco com dimensões \(17 \times 201 \times 17\). B) Procedemos com um processo de limpeza nesse tronco a fim de obter o esqueleto ativo, que efetivamente conduz a força na fibrila. Iniciamos pela primeira camada do tronco, marcando como ativas todas as moléculas que possuem ao menos um segmento nesta camada. Em seguida, avançamos para as camadas superiores e, para cada segmento ativo em uma dada camada, verificamos a existência de vizinhos ativos. Caso existam, a molécula correspondente é marcada como ativa. Este procedimento é repetido até alcançarmos a última camada. Com o conjunto de moléculas ativas identificado, as inativas são descartadas e o processo é então repetido, agora iniciando da camada 201 e procedendo em direção à primeira camada.}}{4}{}\protected@file@percent }
+\newlabel{M3}{{3}{4}}
 \citation{BRODSKY1997545}
 \citation{Parkinson1997}
 \citation{Parkinson1997,2013}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces .}}{4}{}\protected@file@percent }
-\newlabel{M3}{{3}{4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces .}}{5}{}\protected@file@percent }
-\newlabel{M4}{{4}{5}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Resultados}{6}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Morfologia das fibrilas}{6}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Visualização transversal e lateral das fibrilas geradas com o algoritmo de DLA contendo 30.000 moléculas. A coloração indica quão antigo é a molécula no agregado. Quanto mais pro azul escuro, mais antigo no agregado, quanto mais para o amarelo, mais recente. A) Fibrila gerada para \(T_{s}\) 2, baixa difusão. B) Fibrila gerada para \(T_{s}\) = 10000, alta difusão.}}{7}{}\protected@file@percent }
-\newlabel{R1}{{5}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces A) Com o esqueleto ativo definido, simulamos um teste mecânico na fibrila, análogo à aplicação de uma força axial ao longo do eixo \(y\), estendendo-a. Dada a ausência de propriedades elásticas na fibrila, recorremos a um modelo mecânico probabilístico. Neste modelo, atribuímos a cada molécula uma probabilidade de remoção \(P_{R}\), que depende tanto da força aplicada ao agregado quanto do número de ligações que a molécula mantém. B) Iniciamos a simulação atribuindo \(P_{R}\) a cada molécula e sorteando uma probabilidade \(P_{i}\). Se \(P_{i} \leq P_{R}\), a molécula é removida do agregado. Este processo é repetido até que todas as moléculas sejam avaliadas, seguido pelo recálculo de \(P_{R}\) para as moléculas remanescentes. A força é incrementada em meio após cada ciclo no qual não ocorrem mais remoções. C) A simulação termina quando identificamos uma camada vazia no agregado, momento no qual consideramos a fibrila como rompida.}}{6}{}\protected@file@percent }
+\newlabel{M4}{{4}{6}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Resultados}{7}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Morfologia das fibrilas}{7}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Visualização transversal e lateral das fibrilas geradas com o algoritmo de DLA contendo 30.000 moléculas. A coloração indica quão antigo é a molécula no agregado. Quanto mais pro azul escuro, mais antigo no agregado, quanto mais para o amarelo, mais recente. A) Fibrila gerada para \(T_{s}\) 2, baixa difusão. B) Fibrila gerada para \(T_{s}\) = 10000, alta difusão.}}{8}{}\protected@file@percent }
+\newlabel{R1}{{5}{8}}
 \citation{Parkinson1995,Kadler1987}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Valores médios dos comprimentos, diametros e densidade de fibrilas geradas para diferentes valores de \(T_{s}\).}}{8}{}\protected@file@percent }
-\newlabel{tab1}{{1}{8}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Valores médios dos comprimentos, diametros e densidade de fibrilas geradas para diferentes valores de \(T_{s}\).}}{9}{}\protected@file@percent }
+\newlabel{tab1}{{1}{9}}
 \citation{Witten1983}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces A quantidade de partículas por seção das fibrilas geradas segue uma relação linear da distancia em que medimos para a ponta. Nos observamos que, partindo de uma ponta, a massa cresce linear até bem proximo da região central da fibrila. A medida que nos afastamos dessa região, a massa decaí linearmente. Esse comportamento foi observado para todas as fibrilas, indicando que o parâmetro \(T_{s}\) não tem efeito sobre essa característica.}}{9}{}\protected@file@percent }
-\newlabel{R2}{{6}{9}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Variação da forma da seção transversal das fibrilas para diferentes valores de \(T_{s}\).}}{10}{}\protected@file@percent }
-\newlabel{R3}{{7}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces A quantidade de partículas por seção das fibrilas geradas segue uma relação linear da distancia em que medimos para a ponta. Nos observamos que, partindo de uma ponta, a massa cresce linear até bem proximo da região central da fibrila. A medida que nos afastamos dessa região, a massa decaí linearmente. Esse comportamento foi observado para todas as fibrilas, indicando que o parâmetro \(T_{s}\) não tem efeito sobre essa característica.}}{10}{}\protected@file@percent }
+\newlabel{R2}{{6}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Variação da forma da seção transversal das fibrilas para diferentes valores de \(T_{s}\).}}{11}{}\protected@file@percent }
+\newlabel{R3}{{7}{11}}
 \citation{Parkinson1997}
 \citation{YANG2012148}
 \citation{Noritaka}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces  Dimensão fractal média da sesção transversal em função do parâmetro \(T_{s}\).}}{11}{}\protected@file@percent }
-\newlabel{R4}{{8}{11}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Propriedades mecânicas}{11}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces  Dimensão fractal média da sesção transversal em função do parâmetro \(T_{s}\).}}{12}{}\protected@file@percent }
+\newlabel{R4}{{8}{12}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Propriedades mecânicas}{12}{}\protected@file@percent }
 \citation{Parkinson1995}
 \citation{KATZ1973351}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Tensão em função da deformação da fibrila para diferentes valores de \(T_{s}\).}}{12}{}\protected@file@percent }
-\newlabel{R5}{{9}{12}}
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Tensão crítica em função da densidade. Observamos que esse valor cresce exponencialmente com a densidade até ambos os parâmetros atingirem um limite superior.}}{13}{}\protected@file@percent }
-\newlabel{R6}{{10}{13}}
-\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Distribuição das avalanches de ruptura em função do seu tamanho para diferentes valores de \(T_{s}\). Podemos observar um comportamento em lei de potencia com expoentes $\gamma $ bem definidos para todos valores do parâmetro. Os expoentes variam de -1.94 a -2.60.}}{14}{}\protected@file@percent }
-\newlabel{R7}{{11}{14}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Conclusões}{14}{}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Tensão em função da deformação da fibrila para diferentes valores de \(T_{s}\).}}{13}{}\protected@file@percent }
+\newlabel{R5}{{9}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Tensão crítica em função da densidade. Observamos que esse valor cresce exponencialmente com a densidade até ambos os parâmetros atingirem um limite superior.}}{14}{}\protected@file@percent }
+\newlabel{R6}{{10}{14}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Distribuição das avalanches de ruptura em função do seu tamanho para diferentes valores de \(T_{s}\). Podemos observar um comportamento em lei de potencia com expoentes $\gamma $ bem definidos para todos valores do parâmetro. Os expoentes variam de -1.94 a -2.60.}}{15}{}\protected@file@percent }
+\newlabel{R7}{{11}{15}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Conclusões}{15}{}\protected@file@percent }
 \bibstyle{plain}
 \bibdata{ref}
 \bibcite{2013}{{1}{}{{}}{{}}}
@@ -73,4 +73,4 @@
 \bibcite{YANG2012148}{{17}{}{{}}{{}}}
 \bibcite{Zhu2018}{{18}{}{{}}{{}}}
 \providecommand\NAT@force@numbers{}\NAT@force@numbers
-\gdef \@abspage@last{16}
+\gdef \@abspage@last{17}
