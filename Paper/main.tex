@@ -1,9 +1,11 @@
 \documentclass{article}
-\usepackage{graphicx} % Required for 
-\usepackage{natbib} % For bibliography
+\usepackage{graphicx} % Required for figures
+\usepackage[numbers]{natbib}
 \usepackage{float} % Add this in your preamble
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
 
 
 
@@ -18,17 +20,25 @@
 
 \section{Introduction}
 
-O colágeno tipo I é uma proteína abundante no corpo humano, de forma que compõe $90\%$ dele. Ele está presente na matriz extracelular bem como em estruturas como pele, osso, tendão e córnea \cite{RicoLlanos2021, Silver2018}.
-\\
+    O colágeno tipo I é uma proteína abundante no corpo humano, de forma que compõe $90\%$ dele. Sua estrturua é 
+    composta por um tripla hélice de cadeias polipeptídicas(cadeias $\alpha$). Ele possui tamanhos típicos de $300$ nm de 
+    comprimento por $1,5$ nm de diâmetro e apresenta um formato tipo haste \cite{Gelse2003,Silver2018}. As moléculas de 
+    colágeno tipo I possuem, intrisicamente, a informação necessária para se auto-organizar em estruturas mais complexas 
+    chamadas fibrilas. Esse processo, denominado fibrilo-gênese, ocorre o mediante a agregação de milhares dessas moléculas de forma 
+    escalonada por um período $D= 67$ nm, de modo que existem cinco posições possíveis para que ocorra a interação entre 
+    elas\cite{Zhu2018, KADLER1996}.  
+    
+    As fibrilas apresentam um formato alongado, com a sua região mais densa sendo a central e, consequentemente, as pontas 
+    afinadas \cite{Charvolin2019, KADLER1996}. As fibrilas apresentam comprimento típicos de $500 \mu m$ com $500 nm$ de 
+    diâmetro, além de serem constituídas por moléculas da ordem de $10^{7}$ \cite{Parry1984}. Com aglomerados de fibrilas, 
+    é possivel gerar fibras de colágeno, da ordem de $20 \mu m$ de diâmetro. Por sua vez, as fibras de colágeno são 
+    o alicerce de estrtuturas hierarquicas bem mais complexas e diversas, como o tecido conjuntivo, ossos, tendôes, côrnea 
+    \cite{RicoLlanos2021, Silver2018}.
 
-O colágeno tipo I é uma molécula composta por um tripla hélice de cadeias polipeptídicas(cadeias $\alpha$). Ele possui tamanhos típicos de $300$ nm de comprimento por $1,5$ nm de diâmetro e apresenta um formato tipo haste \cite{Gelse2003,Silver2018}. 
-\\
-
-As moléculas de colágeno tipo I possuem, intrisicamente, a informação necessária para se auto-organizar em estruturas mais complexas chamadas fibrilas. Esse processo, denominado fibrilo-gênese, ocorre o mediante a agregação de milhares dessas moléculas de forma escalonada por um período $D= 67$ nm, de modo que existem cinco posições possíveis para que ocorra a interação entre elas\cite{Zhu2018, KADLER1996}.  
-\\
-
-As fibrilas apresentam um formato alongado, com a sua região mais densa sendo a central e, consequentemente, as pontas afinadas\cite{Charvolin2019, KADLER1996}. As fibrilas apresentam comprimento típicos de $500 \mu m$ com $500 nm$ de diâmetro, além de serem constituídas por moléculas da ordem de $10^{7}$\cite{Parry1984}. 
-\\
+    O processo de formação das fibrilas ja foi alvo dos esforços de outros pesquisadores. Diversos modelos foram propostos, 
+    tendo como base característica observadas em fibrilas. Parkinson et al. propuseram a utilização de modelo baseado em 
+    (\textit{Diffusion Limited Aggregation} - DLA) para resolver esse problema \cite{Parkinson1995}. Os agregados obtidos
+    apresentaram uma morfólogia fibrilar,  
 
 
 \section{Metodologia}
@@ -381,8 +391,8 @@ As fibrilas apresentam um formato alongado, com a sua região mais densa sendo a
 
 
 
-\bibliographystyle{plain} % Set the bibliography style
-\bibliography{ref} % Include your .bib file (without the .bib extension)
+\bibliographystyle{unsrtnat} % Set the bibliography style
+\bibliography{ref.bib} % Include your .bib file (without the .bib extension)
 
 
     

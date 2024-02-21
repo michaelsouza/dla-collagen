@@ -1,108 +1,165 @@
-\begin{thebibliography}{10}
+\begin{thebibliography}{18}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem{2013}
-{\em Engineering Materials 2}.
-\newblock Elsevier, 2013.
-
-\bibitem{BRODSKY1997545}
-Barbara Brodsky and John~A.M. Ramshaw.
-\newblock The collagen triple-helix structure.
-\newblock {\em Matrix Biology}, 15(8):545--554, 1997.
-
-\bibitem{Charvolin2019}
-Jean Charvolin and Jean-Fran{\c{c}}ois Sadoc.
-\newblock Type-i collagen fibrils: From growth morphology to local order.
-\newblock {\em The European Physical Journal E}, 42(4), April 2019.
-
-\bibitem{GarcaRuiz1991}
-Juan~M. Garc{\'{\i}}a-Ruiz and Ferm{\'{\i}}n Ot{\'{a}}lora.
-\newblock Diffusion limited aggregation. the role of surface diffusion.
-\newblock {\em Physica A: Statistical Mechanics and its Applications},
-  178(3):415--420, November 1991.
-
-\bibitem{Gelse2003}
+\bibitem[Gelse(2003)]{Gelse2003}
 K~Gelse.
 \newblock Collagens{\textemdash}structure, function, and biosynthesis.
-\newblock {\em Advanced Drug Delivery Reviews}, 55(12):1531--1546, November
-  2003.
+\newblock \emph{Advanced Drug Delivery Reviews}, 55\penalty0 (12):\penalty0
+  1531--1546, November 2003.
+\newblock \doi{10.1016/j.addr.2003.08.002}.
+\newblock URL \url{https://doi.org/10.1016/j.addr.2003.08.002}.
 
-\bibitem{Saitoh2020MolecularDS}
-Ken ichi Saitoh, Tomohiro Sato, Masanori Takuma, and Yoshimasa Takahashi.
-\newblock Molecular dynamics study of collagen fibrils: Relation between
-  mechanical properties and molecular chirality.
-\newblock {\em Journal of Biomaterials and Nanobiotechnology}, 2020.
+\bibitem[Silver et~al.(2018)Silver, Jaffe, and Shah]{Silver2018}
+Frederick~H. Silver, Michael Jaffe, and Ruchit~G. Shah.
+\newblock Structure and behavior of collagen fibers.
+\newblock In \emph{Handbook of Properties of Textile and Technical Fibres},
+  pages 345--365. Elsevier, 2018.
+\newblock \doi{10.1016/b978-0-08-101272-7.00011-0}.
+\newblock URL \url{https://doi.org/10.1016/b978-0-08-101272-7.00011-0}.
 
-\bibitem{Kadler1987}
+\bibitem[Zhu et~al.(2018)Zhu, Yuan, Yin, You, Gu, Xiong, and Hu]{Zhu2018}
+Shichen Zhu, Qijuan Yuan, Tao Yin, Juan You, Zhipeng Gu, Shanbai Xiong, and
+  Yang Hu.
+\newblock Self-assembly of collagen-based biomaterials: preparation,
+  characterizations and biomedical applications.
+\newblock \emph{Journal of Materials Chemistry B}, 6\penalty0 (18):\penalty0
+  2650--2676, 2018.
+\newblock \doi{10.1039/c7tb02999c}.
+\newblock URL \url{https://doi.org/10.1039/c7tb02999c}.
+
+\bibitem[KADLER et~al.(1996)KADLER, HOLMES, TROTTER, and CHAPMAN]{KADLER1996}
+Karl~E. KADLER, David~F. HOLMES, John~A. TROTTER, and John~A. CHAPMAN.
+\newblock Collagen fibril formation.
+\newblock \emph{Biochemical Journal}, 316\penalty0 (1):\penalty0 1--11, May
+  1996.
+\newblock \doi{10.1042/bj3160001}.
+\newblock URL \url{https://doi.org/10.1042/bj3160001}.
+
+\bibitem[Charvolin and Sadoc(2019)]{Charvolin2019}
+Jean Charvolin and Jean-Fran{\c{c}}ois Sadoc.
+\newblock Type-i collagen fibrils: From growth morphology to local order.
+\newblock \emph{The European Physical Journal E}, 42\penalty0 (4), April 2019.
+\newblock \doi{10.1140/epje/i2019-11812-1}.
+\newblock URL \url{https://doi.org/10.1140/epje/i2019-11812-1}.
+
+\bibitem[Parry and Craig(1984)]{Parry1984}
+David A.~D. Parry and Alan~S. Craig.
+\newblock Growth and development of collagen fibrils in connective tissue.
+\newblock In \emph{Ultrastructure of the Connective Tissue Matrix}, pages
+  34--64. Springer {US}, 1984.
+\newblock \doi{10.1007/978-1-4613-2831-5_2}.
+\newblock URL \url{https://doi.org/10.1007/978-1-4613-2831-5_2}.
+
+\bibitem[Rico-Llanos et~al.(2021)Rico-Llanos, Borrego-Gonz{\'{a}}lez,
+  Moncayo-Donoso, Becerra, and Visser]{RicoLlanos2021}
+Gustavo~A. Rico-Llanos, Sara Borrego-Gonz{\'{a}}lez, Miguelangel
+  Moncayo-Donoso, Jos{\'{e}} Becerra, and Rick Visser.
+\newblock Collagen type i biomaterials as scaffolds for bone tissue
+  engineering.
+\newblock \emph{Polymers}, 13\penalty0 (4):\penalty0 599, February 2021.
+\newblock \doi{10.3390/polym13040599}.
+\newblock URL \url{https://doi.org/10.3390/polym13040599}.
+
+\bibitem[Witten and Sander(1983)]{Witten1983}
+T.~A. Witten and L.~M. Sander.
+\newblock Diffusion-limited aggregation.
+\newblock \emph{Physical Review B}, 27\penalty0 (9):\penalty0 5686--5697, May
+  1983.
+\newblock \doi{10.1103/physrevb.27.5686}.
+\newblock URL \url{https://doi.org/10.1103/physrevb.27.5686}.
+
+\bibitem[Parkinson et~al.(1995)Parkinson, Kadler, and Brass]{Parkinson1995}
+John Parkinson, Karl~E. Kadler, and Andy Brass.
+\newblock Simple physical model of collagen fibrillogenesis based on diffusion
+  limited aggregation.
+\newblock \emph{Journal of Molecular Biology}, 247\penalty0 (4):\penalty0
+  823--831, April 1995.
+\newblock \doi{10.1016/s0022-2836(05)80157-3}.
+\newblock URL \url{https://doi.org/10.1016/s0022-2836(05)80157-3}.
+
+\bibitem[Kadler et~al.(1987)Kadler, Hojima, and Prockop]{Kadler1987}
 K~E Kadler, Y~Hojima, and D~J Prockop.
 \newblock Assembly of collagen fibrils de novo by cleavage of the type i
   {pC}-collagen with procollagen c-proteinase. assay of critical concentration
   demonstrates that collagen self-assembly is a classical example of an
   entropy-driven process.
-\newblock {\em Journal of Biological Chemistry}, 262(32):15696--15701, November
-  1987.
+\newblock \emph{Journal of Biological Chemistry}, 262\penalty0 (32):\penalty0
+  15696--15701, November 1987.
+\newblock \doi{10.1016/s0021-9258(18)47783-6}.
+\newblock URL \url{https://doi.org/10.1016/s0021-9258(18)47783-6}.
 
-\bibitem{KADLER1996}
-Karl~E. KADLER, David~F. HOLMES, John~A. TROTTER, and John~A. CHAPMAN.
-\newblock Collagen fibril formation.
-\newblock {\em Biochemical Journal}, 316(1):1--11, May 1996.
+\bibitem[Garc{\'{\i}}a-Ruiz and Ot{\'{a}}lora(1991)]{GarcaRuiz1991}
+Juan~M. Garc{\'{\i}}a-Ruiz and Ferm{\'{\i}}n Ot{\'{a}}lora.
+\newblock Diffusion limited aggregation. the role of surface diffusion.
+\newblock \emph{Physica A: Statistical Mechanics and its Applications},
+  178\penalty0 (3):\penalty0 415--420, November 1991.
+\newblock \doi{10.1016/0378-4371(91)90030-g}.
+\newblock URL \url{https://doi.org/10.1016/0378-4371(91)90030-g}.
 
-\bibitem{KATZ1973351}
-Elton~P. Katz and Shu~Tung Li.
-\newblock The intermolecular space of reconstituted collagen fibrils.
-\newblock {\em Journal of Molecular Biology}, 73(3):351--369, 1973.
-
-\bibitem{Parkinson1997}
+\bibitem[Parkinson et~al.(1997)Parkinson, Brass, Canova, and
+  Brechet]{Parkinson1997}
 John Parkinson, Andy Brass, Giles Canova, and Yves Brechet.
 \newblock The mechanical properties of simulated collagen fibrils.
-\newblock {\em Journal of Biomechanics}, 30(6):549--554, June 1997.
+\newblock \emph{Journal of Biomechanics}, 30\penalty0 (6):\penalty0 549--554,
+  June 1997.
+\newblock \doi{10.1016/s0021-9290(96)00151-0}.
+\newblock URL \url{https://doi.org/10.1016/s0021-9290(96)00151-0}.
 
-\bibitem{Parkinson1995}
-John Parkinson, Karl~E. Kadler, and Andy Brass.
-\newblock Simple physical model of collagen fibrillogenesis based on diffusion
-  limited aggregation.
-\newblock {\em Journal of Molecular Biology}, 247(4):823--831, April 1995.
+\bibitem[ichi Saitoh et~al.(2020)ichi Saitoh, Sato, Takuma, and
+  Takahashi]{Saitoh2020MolecularDS}
+Ken ichi Saitoh, Tomohiro Sato, Masanori Takuma, and Yoshimasa Takahashi.
+\newblock Molecular dynamics study of collagen fibrils: Relation between
+  mechanical properties and molecular chirality.
+\newblock \emph{Journal of Biomaterials and Nanobiotechnology}, 2020.
+\newblock URL \url{https://api.semanticscholar.org/CorpusID:225284088}.
 
-\bibitem{Parry1984}
-David A.~D. Parry and Alan~S. Craig.
-\newblock Growth and development of collagen fibrils in connective tissue.
-\newblock In {\em Ultrastructure of the Connective Tissue Matrix}, pages
-  34--64. Springer {US}, 1984.
+\bibitem[Brodsky and Ramshaw(1997)]{BRODSKY1997545}
+Barbara Brodsky and John~A.M. Ramshaw.
+\newblock The collagen triple-helix structure.
+\newblock \emph{Matrix Biology}, 15\penalty0 (8):\penalty0 545--554, 1997.
+\newblock ISSN 0945-053X.
+\newblock \doi{https://doi.org/10.1016/S0945-053X(97)90030-5}.
+\newblock URL
+  \url{https://www.sciencedirect.com/science/article/pii/S0945053X97900305}.
 
-\bibitem{RicoLlanos2021}
-Gustavo~A. Rico-Llanos, Sara Borrego-Gonz{\'{a}}lez, Miguelangel
-  Moncayo-Donoso, Jos{\'{e}} Becerra, and Rick Visser.
-\newblock Collagen type i biomaterials as scaffolds for bone tissue
-  engineering.
-\newblock {\em Polymers}, 13(4):599, February 2021.
+\bibitem[201(2013)]{2013}
+\emph{Engineering Materials 2}.
+\newblock Elsevier, 2013.
+\newblock \doi{10.1016/c2009-0-64289-6}.
+\newblock URL \url{https://doi.org/10.1016/c2009-0-64289-6}.
 
-\bibitem{Silver2018}
-Frederick~H. Silver, Michael Jaffe, and Ruchit~G. Shah.
-\newblock Structure and behavior of collagen fibers.
-\newblock In {\em Handbook of Properties of Textile and Technical Fibres},
-  pages 345--365. Elsevier, 2018.
-
-\bibitem{Witten1983}
-T.~A. Witten and L.~M. Sander.
-\newblock Diffusion-limited aggregation.
-\newblock {\em Physical Review B}, 27(9):5686--5697, May 1983.
-
-\bibitem{Noritaka}
-Noritaka Yamamoto.
-\newblock Tensile strength of single collagen fibrils isolated from tendons.
-\newblock {\em European Journal of Biophysics}, 5(1):1--6, 2017.
-
-\bibitem{YANG2012148}
+\bibitem[Yang et~al.(2012)Yang, {van der Werf}, Dijkstra, Feijen, and
+  Bennink]{YANG2012148}
 L.~Yang, K.O. {van der Werf}, P.J. Dijkstra, J.~Feijen, and M.L. Bennink.
 \newblock Micromechanical analysis of native and cross-linked collagen type i
   fibrils supports the existence of microfibrils.
-\newblock {\em Journal of the Mechanical Behavior of Biomedical Materials},
-  6:148--158, 2012.
+\newblock \emph{Journal of the Mechanical Behavior of Biomedical Materials},
+  6:\penalty0 148--158, 2012.
+\newblock ISSN 1751-6161.
+\newblock \doi{https://doi.org/10.1016/j.jmbbm.2011.11.008}.
+\newblock URL
+  \url{https://www.sciencedirect.com/science/article/pii/S1751616111002955}.
 
-\bibitem{Zhu2018}
-Shichen Zhu, Qijuan Yuan, Tao Yin, Juan You, Zhipeng Gu, Shanbai Xiong, and
-  Yang Hu.
-\newblock Self-assembly of collagen-based biomaterials: preparation,
-  characterizations and biomedical applications.
-\newblock {\em Journal of Materials Chemistry B}, 6(18):2650--2676, 2018.
+\bibitem[Yamamoto(2017)]{Noritaka}
+Noritaka Yamamoto.
+\newblock Tensile strength of single collagen fibrils isolated from tendons.
+\newblock \emph{European Journal of Biophysics}, 5\penalty0 (1):\penalty0 1--6,
+  2017.
+\newblock \doi{10.11648/j.ejb.20170501.11}.
+\newblock URL \url{https://doi.org/10.11648/j.ejb.20170501.11}.
+
+\bibitem[Katz and Li(1973)]{KATZ1973351}
+Elton~P. Katz and Shu~Tung Li.
+\newblock The intermolecular space of reconstituted collagen fibrils.
+\newblock \emph{Journal of Molecular Biology}, 73\penalty0 (3):\penalty0
+  351--369, 1973.
+\newblock ISSN 0022-2836.
+\newblock \doi{https://doi.org/10.1016/0022-2836(73)90347-1}.
+\newblock URL
+  \url{https://www.sciencedirect.com/science/article/pii/0022283673903471}.
 
 \end{thebibliography}
