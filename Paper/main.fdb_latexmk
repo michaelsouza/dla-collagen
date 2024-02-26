@@ -1,14 +1,14 @@
 # Fdb version 3
-["bibtex main"] 1708902246 "main.aux" "main.bbl" "main" 1708902256
+["bibtex main"] 1708919610 "main.aux" "main.bbl" "main" 1708919619
   "/usr/share/texlive/texmf-dist/bibtex/bst/natbib/unsrtnat.bst" 1233624470 24550 a41a6405f4de768c43e871d9fbce2bc8 ""
-  "main.aux" 1708902256 14789 409859a4677ef2306ce61325c8959640 "pdflatex"
+  "main.aux" 1708919619 14789 2b4f570cb4fe41c5b47af7eafef074a4 "pdflatex"
   "ref.bib" 1708649068 28218 3225ef9b943e6ceab395777ab3d5e136 ""
   (generated)
   "main.bbl"
   "main.blg"
-["pdflatex"] 1708902247 "/home/robert/dla-collagen/Paper/main.tex" "main.pdf" "main" 1708902256
+["pdflatex"] 1708919610 "/home/robert/dla-collagen/Paper/main.tex" "main.pdf" "main" 1708919619
   "/etc/texmf/web2c/texmf.cnf" 1707090169 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/robert/dla-collagen/Paper/main.tex" 1708902226 29192 b0a9c1823f998cd5787861f8c25533d6 ""
+  "/home/robert/dla-collagen/Paper/main.tex" 1708919595 29429 72eecdc71234dd59e81db54cfcfb4344 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1246382020 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -113,10 +113,10 @@
   "figures/specific_bind.png" 1707865876 32956 d139a2a7c3214a6cc8fd95c312ab56c9 ""
   "figures/stress_strain.png" 1707349799 365625 004882c8102e6a24f9fe7fa58d16f373 ""
   "figures/tips.png" 1707334966 433196 ca9063e71a44cf01c28f3992de548406 ""
-  "main.aux" 1708902256 14789 409859a4677ef2306ce61325c8959640 "pdflatex"
-  "main.bbl" 1708902247 9475 4957b1761bcedaaeedccfb003058534c "bibtex main"
-  "main.out" 1708902256 1087 5d5fddee9ebb23bcf852c81872ddd58f "pdflatex"
-  "main.tex" 1708902226 29192 b0a9c1823f998cd5787861f8c25533d6 ""
+  "main.aux" 1708919619 14789 2b4f570cb4fe41c5b47af7eafef074a4 "pdflatex"
+  "main.bbl" 1708919610 9475 4957b1761bcedaaeedccfb003058534c "bibtex main"
+  "main.out" 1708919619 1087 5d5fddee9ebb23bcf852c81872ddd58f "pdflatex"
+  "main.tex" 1708919595 29429 72eecdc71234dd59e81db54cfcfb4344 ""
   (generated)
   "main.aux"
   "main.log"
