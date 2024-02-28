@@ -20,38 +20,42 @@
 
 \section{Introduction}
 
-    O colágeno tipo I é uma proteína abundante no corpo humano, de forma que compõe $90\%$ dele. Sua estrturua é 
-    composta por um tripla hélice de cadeias polipeptídicas(cadeias $\alpha$). Ele possui tamanhos típicos de $300$ nm de 
-    comprimento por $1,5$ nm de diâmetro e apresenta um formato tipo haste \cite{Gelse2003,Silver2018}. As moléculas de 
-    colágeno tipo I possuem, intrisicamente, a informação necessária para se auto-organizar em estruturas mais complexas 
-    chamadas fibrilas. Esse processo, denominado fibrilo-gênese, ocorre o mediante a agregação de milhares dessas moléculas de forma 
-    escalonada por um período $D= 67$ nm, de modo que existem cinco posições possíveis para que ocorra a interação entre 
-    elas \cite{Zhu2018, KADLER1996}.  
+    O colágeno tipo I, que constitui $90\%$ da matriz extracelular humana, é caracterizado por sua estrutura de tripla hélice 
+    polipeptídica ($\alpha$-cadeias), com dimensões típicas de $300$ nm de comprimento e $1,5$ nm de diâmetro, assemelhando-se 
+    a hastes \cite{Gelse2003,Silver2018}. Intrinsecamente programadas para a auto-organização, as moléculas de colágeno se 
+    agregam em estruturas fibrilares durante a fibrilogênese, alinhando-se em intervalos de $D=67$ nm, permitindo cinco 
+    configurações de interação \cite{Zhu2018, KADLER1996}. 
     
-    As fibrilas apresentam um formato alongado, com a sua região mais densa sendo a central e, consequentemente, as pontas 
-    afinadas \cite{Charvolin2019, KADLER1996}. As fibrilas apresentam comprimento típicos de $500 \mu m$ com $500 nm$ de 
-    diâmetro, além de serem constituídas por moléculas da ordem de $10^{7}$ \cite{Parry1984}. Com aglomerados de fibrilas, 
-    é possivel gerar fibras de colágeno, da ordem de $20 \mu m$ de diâmetro. Por sua vez, as fibras de colágeno são 
-    o alicerce de estrtuturas hierarquicas bem mais complexas e diversas, como o tecido conjuntivo, ossos, tendôes, côrnea 
-    \cite{RicoLlanos2021}. A presença do colágeno nessas estrtuturas é o fator crucial nas suas capacidades 
-    elásticas e mecânicas \cite{Silver2018}.
+    As fibrilas de colágeno exibem uma forma alongada, caracterizada por uma região central densa e extremidades afiladas, 
+    com comprimentos típicos em torno de \(500 \mu m\) e diâmetro de \(500 nm\), sendo compostas por cerca de \(10^{7}\) moléculas 
+    \cite{Charvolin2019, KADLER1996, Parry1984}. A agregação dessas fibrilas forma fibras de colágeno, com diâmetros aproximados 
+    de \(20 \mu m\), que servem como pilares para estruturas hierárquicas mais complexas e variadas, incluindo tecido conjuntivo, 
+    ossos, tendões e córnea \cite{RicoLlanos2021}. A presença de colágeno nessas estruturas é fundamental para suas propriedades 
+    elásticas e mecânicas \cite{Silver2018}. 
 
-    O interesse nas fibras de colágeno se mostra compreensivel quando entendemos seu papel no corpo humano. Os esforços para
-    adquirirmos esse conhecimento ocorrem a bastante tempo, mas enfrentam um grande empecilho que é a escala do objto de estudo.
-    As dimensões das fibrilas dificultam estudos das propriedades mecânicas, visto que se requer equipamentos nanometricos para
-    tais medidas \cite{Nalbach2022InstrumentFT}. A microscopia atómica de força(AFM) é uma tecnica usada com frequencia para 
-    estudar fibrilas de colágeno \cite{Andriotis2015-lx,Mull2022-br} com enfase na sua analise estrutural. Van der Rijt et al
-    \cite{Rijt} foram os primeiros a usarem essa tecnica para, em fibrilas de tendoes isoladas, medirem propriedades mecanicas,
-    sendo capazes de determinar como elas se comportam sobre tensão até a falha.
+    A relevância das fibras de colágeno se torna evidente ao compreendermos seu papel essencial no corpo humano. A jornada para 
+    desvendar esses mistérios é longa e esbarra em um desafio significativo: a minúscula escala das fibrilas. Esta escala nanométrica 
+    impõe dificuldades na investigação de suas propriedades mecânicas, exigindo equipamentos de precisão nanométrica para tais análises 
+    \cite{Nalbach2022InstrumentFT}. Entre as técnicas empregadas, a Microscopia de Força Atômica (AFM) destaca-se por sua aplicabilidade
+    frequente no estudo detalhado das fibrilas de colágeno, com um foco particular na análise de sua estrutura 
+    \cite{Andriotis2015-lx,Mull2022-br}. Pioneiramente, Van der Rijt e colaboradores \cite{Rijt} utilizaram a AFM para avaliar as 
+    propriedades mecânicas de fibrilas de tendão isoladas, elucidando seu comportamento sob tensão até o ponto de falha. 
 
-    Diversos modelos computacionais foram propostos para estudar as fibrilas de colágeno. Sua utiliza permite conectar as informações
-    nanoscopicas com comportamentos observados nas estrtuturas macroscopicas ricas nesse material. 
-    
+    A literatura evidencia uma diversidade de modelos computacionais dedicados ao estudo das fibrilas de colágeno e suas características 
+    mecânicas. Notavelmente, Buehler e seus colaboradores introduziram uma metodologia baseada em granulação grossa e dinâmica molecular, 
+    que elucida profundamente a arquitetura e o comportamento das fibrilas sob tensões ou em processos de degradação, e examina o efeito 
+    de componentes minerais incorporados \cite{B1,B2,B3,B4,Malaspina2017-qp,10.1002/jbmr.2705}. Alternativamente, uma abordagem fundamentada 
+    em primeiros princípios emprega osciladores harmônicos, analogamente a molas, para simular a natureza elástica das fibrilas. Este modelo, 
+    aplicado em uma configuração bidimensional, foi explorado por Araujo e equipe para investigar as alterações nas propriedades mecânicas 
+    de tecidos sob influência de agentes degradativos \cite{Araujo}. Tal estratégia simplificada facilita o exame de estruturas nanoscópicas 
+    e a compreensão do comportamento microscópico do colágeno, minimizando a exigência de recursos computacionais. 
 
-    O processo de formação das fibrilas ja foi alvo dos esforços de outros pesquisadores. Diversos modelos foram propostos, 
-    tendo como base característica observadas em fibrilas. Parkinson et al. propuseram a utilização de modelo baseado em 
-    (\textit{Diffusion Limited Aggregation} - DLA) para resolver esse problema \cite{Parkinson1995}. Os agregados obtidos
-    apresentaram uma morfólogia fibrilar,  
+    Em nossa pesquisa, adotamos um modelo de Agregação Limitada por Difusão (\textit{Diffusion Limited Aggregation} - DLA) para simular 
+    agregados com morfologias análogas às fibrilas de colágeno \cite{Parkinson1995}. Essas estruturas foram analisadas por meio de um modelo 
+    mecânico probabilístico \cite{Parkinson1997}, permitindo-nos investigar seu comportamento sob tensão e examinar o impacto de diferentes 
+    parâmetros do modelo na resistência do material. Identificamos a ocorrência de avalanches durante o processo de ruptura, caracterizadas 
+    por leis de escala precisas. Acreditamos que essa abordagem integrada, que combina simulação da formação com análise mecânica, possa 
+    oferecer perspectivas valiosas sobre as fibrilas de colágeno, possibilitando a exploração de sua estrutura em diferentes estágios. 
 
 
 \section{Metodologia}

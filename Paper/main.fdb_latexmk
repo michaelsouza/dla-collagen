@@ -1,14 +1,14 @@
 # Fdb version 3
-["bibtex main"] 1708919610 "main.aux" "main.bbl" "main" 1708919619
+["bibtex main"] 1709084947 "main.aux" "main.bbl" "main" 1709084955
   "/usr/share/texlive/texmf-dist/bibtex/bst/natbib/unsrtnat.bst" 1233624470 24550 a41a6405f4de768c43e871d9fbce2bc8 ""
-  "main.aux" 1708919619 14789 2b4f570cb4fe41c5b47af7eafef074a4 "pdflatex"
-  "ref.bib" 1708649068 28218 3225ef9b943e6ceab395777ab3d5e136 ""
+  "main.aux" 1709084955 15353 79ca873e075a18cc2021a0c296fbb61b "pdflatex"
+  "ref.bib" 1709081772 40722 799506957552f5006b5de68b94d83d3e ""
   (generated)
   "main.bbl"
   "main.blg"
-["pdflatex"] 1708919610 "/home/robert/dla-collagen/Paper/main.tex" "main.pdf" "main" 1708919619
+["pdflatex"] 1709084947 "/home/robert/dla-collagen/Paper/main.tex" "main.pdf" "main" 1709084955
   "/etc/texmf/web2c/texmf.cnf" 1707090169 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/robert/dla-collagen/Paper/main.tex" 1708919595 29429 72eecdc71234dd59e81db54cfcfb4344 ""
+  "/home/robert/dla-collagen/Paper/main.tex" 1709084938 30521 fac4d6a44128f7e05be864f8b6708e7d ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1246382020 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1246382020 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -113,10 +113,10 @@
   "figures/specific_bind.png" 1707865876 32956 d139a2a7c3214a6cc8fd95c312ab56c9 ""
   "figures/stress_strain.png" 1707349799 365625 004882c8102e6a24f9fe7fa58d16f373 ""
   "figures/tips.png" 1707334966 433196 ca9063e71a44cf01c28f3992de548406 ""
-  "main.aux" 1708919619 14789 2b4f570cb4fe41c5b47af7eafef074a4 "pdflatex"
-  "main.bbl" 1708919610 9475 4957b1761bcedaaeedccfb003058534c "bibtex main"
-  "main.out" 1708919619 1087 5d5fddee9ebb23bcf852c81872ddd58f "pdflatex"
-  "main.tex" 1708919595 29429 72eecdc71234dd59e81db54cfcfb4344 ""
+  "main.aux" 1709084955 15353 79ca873e075a18cc2021a0c296fbb61b "pdflatex"
+  "main.bbl" 1709084947 12599 4b139e7463e4c948d1228a5c5d78ef97 "bibtex main"
+  "main.out" 1709084955 1087 5d5fddee9ebb23bcf852c81872ddd58f "pdflatex"
+  "main.tex" 1709084938 30521 fac4d6a44128f7e05be864f8b6708e7d ""
   (generated)
   "main.aux"
   "main.log"

@@ -1,4 +1,4 @@
-\begin{thebibliography}{22}
+\begin{thebibliography}{29}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -103,6 +103,77 @@ Joost A.~J. van~der Rijt, Kees~O. van~der Werf, Martin~L. Bennink, Pieter~J.
 \newblock URL
   \url{https://onlinelibrary.wiley.com/doi/abs/10.1002/mabi.200600063}.
 
+\bibitem[Buehler(2006{\natexlab{a}})]{B1}
+Markus~J. Buehler.
+\newblock Nature designs tough collagen: Explaining the nanostructure of
+  collagen fibrils.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 103\penalty0
+  (33):\penalty0 12285--12290, 2006{\natexlab{a}}.
+\newblock \doi{10.1073/pnas.0603216103}.
+\newblock URL \url{https://www.pnas.org/doi/abs/10.1073/pnas.0603216103}.
+
+\bibitem[Buehler(2006{\natexlab{b}})]{B2}
+Markus~J. Buehler.
+\newblock Atomistic and continuum modeling of mechanical properties of
+  collagen: Elasticity, fracture, and self-assembly.
+\newblock \emph{Journal of Materials Research}, 21\penalty0 (8):\penalty0
+  1947–1961, 2006{\natexlab{b}}.
+\newblock \doi{10.1557/jmr.2006.0236}.
+
+\bibitem[Buehler(2008{\natexlab{a}})]{B3}
+Markus~J. Buehler.
+\newblock Molecular architecture of collagen fibrils: A critical length scale
+  for tough fibrils.
+\newblock \emph{Current Applied Physics}, 8\penalty0 (3):\penalty0 440--442,
+  2008{\natexlab{a}}.
+\newblock ISSN 1567-1739.
+\newblock \doi{https://doi.org/10.1016/j.cap.2007.10.058}.
+\newblock URL
+  \url{https://www.sciencedirect.com/science/article/pii/S1567173907002283}.
+\newblock AMN-3 (Third International Conference on Advanced Materials and
+  Nanotechnology).
+
+\bibitem[Buehler(2008{\natexlab{b}})]{B4}
+Markus~J. Buehler.
+\newblock Nanomechanics of collagen fibrils under varying cross-link densities:
+  Atomistic and continuum studies.
+\newblock \emph{Journal of the Mechanical Behavior of Biomedical Materials},
+  1\penalty0 (1):\penalty0 59--67, 2008{\natexlab{b}}.
+\newblock ISSN 1751-6161.
+\newblock \doi{https://doi.org/10.1016/j.jmbbm.2007.04.001}.
+\newblock URL
+  \url{https://www.sciencedirect.com/science/article/pii/S1751616107000057}.
+
+\bibitem[Malaspina et~al.(2017)Malaspina, Szleifer, and
+  Dhaher]{Malaspina2017-qp}
+David~C Malaspina, Igal Szleifer, and Yasin Dhaher.
+\newblock Mechanical properties of a collagen fibril under simulated
+  degradation.
+\newblock \emph{J. Mech. Behav. Biomed. Mater.}, 75:\penalty0 549--557,
+  November 2017.
+
+\bibitem[Depalle et~al.(2015)Depalle, Qin, Shefelbine, and
+  Buehler]{10.1002/jbmr.2705}
+Baptiste Depalle, Zhao Qin, Sandra~J Shefelbine, and Markus~J Buehler.
+\newblock {Large Deformation Mechanisms, Plasticity, and Failure of an
+  Individual Collagen Fibril With Different Mineral Content}.
+\newblock \emph{Journal of Bone and Mineral Research}, 31\penalty0
+  (2):\penalty0 380--390, 09 2015.
+\newblock ISSN 0884-0431.
+\newblock \doi{10.1002/jbmr.2705}.
+\newblock URL \url{https://doi.org/10.1002/jbmr.2705}.
+
+\bibitem[Araújo et~al.(2011)Araújo, Majumdar, Parameswaran, Yi, Spencer,
+  Nugent, and Suki]{Araujo}
+Ascânio~D. Araújo, Arnab Majumdar, Harikrishnan Parameswaran, Eunice Yi,
+  Jean~L. Spencer, Matthew~A. Nugent, and Béla Suki.
+\newblock Dynamics of enzymatic digestion of elastic fibers and networks under
+  tension.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 108\penalty0
+  (23):\penalty0 9414--9419, 2011.
+\newblock \doi{10.1073/pnas.1019188108}.
+\newblock URL \url{https://www.pnas.org/doi/abs/10.1073/pnas.1019188108}.
+
 \bibitem[Parkinson et~al.(1995)Parkinson, Kadler, and Brass]{Parkinson1995}
 John Parkinson, Karl~E. Kadler, and Andy Brass.
 \newblock Simple physical model of collagen fibrillogenesis based on diffusion
@@ -111,6 +182,15 @@ John Parkinson, Karl~E. Kadler, and Andy Brass.
   823--831, April 1995.
 \newblock \doi{10.1016/s0022-2836(05)80157-3}.
 \newblock URL \url{https://doi.org/10.1016/s0022-2836(05)80157-3}.
+
+\bibitem[Parkinson et~al.(1997)Parkinson, Brass, Canova, and
+  Brechet]{Parkinson1997}
+John Parkinson, Andy Brass, Giles Canova, and Yves Brechet.
+\newblock The mechanical properties of simulated collagen fibrils.
+\newblock \emph{Journal of Biomechanics}, 30\penalty0 (6):\penalty0 549--554,
+  June 1997.
+\newblock \doi{10.1016/s0021-9290(96)00151-0}.
+\newblock URL \url{https://doi.org/10.1016/s0021-9290(96)00151-0}.
 
 \bibitem[Witten and Sander(1983)]{Witten1983}
 T.~A. Witten and L.~M. Sander.
@@ -138,15 +218,6 @@ Juan~M. Garc{\'{\i}}a-Ruiz and Ferm{\'{\i}}n Ot{\'{a}}lora.
   178\penalty0 (3):\penalty0 415--420, November 1991.
 \newblock \doi{10.1016/0378-4371(91)90030-g}.
 \newblock URL \url{https://doi.org/10.1016/0378-4371(91)90030-g}.
-
-\bibitem[Parkinson et~al.(1997)Parkinson, Brass, Canova, and
-  Brechet]{Parkinson1997}
-John Parkinson, Andy Brass, Giles Canova, and Yves Brechet.
-\newblock The mechanical properties of simulated collagen fibrils.
-\newblock \emph{Journal of Biomechanics}, 30\penalty0 (6):\penalty0 549--554,
-  June 1997.
-\newblock \doi{10.1016/s0021-9290(96)00151-0}.
-\newblock URL \url{https://doi.org/10.1016/s0021-9290(96)00151-0}.
 
 \bibitem[ichi Saitoh et~al.(2020)ichi Saitoh, Sato, Takuma, and
   Takahashi]{Saitoh2020MolecularDS}
