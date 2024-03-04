@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.2.4)  27 FEB 2024 22:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2023.7.13)  4 MAR 2024 20:19
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -299,70 +299,74 @@ Overfull \hbox (1.36166pt too wide) in paragraph at lines 23--28
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-<figures/DLA.png, id=88, 1445.4pt x 813.0375pt>
+Overfull \hbox (2.57103pt too wide) in paragraph at lines 54--63
+\OT1/cmr/m/n/10 fus~ao (\OT1/cmr/m/it/10 Dif-fu-sion Lim-ited Ag-gre-ga-tion \OT1/cmr/m/n/10 - DLA) para sim-u-lar o pro-cesso de forma^^Xc~ao
+ []
+
+<figures/DLA.png, id=85, 1445.4pt x 813.0375pt>
 File: figures/DLA.png Graphic file (type png)
 <use figures/DLA.png>
-Package pdftex.def Info: figures/DLA.png  used on input line 77.
+Package pdftex.def Info: figures/DLA.png  used on input line 80.
 (pdftex.def)             Requested size: 345.0pt x 194.05367pt.
- [2]
+[2]
 <figures/specific_bind.png, id=103, 1445.4pt x 813.0375pt>
 File: figures/specific_bind.png Graphic file (type png)
 <use figures/specific_bind.png>
-Package pdftex.def Info: figures/specific_bind.png  used on input line 97.
+Package pdftex.def Info: figures/specific_bind.png  used on input line 100.
 (pdftex.def)             Requested size: 345.0pt x 194.05367pt.
  [3 <./figures/DLA.png>] [4 <./figures/specific_bind.png>]
 <figures/esqueleto.png, id=126, 4516.875pt x 2540.74219pt>
 File: figures/esqueleto.png Graphic file (type png)
 <use figures/esqueleto.png>
-Package pdftex.def Info: figures/esqueleto.png  used on input line 135.
+Package pdftex.def Info: figures/esqueleto.png  used on input line 138.
 (pdftex.def)             Requested size: 345.0pt x 194.0366pt.
  [5 <./figures/esqueleto.png>]
 <figures/simulaçao (1).png, id=138, 4516.875pt x 2540.74219pt>
 File: figures/simulaçao (1).png Graphic file (type png)
 <use figures/simulaçao (1).png>
-Package pdftex.def Info: figures/simulaçao (1).png  used on input line 188.
+Package pdftex.def Info: figures/simulaçao (1).png  used on input line 191.
 (pdftex.def)             Requested size: 345.0pt x 194.0366pt.
  [6] [7 <./figures/simulaçao (1).png>]
 <figures/fibrils.png, id=156, 598.1547pt x 723.9045pt>
 File: figures/fibrils.png Graphic file (type png)
 <use figures/fibrils.png>
-Package pdftex.def Info: figures/fibrils.png  used on input line 226.
+Package pdftex.def Info: figures/fibrils.png  used on input line 229.
 (pdftex.def)             Requested size: 345.0pt x 417.54526pt.
  [8] [9 <./figures/fibrils.png>]
 <figures/tips.png, id=172, 417.2388pt x 324.61275pt>
 File: figures/tips.png Graphic file (type png)
 <use figures/tips.png>
-Package pdftex.def Info: figures/tips.png  used on input line 275.
+Package pdftex.def Info: figures/tips.png  used on input line 278.
 (pdftex.def)             Requested size: 345.0pt x 268.423pt.
  [10]
 <figures/cs_all.png, id=183, 560.5743pt x 684.3969pt>
 File: figures/cs_all.png Graphic file (type png)
 <use figures/cs_all.png>
-Package pdftex.def Info: figures/cs_all.png  used on input line 298.
+Package pdftex.def Info: figures/cs_all.png  used on input line 301.
 (pdftex.def)             Requested size: 345.0pt x 421.20966pt.
  [11 <./figures/tips.png>]
 <figures/dim_frac.png, id=191, 431.81325pt x 318.34935pt>
 File: figures/dim_frac.png Graphic file (type png)
 <use figures/dim_frac.png>
-Package pdftex.def Info: figures/dim_frac.png  used on input line 305.
+Package pdftex.def Info: figures/dim_frac.png  used on input line 308.
 (pdftex.def)             Requested size: 345.0pt x 254.36407pt.
  [12 <./figures/cs_all.png>]
 <figures/stress_strain.png, id=201, 402.66435pt x 332.6829pt>
 File: figures/stress_strain.png Graphic file (type png)
 <use figures/stress_strain.png>
-Package pdftex.def Info: figures/stress_strain.png  used on input line 331.
+Package pdftex.def Info: figures/stress_strain.png  used on input line 334.
 (pdftex.def)             Requested size: 345.0pt x 285.04076pt.
  [13 <./figures/dim_frac.png>]
 <figures/sigma_rho.png, id=214, 402.66435pt x 332.6829pt>
 File: figures/sigma_rho.png Graphic file (type png)
 <use figures/sigma_rho.png>
-Package pdftex.def Info: figures/sigma_rho.png  used on input line 353.
+Package pdftex.def Info: figures/sigma_rho.png  used on input line 356.
 (pdftex.def)             Requested size: 345.0pt x 285.04076pt.
  [14 <./figures/stress_strain.png>]
 <figures/ava.png, id=223, 552.50415pt x 417.11835pt>
 File: figures/ava.png Graphic file (type png)
 <use figures/ava.png>
-Package pdftex.def Info: figures/ava.png  used on input line 376.
+Package pdftex.def Info: figures/ava.png  used on input line 379.
 (pdftex.def)             Requested size: 345.0pt x 260.45647pt.
  [15 <./figures/sigma_rho.png>] [16 <./figures/ava.png>] (./main.bbl
 Underfull \hbox (badness 1931) in paragraph at lines 17--23
@@ -405,14 +409,14 @@ Package rerunfilecheck Info: File `main.out' has not changed.
  ) 
 Here is how much of TeX's memory you used:
  9631 strings out of 478287
- 149777 string characters out of 5849290
- 453398 words of memory out of 5000000
+ 149777 string characters out of 5849289
+ 453396 words of memory out of 5000000
  27619 multiletter control sequences out of 15000+600000
  477636 words of font info for 61 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  60i,10n,63p,1157b,489s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on main.pdf (20 pages, 3991627 bytes).
+Output written on main.pdf (20 pages, 3992037 bytes).
 PDF statistics:
  363 PDF objects out of 1000 (max. 8388607)
  292 compressed objects within 3 object streams
