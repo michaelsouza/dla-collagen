@@ -69,20 +69,20 @@
     \subsection{Estrutura das fibrilas}
 
     Utilizamos um modelo baseado em Agregação Limitada por Difusão (\textit{Diffusion Limited Aggregation} - DLA) \cite{Witten1983} 
-    em três dimensões para simular a formação de fibrilas de colágeno. Consideramos as moléculas de colágeno como paralelepípedos 
+    em três dimensões para simular a formação de fibrilas de colágeno. Representamos as moléculas de colágeno como paralelepípedos 
     regulares de dimensões \(1 \times 18 \times 1\). Empregando uma rede regular cúbica, definimos o centro como a origem e fixamos 
-    a primeira molécula do agregado, denominada \textit{seed}. Em seguida, novas moléculas são lançadas a partir de uma distância 
-    \(R\) do centro do agregado e se difundem até que ocorra uma das seguintes situações: serem capturadas pelo agregado ou atingirem 
-    uma distância \(2R\) em relação ao centro, caso em que a simulação é reiniciada. Esse processo está esquematizado na Figura \ref{M1}. 
+    a primeira molécula do agregado, denominada \textit{seed}. Em seguida, novas moléculas são lançadas a partir de uma casca esférica
+    de raio \(R\) e se difundem até que ocorra uma das seguintes situações: serem capturadas pelo agregado ou atingirem uma distância 
+    \(2R\) em relação ao centro, caso em que a simulação é reiniciada. Esse processo está representado na Figura \ref{M1}. 
 
         \begin{figure}[H]
             \centering
             \includegraphics[width=\textwidth]{figures/DLA.png}
     
             \caption{Consideramos as moléculas de colágeno como paralelepípedos regulares de dimensões \(1 \times 18 \times 1\). 
-            Estas moléculas são lançadas a partir de uma distância \(R\) da \textit{seed}, que representa a primeira molécula fixada 
-            no agregado. As moléculas podem se difundir até serem capturadas pelo agregado ou atingirem uma distância \(2R\) da \textit{seed}, 
-            fora da zona de interesse, o que leva à reinicialização da simulação.} 
+            Estas moléculas são lançadas a partir de uma distância \(R\) da \textit{seed}, que representa a primeira molécula do
+            do processo de agregação. As moléculas podem se difundir no interior de uma casca esférica até serem capturadas pelo 
+            agregado ou atingirem uma distância \(2R\) da \textit{seed}, fora da zona de interesse, o que leva à reinicialização da simulação.} 
     
             \label{M1}
         \end{figure}
@@ -98,52 +98,58 @@
         \begin{figure}[H]
             \centering
             \includegraphics[width=\textwidth]{figures/specific_bind.png}
-    
-            \caption{Em fibrilas reais, observa-se que as moléculas estão alinhadas de forma escalonada, com um espaçamento característico de 
-            \(D = 67 \, \text{nm}\). Visando uma modelagem mais precisa do fenômeno, implementamos uma regra de agregação que reproduz esse 
-            processo, na qual novas moléculas são capturadas pelo agregado apenas se conectarem em posições que são múltiplos de \(D = 4\). 
-            Assim, resultam cinco configurações possíveis de agregação para as novas moléculas.}  
+            
+            \caption{Na imagem, temos uma visualização bidimensional dos objetos que representam as moléculas de colágeno na nossa simulação. 
+            Esse objetos possuem um comprimento \(18\) unidades de rede e o espaçamento entre quatro unidade equivale ao comprimento típico de
+            \(D = 67 \, \text{nm}\) observado em moléculas reais de colágeno. Novas capturas ocorrem somente se uma nova molécula estiver em uma
+            das 5 posições possiveis. }
+            
     
             \label{M2}
         \end{figure}
 
         A formação de fibrilas reais é impulsionada por forças hidrofóbicas resultantes das interações entre as moléculas, as quais buscam 
-        minimizar sua superfície exposta \cite{Kadler1987,Parkinson1995}. Para simular esse fenômeno, empregamos um algoritmo de difusão lateral
+        minimizar sua superfície exposta \cite{Kadler1987,Parkinson1995}. Implementamos um algoritmo de difusão lateral
         na superfície, permitindo que uma molécula recém-agregada explore a superfície, mantendo sua coordenada \(y\) fixa, a fim de localizar 
         uma posição que minimize sua superfície exposta \cite{GarcaRuiz1991}. Em situações onde mais de uma posição minimiza a superfície, a 
         molécula permanece na primeira posição encontrada. Este mecanismo é regulado pelo parâmetro \(T_{s}\), que determina o número de 
         tentativas disponíveis para a molécula explorar a superfície do agregado \cite{Parkinson1995}.
 
-        Com este algoritmo, geramos \(50\) fibrilas, cada uma contendo \(30.000\) bastões, para diferentes valores de \(T_{s}\), a fim de 
-        investigar o efeito desse parâmetro na morfologia das fibrilas. 
+        Utilizando esse algoritmo e levando em consideração que as fibrilas variam suas características estatisticamente, optamos por gerar 
+        \(50\) fibrilas, cada uma contendo \(30.000\) bastões, para diferentes valores de \(T_{s}\), a fim de investigar 
+        o efeito desse parâmetro na morfologia das fibrilas. 
 
 
     \subsection{Propriedades Mecânicas} 
 
-        Para a análise das propriedades mecânicas das fibrilas, adotamos um modelo mecânico probabilístico. Esta abordagem é necessária, uma vez
-        que os agregados gerados não apresentam propriedades elásticas adequadas para serem estudados por modelos baseados em molas, por exemplo
-        \cite{Parkinson1997,Saitoh2020MolecularDS}.
+        Para a análise das propriedades mecânicas das fibrilas, adotamos um modelo mecânico probabilístico\cite{Parkinson1997}. 
+        Diferente das abordagens encontradas em \cite{Saitoh2020MolecularDS} onde as fibras são represntadas por meio de um 
+        conjuntos de molas acopladas.
+        
 
-        Primeiramente, realizamos o corte de um tronco de dimensão \(17 \times 201 \times 17\) em uma fibrila. Após este corte, procedemos com 
-        uma limpeza para assegurar a ausência de moléculas desafixadas devido ao corte e para determinar o esqueleto ativo. Consideramos que o 
-        tronco é composto por \(201\) camadas, e cada molécula, dividida em parcelas de tamanho unitário, pode estender-se por mais de uma camada.
-        Iniciamos pela primeira camada, marcando todas as moléculas como ativas. Em seguida, verificamos nas camadas superiores se alguma 
-        partícula de uma molécula ativa possui vizinhança inativa; caso afirmativo, a partícula é ativada, assim como todas as partículas 
-        associadas à mesma molécula, tanto acima quanto abaixo. Este procedimento é repetido até alcançarmos a última camada, conforme ilustrado 
-        na Figura \ref{M3}. Com essa seleção de moléculas ativas, repetimos o processo agora de cima para baixo até obtermos o esqueleto ativo, 
-        que é o conjunto de moléculas através do qual uma força aplicada pode percolar. 
+        Primeiramente, realizamos o corte de um tronco de dimensão \(17 \times 201 \times 17\) em uma fibrila. Após este 
+        corte, procedemos com uma limpeza para assegurar a ausência de moléculas desconectadas devido ao corte e para 
+        determinar o esqueleto ativo. Consideramos que o tronco é composto por \(201\) camadas, e cada molécula, dividida 
+        em parcelas de tamanho unitário, pode estender-se por mais de uma camada. Para análise das fibrilas, realizamos 
+        inicialmente o corte de um tronco com dimensões 17×201×17. Procedemos com um processo de limpezanesse tronco a fim 
+        de obter o esqueleto ativo, que efetivamente conduz a força na fibrila. Iniciamos pela primeira camada do tronco, 
+        marcando como ativas todas as moléculas que possuem ao menos um segmento nesta camada. Em seguida, avançamos para 
+        as camadas superiores e, para cada segmento ativo em uma dada camada, verificamos a existência de vizinhos ativos. 
+        Caso existam, a molécula correspondente é marcada como ativa. Este procedimento é repetido até alcançarmos a última 
+        camada. Com o conjunto de moléculas ativas identificado, as inativas são descartadas e o processo é então repetido, 
+        agora iniciando da camada 201 e procedendo em direção à primeira camada.. Este procedimento é repetido até alcançarmos a última camada, conforme 
+        ilustrado na Figura \ref{M3}. Com essa seleção de moléculas ativas, repetimos o processo agora de cima para baixo 
+        até obtermos o esqueleto ativo, que é o conjunto de moléculas através do qual uma força aplicada pode percolar. 
 
         \begin{figure}[H]
             \centering
             \includegraphics[width=\textwidth]{figures/esqueleto.png}
     
-            \caption{A) Para análise das fibrilas, realizamos inicialmente o corte de um tronco com dimensões \(17 \times 201 \times 17\). B) 
-            Procedemos com um processo de limpeza nesse tronco a fim de obter o esqueleto ativo, que efetivamente conduz a força na fibrila. 
-            Iniciamos pela primeira camada do tronco, marcando como ativas todas as moléculas que possuem ao menos um segmento nesta camada. Em 
-            seguida, avançamos para as camadas superiores e, para cada segmento ativo em uma dada camada, verificamos a existência de vizinhos 
-            ativos. Caso existam, a molécula correspondente é marcada como ativa. Este procedimento é repetido até alcançarmos a última camada. 
-            Com o conjunto de moléculas ativas identificado, as inativas são descartadas e o processo é então repetido, agora iniciando da 
-            camada 201 e procedendo em direção à primeira camada.}  
+            \caption{Em (A) mostramos a seção selecionada para uqe possamos identificar o esqueleto ativo, parte da fibra 
+            que efetivamente sofre a força aplicada. Em (B), da esquerda para direita ilustramos os passos nescessários 
+            até identificação do agregado que definimos como esqueleto ativo. À medida que o processo evolui destacamos 
+            em preto a parte ativa da fibra que efetivamente sofre a força externa aplicada. O processo ocorre até 
+            atigirmos a extremidade oposta da fibra.}  
     
             \label{M3}
         \end{figure}
