@@ -1,4 +1,4 @@
-\begin{thebibliography}{29}
+\begin{thebibliography}{28}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -226,15 +226,6 @@ Ken ichi Saitoh, Tomohiro Sato, Masanori Takuma, and Yoshimasa Takahashi.
   mechanical properties and molecular chirality.
 \newblock \emph{Journal of Biomaterials and Nanobiotechnology}, 2020.
 \newblock URL \url{https://api.semanticscholar.org/CorpusID:225284088}.
-
-\bibitem[Brodsky and Ramshaw(1997)]{BRODSKY1997545}
-Barbara Brodsky and John~A.M. Ramshaw.
-\newblock The collagen triple-helix structure.
-\newblock \emph{Matrix Biology}, 15\penalty0 (8):\penalty0 545--554, 1997.
-\newblock ISSN 0945-053X.
-\newblock \doi{https://doi.org/10.1016/S0945-053X(97)90030-5}.
-\newblock URL
-  \url{https://www.sciencedirect.com/science/article/pii/S0945053X97900305}.
 
 \bibitem[201(2013)]{2013}
 \emph{Engineering Materials 2}.

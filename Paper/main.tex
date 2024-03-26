@@ -122,7 +122,7 @@
 
     \subsection{Propriedades Mecânicas} 
 
-        Para a análise das propriedades mecânicas das fibrilas, adotamos um modelo mecânico probabilístico\cite{Parkinson1997}. 
+        \indent Para a análise das propriedades mecânicas das fibrilas, adotamos um modelo mecânico probabilístico\cite{Parkinson1997}. 
         Diferente das abordagens encontradas em \cite{Saitoh2020MolecularDS} onde as fibras são represntadas por meio de um 
         conjuntos de molas acopladas.
         
@@ -154,9 +154,8 @@
             \label{M3}
         \end{figure}
 
-        Após a determinação do esqueleto ativo, definimos para cada molécula uma probabilidade \(P_{R}\), influenciada tanto pela configuração de
-        sua vizinhança quanto pela magnitude da força total aplicada ao agregado. Quando uma tensão é aplicada, cada molécula no agregado é 
-        afetada por uma parcela dessa força total, proporcional ao número de partículas presentes em sua respectiva camada. Consequentemente, em 
+        Quando uma força externa é aplicada as extremidades da fibra, cada molécula que compõe a fibra sofre uma parcela d
+        essa força total, proporcional ao número de partículas presentes em sua respectiva camada. Consequentemente, em 
         uma dada \(i\)-ésima camada contendo \(M\) partículas, a força por partícula é dada por:  
 
         \begin{equation}
@@ -164,11 +163,11 @@
         \end{equation}
             
 
-        onde \(\sigma_{i}\) representa a força por partícula na \(i\)-ésima camada e \(F\) é a força total aplicada ao agregado. A força sentida 
+        \noindent onde \(\sigma_{i}\) representa a força por partícula na \(i\)-ésima camada e \(F\) é a força total aplicada ao agregado. A força sentida 
         por uma molécula individual no agregado é, portanto, a média dos \(\sigma_{i}\) correspondentes às camadas em que a molécula está presente. 
-
-        As moléculas de colágeno são caracterizadas por sua estrutura em tripla hélice \cite{BRODSKY1997545}, o que torna a ruptura intramolecular 
-        menos provável em comparação com a quebra das ligações intermoleculares \cite{Parkinson1997}. Dessa forma, consideramos a probabilidade 
+        
+        Quando temos o ropimento de uma ligação interna na estrutura essa quebra aumenta a probabilidade de outras rupturas, levando a uma cascata de 
+        falhas na fibrila até acontecer um rompimento global. Dessa forma, consideramos a probabilidade 
         de ruptura para a molécula como um todo, ao invés de para cada partícula individual que a compõe. Adicionalmente, assumimos que o número de 
         ligações responsáveis por manter a molécula fixada no esqueleto ativo é igual ao somatório do número de partículas vizinhas em cada camada 
         onde a molécula está presente. 
@@ -179,30 +178,29 @@
             P_{R} = \left(\frac{\langle \sigma_{i} \rangle}{N \sigma_{s}}\right)^{m},
         \end{equation}
 
-        onde \(N\) representa o número de ligações de uma dada molécula, \(\sigma_{s}\) denota a força das ligações entre as moléculas, e \(m\) é um 
-        fator que modula a dissipação de energia \cite{Parkinson1997,2013}. Em todas as simulações, adotamos \(m = 2\). 
+        \noindent onde \(N\) representa o número de ligações de uma dada molécula, \(\sigma_{s}\) denota a força das ligações entre as moléculas, e 
+        \(m\) é um fator que modula a dissipação de energia \cite{Parkinson1997,2013}. Por questões de simplicidade, adotamos \(m = 2\)  em todas as 
+        nossas simulações.
 
-        A simulação é conduzida aplicando-se uma força ao esqueleto ativo, em uma tentativa de emular os comportamentos observados em experimentos de 
-        distensão. Inicialmente, calculamos a probabilidade de remoção \(P_{R}\) para cada molécula. Em seguida, realizamos um sorteio de um valor 
-        entre 0 e 1 para cada molécula; se o valor sorteado for menor ou igual a \(P_{R}\), a molécula é removida. Este processo é repetido para 
-        todas as moléculas do agregado. Após a primeira varredura, recalculamos \(P_{R}\) para as moléculas remanescentes sob a mesma força aplicada 
-        e continuamos o processo até que não ocorram mais quebras. A força é então incrementada em meia unidade, e o procedimento é repetido. 
-        Consideramos que a fibrila se rompe quando ao menos uma camada fica vazia, indicando que o esqueleto ativo não mais forma um agregado 
-        percolante. Esse procedimento está esquematizado na Figura \ref{M4}. Monitoramos o processo de remoção das moléculas, registrando a quantidade 
-        de moléculas removidas para uma dada força e a tensão máxima suportada antes da ruptura. 
+        O processo de ruptura é simulado com aplicação de uma força ao esqueleto ativo, em uma tentativa de reproduzir os comportamentos observados 
+        em experimentos de distensão. Inicialmente, calculamos a probabilidade de remoção \(P_{R}\) para cada molécula. Em seguida, realizamos um 
+        sorteio de um valor entre 0 e 1 para cada molécula; se o valor sorteado for menor ou igual a \(P_{R}\), a molécula é removida. Este processo 
+        é repetido para todas as moléculas do agregado. Após a primeira varredura, recalculamos \(P_{R}\) para as moléculas remanescentes sob a mesma 
+        força aplicada e continuamos o processo até que não ocorram mais quebras. A força é então incrementada em meia unidade, e o procedimento é 
+        repetido. Consideramos que a fibrila se rompe quando ao menos uma camada fica vazia, indicando que o esqueleto ativo não mais forma permitindo 
+        que a força seja transmitida para a vizinhança próxima na fibra.. Esse procedimento está esquematizado na Figura \ref{M4}. Monitoramos o 
+        processo de remoção das moléculas, registrando a quantidade de moléculas removidas para uma dada força e a tensão máxima suportada antes da 
+        ruptura. 
 
 
         \begin{figure}[H]
             \centering
             \includegraphics[width=\textwidth]{figures/simulaçao (1).png}
     
-            \caption{A) Com o esqueleto ativo definido, simulamos um teste mecânico na fibrila, análogo à aplicação de uma força axial ao longo do eixo 
-            \(y\), estendendo-a. Dada a ausência de propriedades elásticas na fibrila, recorremos a um modelo mecânico probabilístico. Neste modelo, 
-            atribuímos a cada molécula uma probabilidade de remoção \(P_{R}\), que depende tanto da força aplicada ao agregado quanto do número de 
-            ligações que a molécula mantém. B) Iniciamos a simulação atribuindo \(P_{R}\) a cada molécula e sorteando uma probabilidade \(P_{i}\). Se 
-            \(P_{i} \leq P_{R}\), a molécula é removida do agregado. Este processo é repetido até que todas as moléculas sejam avaliadas, seguido pelo 
-            recálculo de \(P_{R}\) para as moléculas remanescentes. A força é incrementada em meio após cada ciclo no qual não ocorrem mais remoções. C) 
-            A simulação termina quando identificamos uma camada vazia no agregado, momento no qual consideramos a fibrila como rompida.} 
+            \caption{Na figura, em (A) representamos a fibra sujeita a uma força $F$ aplicada em suas extremidades. Cada pedaço (bloco) que compõe 
+            a fibra representa um entrelaçado de moléculas que podem se romper a depender da probabilidade $P_{R}$ [Usar Eq.(2)]. Em (B) o processo 
+            de ruptura é testado estatisticamente (número entre zero e um) e a depender do teste, um pedaço da fibra se rompe. Em (C), após vários 
+            testes estatístico a fibra se rompe por completo na condição que há uma ruptura de uma seção transversal da fibra.} 
     
             \label{M4}
         \end{figure}
@@ -212,32 +210,35 @@
         às forças calculadas para aproximar a simulação a uma fibrila real. A força necessária para romper uma ligação é considerada constante, e 
         utilizamos o diâmetro médio das fibrilas para calcular a tensão. 
 
-        Para cada valor de \(T_{s}\), selecionamos 10 fibrilas para submeter ao procedimento de simulação. Para cada fibrila, realizamos mil experimentos. 
-        Registramos, para cada nível de força aplicada, o número de moléculas removidas do esqueleto e quantas permaneceram. 
+        Para cada valor de \(T_{s}\), selecionamos 10 fibrilas para submeter ao procedimento de simulação. Para cada fibrila, realizamos mil 
+        experimentos. Registramos, para cada nível de força aplicada, o número de moléculas removidas do esqueleto e quantas permaneceram. 
         
 
 
 \section{Resultados}
     \subsection{Morfologia das fibrilas}
 
-    Os agregados gerados pelo modelo apresentam uma morfologia fibrilar, com características relevantes de sua forma 
+    Os agregados gerados pelo modelo apresentam uma morfologia fibrilar, com características relevantes quanto a sua forma 
     sendo determinadas pelo parâmetro \(T_{s}\). Podemos observar, na Figura \ref{R1}, a estrutura desses agregados 
     para os valores de \(T_{s} = 2\), baixa difusão, e \(T_{s} = 10000\), alta difusão lateral sobre a superfície. As 
-    fibrilas com menor \(T_{s}\) apresentam uma forma mais aberta, enquanto para valores mais altos, observamos uma 
-    forma mais compacta e regular. A coloração indica o quão antiga uma molécula é no agregado, indo do azul escuro, 
-    mais antigas, para o amarelo, mais recentes. Nos agregados mais compactos, temos dificuldade em observar moléculas
-    mais antigas visto que essas estão muito no interior da estrutura. Para as mais abertas, temos uma maior facilidade
-    em observar moléculas mais antigas. Além disso, na visão lateral, observamos o comportamento alongado e com pontas 
-    afinadas, típico de fibrilas reais. 
+    fibrilas com menor \(T_{s}\) apresentam uma forma menos densa, enquanto para valores mais altos, observamos uma 
+    forma mais compacta e regular. A coloração indica o quão antiga uma molécula pertence ao agregado, indo do azul 
+    escuro, mais antigas, para o amarelo, mais recentes. Nos agregados mais compactos, temos dificuldade em observar 
+    moléculas mais antigas visto que essas estão localizadas no interior da estrutura. Para fibrilas menos compactas fica 
+    mais fácil identificar as que pertencem ao agragado por mais tempo. Além disso, na visão lateral, observamos o 
+    comportamento alongado e com pontas afinadas, típico de fibrilas reais. 
 
     \begin{figure}[H]
         \centering
         \includegraphics[width=\textwidth]{figures/fibrils.png}
 
-        \caption{Visualização transversal e lateral das fibrilas geradas com o algoritmo de DLA contendo 30.000 moléculas.
-        A coloração indica quão antigo é a molécula no agregado. Quanto mais pro azul escuro, 
-        mais antigo no agregado, quanto mais para o amarelo, mais recente. 
-        A) Fibrila gerada para \(T_{s}\) 2, baixa difusão. B) Fibrila gerada para \(T_{s}\) = 10000, alta difusão.} 
+        \caption{Representação das fibrilas geradas com o algoritmo de DLA contendo $30.000$ moléculas. 
+        Em (A) e (B) destaque a visão transversal enquanto que abaixo uma visão geral da fibrilas realçando 
+        uma maior concentração de blocos na região central em detrimento das extremidades. As cores indicam 
+        o tempo de pertencimento de cada bloco ao agragado. Quanto mais próximo do azul mais antigo esse 
+        bloco pertence ao agregado, equanto que uma tendência para o amarelo indica um pertencimento recente 
+        ao agragado. Em $(A)$ temos uma fiblila gerada com $T_{S}=2$, indicando baixa difusão, enquanto que 
+        em $(B)$ temos  $T_{S}=1000$, representando efeito de alta difusão.} 
 
         \label{R1}
     \end{figure}
@@ -283,29 +284,34 @@
         \centering
         \includegraphics[width=\textwidth]{figures/tips.png}
 
-        \caption{A quantidade de partículas por seção das fibrilas geradas segue uma relação linear da distancia em que 
-        medimos para a ponta. Nos observamos que, partindo de uma ponta, a massa cresce linear até bem proximo da região
-        central da fibrila. A medida que nos afastamos dessa região, a massa decaí linearmente. Esse comportamento foi 
-        observado para todas as fibrilas, indicando que o parâmetro \(T_{s}\) não tem efeito sobre essa característica.} 
+        \caption{A figura mostra a quantidade de partículas por seção tranversal das fibrilas geradas em função da 
+        distância desta seção até a sua extremidade. Partindo de uma ponta, a massa cresce linear até bem proximo 
+        da região central da fibrila. A medida que nos afastamos dessa região, a massa decaí linearmente. Os simbolos 
+        correspondem aos diferentes valores de $T_{S}$. Fica evidente que o valor escolhido para $T_{S}$ não tem 
+        efeito sobre esse efeito.} 
 
         \label{R2}
     \end{figure}
 
 
-    Analisando a seção transversal das fibrilas, conforme ilustrado na Figura \ref{R3}, observamos que o aumento do 
-    parâmetro \(T_{s}\) resulta na diminuição dos espaços vazios dentro da seção, levando à formação de agregados mais 
-    compactos e quase completamente preenchidos. Devido a essa característica progressiva em função do parâmetro 
-    \(T_{s}\), calculamos a dimensão fractal das seções e constatamos que, à medida que \(T_{s}\) aumenta, ocorre um 
+    Com o objetivo de obter um entendimento mais preciso acerca do efeito do parâmetro $T_{S}$ sobre a morfologia das 
+    fibrilas geradas analisamos a seção transversal na posição \(y=0\), conforme ilustrado na Figura \ref{R3}. Observamos 
+    que o aumento do parâmetro \(T_{s}\) resulta na diminuição dos espaços vazios dentro da seção, levando à formação de 
+    agregados mais compactos e quase completamente preenchidos. Devido a essa característica progressiva em função do 
+    parâmetro \(T_{s}\) e de seu aspecto não euclidiano, optamos por calculara dimensão fractal das seções e constatamos que, à medida que \(T_{s}\) aumenta, ocorre um 
     incremento no valor médio da dimensão fractal da seção até atingir uma saturação. Na Figura \ref{R4}, é evidente 
     que para valores mais baixos de \(T_{s}\), a dimensionalidade é próxima da observada em agregados gerados pelo 
-    modelo de Agregação Limitada por Difusão (DLA) \cite{Witten1983}, que é de 1.71, remetendo ao nosso modelo de 
-    formação. Enquanto isso, para valores mais elevados de \(T_{s}\), a dimensão fractal tende a estabilizar em valores 
-    próximos a 1.93, que se assemelha muito à dimensão euclidiana para objetos bidimensionais. 
+    modelo de Agregação Limitada por Difusão (DLA) \cite{Witten1983}, que é de 1.71, recuperando os valores esperados 
+    que remete aos igredientes básicos presente em nosso modelo de formação. Por outro lado,, para valores mais elevados 
+    de \(T_{s}\), a dimensão fractal tende a estabilizar em valores próximos a 1.93, que se assemelha muito à dimensão 
+    euclidiana para objetos bidimensionais. 
 
     \begin{figure}[H]
         \centering
         \includegraphics[width=\textwidth]{figures/cs_all.png}
-        \caption{Variação da forma da seção transversal das fibrilas para diferentes valores de \(T_{s}\).} 
+        \caption{A figura mostra a visualização de diferentes cortes transversais localizados em \(y=0\) para diferentes 
+        valores do parâmetro $T_{S}$. Da esquerda para direita e de cima para baixo temos os seguintes valores para o 
+        prâmetro $T_{S}=2,8,16,32,64,128,512,1024,4096,8192, 10000$.} 
         \label{R3}
     \end{figure}
 
@@ -321,7 +327,7 @@
 
     \subsection{Propriedades mecânicas}
 
-    Para compreender como nosso agregado responde à aplicação de uma força axial, avaliamos como o número de 
+    \indent Para compreender como nosso agregado responde à aplicação de uma força axial, avaliamos como o número de 
     moléculas na fibrila varia com a força. Na Figura \ref{R5}, apresentamos a curva de stress-strain para agregados 
     gerados com diferentes valores de \(T_{s}\). Observamos que o aumento desse parâmetro influencia no incremento da 
     tensão máxima de ruptura. No entanto, a partir de \(T_{s} = 512\), esses valores se tornam bastante próximos e as 
