@@ -350,6 +350,26 @@
         \label{R5}
     \end{figure}
 
+    Investigando o comportamento tensão em função da deformação, conseguimos determinar a existencia de dois regimes 
+    para cada curva. Na Figura \ref{R8}, temos os comportamentos analisados para as curvas de \(T_{s} = 8, 128, 1000\). 
+    Na região cinza, temos o comportamento não linear, regido por um logartimo natural da forma \(A\times ln(BX)\).
+    A separação ocorre proximo a \(28 \%\) de deformação das fibrilas. Após isso, entramos em um regime linear, na 
+    região branca, da forma \(AX + B\). Na Tabela \ref{tab2}, temos os valores dos coeficientes das regressões para os
+    dois regimes em cada parametro \(T_{s}\). Novamente, para os valores a partir de \(T_{s} = 512\), as curvas apresentam 
+    os coeficientes muito proximos, indicando que elas representam o mesmo processo de ruptura.
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=\textwidth]{figures/stress_fit.png}
+
+        \caption{Curva de tensão em função da deformação para \(T_{s} = 8, 128, 1000\). A região cinza delimita a 
+        região de comportamento não linear. A região branca, o regime linear das curvas. O coeficiente angular de cada 
+        curva é indicado. Na figura menor, temos o comportamento da derivada de cada curva de tensão, em função da 
+        deformação.} 
+
+        \label{R8}
+    \end{figure}
+
     Na Figura \ref{R6}, podemos observar como os valores de tensão máxima suportada variam com um parâmetro 
     importante das fibrilas, a densidade. Escolhemos essa análise visto que o comportamento de \(\sigma\) e da 
     densidade, \(\rho\), exibem formas semelhantes quando analisados em função de \(T_{s}\). Identificamos um 

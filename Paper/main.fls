@@ -622,6 +622,11 @@ INPUT ./figures/stress_strain.png
 INPUT figures/stress_strain.png
 INPUT ./figures/stress_strain.png
 INPUT ./figures/stress_strain.png
+INPUT ./figures/stress_fit.png
+INPUT ./figures/stress_fit.png
+INPUT figures/stress_fit.png
+INPUT ./figures/stress_fit.png
+INPUT ./figures/stress_fit.png
 INPUT ./figures/sigma_rho.png
 INPUT ./figures/sigma_rho.png
 INPUT figures/sigma_rho.png
