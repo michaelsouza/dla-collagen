@@ -1,9 +1,80 @@
-\begin{thebibliography}{28}
+\begin{thebibliography}{38}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Silver et~al.(2018)Silver, Jaffe, and Shah]{Silver2018}
+Frederick~H. Silver, Michael Jaffe, and Ruchit~G. Shah.
+\newblock Structure and behavior of collagen fibers.
+\newblock In \emph{Handbook of Properties of Textile and Technical Fibres},
+  pages 345--365. Elsevier, 2018.
+\newblock \doi{10.1016/b978-0-08-101272-7.00011-0}.
+\newblock URL \url{https://doi.org/10.1016/b978-0-08-101272-7.00011-0}.
+
+\bibitem[Davison-Kotler et~al.(2019)Davison-Kotler, Marshall, and
+  Garc{\'\i}a-Gareta]{Davison-Kotler2019-do}
+Evan Davison-Kotler, William~S Marshall, and Elena Garc{\'\i}a-Gareta.
+\newblock Sources of collagen for biomaterials in skin wound healing.
+\newblock \emph{Bioengineering (Basel)}, 6\penalty0 (3):\penalty0 56, June
+  2019.
+
+\bibitem[Tresoldi et~al.(2013)Tresoldi, Oliva, Benvenuto, Fantini, Masuelli,
+  Bei, and Modesti]{Tresoldi2013-qq}
+Ilaria Tresoldi, Francesco Oliva, Monica Benvenuto, Massimo Fantini, Laura
+  Masuelli, Roberto Bei, and Andrea Modesti.
+\newblock Tendon's ultrastructure.
+\newblock \emph{Muscles Ligaments Tendons J.}, 3\penalty0 (1):\penalty0 2--6,
+  January 2013.
+
+\bibitem[Fedarko(2014)]{FEDARKO201445}
+Neal~S. Fedarko.
+\newblock Chapter 5 - osteoblast/osteoclast development and function in
+  osteogenesis imperfecta.
+\newblock In Jay~R. Shapiro, Peter~H. Byers, Francis~H. Glorieux, and Paul~D.
+  Sponseller, editors, \emph{Osteogenesis Imperfecta}, pages 45--56. Academic
+  Press, San Diego, 2014.
+\newblock ISBN 978-0-12-397165-4.
+\newblock \doi{https://doi.org/10.1016/B978-0-12-397165-4.00005-8}.
+\newblock URL
+  \url{https://www.sciencedirect.com/science/article/pii/B9780123971654000058}.
+
+\bibitem[Rico-Llanos et~al.(2021)Rico-Llanos, Borrego-Gonz{\'{a}}lez,
+  Moncayo-Donoso, Becerra, and Visser]{RicoLlanos2021}
+Gustavo~A. Rico-Llanos, Sara Borrego-Gonz{\'{a}}lez, Miguelangel
+  Moncayo-Donoso, Jos{\'{e}} Becerra, and Rick Visser.
+\newblock Collagen type i biomaterials as scaffolds for bone tissue
+  engineering.
+\newblock \emph{Polymers}, 13\penalty0 (4):\penalty0 599, February 2021.
+\newblock \doi{10.3390/polym13040599}.
+\newblock URL \url{https://doi.org/10.3390/polym13040599}.
+
+\bibitem[Sophia~Fox et~al.(2009)Sophia~Fox, Bedi, and Rodeo]{Sophia_Fox2009-qd}
+Alice~J Sophia~Fox, Asheesh Bedi, and Scott~A Rodeo.
+\newblock The basic science of articular cartilage: structure, composition, and
+  function.
+\newblock \emph{Sports Health}, 1\penalty0 (6):\penalty0 461--468, November
+  2009.
+
+\bibitem[Chen et~al.(2015)Chen, Mienaltowski, and Birk]{CHEN201569}
+Shoujun Chen, Michael~J. Mienaltowski, and David~E. Birk.
+\newblock Regulation of corneal stroma extracellular matrix assembly.
+\newblock \emph{Experimental Eye Research}, 133:\penalty0 69--80, 2015.
+\newblock ISSN 0014-4835.
+\newblock \doi{https://doi.org/10.1016/j.exer.2014.08.001}.
+\newblock URL
+  \url{https://www.sciencedirect.com/science/article/pii/S0014483514002152}.
+\newblock Ocular extracellular matrix: Role in development, homeostasis and
+  disease.
+
+\bibitem[Amirrah et~al.(2022)Amirrah, Lokanathan, Zulkiflee, Wee, Motta, and
+  Fauzi]{Amirrah2022-uh}
+Ibrahim~N Amirrah, Yogeswaran Lokanathan, Izzat Zulkiflee, M~F Mohd~Razip Wee,
+  Antonella Motta, and Mh~Busra Fauzi.
+\newblock A comprehensive review on collagen type {I} development of
+  biomaterials for tissue engineering: From biosynthesis to bioscaffold.
+\newblock \emph{Biomedicines}, 10\penalty0 (9):\penalty0 2307, September 2022.
 
 \bibitem[Gelse(2003)]{Gelse2003}
 K~Gelse.
@@ -13,13 +84,28 @@ K~Gelse.
 \newblock \doi{10.1016/j.addr.2003.08.002}.
 \newblock URL \url{https://doi.org/10.1016/j.addr.2003.08.002}.
 
-\bibitem[Silver et~al.(2018)Silver, Jaffe, and Shah]{Silver2018}
-Frederick~H. Silver, Michael Jaffe, and Ruchit~G. Shah.
-\newblock Structure and behavior of collagen fibers.
-\newblock In \emph{Handbook of Properties of Textile and Technical Fibres},
-  pages 345--365. Elsevier, 2018.
-\newblock \doi{10.1016/b978-0-08-101272-7.00011-0}.
-\newblock URL \url{https://doi.org/10.1016/b978-0-08-101272-7.00011-0}.
+\bibitem[Charvolin and Sadoc(2019)]{Charvolin2019}
+Jean Charvolin and Jean-Fran{\c{c}}ois Sadoc.
+\newblock Type-i collagen fibrils: From growth morphology to local order.
+\newblock \emph{The European Physical Journal E}, 42\penalty0 (4), April 2019.
+\newblock \doi{10.1140/epje/i2019-11812-1}.
+\newblock URL \url{https://doi.org/10.1140/epje/i2019-11812-1}.
+
+\bibitem[KADLER et~al.(1996)KADLER, HOLMES, TROTTER, and CHAPMAN]{KADLER1996}
+Karl~E. KADLER, David~F. HOLMES, John~A. TROTTER, and John~A. CHAPMAN.
+\newblock Collagen fibril formation.
+\newblock \emph{Biochemical Journal}, 316\penalty0 (1):\penalty0 1--11, May
+  1996.
+\newblock \doi{10.1042/bj3160001}.
+\newblock URL \url{https://doi.org/10.1042/bj3160001}.
+
+\bibitem[Parry and Craig(1984)]{Parry1984}
+David A.~D. Parry and Alan~S. Craig.
+\newblock Growth and development of collagen fibrils in connective tissue.
+\newblock In \emph{Ultrastructure of the Connective Tissue Matrix}, pages
+  34--64. Springer {US}, 1984.
+\newblock \doi{10.1007/978-1-4613-2831-5_2}.
+\newblock URL \url{https://doi.org/10.1007/978-1-4613-2831-5_2}.
 
 \bibitem[Zhu et~al.(2018)Zhu, Yuan, Yin, You, Gu, Xiong, and Hu]{Zhu2018}
 Shichen Zhu, Qijuan Yuan, Tao Yin, Juan You, Zhipeng Gu, Shanbai Xiong, and
@@ -31,38 +117,12 @@ Shichen Zhu, Qijuan Yuan, Tao Yin, Juan You, Zhipeng Gu, Shanbai Xiong, and
 \newblock \doi{10.1039/c7tb02999c}.
 \newblock URL \url{https://doi.org/10.1039/c7tb02999c}.
 
-\bibitem[KADLER et~al.(1996)KADLER, HOLMES, TROTTER, and CHAPMAN]{KADLER1996}
-Karl~E. KADLER, David~F. HOLMES, John~A. TROTTER, and John~A. CHAPMAN.
-\newblock Collagen fibril formation.
-\newblock \emph{Biochemical Journal}, 316\penalty0 (1):\penalty0 1--11, May
-  1996.
-\newblock \doi{10.1042/bj3160001}.
-\newblock URL \url{https://doi.org/10.1042/bj3160001}.
-
-\bibitem[Charvolin and Sadoc(2019)]{Charvolin2019}
-Jean Charvolin and Jean-Fran{\c{c}}ois Sadoc.
-\newblock Type-i collagen fibrils: From growth morphology to local order.
-\newblock \emph{The European Physical Journal E}, 42\penalty0 (4), April 2019.
-\newblock \doi{10.1140/epje/i2019-11812-1}.
-\newblock URL \url{https://doi.org/10.1140/epje/i2019-11812-1}.
-
-\bibitem[Parry and Craig(1984)]{Parry1984}
-David A.~D. Parry and Alan~S. Craig.
-\newblock Growth and development of collagen fibrils in connective tissue.
-\newblock In \emph{Ultrastructure of the Connective Tissue Matrix}, pages
-  34--64. Springer {US}, 1984.
-\newblock \doi{10.1007/978-1-4613-2831-5_2}.
-\newblock URL \url{https://doi.org/10.1007/978-1-4613-2831-5_2}.
-
-\bibitem[Rico-Llanos et~al.(2021)Rico-Llanos, Borrego-Gonz{\'{a}}lez,
-  Moncayo-Donoso, Becerra, and Visser]{RicoLlanos2021}
-Gustavo~A. Rico-Llanos, Sara Borrego-Gonz{\'{a}}lez, Miguelangel
-  Moncayo-Donoso, Jos{\'{e}} Becerra, and Rick Visser.
-\newblock Collagen type i biomaterials as scaffolds for bone tissue
-  engineering.
-\newblock \emph{Polymers}, 13\penalty0 (4):\penalty0 599, February 2021.
-\newblock \doi{10.3390/polym13040599}.
-\newblock URL \url{https://doi.org/10.3390/polym13040599}.
+\bibitem[Silver and Landis(2008)]{Silver2008ViscoelasticityES}
+Frederick~H. Silver and William~J. Landis.
+\newblock Viscoelasticity, energy storage and transmission and dissipation by
+  extracellular matrices in vertebrates.
+\newblock 2008.
+\newblock URL \url{https://api.semanticscholar.org/CorpusID:91697957}.
 
 \bibitem[Nalbach et~al.(2022)Nalbach, Chalupa-Gantner, Spoerl, de~Bar,
   Baumgartner, Andriotis, Ito, Ovsianikov, Schitter, and
@@ -102,6 +162,28 @@ Joost A.~J. van~der Rijt, Kees~O. van~der Werf, Martin~L. Bennink, Pieter~J.
 \newblock \doi{https://doi.org/10.1002/mabi.200600063}.
 \newblock URL
   \url{https://onlinelibrary.wiley.com/doi/abs/10.1002/mabi.200600063}.
+
+\bibitem[Svensson et~al.(2018)Svensson, Smith, Moyer, and
+  Magnusson]{SVENSSON2018270}
+Rene~B. Svensson, Stuart~T. Smith, Patrick~J. Moyer, and S.~Peter Magnusson.
+\newblock Effects of maturation and advanced glycation on tensile mechanics of
+  collagen fibrils from rat tail and achilles tendons.
+\newblock \emph{Acta Biomaterialia}, 70:\penalty0 270--280, 2018.
+\newblock ISSN 1742-7061.
+\newblock \doi{https://doi.org/10.1016/j.actbio.2018.02.005}.
+\newblock URL
+  \url{https://www.sciencedirect.com/science/article/pii/S1742706118300758}.
+
+\bibitem[Andriotis et~al.(2023)Andriotis, Nalbach, and
+  Thurner]{ANDRIOTIS202335}
+Orestis~G. Andriotis, Mathis Nalbach, and Philipp~J. Thurner.
+\newblock Mechanics of isolated individual collagen fibrils.
+\newblock \emph{Acta Biomaterialia}, 163:\penalty0 35--49, 2023.
+\newblock ISSN 1742-7061.
+\newblock \doi{https://doi.org/10.1016/j.actbio.2022.12.008}.
+\newblock URL
+  \url{https://www.sciencedirect.com/science/article/pii/S174270612200811X}.
+\newblock The Mechanics of Cells and Fibers.
 
 \bibitem[Buehler(2006{\natexlab{a}})]{B1}
 Markus~J. Buehler.
@@ -232,6 +314,13 @@ Ken ichi Saitoh, Tomohiro Sato, Masanori Takuma, and Yoshimasa Takahashi.
 \newblock Elsevier, 2013.
 \newblock \doi{10.1016/c2009-0-64289-6}.
 \newblock URL \url{https://doi.org/10.1016/c2009-0-64289-6}.
+
+\bibitem[Pandolfi et~al.(2019)Pandolfi, Gizzi, and Vasta]{Pandolfi2019AMM}
+Anna Pandolfi, Alessio Gizzi, and Marcello Vasta.
+\newblock A microstructural model of cross-link interaction between collagen
+  fibrils in the human cornea.
+\newblock \emph{Philosophical Transactions of the Royal Society A}, 377, 2019.
+\newblock URL \url{https://api.semanticscholar.org/CorpusID:81985945}.
 
 \bibitem[Yang et~al.(2012)Yang, {van der Werf}, Dijkstra, Feijen, and
   Bennink]{YANG2012148}
