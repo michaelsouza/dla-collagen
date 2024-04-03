@@ -8,10 +8,6 @@
 \usepackage{hyperref}
 \usepackage{indentfirst} % first paragraph indet
 
-
-
-
-
 \title{paper collagen}
 \author{robert.tavares}
 \date{November 2023}
@@ -292,9 +288,10 @@
         \label{R1}
     \end{figure}
 
-    O comprimento, o diâmetro e a densidade da região central das fibrilas são características influenciadas pelo 
+    O comprimento, o diâmetro e a densidade(\(\rho\)) da região central das fibrilas são características influenciadas pelo 
     parâmetro \(T_{s}\). Na Tabela \ref{tab1}, podemos observar como essas dimensões se alteram, em média, com o 
-    aumento desse parâmetro. O comprimento e a densidade tendem a aumentar com o incremento de \(T_{s}\), enquanto 
+    aumento desse parâmetro. Calculamos a densidade considerando o espaço ocupado pelas moléculas dentro de uma caixa
+    que continha o tronco, o comportamento dessa parâmetro e do comprimento tendem a aumentar com o incremento de \(T_{s}\), enquanto 
     o diâmetro tende a diminuir. Uma propriedade comum a essas medidas é que elas exibem um comportamento de 
     estabilização à medida que nos aproximamos de \(T_{s} = 512\); a partir desse ponto, elas oscilam em torno de um 
     valor médio. 
@@ -305,7 +302,7 @@
         \centering  % Mantém a tabela centralizada no texto
         \begin{tabular}{lccc}
         \hline
-        \textbf{$T_{s}$} & \multicolumn{1}{c}{\textbf{Length(u.m)}} & \textbf{Ray(u.m)} & \textbf{Density(\% )} \\ \hline
+        \textbf{$T_{s}$} & \multicolumn{1}{c}{\textbf{Length(u.m)}} & \textbf{Ray(u.m)} & \textbf{\(\rho\)(\%)} \\ \hline
         2                & 3668.36                                   & 32.40             & 0.17                  \\
         8                & 3695.16                                   & 28.68             & 0.25                  \\
         16               & 3764.27                                   & 24.63             & 0.34                  \\
@@ -359,7 +356,7 @@
         \centering
         \includegraphics[width=\textwidth]{figures/cs_all.png}
         \caption{A figura mostra a visualização de diferentes cortes transversais localizados em \(y=0\) para diferentes 
-        valores do parâmetro $T_{S}$. Da esquerda para direita e de cima para baixo temos os seguintes valores para o 
+        valores do parâmetro \(T_{S}\). Da esquerda para direita e de cima para baixo temos os seguintes valores para o 
         prâmetro \(T_{S}=2,8,16,32,64,128,512,1024,4096,8192, 10000\).} 
         \label{R3}
     \end{figure}
@@ -368,7 +365,7 @@
         \centering
         \includegraphics[width=\textwidth]{figures/dim_frac.png}
 
-        \caption{ Gráfico da dimenssão fractal $<F_{D}>$ em função do parâmetro de difusão \(T_{s}\). Os valores para 
+        \caption{ Gráfico da dimenssão fractal média,\(F_{D}\), em função do parâmetro de difusão \(T_{s}\). Os valores para 
         dimensão fractal foram obtidos por meio da média sobre diferentes seções de uma mesma fibrila e sobre os agregados
         de mesmo  \(T_{s}\). Usamos a relação massa-raio para determinar essa propriedade. A linha pontilhada representa 
         o valor médio da dimensão fractal para os valores de \(T_{S}=512,1024,4096,8192,10000\).} 
@@ -382,11 +379,12 @@
     \indent Para compreender como nosso agregado responde à aplicação de uma força axial, avaliamos como o número de 
     moléculas na fibrila varia com a força. Na Figura \ref{R5}, apresentamos a curva de stress-strain para agregados 
     gerados com diferentes valores de \(T_{s}\). Observamos que o aumento desse parâmetro influencia no incremento da 
-    tensão máxima de ruptura. No entanto, a partir de \(T_{s} = 512\), esses valores se tornam bastante próximos e as 
-    curvas começam a se sobrepor. Comumente, esperaríamos que essas curvas crescessem de forma mais abrupta até o valor
+    tensão máxima de ruptura, além disso, a deformação sofrida por essas fibrilas começa a ocorrer apenas para valores 
+    de tensão mais altos, em comparação a fibrilas de baixo \(T_{s}\). No entanto, a partir de \(T_{s} = 512\), esses 
+    valores se tornam bastante próximos e as curvas começam a se sobrepor. Comumente, esperaríamos que essas curvas crescessem de forma mais abrupta até o valor
     máximo, o que não é observado aqui. Esse comportamento mais suave até o valor limite é uma consequência do módulo 
     de Weibull que utilizamos no modelo. Para valores baixos, a curva resultante é não determinística 
-    \cite{Parkinson1997}. A tensão máxima suportada que encontramos foi de 45,6 MPa, valor muito próximo ao encontrado 
+    \cite{Parkinson1997}. A tensão máxima suportada que encontramos foi de 45,1 MPa, valor muito próximo ao encontrado 
     por Yang et al. \cite{YANG2012148} ao analisar fibrilas reconstituídas do tendão de Aquiles bovino purificado. 
     Em contraste, no trabalho de Yamamoto \cite{Noritaka}, foram utilizadas fibrilas isoladas do fascículo dos tendões 
     da cauda de ratos, obtendo um valor de 100 \(\pm\) 32 MPa. A discrepância em relação ao nosso valor pode estar 
@@ -397,18 +395,20 @@
         \centering
         \includegraphics[width=\textwidth]{figures/stress_strain.png}
 
-        \caption{Tensão em função da deformação da fibrila para diferentes valores de \(T_{s}\).} 
+        \caption{Tensão em função da deformação da fibrila para diferentes valores de \(T_{s}\). A deformação foi calculada
+        como a porção de moléculas removidas sobre o total de moléculas no inicio da simulação. Nos aproximamos a simualção 
+        de uma medida real considerando que a unidade de força para romper as ligações internas equivale a  \( F_{c} = 0.5 nN\).} 
 
         \label{R5}
     \end{figure}
 
     Investigando o comportamento tensão em função da deformação, conseguimos determinar a existencia de dois regimes 
-    para cada curva. Na Figura \ref{R8}, temos os comportamentos analisados para as curvas de \(T_{s} = 8, 128, 1000\). 
-    Na região cinza, temos o comportamento não linear, regido por um logartimo natural da forma \(A\times ln(BX)\).
-    A separação ocorre proximo a \(28 \%\) de deformação das fibrilas. Após isso, entramos em um regime linear, na 
-    região branca, da forma \(AX + B\). Na Tabela \ref{tab2}, temos os valores dos coeficientes das regressões para os
-    dois regimes em cada parametro \(T_{s}\). Novamente, para os valores a partir de \(T_{s} = 512\), as curvas apresentam 
-    os coeficientes muito proximos, indicando que elas representam o mesmo processo de ruptura.
+    para cada curva após elas começarem a sofrer deformação. Na Figura \ref{R8}, temos os comportamentos analisados para 
+    as curvas de \(T_{s} = 8, 128, 1000\). Na região cinza, temos o comportamento não linear, regido por um logartimo 
+    natural da forma \(A\times ln(BX)\). A separação ocorre proximo a \(28 \%\) de deformação das fibrilas. Após isso, 
+    entramos em um regime linear, na região branca, da forma \(AX + B\). Na Tabela \ref{tab2}, temos os valores dos coeficientes
+    das regressões para os dois regimes em cada parametro \(T_{s}\) e o \(R^{2}\). Novamente, para os valores a partir de \(T_{s} = 512\)
+    , as curvas apresentam os coeficientes muito proximos, indicando que elas representam o mesmo processo de ruptura.
 
     \begin{figure}[H]
         \centering
@@ -421,6 +421,29 @@
 
         \label{R8}
     \end{figure}
+
+
+    \begin{table}[H]
+        \begin{tabular}{ccccl}
+        \caption{Regressões para os diferentes regimes da curva de tensão deformação para os diferentes valores de \(T_{s}\).
+        Os dois comportamentos, logaritmo natural e linear, estão acompanhados dos seus respectivos \(R^{2}\).}
+        \hline
+        \textbf{$T_{s}$} & \textbf{Aln(Bx)}                                                & \textbf{R\textasciicircum{}\{2\}} & \textbf{A + Bx}                                                                                              & R\textasciicircum{}\{2\} \\ \hline
+        2                & 3.7 \textbackslash{}times 10\textasciicircum{}\{5\}ln(126.19x)  & 0.97                              & 8.98 \textbackslash{}times 10\textasciicircum{}\{5\} + 1.68 \textbackslash{}times 10\textasciicircum{}\{6\}x & 0.99                     \\
+        8                & 7.98 \textbackslash{}times 10\textasciicircum{}\{5\}ln(146.69x) & 0.986                             & 2.34 \textbackslash{}times 10\textasciicircum{}\{6\} + 2.80 \textbackslash{}times 10\textasciicircum{}\{6\}x & 0.988                    \\
+        16               & 1.65 \textbackslash{}times 10\textasciicircum{}\{6\}ln(140.8x)  & 0.988                             & 4.99 \textbackslash{}times 10\textasciicircum{}\{6\} + 3.95 \textbackslash{}times 10\textasciicircum{}\{6\}x & 0.998                    \\
+        32               & 2.98 \textbackslash{}times 10\textasciicircum{}\{6\}ln(155.47x) & 0.99                              & 9.5 \textbackslash{}times 10\textasciicircum{}\{6\} + 5.86 \textbackslash{}times 10\textasciicircum{}\{6\}x  & 0.998                    \\
+        64               & 5.7 \textbackslash{}times 10\textasciicircum{}\{6\}ln(145.58x)  & 0.989                             & 1.62 \textbackslash{}times 10\textasciicircum{}\{7\} + 1.60 \textbackslash{}times 10\textasciicircum{}\{7\}x & 0.997                    \\
+        128              & 7.35 \textbackslash{}times 10\textasciicircum{}\{6\}ln(154.32x) & 0.99                              & 2.55 \textbackslash{}times 10\textasciicircum{}\{7\} + 9.37 \textbackslash{}times 10\textasciicircum{}\{6\}x & 0.99                     \\
+        512              & 1.03 \textbackslash{}times 10\textasciicircum{}\{7\}ln(164.02x) & 0.99                              & 3.49 \textbackslash{}times 10\textasciicircum{}\{7\} + 1.6 \textbackslash{}times 10\textasciicircum{}\{6\}x  & 0.993                    \\
+        1024             & 1.04 \textbackslash{}times 10\textasciicircum{}\{7\}ln(158.23x) & 0.99                              & 3.51 \textbackslash{}times 10\textasciicircum{}\{7\} + 1.58 \textbackslash{}times 10\textasciicircum{}\{7\}x & 0.99                     \\
+        4096             & 1.08 \textbackslash{}times 10\textasciicircum{}\{7\}ln(157.09x) & 0.99                              & 3.65 \textbackslash{}times 10\textasciicircum{}\{7\} + 1.45 \textbackslash{}times 10\textasciicircum{}\{7\}x & 0.996                    \\
+        8192             & 1.07 \textbackslash{}times 10\textasciicircum{}\{7\}ln(157.16x) & 0.991                             & 3.54 \textbackslash{}times 10\textasciicircum{}\{7\} + 1.7 \textbackslash{}times 10\textasciicircum{}\{7\}x  & 0.994                    \\
+        10000            & 1.1 \textbackslash{}times 10\textasciicircum{}\{7\}ln(157.02x)  & 0.99                              & 3.59 \textbackslash{}times 10\textasciicircum{}\{7\} + 1.84 \textbackslash{}times 10\textasciicircum{}\{7\}x & 0.997                    \\ \hline
+        \end{tabular}
+        \label{tab2}
+    \end{table}
+
 
     Na Figura \ref{R6}, podemos observar como os valores de tensão máxima suportada variam com um parâmetro 
     importante das fibrilas, a densidade. Escolhemos essa análise visto que o comportamento de \(\sigma\) e da 
@@ -439,8 +462,9 @@
         \centering
         \includegraphics[width=\textwidth]{figures/sigma_rho.png}
 
-        \caption{Tensão crítica em função da densidade. Observamos que esse valor cresce exponencialmente com a 
-        densidade até ambos os parâmetros atingirem um limite superior.} 
+        \caption{Tensão crítica em função da densidade das fibrilas. Os dados medidos são os quadrados verdes. A curva 
+        continua preta é o ajuste exponencial dos dados. A forma da exponencial, mostrada na legenda da curva, é dada 
+        por \(6.95 \times 10^{5}e^{6.08\rho}\).} 
 
 
         \label{R6}
@@ -455,7 +479,8 @@
     considerarmos que a densidade aumenta com este parâmetro, resultando em mais moléculas para contribuir com os 
     tamanhos das avalanches. Assim, temos que as avalanches durante o processo de ruptura são independentes do tamanho 
     do sistema; contudo, elas são influenciadas pelo quão compacta é a fibrila, com o expoente \(\gamma\) variando de 
-    -1.94 até -2.60. 
+    -1.94 até -2.60. Na Tabela \ref{tab3}, temos os outros coeficientes para cada valor do parâmetro \(T_{s}\).
+    
 
 
     \begin{figure}[H]
@@ -469,6 +494,26 @@
         \label{R7}
 
     \end{figure}
+
+    \begin{table}[H]
+        \begin{tabular}{cc}
+        \caption{Expoente \(gamma\) das leis de escala das avalanches para cada parâmetro \(T_{s}\).}
+        \hline
+        \textbf{\(T_{s}\)} & \textbf{\(gamma\)} \\ \hline
+        2                  & 1.94               \\
+        8                  & 2.11               \\
+        16                 & 2.25               \\
+        32                 & 2.35               \\
+        64                 & 2.35               \\
+        128                & 2.39               \\
+        512                & 2.46               \\
+        1024               & 2.49               \\
+        4096               & 2.51               \\
+        8192               & 2.56               \\
+        10000              & 2.6                \\ \hline
+        \end{tabular}
+        \label{tab3}
+    \end{table}
 
 \section{Conclusões}
 
@@ -491,12 +536,8 @@
     observar os valores máximos de interesse, otimizando o uso de recursos computacionais.
 
 
-
-
-
-
-\bibliographystyle{unsrtnat} % Set the bibliography style
-\bibliography{ref.bib} % Include your .bib file (without the .bib extension)
+\bibliographystyle{unsrtnat} % Ou outro estilo de sua preferência
+\bibliography{ref} % Refere-se ao seu arquivo ref.bib, sem a extensão .bib
 
 
     

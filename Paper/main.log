@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.3.25)  1 APR 2024 09:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.3.25)  2 APR 2024 16:42
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -232,24 +232,24 @@ File: l3backend-pdftex.def 2022-01-12 L3 backend support: PDF output (pdfTeX)
 ) (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
  (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count284
@@ -269,7 +269,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
  (/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-Package hyperref Info: Link coloring OFF on input line 19.
+Package hyperref Info: Link coloring OFF on input line 15.
  (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
  (/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty
@@ -279,94 +279,286 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count290
 )
-LaTeX Info: Redefining \ref on input line 19.
-LaTeX Info: Redefining \pageref on input line 19.
-LaTeX Info: Redefining \nameref on input line 19.
+LaTeX Info: Redefining \ref on input line 15.
+LaTeX Info: Redefining \pageref on input line 15.
+LaTeX Info: Redefining \nameref on input line 15.
  (./main.out) (./main.out)
 \@outlinefile=\write3
 \openout3 = `main.out'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 22.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 18.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 22.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 18.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [1
+)
+
+Package natbib Warning: Citation `Silver2018' on page 1 undefined on input line 22.
+
+
+Package natbib Warning: Citation `Davison-Kotler2019-do' on page 1 undefined on input line 24.
+
+
+Package natbib Warning: Citation `Tresoldi2013-qq' on page 1 undefined on input line 24.
+
+
+Package natbib Warning: Citation `FEDARKO201445' on page 1 undefined on input line 24.
+
+
+Package natbib Warning: Citation `RicoLlanos2021' on page 1 undefined on input line 24.
+
+
+Package natbib Warning: Citation `Sophia_Fox2009-qd' on page 1 undefined on input line 25.
+
+
+Package natbib Warning: Citation `CHEN201569' on page 1 undefined on input line 25.
+
+
+Package natbib Warning: Citation `Silver2018' on page 1 undefined on input line 26.
+
+
+Package natbib Warning: Citation `Amirrah2022-uh' on page 1 undefined on input line 26.
+
+
+Package natbib Warning: Citation `Gelse2003' on page 1 undefined on input line 29.
+
+
+Package natbib Warning: Citation `Silver2018' on page 1 undefined on input line 29.
+
+
+Package natbib Warning: Citation `Charvolin2019' on page 1 undefined on input line 32.
+
+
+Package natbib Warning: Citation `KADLER1996' on page 1 undefined on input line 32.
+
+
+Package natbib Warning: Citation `Parry1984' on page 1 undefined on input line 32.
+
+
+Package natbib Warning: Citation `Zhu2018' on page 1 undefined on input line 33.
+
+
+Package natbib Warning: Citation `Amirrah2022-uh' on page 1 undefined on input line 34.
+
+
+Package natbib Warning: Citation `Silver2008ViscoelasticityES' on page 1 undefined on input line 36.
+
+
+Package natbib Warning: Citation `Nalbach2022InstrumentFT' on page 1 undefined on input line 40.
+
+
+Package natbib Warning: Citation `Andriotis2015-lx' on page 1 undefined on input line 42.
+
+
+Package natbib Warning: Citation `Mull2022-br' on page 1 undefined on input line 42.
+
+
+Package natbib Warning: Citation `Rijt' on page 1 undefined on input line 42.
+
+
+Package natbib Warning: Citation `SVENSSON2018270' on page 1 undefined on input line 45.
+
+
+Package natbib Warning: Citation `ANDRIOTIS202335' on page 1 undefined on input line 46.
+
+[1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (2.57103pt too wide) in paragraph at lines 62--71
+
+Package natbib Warning: Citation `B1' on page 2 undefined on input line 49.
+
+
+Package natbib Warning: Citation `B2' on page 2 undefined on input line 49.
+
+
+Package natbib Warning: Citation `B3' on page 2 undefined on input line 49.
+
+
+Package natbib Warning: Citation `B4' on page 2 undefined on input line 52.
+
+
+Package natbib Warning: Citation `Malaspina2017-qp' on page 2 undefined on input line 52.
+
+
+Package natbib Warning: Citation `10.1002/jbmr.2705' on page 2 undefined on input line 52.
+
+
+Package natbib Warning: Citation `Araujo' on page 2 undefined on input line 55.
+
+
+Package natbib Warning: Citation `Parkinson1995' on page 2 undefined on input line 59.
+
+
+Package natbib Warning: Citation `Parkinson1997' on page 2 undefined on input line 61.
+
+
+Overfull \hbox (2.57103pt too wide) in paragraph at lines 58--67
 \OT1/cmr/m/n/10 fus~ao (\OT1/cmr/m/it/10 Dif-fu-sion Lim-ited Ag-gre-ga-tion \OT1/cmr/m/n/10 - DLA) para sim-u-lar o pro-cesso de forma^^Xc~ao
  []
 
+
+Package natbib Warning: Citation `Witten1983' on page 2 undefined on input line 75.
+
+
+LaTeX Warning: Reference `M1' on page 2 undefined on input line 80.
+
 [2]
-<figures/DLA.png, id=120, 2179.4223pt x 1835.4171pt>
+<figures/DLA.png, id=24, 2179.4223pt x 1835.4171pt>
 File: figures/DLA.png Graphic file (type png)
 <use figures/DLA.png>
-Package pdftex.def Info: figures/DLA.png  used on input line 88.
+Package pdftex.def Info: figures/DLA.png  used on input line 84.
 (pdftex.def)             Requested size: 345.0pt x 290.53604pt.
- [3 <./figures/DLA.png>]
-<figures/specific_bind.png, id=131, 1445.4pt x 813.0375pt>
+
+
+Package natbib Warning: Citation `Parkinson1995' on page 3 undefined on input line 98.
+
+
+LaTeX Warning: Reference `M2' on page 3 undefined on input line 99.
+
+[3 <./figures/DLA.png>]
+<figures/specific_bind.png, id=33, 1445.4pt x 813.0375pt>
 File: figures/specific_bind.png Graphic file (type png)
 <use figures/specific_bind.png>
-Package pdftex.def Info: figures/specific_bind.png  used on input line 108.
+Package pdftex.def Info: figures/specific_bind.png  used on input line 104.
 (pdftex.def)             Requested size: 345.0pt x 194.05367pt.
- [4 <./figures/specific_bind.png>]
-<figures/esqueleto.png, id=148, 4516.875pt x 2540.74219pt>
+
+
+Package natbib Warning: Citation `Kadler1987' on page 4 undefined on input line 116.
+
+
+Package natbib Warning: Citation `Parkinson1995' on page 4 undefined on input line 116.
+
+
+Package natbib Warning: Citation `GarcaRuiz1991' on page 4 undefined on input line 118.
+
+
+Package natbib Warning: Citation `Parkinson1995' on page 4 undefined on input line 120.
+
+[4 <./figures/specific_bind.png>]
+
+Package natbib Warning: Citation `Parkinson1997' on page 5 undefined on input line 129.
+
+
+Package natbib Warning: Citation `Saitoh2020MolecularDS' on page 5 undefined on input line 130.
+
+
+LaTeX Warning: Reference `M3' on page 5 undefined on input line 144.
+
+<figures/esqueleto.png, id=41, 4516.875pt x 2540.74219pt>
 File: figures/esqueleto.png Graphic file (type png)
 <use figures/esqueleto.png>
-Package pdftex.def Info: figures/esqueleto.png  used on input line 153.
+Package pdftex.def Info: figures/esqueleto.png  used on input line 149.
 (pdftex.def)             Requested size: 345.0pt x 194.0366pt.
- [5]
-Overfull \hbox (0.72287pt too wide) in paragraph at lines 164--168
+[5]
+Overfull \hbox (0.72287pt too wide) in paragraph at lines 160--164
 []\OT1/cmr/m/n/10 Quando uma for^^Xca ex-terna ^^Se apli-cada as ex-trem-i-dades da fi-bra, cada mol^^Secula
  []
 
 [6 <./figures/esqueleto.png>]
-<figures/simulaçao (1).png, id=165, 4516.875pt x 2540.74219pt>
+
+Package natbib Warning: Citation `Parkinson1997' on page 7 undefined on input line 187.
+
+
+Package natbib Warning: Citation `2013' on page 7 undefined on input line 187.
+
+
+LaTeX Warning: Reference `M4' on page 7 undefined on input line 196.
+
+<figures/simulaçao (1).png, id=55, 4516.875pt x 2540.74219pt>
 File: figures/simulaçao (1).png Graphic file (type png)
 <use figures/simulaçao (1).png>
-Package pdftex.def Info: figures/simulaçao (1).png  used on input line 207.
+Package pdftex.def Info: figures/simulaçao (1).png  used on input line 203.
 (pdftex.def)             Requested size: 345.0pt x 194.0366pt.
- [7] [8 <./figures/simulaçao (1).png>]
-Overfull \hbox (0.52838pt too wide) in paragraph at lines 270--279
+[7] [8 <./figures/simulaçao (1).png>]
+
+Package natbib Warning: Citation `KADLER1996' on page 9 undefined on input line 241.
+
+
+Package natbib Warning: Citation `Parry1984' on page 9 undefined on input line 241.
+
+
+Package natbib Warning: Citation `Pandolfi2019AMM' on page 9 undefined on input line 250.
+
+
+LaTeX Warning: Reference `R1' on page 9 undefined on input line 267.
+
+
+Overfull \hbox (0.52838pt too wide) in paragraph at lines 266--275
 \OT1/cmr/m/n/10 car-ac-ter^^S^^Psticas rel-e-vantes quanto a sua forma sendo de-ter-mi-nadas pelo par^ametro
  []
 
 [9]
-<figures/fibrils.png, id=193, 762.6894pt x 1076.5821pt>
+<figures/fibrils.png, id=78, 762.6894pt x 1076.5821pt>
 File: figures/fibrils.png Graphic file (type png)
 <use figures/fibrils.png>
-Package pdftex.def Info: figures/fibrils.png  used on input line 282.
+Package pdftex.def Info: figures/fibrils.png  used on input line 278.
 (pdftex.def)             Requested size: 345.0pt x 486.98727pt.
  [10]
 Overfull \vbox (54.98727pt too high) has occurred while \output is active []
 
  [11 <./figures/fibrils.png>]
-<figures/tips.png, id=207, 417.2388pt x 324.61275pt>
+
+LaTeX Warning: Reference `tab1' on page 12 undefined on input line 292.
+
+
+LaTeX Warning: Reference `R2' on page 12 undefined on input line 324.
+
+
+Package natbib Warning: Citation `Parkinson1995' on page 12 undefined on input line 326.
+
+
+Package natbib Warning: Citation `Kadler1987' on page 12 undefined on input line 326.
+
+<figures/tips.png, id=89, 417.2388pt x 324.61275pt>
 File: figures/tips.png Graphic file (type png)
 <use figures/tips.png>
-Package pdftex.def Info: figures/tips.png  used on input line 334.
+Package pdftex.def Info: figures/tips.png  used on input line 331.
 (pdftex.def)             Requested size: 345.0pt x 268.423pt.
- [12]
-<figures/cs_all.png, id=218, 1300.86pt x 1513.0929pt>
+[12]
+
+LaTeX Warning: Reference `R3' on page 13 undefined on input line 344.
+
+
+LaTeX Warning: Reference `R4' on page 13 undefined on input line 348.
+
+
+Package natbib Warning: Citation `Witten1983' on page 13 undefined on input line 350.
+
+<figures/cs_all.png, id=95, 1300.86pt x 1513.0929pt>
 File: figures/cs_all.png Graphic file (type png)
 <use figures/cs_all.png>
-Package pdftex.def Info: figures/cs_all.png  used on input line 360.
+Package pdftex.def Info: figures/cs_all.png  used on input line 357.
 (pdftex.def)             Requested size: 345.0pt x 401.26785pt.
- [13 <./figures/tips.png>]
-<figures/dim_frac.png, id=227, 431.81325pt x 318.34935pt>
+[13 <./figures/tips.png>]
+<figures/dim_frac.png, id=103, 431.81325pt x 318.34935pt>
 File: figures/dim_frac.png Graphic file (type png)
 <use figures/dim_frac.png>
-Package pdftex.def Info: figures/dim_frac.png  used on input line 369.
+Package pdftex.def Info: figures/dim_frac.png  used on input line 366.
 (pdftex.def)             Requested size: 345.0pt x 254.36407pt.
- [14 <./figures/cs_all.png>] [15 <./figures/dim_frac.png>]
-<figures/stress_strain.png, id=245, 402.66435pt x 332.6829pt>
+ [14 <./figures/cs_all.png>]
+
+LaTeX Warning: Reference `R5' on page 15 undefined on input line 380.
+
+
+Package natbib Warning: Citation `Parkinson1997' on page 15 undefined on input line 387.
+
+
+Package natbib Warning: Citation `YANG2012148' on page 15 undefined on input line 388.
+
+
+Package natbib Warning: Citation `Noritaka' on page 15 undefined on input line 389.
+
+[15 <./figures/dim_frac.png>]
+<figures/stress_strain.png, id=117, 409.0482pt x 325.09454pt>
 File: figures/stress_strain.png Graphic file (type png)
 <use figures/stress_strain.png>
-Package pdftex.def Info: figures/stress_strain.png  used on input line 398.
-(pdftex.def)             Requested size: 345.0pt x 285.04076pt.
+Package pdftex.def Info: figures/stress_strain.png  used on input line 396.
+(pdftex.def)             Requested size: 345.0pt x 274.19862pt.
+
+
+LaTeX Warning: Reference `R8' on page 16 undefined on input line 406.
 
 
 LaTeX Warning: Reference `tab2' on page 16 undefined on input line 409.
@@ -376,93 +568,62 @@ Overfull \hbox (2.7229pt too wide) in paragraph at lines 405--412
 []\OT1/cmr/m/n/10 Investigando o com-por-ta-mento tens~ao em fun^^Xc~ao da de-forma^^Xc~ao, con-seguimos
  []
 
-<figures/stress_fit.png, id=247, 638.385pt x 478.6683pt>
+<figures/stress_fit.png, id=118, 433.62pt x 325.215pt>
 File: figures/stress_fit.png Graphic file (type png)
 <use figures/stress_fit.png>
 Package pdftex.def Info: figures/stress_fit.png  used on input line 415.
-(pdftex.def)             Requested size: 345.0pt x 258.68153pt.
+(pdftex.def)             Requested size: 345.0pt x 258.76303pt.
 [16 <./figures/stress_strain.png>]
-<figures/sigma_rho.png, id=257, 402.66435pt x 332.6829pt>
+
+LaTeX Warning: Reference `R6' on page 17 undefined on input line 427.
+
+
+Package natbib Warning: Citation `Parkinson1995' on page 17 undefined on input line 431.
+
+
+Package natbib Warning: Citation `KATZ1973351' on page 17 undefined on input line 432.
+
+<figures/sigma_rho.png, id=125, 413.02306pt x 320.51746pt>
 File: figures/sigma_rho.png Graphic file (type png)
 <use figures/sigma_rho.png>
-Package pdftex.def Info: figures/sigma_rho.png  used on input line 440.
-(pdftex.def)             Requested size: 345.0pt x 285.04076pt.
- [17 <./figures/stress_fit.png>]
-<figures/ava.png, id=266, 552.50415pt x 417.11835pt>
+Package pdftex.def Info: figures/sigma_rho.png  used on input line 442.
+(pdftex.def)             Requested size: 345.0pt x 267.74115pt.
+[17 <./figures/stress_fit.png>]
+
+LaTeX Warning: Reference `R7' on page 18 undefined on input line 454.
+
+
+LaTeX Warning: Reference `tab3' on page 18 undefined on input line 461.
+
+<figures/ava.png, id=132, 433.62pt x 331.2375pt>
 File: figures/ava.png Graphic file (type png)
 <use figures/ava.png>
-Package pdftex.def Info: figures/ava.png  used on input line 463.
-(pdftex.def)             Requested size: 345.0pt x 260.45647pt.
- [18 <./figures/sigma_rho.png>]
-Overfull \hbox (11.3895pt too wide) in paragraph at lines 475--481
-[]\OT1/cmr/m/n/10 Neste es-tudo, demon-stramos a ca-paci-dade de um mod-elo baseado em Agrega^^Xc~ao
- []
+Package pdftex.def Info: figures/ava.png  used on input line 467.
+(pdftex.def)             Requested size: 345.0pt x 263.55493pt.
+[18 <./figures/sigma_rho.png>]
+/home/robert/dla-collagen/Paper/main.tex:479: Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.479 ...alanches para cada parâmetro \(T_{s}\).}
+                                                  
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
 
-[19 <./figures/ava.png>] (./main.bbl
-Underfull \hbox (badness 1931) in paragraph at lines 9--15
-[]\OT1/cmr/m/n/10 Frederick H. Sil-ver, Michael Jaffe, and Ru-chit G. Shah.  Struc-
- []
+/home/robert/dla-collagen/Paper/main.tex:479: Missing } inserted.
+<inserted text> 
+                }
+l.479 ...alanches para cada parâmetro \(T_{s}\).}
+                                                  
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
 
-
-Underfull \hbox (badness 1609) in paragraph at lines 9--15
-\OT1/cmr/m/it/10 Tex-tile and Tech-ni-cal Fi-bres\OT1/cmr/m/n/10 , pages 345--365. El-se-vier, 2018.  doi:
- []
-
-
-Underfull \hbox (badness 1400) in paragraph at lines 32--42
-\OT1/cmr/m/n/10 978-0-12-397165-4.  doi: $https : / / doi . org / 10 . 1016 / B978-[]0-[]12-[]397165-[]4 .
- []
-
-
-Underfull \hbox (badness 1817) in paragraph at lines 32--42
-\OT1/cmr/m/n/10 00005-[]8$.  URL []$\OT1/cmtt/m/n/10 https : / / www . sciencedirect . com / science / article /
- []
-
-[20]
-Underfull \hbox (badness 1173) in paragraph at lines 73--78
-[]\OT1/cmr/m/n/10 Ibrahim N Amir-rah, Yo-geswaran Lokanathan, Iz-zat Zulk-i-flee, M F
- []
-
-
-Underfull \hbox (badness 1005) in paragraph at lines 130--138
-\OT1/cmr/m/n/10 Benedikt Baum-gart-ner, Orestis G. An-dri-o-tis, Shingo Ito, Alek-sandr
- []
-
-[21] [22]
-Underfull \hbox (badness 1067) in paragraph at lines 260--267
-[]\OT1/cmr/m/n/10 John Parkin-son, Karl E. Kadler, and Andy Brass.  Sim-ple phys-i-
- []
-
-
-Underfull \hbox (badness 1389) in paragraph at lines 260--267
-\OT1/cmr/m/n/10 ga-tion.  \OT1/cmr/m/it/10 Jour-nal of Molec-u-lar Bi-ol-ogy\OT1/cmr/m/n/10 , 247(4):823--831, April 1995.
- []
-
-[23]
-Underfull \hbox (badness 1817) in paragraph at lines 346--354
-\OT1/cmr/m/n/10 90347-[]1$.  URL []$\OT1/cmtt/m/n/10 https : / / www . sciencedirect . com / science / article /
- []
-
-) [24] (./main.aux)
-
-LaTeX Warning: There were undefined references.
-
-Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: D2803B6E764DA21B8C8EF937471EB840;1418.
- ) 
-Here is how much of TeX's memory you used:
- 9711 strings out of 478287
- 151707 string characters out of 5849289
- 455541 words of memory out of 5000000
- 27676 multiletter control sequences out of 15000+600000
- 477971 words of font info for 62 fonts, out of 8000000 for 9000
- 1141 hyphenation exceptions out of 8191
- 60i,10n,63p,817b,505s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on main.pdf (24 pages, 7289693 bytes).
-PDF statistics:
- 429 PDF objects out of 1000 (max. 8388607)
- 349 compressed objects within 4 object streams
- 90 named destinations out of 1000 (max. 500000)
- 133 words of extra memory for PDF output out of 10000 (max. 10000000)
-
+/home/robert/dla-collagen/Paper/main.tex:479: Missing } inserted.
+<inserted text> 
+                }
+l.479 ...alanches para
