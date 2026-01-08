@@ -1,11 +1,50 @@
-codigo_finalizado/sigma_e_2.dat
-codigo_finalizado/sigma_e_8.dat
-codigo_finalizado/sigma_e_16.dat
-codigo_finalizado/sigma_e_32.dat
-codigo_finalizado/sigma_e_64.dat
-codigo_finalizado/sigma_e_128.dat
-codigo_finalizado/sigma_e_512.dat
-codigo_finalizado/sigma_e_1024.dat
-codigo_finalizado/sigma_e_4096.dat
-codigo_finalizado/sigma_e_8192.dat
-codigo_finalizado/sigma_e_10000.dat
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Virtual Environment
+venv/
+venv_dla/
+env/
+.env
+
+# C++
+*.o
+*.obj
+*.exe
+*.out
+*.app
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Project specific
+Data_fibrils/
+*.zip

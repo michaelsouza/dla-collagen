@@ -1,5 +1,0 @@
-##Analisar fibrilas
-
-1) As fibrias vem como arquivos .dat e devem ser extraidas dentro de uma pasta Datas/Collagen_fibril_zurik/;
-2) Após extraí-las, vc deve extende-las usando o código extend_fibril.ipynb. 
-Nesse código, vc salvara as fibrilas em uma pasta, dentro de Datas, chamada /Collagen_fibril_zurik_ext;
