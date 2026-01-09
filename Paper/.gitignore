@@ -1,0 +1,17 @@
+# LaTeX build artifacts
+*.aux
+*.log
+*.bbl
+*.blg
+*.out
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.bak
+indent.log
+
+# PDF output (uncomment if you want to track the PDF)
+# paper.pdf

@@ -1,0 +1,3 @@
+Conduct a comprehensive grammatical, spelling, and stylistic review of the scientific manuscript 'paper_collagen.tex'. Identify and rectify any errors in grammar, spelling, punctuation, sentence structure, and word usage. Ensure consistency in scientific terminology, nomenclature, abbreviations, and citation formatting. Verify adherence to standard scientific writing conventions, including clarity, precision, and conciseness. Provide detailed corrections with explanations for each change, highlighting potential improvements in readability and coherence while preserving the manuscript's scientific rigor and academic tone.
+
+Don't modify the content of the manuscript, only write a review of the grammar and spelling (including the title,  captions and references).
