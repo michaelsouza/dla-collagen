@@ -78,7 +78,7 @@
 \date{\today}
 
 \begin{abstract}
-    Collagen fibrils are hierarchical protein assemblies that provide tensile strength and structural support to mammalian tissues. Understanding the relationship between assembly kinetics, structural organization, and mechanical properties is fundamental to soft matter physics and biomaterials science. Here, we investigate collagen fibril formation and mechanical failure through complementary computational models: a diffusion-limited aggregation (DLA) algorithm with lateral surface diffusion that simulates the entropy-driven self-assembly process, and a probabilistic fracture mechanics model. Fibril assembly is governed by a surface diffusion parameter $T_s$ that represents the molecular mobility and rearrangement capability of collagen molecules after initial attachment. Increasing $T_s$ drives a morphological transition from open, fractal structures (fractal dimension $D_f \approx 1.71$, characteristic of DLA) to dense, compact fibrils ($D_f \approx 1.96$, approaching Euclidean space-filling). Critically, we find that $D_f$ is a robust predictor of both tensile strength and failure mode: higher $D_f$ corresponds to enhanced load-bearing capacity through increased connectivity of the active skeleton. Mechanical failure proceeds via avalanche-like rupture events whose size distributions follow power-law scaling, with exponents that depend systematically on $T_s$. Notably, these scaling exponents exhibit two distinct linear regimes when plotted against $\log(T_s)$, indicating a transition in the dominant failure mechanism between diffusion-limited and compact packing regimes. These findings establish fractal dimension as a quantitative link between assembly conditions and mechanical resilience, providing a framework for understanding how molecular-scale processes during self-assembly determine the emergent failure mechanics of hierarchical biomaterials.
+In this work, we investigate the relationship between assembly kinetics, structural organization, and mechanical failure in collagen fibrils. We employ a three-dimensional diffusion-limited aggregation (DLA) model with a surface diffusion parameter, $T_s$, to generate fibrils with varying morphologies. We show that $T_s$ controls the compactness of the structure: increasing molecular mobility leads to a transition from open, fractal aggregates to dense fibrils with higher fractal dimension ($D_f$). By coupling this formation model with a probabilistic fracture simulation, we demonstrate that $D_f$ is a strong predictor of mechanical resilience. Fibrils with higher $D_f$ possess a more connected load-bearing backbone, resulting in greater tensile strength. Furthermore, we find that the rupture process proceeds via avalanche-like events, whose sizes follow a power-law distribution. The scaling exponents of these avalanches depend systematically on $T_s$, establishing a quantitative link between the initial assembly conditions and the statistical dynamics of failure.
 \end{abstract}
 
 % insert suggested keywords - APS authors don't need to do this
@@ -126,9 +126,7 @@ The formation of real fibrils is driven by electrostatic forces \cite{Parkinson1
 
 The generated fibrils exhibit complex, heterogeneous packing with internal voids whose prevalence depends strongly on $T_s$ (Fig.~\ref{fig_1}). For $T_s = 2$, the fibril displays an open architecture with visible gaps between molecular clusters. In contrast, for $T_s = 8192$, the structure becomes more compact and homogeneous, with substantially reduced void space.
 
-\subsection{Radial Expansion of the Fibril Core}
-
-Fibril growth occurs more strongly in the $y$-direction. We aimed to study the density of the cross-section in the $x$-$z$ plane. Using the original simulation for this purpose would be computationally prohibitive. Therefore, alternatively, we isolated a trunk in the $y$-direction from $-100$ to $100$ and used a cylindrical surface instead of a sphere for particle launching. We repeated the deposition until the average radius of the cross-sections ($y=-100, -99, \dots, 100$) reached $100~\text{l.u.}$. Molecules diffused inward until binding to the aggregate, following the same diffusion, attachment, and surface-diffusion rules described above. Fig.~\ref{fig_2} shows the resulting projected central segments in the $x$-$z$ plane for different values of $T_s$.
+Although fibril growth proceeds primarily along the longitudinal axis ($y$-direction), the influence of the surface diffusion parameter $T_s$ is most pronounced in the radial organization of the structure ($x$-$z$ plane), as illustrated in Fig.~\ref{fig_2}. At low $T_s$ (Fig.~\ref{fig_2}a), the projected cross-sections are open and branched. As $T_s$ increases, however, the packing becomes progressively more compact and regular, reaching a highly uniform configuration at $T_s = 8192$ (Fig.~\ref{fig_2}d). Since a higher local packing density implies a greater number of intermolecular contacts, this morphological transition suggests that fibrils formed at larger $T_s$ exhibit enhanced connectivity and mechanical stability \cite{Mohammadkhah2023}.
 
 \begin{figure}[!htb]
 	\centering
@@ -137,9 +135,7 @@ Fibril growth occurs more strongly in the $y$-direction. We aimed to study the d
 	\label{fig_2}
 \end{figure}
 
-Fig.~\ref{fig_2} illustrates how $T_s$ controls radial organization. At low $T_s$ (Fig.~\ref{fig_2}a), the projected cross-section is open and branched. As $T_s$ increases, growth becomes progressively more compact and regular, reaching the most uniform configuration at $T_s = 8192$ (Fig.~\ref{fig_2}d). Because the number of intermolecular contacts increases with local packing density, this transition suggests enhanced connectivity and mechanical stability at larger $T_s$ \cite{Mohammadkhah2023}.
-
-To quantify how $T_s$ modulates fibril structure, we estimated the fractal dimension of the central segments. For each $T_s$, we generated 50 fibrils using the first model (spherical launch), isolated the central region of each fibril, and performed radial growth using the second model (cylindrical launch). From each grown region, we extracted 11 cross-sections from $y=-90$ to $y=90$ with a spacing of $18~\text{l.u.}$, yielding a total of 550 cross-sections per $T_s$ value. For each cross-section, we computed the center of mass and the individual maximum radius enclosing all particles; $R_{\text{max}}$ was then defined as the largest of these 550 individual radii. The mass $m(R)$ was measured as the number of particles within a circular region of radius $R$ centered at the cross-section's center of mass. For each value of $R$ spanning from $R_{\text{min}} = 5~\text{l.u.}$ to $R_{\text{max}}$, we computed the mean mass $\langle m(R) \rangle$ by averaging over all 550 cross-sections \cite{Vicsek1991}. The fractal dimension $D_f$ was then extracted from the mass--radius scaling relation \cite{Giordano2012}:
+To quantify how $T_s$ modulates fibril structure, we estimated the fractal dimension of the central segment, defined as the region extending from $y=-100$ to $y=100$. For each $T_s$, we generated 50 fibrils and isolated this central region from each. Within each central segment, we extracted 11 cross-sections at intervals of $18~\text{l.u.}$ between $y=-90$ and $y=90$, yielding a total of 550 cross-sections per $T_s$ value. For each cross-section, we computed the center of mass and the maximum radius enclosing all particles; $R_{\text{max}}$ was subsequently defined as the largest of these 550 radii. The mass $m(R)$ was measured as the number of particles within a circular region of radius $R$ centered at the cross-section's center of mass. For each value of $R$ spanning from $R_{\text{min}} = 5~\text{l.u.}$ to $R_{\text{max}}$, we computed the mean mass $\langle m(R) \rangle$ by averaging over all 550 cross-sections \cite{Vicsek1991}. The fractal dimension $D_f$ was then extracted from the mass--radius scaling relation \cite{Giordano2012}:
 
 \begin{equation}
 	\langle m(R) \rangle \sim R^{D_{f}},
@@ -153,9 +149,9 @@ As shown in Fig.~\ref{fig_3}, the fractal dimension $D_f$ depends strongly on $T
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.7\textwidth]{../Figures/figure_3.pdf}
-	\caption{Average fractal dimension $D_f$ as a function of the diffusion parameter $T_s$ on a linear--log scale. Error bars are shown in red. The fractal dimension increases from $D_f = 1.708 \pm 0.005$ at $T_s = 2$ to $D_f = 1.963 \pm 0.001$ for $T_s = 8192$.}
+	\caption{Average fractal dimension $D_f$ as a function of the diffusion parameter $T_s$ on a linear--log plot. Error bars are shown in red. The fractal dimension increases from $D_f = 1.708 \pm 0.005$ at $T_s = 2$ to $D_f = 1.963 \pm 0.001$ for $T_s = 8192$.}
 	\label{fig_3}
-\end{figure}
+\end{figure}		
 
 
 \subsection{Mechanical Model for Fibril Rupture}
@@ -214,7 +210,7 @@ For a given force level $F$, we evaluate $P_{R}$ for every molecule in the backb
 	\label{fig_6}
 \end{figure}
 
-Since our rupture model is probabilistic, for each value of $T_s$ we analyzed an ensemble of $10$ distinct fibrils generated using the spherical launch model, each containing 30,000 molecules, and performed $1,000$ independent rupture simulations per fibril. During each simulation, the force was increased incrementally, and at each level we recorded the molecules removed from the backbone.
+Since our rupture model is probabilistic, for each value of $T_s$ we analyzed an ensemble of $10$ distinct fibrils, each containing 30,000 molecules, and performed $1,000$ independent rupture simulations per fibril. During each simulation, the force was increased incrementally, and at each level we recorded the molecules removed from the backbone.
 
 To quantify the mechanical resistance of the simulated fibrils, we analyzed the evolution of the average fraction of removed molecules, denoted by $\varphi$, as a function of the applied force $F$ \cite{Parkinson1997}. As shown in Fig.~\ref{fig_7}(A), $\varphi$ increases monotonically with $F$, reflecting progressive intermolecular bond rupture and loss of load-bearing connectivity.
 
