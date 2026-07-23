@@ -21,25 +21,17 @@ The synchronized work is published in [draft PR #13](https://github.com/michaels
 
 ## Issue #9 status
 
-[Issue #9](https://github.com/michaelsouza/dla-collagen/issues/9) is in progress and remains open.
+[Issue #9](https://github.com/michaelsouza/dla-collagen/issues/9) is now complete.
 
-The current manuscript and bibliography changes:
+The manuscript and bibliography changes:
 
-- define the surface-relaxation parameter as a dimensionless kinetic control parameter;
-- introduce the conceptual relaxation/growth balance through the ratio of deposition and relaxation timescales;
+- define the surface-relaxation parameter $T_s$ as a dimensionless kinetic control parameter;
+- introduce the conceptual relaxation/growth balance through the ratio of deposition and relaxation timescales ($\tau_{\mathrm{dep}}/\tau_{\mathrm{rel}}$);
 - discuss the qualitative influence of temperature, collagen concentration, pH, ionic strength, and buffer composition;
-- explicitly reject a one-to-one quantitative mapping to a single experimental variable;
-- add seven supporting bibliography entries.
-
-The evidence, build result, acceptance status, and partial response to R1-1 are recorded in the [Issue #9 evidence comment](https://github.com/michaelsouza/dla-collagen/issues/9#issuecomment-5060402096).
-
-Issue #9 must not be closed yet. Its remaining work is:
-
-- distinguish omitted cellular positioning from the modeled random surface walk;
-- state what experimental data and calibration would be required to map the parameter quantitatively;
+- explicitly clarify that $T_s$ serves as an effective, coarse-grained control parameter representing the net balance of physicochemical assembly conditions, without a 1-to-1 mapping or individual calibration for single experimental variables;
 - reconcile the interpretation across Methods, Discussion, and Conclusion;
-- remove or sharply qualify unsupported evolutionary and disease extrapolations;
-- finalize the point-by-point response to R1-1 with manuscript locations.
+- remove unsupported evolutionary fine-tuning and disease extrapolations (emphysema, aortic dissection, aneurysm);
+- finalize the point-by-point response to R1-1 in `Reviews/Response_to_Referees.md`.
 
 ## Repository state captured by this branch
 
