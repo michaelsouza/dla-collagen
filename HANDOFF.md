@@ -10,6 +10,8 @@ This handoff lets the revision continue on another computer without reconstructi
 4. Read the original referee reports in `Reviews/Referees-comment-Suki.md`.
 5. Inspect the current manuscript diff before continuing Issue #9.
 
+The synchronized work is published in [draft PR #13](https://github.com/michaelsouza/dla-collagen/pull/13).
+
 ## Tracker state
 
 - The major revision is coordinated by [Spec #1](https://github.com/michaelsouza/dla-collagen/issues/1).
