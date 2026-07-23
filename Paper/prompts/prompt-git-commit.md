@@ -1,1 +1,0 @@
-write a detailed commit to the staged changes.
