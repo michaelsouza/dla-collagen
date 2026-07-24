@@ -385,7 +385,8 @@ def read_or_create_ssd(fn_dat: str):
     with open(fn_dat, 'r') as fid:
         for row in fid:
             row = row.split()
-            if len(row) < 5: continue
+            if len(row) < 5 or row[0] != 'uid':
+                continue
             
             x = int(row[2]); y = int(row[3]); z = int(row[4])
             if np.abs(x) > 8 or np.abs(y) > 100 or np.abs(z) > 8:
@@ -478,38 +479,51 @@ def stress_strain(ssd: StressStrainData, verbose: bool = False) -> Logger:
     logger.log(0, ssd.num_active_particles(), []) 
 
     F = 0.5
+    force_start_snapshot = ssd.copy()
+    force_deleted_rids = set()
+
     while True:
         if verbose:  
             print(f'Force: {F:.2f}, Rods: {len(ssd.rods)} =================================')
 
-        ssd_snapshot = ssd.copy()
         prob_deleted_rids = random_deleted_rids(ssd, F)
 
         if not prob_deleted_rids:
-            logger.log(F, ssd.num_active_particles(), [])
+            avalanche_clusters = find_deleted_rod_clusters(
+                force_start_snapshot,
+                force_deleted_rids,
+            )
+            logger.log(F, ssd.num_active_particles(), avalanche_clusters)
             F += 0.5
+            force_start_snapshot = ssd.copy()
+            force_deleted_rids = set()
             continue
 
         ssd.drop_rids(set(prob_deleted_rids))
         active_rids_after_down_sweep, structural_deleted_rids1 = ssd.filter_rids(reverse=False)
+        force_deleted_rids.update(prob_deleted_rids)
+        force_deleted_rids.update(structural_deleted_rids1)
         
         if not active_rids_after_down_sweep:
             if verbose: print("Ruptura detectada (varredura para baixo)!")
-            total_avalanche_rids = set(prob_deleted_rids) | structural_deleted_rids1
-            avalanche_clusters = find_deleted_rod_clusters(ssd_snapshot, total_avalanche_rids)
+            avalanche_clusters = find_deleted_rod_clusters(
+                force_start_snapshot,
+                force_deleted_rids,
+            )
             logger.log(F, 0, avalanche_clusters)
             break
 
         active_rids_after_up_sweep, structural_deleted_rids2 = ssd.filter_rids(reverse=True)
-        total_avalanche_rids = set(prob_deleted_rids) | structural_deleted_rids1 | structural_deleted_rids2
-        avalanche_clusters = find_deleted_rod_clusters(ssd_snapshot, total_avalanche_rids)
+        force_deleted_rids.update(structural_deleted_rids2)
 
         if not active_rids_after_up_sweep:
             if verbose: print("Ruptura detectada (varredura para cima)!")
+            avalanche_clusters = find_deleted_rod_clusters(
+                force_start_snapshot,
+                force_deleted_rids,
+            )
             logger.log(F, 0, avalanche_clusters)
             break
-        
-        logger.log(F, ssd.num_active_particles(), avalanche_clusters)
             
     return logger
 

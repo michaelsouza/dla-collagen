@@ -2,6 +2,10 @@ Data_fibrils
 .env
 ai-tools
 
+# Python cache files
+__pycache__/
+*.py[cod]
+
 # LaTeX temporary and build files
 *.aux
 *.bbl

@@ -4,9 +4,17 @@
 #include <chrono>
 #include <cstring>
 #include <iostream>
+#include <string>
 #include <sys/resource.h>
 
-void read_args(int argc, char const *argv[], int &tmax, char &mode, int &num_bind, unsigned int &seed)
+void read_args(
+  int argc,
+  char const *argv[],
+  int &tmax,
+  char &mode,
+  int &num_bind,
+  unsigned int &seed,
+  std::string &output_dir)
 {
   for (int i = 0; i < argc; ++i)
   {
@@ -26,6 +34,10 @@ void read_args(int argc, char const *argv[], int &tmax, char &mode, int &num_bin
         printf("The parameter seed must greater than zero.\n");
         exit(EXIT_FAILURE);
       }
+    }
+    else if (strcmp(argv[i], "-output_dir") == 0)
+    {
+      output_dir = argv[i + 1];
     }
   }
 }
@@ -59,12 +71,13 @@ int main(int argc, char const *argv[])
   int num_bind = 3600;
   int tmax = 1; 
   unsigned int seed = 36;
+  std::string output_dir = ".";
 
 
   // read arguments
-  read_args(argc, argv, tmax, mode, num_bind, seed);
+  read_args(argc, argv, tmax, mode, num_bind, seed, output_dir);
 
-  run_dla(tmax, num_bind, mode, seed);
+  run_dla(tmax, num_bind, mode, seed, output_dir.c_str());
 
   // std::chrono::steady_clock::time_point toc = std::chrono::steady_clock::now();
   // std::cout << "   Elapsed time " << std::chrono::duration_cast<std::chrono::seconds>(toc - tic).count() << " secs" << std::endl;

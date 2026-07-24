@@ -595,7 +595,12 @@ int test_overlap_mode_s()
   return EXIT_SUCCESS;
 }
 
-void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
+void run_dla(
+  int tmax,
+  int num_bind,
+  char mode,
+  unsigned int seed,
+  const char *output_dir) {
   //printf("Arguments\n");
   printf("mode ....... %c\n", mode);
   printf("tmax ....... %d\n", tmax);
@@ -606,8 +611,21 @@ void run_dla(int tmax, int num_bind, char mode, unsigned int seed) {
   //printf("rand() = %d\n", rand());
 
   const int height = 18;
-  char arquivo[256];
-  sprintf(arquivo, "/home/robert/Dropbox/data/files/dla_mode_%c_ts_%d_nb_%d_seed_%d_.dat", mode, tmax, num_bind, seed);
+  char arquivo[1024];
+  const int filename_length = snprintf(
+    arquivo,
+    sizeof(arquivo),
+    "%s/dla_mode_%c_ts_%d_nb_%d_seed_%d_.dat",
+    output_dir,
+    mode,
+    tmax,
+    num_bind,
+    seed);
+  if (filename_length < 0 || filename_length >= static_cast<int>(sizeof(arquivo)))
+  {
+    printf("The output filename is too long.\n");
+    exit(EXIT_FAILURE);
+  }
 
   // init data file
   FILE* fid = nullptr;
