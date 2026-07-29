@@ -33,6 +33,28 @@ We have removed the SOC and scale-free terminology throughout the manuscript and
 
 ---
 
+### Point 4 (R1-4): Cross-sectional fractal dimension and three-dimensional mechanical structure
+
+**Referee Comment:**
+> *The fractal dimension is measured in 2D but used to characterize a 3D mechanical problem. $D_f$ is estimated from 2D cross-sectional projections ($x$-$z$ plane), yet the backbone identification and the entire fracture simulation are three-dimensional. The relationship between the 2D cross-sectional $D_f$ and the 3D structural properties that govern mechanical response is not established. The authors use the 2D $D_f$ as a proxy for overall fibril compactness without justification. This connection should either be derived or explicitly discussed as an assumption with its limitations.*
+
+**Author Response:**
+We thank the Referee for pointing out that the original manuscript did not adequately establish the connection between the cross-sectional fractal dimension and the three-dimensional mechanical structure. The cross-sectional $D_f$ characterizes transverse packing, which is directly relevant to the rupture model because the tensile stress at each axial position is determined by the load-bearing area $N(i)$ of the corresponding cross-section, while molecular resistance depends on coordination within the three-dimensional backbone.
+
+To test this connection explicitly, for each $T_s$ we obtained $D_f$ from the ensemble mass--radius curve constructed using 11 transverse cross-sections from each of 50 independent fibrils. From the corresponding three-dimensional load-bearing backbones, we measured four mechanically relevant descriptors: the mean cross-sectional load-bearing area $\langle N\rangle$; the mean molecular coordination $\langle K\rangle$; the axial coefficient of variation of the load-bearing area,
+
+$$
+\mathrm{CV}(N)=\frac{\mathrm{SD}[N(i)]}{\langle N\rangle},
+$$
+
+which quantifies the relative variation of $N(i)$ along the 201 axial layers; and the mean molecular stress exposure at unit force, $\langle\sigma_M\rangle_{F=1}$, obtained by evaluating the molecular stress defined in Eq. (3) at $F=1$ and averaging it over the backbone molecules. These descriptors were averaged over the independent fibrils, with their uncertainties reported as standard errors of the mean. The uncertainty in $D_f$ corresponds to the standard error of the linear mass--radius fit. Because the relationships are monotonic and approach plateaus rather than remaining linear, associations were evaluated using Spearman's rank correlation coefficient, $\rho$ ([Spearman, 1904](https://doi.org/10.2307/1412159)), between the ten $T_s$-averaged conditions.
+
+The cross-sectional $D_f$ was positively associated with the mean load-bearing area ($\rho=0.988$) and mean molecular coordination ($\rho=1.000$), and inversely associated with the axial variability of the load-bearing area ($\rho=-0.782$) and mean molecular stress exposure at unit force ($\rho=-0.964$). Thus, increasing $D_f$ accompanies cross-sections that contain more load-bearing material, greater molecular coordination, reduced axial heterogeneity, and lower mean stress exposure for the same applied force.
+
+Taken together, these results provide direct numerical validation that $D_f$ captures structural changes relevant to axial load bearing: increasing $D_f$ corresponds to larger, better-coordinated, and more axially uniform load-bearing backbones, with lower mean stress exposure for the same applied force. Within its stated scope, which is the comparison of fibril ensembles generated at different $T_s$, $D_f$ therefore provides a compact and quantitatively supported proxy for mechanically relevant transverse compactness. We have revised the manuscript to make this interpretation and its scope explicit.
+
+---
+
 ### Point 6 (R1-6): Molecular aspect ratio
 
 **Referee Comment:**

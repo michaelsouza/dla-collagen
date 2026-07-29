@@ -152,8 +152,9 @@ As shown in Fig.~\ref{fig_3}, $D_f$ depends strongly on $T_s$, providing a quant
 	\includegraphics[width=0.7\textwidth]{Figures/figure_3.pdf}
 	\caption{Average fractal dimension $D_f$ as a function of the diffusion parameter $T_s$ on a log-linear plot. Error bars are shown in red. The fractal dimension increases from $D_f = 1.708 \pm 0.005$ at $T_s = 2$ to $D_f = 1.963 \pm 0.001$ for $T_s = 8192$.}
 	\label{fig_3}
-\end{figure}		
+\end{figure}
 
+The mechanical relevance of this cross-sectional descriptor is evaluated below by comparing $D_f$ with three-dimensional structural quantities entering the rupture model, after these quantities have been introduced.
 
 \subsection{Mechanical Model for Fibril Rupture}
 
@@ -209,6 +210,31 @@ For a given force level $F$, every molecule in the load-bearing backbone is asse
 	\caption{Schematic view of the load-bearing backbone and the stages of the rupture process. (a) Two-dimensional view of the backbone subjected to an axial force $F$ along the $y$-axis. Each molecule (gray) is assigned a removal probability $P_{R}$ (Eq.~\ref{eq4}); a molecule is removed when a random number $u\in[0,1]$ satisfies $u<P_{R}$. (b) Progressive damage after some molecules have been removed, represented by red dashed lines. (c) Rupture occurs when a cross-section becomes completely empty (solid lines), eliminating the continuous load path.}
 	\label{fig_6}
 \end{figure}
+
+Having defined the three-dimensional backbone and the quantities entering the rupture model, we assess whether the cross-sectional fractal dimension captures mechanically relevant transverse compactness. We therefore compare $D_f$ with structural properties of the three-dimensional backbone that directly determine load transmission and molecular resistance.
+
+For each initial backbone, before any molecule was removed, we measured four structural descriptors. The mean load-bearing area was calculated over the $S_y=201$ axial layers as
+\[
+	\langle N\rangle=\frac{1}{S_y}\sum_{i=1}^{S_y}N(i).
+\]
+The axial heterogeneity of the load-bearing area was quantified using its coefficient of variation,
+\[
+	\mathrm{CV}(N)=\frac{\mathrm{SD}[N(i)]}{\langle N\rangle},
+\]
+where smaller values indicate a more uniform load-bearing area along the fibril. We also calculated the mean molecular coordination $\langle K\rangle$ over all molecules in the backbone and the mean molecular stress exposure $\langle\sigma_M\rangle_{F=1}$, obtained by evaluating Eq.~(\ref{eq3}) at $F=1$ and averaging over the backbone molecules.
+
+For each $T_s$, these descriptors were averaged over 50 independent fibrils, and their uncertainties were calculated as standard errors of the mean. The corresponding uncertainty in $D_f$ is the standard error of the linear mass--radius fit. Because the relationships are monotonic and approach plateaus rather than remaining linear, associations were quantified using Spearman's rank correlation coefficient, $\rho$ \cite{Spearman1904}, across the ten ensemble-averaged $T_s$ conditions.
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=\textwidth]{Figures/fractal_proxy_validation.pdf}
+	\caption{Relationship between the cross-sectional fractal dimension $D_f$ and structural descriptors of the three-dimensional load-bearing backbone: (a) mean load-bearing area $\langle N\rangle$; (b) mean molecular coordination $\langle K\rangle$; (c) axial coefficient of variation of the load-bearing area, $\mathrm{CV}(N)$; and (d) mean molecular stress exposure at unit force, $\langle\sigma_M\rangle_{F=1}$. Each point represents the ensemble average for one value of $T_s$, indicated by the color scale. Horizontal error bars are the standard errors of the mass--radius fits used to estimate $D_f$, while vertical error bars are standard errors of the mean across fibrils. The values of $\rho$ are Spearman correlations calculated across the ten $T_s$ conditions.}
+	\label{fig_df_proxy}
+\end{figure}
+
+As shown in Fig.~\ref{fig_df_proxy}, $D_f$ is positively associated with the mean load-bearing area ($\rho=0.988$) and the mean molecular coordination ($\rho=1.000$). Conversely, $D_f$ is inversely associated with the axial variability of the load-bearing area ($\rho=-0.782$) and the mean molecular stress exposure at unit force ($\rho=-0.964$). Thus, increasing $D_f$ corresponds to backbones containing more load-bearing material, greater molecular coordination, and a more uniform axial distribution of the load-bearing area. Consistent with $\sigma(i)=F/N(i)$, these structural changes also reduce the mean molecular stress exposure for the same applied force.
+
+Taken together, these results provide direct numerical validation that $D_f$ captures structural changes relevant to axial load bearing. Within its stated scope, which is the comparison of fibril ensembles generated at different $T_s$, $D_f$ therefore provides a compact and quantitatively supported proxy for mechanically relevant transverse compactness.
 
 Since our rupture model is probabilistic, for each value of $T_s$ we analyzed an ensemble of $10$ distinct fibrils, each containing $3\times 10^4$ molecules, and performed $10^3$ independent rupture simulations per fibril. During each simulation, the force was increased gradually, and at each level we recorded the molecules removed from the backbone.
 

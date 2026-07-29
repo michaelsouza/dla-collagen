@@ -1,75 +1,120 @@
 # Handoff: ER12738 manuscript revision
 
-This handoff lets the revision continue on another computer without reconstructing the decisions from chat history.
+This handoff records the current manuscript-revision state so that the work can
+continue on another computer without relying on chat history.
 
 ## Start here
 
-1. Check out the branch `codex/revision-handoff-issue-9`.
+1. Check out `main` and update it with `git pull --ff-only origin main`.
 2. Read `AGENTS.md`.
-3. Read the umbrella [Revision Spec #1](https://github.com/michaelsouza/dla-collagen/issues/1) and its native sub-issues/dependencies.
-4. Read the original referee reports in `Reviews/Referees-comment-Suki.md`.
-5. Inspect the current manuscript diff before continuing Issue #9.
-
-The synchronized work is published in [draft PR #13](https://github.com/michaelsouza/dla-collagen/pull/13).
+3. Read the umbrella [Revision Spec #1](https://github.com/michaelsouza/dla-collagen/issues/1).
+4. Read the referee reports in `Reviews/Referees.md` and the current letter in
+   `Reviews/Response_to_Referees.md`.
+5. Inspect the current manuscript changes in `Paper/paper_PRE.tex`.
 
 ## Tracker state
 
-- The major revision is coordinated by [Spec #1](https://github.com/michaelsouza/dla-collagen/issues/1).
-- Eleven implementation tickets exist as sub-issues, #2 through #12, with native GitHub blocking relationships.
-- The initial unblocked frontier is #2 (data/reproducibility audit), #3 (rupture protocol), #9 (physical interpretation of the surface-relaxation parameter), and #10 (coarse-graining and phenomenological fit).
-- The critical chain is rupture protocol → avalanche definition → statistical reanalysis → interpretation → manuscript revision → response letter.
+Five of the eleven implementation issues are closed: #2, #3, #4, #9, and #10.
+The umbrella Spec remains open by design.
 
-## Issue #9 status
+Issue #7 is nearly complete. Issue #5 is the main remaining statistical
+blocker. Issues #6 and #8 depend on #5; Issue #8 also depends on #7. The final
+manuscript and response-letter checks remain in #11 and #12.
 
-[Issue #9](https://github.com/michaelsouza/dla-collagen/issues/9) is now complete.
+## Decisions already incorporated
 
-The manuscript and bibliography changes:
+The manuscript and response letter currently implement these decisions:
 
-- define the surface-relaxation parameter $T_s$ as a dimensionless kinetic control parameter;
-- introduce the conceptual relaxation/growth balance through the ratio of deposition and relaxation timescales ($\tau_{\mathrm{dep}}/\tau_{\mathrm{rel}}$);
-- discuss the qualitative influence of temperature, collagen concentration, pH, ionic strength, and buffer composition;
-- explicitly clarify that $T_s$ serves as an effective, coarse-grained control parameter representing the net balance of physicochemical assembly conditions, without a 1-to-1 mapping or individual calibration for single experimental variables;
-- reconcile the interpretation across Methods, Discussion, and Conclusion;
-- remove unsupported evolutionary fine-tuning and disease extrapolations (emphysema, aortic dissection, aneurysm);
-- finalize the point-by-point response to R1-1 in `Reviews/Response_to_Referees.md`.
+- `T_s` is an effective kinetic control parameter, without a one-to-one
+  calibration to a single experimental variable.
+- The zero-removal sweep is an operational stopping criterion, not an
+  equilibrium or long-time stability condition.
+- Spatially disconnected nearest-neighbor clusters removed at the same force
+  are counted as separate local avalanches.
+- Self-Organized Criticality and scale-free behavior are not claimed.
+- The current binned avalanche slopes are descriptive until the discrete
+  statistical reanalysis in Issue #5 is complete.
+- The model is not assigned to the standard equal-load-sharing or
+  local-load-sharing universality classes.
+- Equation (5) is a phenomenological interpolation; `alpha` and `beta` are
+  empirical shape parameters.
+- The reduced molecular aspect ratio is acknowledged as a coarse-graining
+  limitation.
 
-## Repository state captured by this branch
+## Issue #7 status
 
-The branch includes three local commits that previously had not reached `origin/main`:
+The new structural validation compares the ensemble cross-sectional fractal
+dimension with four descriptors extracted from the three-dimensional
+load-bearing backbone:
 
-- the Clauset et al. power-law reference in PDF and Markdown form;
-- the Yang and Kaufman reference PDF;
-- removal of generated LaTeX artifacts from version control and corresponding ignore rules.
+- mean load-bearing area;
+- mean molecular coordination;
+- axial coefficient of variation of the load-bearing area;
+- mean molecular stress exposure at unit force.
 
-It also includes:
+The analysis scripts are:
 
-- the current Issue #9 manuscript and bibliography changes;
-- repository-wide revision instructions in `AGENTS.md`;
-- issue-tracker, triage-label, and domain-document conventions under `docs/agents/`;
-- this handoff.
+- `Code/Data_analysis/validate_fractal_proxy.py`;
+- `Code/Data_analysis/analyze_fractal_proxy_results.py`;
+- `Code/Data_analysis/xmgrace_paper.mplstyle`.
 
-The apparent local modification to `Code/Fracture_fibril/run_parallel.sh` was only a Windows Git file-mode artifact. The executable bit is unchanged in the WSL checkout and the file is not part of the intended commit.
+The publication figure is
+`Paper/Figures/fractal_proxy_validation.pdf`. The manuscript introduces the
+descriptors after the fracture-model definitions and presents this figure as
+Figure 7. The response to R1-4 is drafted in
+`Reviews/Response_to_Referees.md`.
 
-## Validation already performed
+The current Spearman coefficients are 0.988 for mean load-bearing area, 1.000
+for mean coordination, -0.782 for axial variation, and -0.964 for mean stress
+exposure. These values must be regenerated after the missing `T_s=16` fibril is
+added. The manuscript already states the intended final sample size of 50
+fibrils per condition.
 
-- The manuscript was compiled with `latexmk` in an isolated output directory.
-- Build exit code: 0.
-- BibTeX resolved the seven new references.
-- No undefined citations or references were reported.
-- Remaining warnings were the existing `nameref` label-definition warning and two float-placement adjustments.
+Before closing Issue #7:
 
-## Suggested next actions
+1. Add the missing `T_s=16` fibril.
+2. Rerun the structural analysis and replace Figure 7.
+3. Confirm the four reported correlation coefficients.
+4. Review the detailed wording and refine the conclusion about the role of
+   `D_f`.
+5. Record the final evidence and decision in GitHub Issue #7.
 
-1. Continue the remaining acceptance criteria in Issue #9.
-2. Recompile the manuscript in an isolated output directory.
-3. Add the final evidence and manuscript locations to Issue #9.
-4. Close Issue #9 only when every acceptance criterion is satisfied.
-5. Then select another unblocked frontier ticket from Spec #1.
+## Response-letter status
 
-## Suggested skills
+Eight of the eleven point-by-point responses have drafts. Three responses have
+not yet been written:
 
-- `github:github` for reading and updating the Spec and ticket evidence.
-- `mattpocock-skills:implement` for executing one ready revision ticket.
-- `mattpocock-skills:research` when additional primary-source support must be captured in the repository.
-- `mattpocock-skills:handoff-local` before moving the work between environments again.
-- `github:yeet` when publishing the next completed set of local changes.
+- R1-3, interpretation of the avalanche exponent relative to 5/2;
+- R1-5, empirical relation between `D_f` and rupture statistics;
+- R2-2, the precise nature of load sharing in the model.
+
+R1-4 needs only the final Issue #7 values. R1-2 and R2-4 must be updated after
+the statistical reanalysis in Issue #5.
+
+The value 5/2 must be described as the classical equal-load-sharing mean-field
+reference, not as a universal upper bound. Any final exponent interpretation
+must follow the accepted distributional model and uncertainty from Issue #5.
+
+## Data and local execution state
+
+Raw fibril files, simulation outputs, generated CSV tables, local diagnostic
+plots, the `cluster_bundle` directory, and `cluster_bundle.tar.gz` are
+intentionally absent from this handoff commit.
+
+The interrupted `T_s=32` fracture batch was resumed on the original computer.
+Its running outputs remain local and are not required for editing the
+manuscript or response letter on the second computer.
+
+Other uncommitted changes under `Code/Dla` and `Code/Fracture_fibril` were kept
+out of this handoff because they are independent of the manuscript and
+response-letter editing task.
+
+## Validation
+
+The manuscript was compiled after integrating the new text, figure, and
+Spearman reference. The build completed with no undefined citations or
+references. The new structural-validation figure appears as Figure 7 on page
+13 of the compiled manuscript.
+
+The only remaining Issue #7 validation is the rerun after the final `T_s=16`
+fibril is available.
