@@ -4,4 +4,5 @@ matplotlib
 tqdm
 scikit-learn
 jupyter
-scipy
+scipy>=1.7.1
+mpmath

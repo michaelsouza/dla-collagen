@@ -14,7 +14,9 @@ void read_args(
   char &mode,
   int &num_bind,
   unsigned int &seed,
-  std::string &output_dir)
+  std::string &output_dir,
+  bool &resume,
+  unsigned int &continuation_seed)
 {
   for (int i = 0; i < argc; ++i)
   {
@@ -38,6 +40,19 @@ void read_args(
     else if (strcmp(argv[i], "-output_dir") == 0)
     {
       output_dir = argv[i + 1];
+    }
+    else if (strcmp(argv[i], "-resume") == 0)
+    {
+      resume = true;
+    }
+    else if (strcmp(argv[i], "-continuation_seed") == 0)
+    {
+      continuation_seed = atoi(argv[i + 1]);
+      if (continuation_seed < 1)
+      {
+        printf("The continuation seed must be greater than zero.\n");
+        exit(EXIT_FAILURE);
+      }
     }
   }
 }
@@ -72,12 +87,36 @@ int main(int argc, char const *argv[])
   int tmax = 1; 
   unsigned int seed = 36;
   std::string output_dir = ".";
+  bool resume = false;
+  unsigned int continuation_seed = 0;
 
 
   // read arguments
-  read_args(argc, argv, tmax, mode, num_bind, seed, output_dir);
+  read_args(
+    argc,
+    argv,
+    tmax,
+    mode,
+    num_bind,
+    seed,
+    output_dir,
+    resume,
+    continuation_seed);
 
-  run_dla(tmax, num_bind, mode, seed, output_dir.c_str());
+  if (resume && continuation_seed == 0)
+  {
+    printf("The -resume option requires -continuation_seed.\n");
+    return EXIT_FAILURE;
+  }
+
+  run_dla(
+    tmax,
+    num_bind,
+    mode,
+    seed,
+    output_dir.c_str(),
+    resume,
+    continuation_seed);
 
   // std::chrono::steady_clock::time_point toc = std::chrono::steady_clock::now();
   // std::cout << "   Elapsed time " << std::chrono::duration_cast<std::chrono::seconds>(toc - tic).count() << " secs" << std::endl;

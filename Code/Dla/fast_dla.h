@@ -1,11 +1,16 @@
 #include <algorithm>
+#include <cerrno>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
+#include <fstream>
 #include <math.h>
-#include <stdexcept>
-#include <vector>
 #include <memory>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
@@ -291,12 +296,6 @@ public:
    * @param fibers
    */
   void split(std::vector<fiber_t> &fibers) {
-    // aloca os filhos
-    m_lft = std::unique_ptr<kdt_t>(new kdt_t(m_max_node_size, m_height));
-    m_rht = std::unique_ptr<kdt_t>(new kdt_t(m_max_node_size, m_height));
-    m_lft->m_level = m_level + 1;
-    m_rht->m_level = m_level + 1;
-
     // identifica a direção do corte como sendo a mais longa
     int d[3] = {m_xmax[0] - m_xmin[0] - m_dx[0],
                 m_xmax[1] - m_xmin[1] - m_dx[1],
@@ -313,15 +312,34 @@ public:
     std::sort(v.begin(), v.end());
     int x = v[v.size() / 2]; // mediana
 
-    // divide os filhos pela mediana
+    std::vector<int> lft_uids;
+    std::vector<int> rht_uids;
     for (auto &&uid : m_uids)
-      fibers[uid].m_x[imax] < x ? m_lft->add(uid, fibers)
-                                : m_rht->add(uid, fibers);
+      fibers[uid].m_x[imax] < x ? lft_uids.push_back(uid)
+                                : rht_uids.push_back(uid);
 
-    if (m_lft->m_uids.size() == 0 || m_rht->m_uids.size() == 0) {
-      printf("split failed (empty child)\n");
-      exit(EXIT_FAILURE);
+    // Coordenadas repetidas podem deixar um dos filhos vazio. A antiga
+    // implementação preenchia os filhos chamando add() imediatamente; ao
+    // receber todos os elementos, o filho cheio tentava se dividir de novo
+    // antes que o caso degenerado fosse detectado, causando recursão infinita.
+    if (lft_uids.empty() || rht_uids.empty()) {
+      const size_t midpoint = m_uids.size() / 2;
+      lft_uids.assign(m_uids.begin(), m_uids.begin() + midpoint);
+      rht_uids.assign(m_uids.begin() + midpoint, m_uids.end());
     }
+
+    // Aloca e preenche os filhos somente depois de garantir uma partição
+    // não vazia. Como split() é chamado assim que o limite é excedido, cada
+    // filho recebe no máximo m_max_node_size elementos.
+    m_lft = std::unique_ptr<kdt_t>(new kdt_t(m_max_node_size, m_height));
+    m_rht = std::unique_ptr<kdt_t>(new kdt_t(m_max_node_size, m_height));
+    m_lft->m_level = m_level + 1;
+    m_rht->m_level = m_level + 1;
+
+    for (auto &&uid : lft_uids)
+      m_lft->add(uid, fibers);
+    for (auto &&uid : rht_uids)
+      m_rht->add(uid, fibers);
 
     // libera as fibras
     m_uids.clear();
@@ -595,19 +613,85 @@ int test_overlap_mode_s()
   return EXIT_SUCCESS;
 }
 
+int load_fibers_for_resume(
+  const char *filename,
+  int height,
+  std::vector<fiber_t> &fibers)
+{
+  std::ifstream input(filename, std::ios::binary);
+  if (!input)
+    throw std::runtime_error("Could not open the fibril for resuming.");
+
+  std::vector<std::string> lines;
+  std::string line;
+  while (std::getline(input, line))
+    lines.push_back(line);
+
+  fibers.clear();
+  int expected_uid = 0;
+  for (size_t i = 0; i < lines.size(); ++i)
+  {
+    std::istringstream parser(lines[i]);
+    std::string label;
+    std::string extra;
+    int uid, x, y, z;
+
+    if (!(parser >> label >> uid >> x >> y >> z))
+    {
+      if (i + 1 == lines.size())
+        break;
+      throw std::runtime_error("Incomplete record before the end of the fibril.");
+    }
+    if (label != "uid:" || uid != expected_uid || (parser >> extra))
+      throw std::runtime_error("Invalid or nonconsecutive fibril record.");
+
+    fibers.push_back(fiber_t(uid, height, x, y, z));
+    ++expected_uid;
+  }
+
+  if (fibers.empty())
+    throw std::runtime_error("The fibril has no complete records to resume.");
+
+  const std::string temporary_filename = std::string(filename) + ".resume.tmp";
+  FILE *temporary_file = fopen(temporary_filename.c_str(), "w");
+  if (temporary_file == nullptr)
+    throw std::runtime_error("Could not create the sanitized resume file.");
+
+  for (auto &fiber : fibers)
+    fiber.save(temporary_file);
+
+  if (fclose(temporary_file) != 0)
+  {
+    std::remove(temporary_filename.c_str());
+    throw std::runtime_error("Could not finish the sanitized resume file.");
+  }
+
+  if (std::rename(temporary_filename.c_str(), filename) != 0)
+  {
+    std::remove(temporary_filename.c_str());
+    throw std::runtime_error("Could not replace the fibril with its sanitized copy.");
+  }
+
+  return expected_uid - 1;
+}
+
 void run_dla(
   int tmax,
   int num_bind,
   char mode,
   unsigned int seed,
-  const char *output_dir) {
+  const char *output_dir,
+  bool resume,
+  unsigned int continuation_seed) {
   //printf("Arguments\n");
   printf("mode ....... %c\n", mode);
   printf("tmax ....... %d\n", tmax);
   printf("num_bind ... %d\n", num_bind);
   printf("seed ....... %d\n", seed);
 
-  srand(seed);
+  const unsigned int active_seed = resume ? continuation_seed : seed;
+  printf("rng seed ... %d%s\n", active_seed, resume ? " (continuation)" : "");
+  srand(active_seed);
   //printf("rand() = %d\n", rand());
 
   const int height = 18;
@@ -627,30 +711,54 @@ void run_dla(
     exit(EXIT_FAILURE);
   }
 
-  // init data file
-  FILE* fid = nullptr;
-  fid = fopen(arquivo, "w");
-  if (fid == nullptr)
-  {
-    printf("The file %s could not be opened.\n", arquivo);
-    exit(EXIT_FAILURE);
-  }
-
   int max_kdt_node_size = 100;
   int max_dist = 2;
   std::vector<fiber_t> fibers;
-
-  // first fiber
-  int uid = 0;
-  int x = 0;
-  int y = -height / 2;
-  int z = 0;
-  fibers.push_back(fiber_t(uid, height, x, y, z));
-
   kdt_t kdt(max_kdt_node_size, height);
-  kdt.add(uid, fibers);
-  //fibers[uid].show();
-  fprintf(fid, "uid: %d %d %d %d\n", uid, x, y, z);
+  FILE* fid = nullptr;
+  int uid;
+
+  if (resume)
+  {
+    try
+    {
+      uid = load_fibers_for_resume(arquivo, height, fibers);
+    }
+    catch (const std::exception &error)
+    {
+      fprintf(stderr, "Could not resume %s: %s\n", arquivo, error.what());
+      exit(EXIT_FAILURE);
+    }
+
+    for (auto &fiber : fibers)
+      kdt.add(fiber.m_uid, fibers);
+
+    fid = fopen(arquivo, "a");
+    if (fid == nullptr)
+    {
+      printf("The file %s could not be opened for appending.\n", arquivo);
+      exit(EXIT_FAILURE);
+    }
+    printf("resuming ... uid %d\n", uid);
+  }
+  else
+  {
+    fid = fopen(arquivo, "w");
+    if (fid == nullptr)
+    {
+      printf("The file %s could not be opened.\n", arquivo);
+      exit(EXIT_FAILURE);
+    }
+
+    // first fiber
+    uid = 0;
+    int x = 0;
+    int y = -height / 2;
+    int z = 0;
+    fibers.push_back(fiber_t(uid, height, x, y, z));
+    kdt.add(uid, fibers);
+    fprintf(fid, "uid: %d %d %d %d\n", uid, x, y, z);
+  }
 
   std::vector<int> neighs;
   int xold[3];

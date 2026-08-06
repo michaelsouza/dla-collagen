@@ -187,6 +187,40 @@ statistical reanalysis.
 
 \pointseparator
 
+\subsection*{Point 3 (R1-3): Interpretation of \(\gamma>5/2\) in fiber-bundle theory}
+
+\refereelabel
+\begin{refereecomment}
+The authors interpret their measured exponent \(\gamma\approx2.8\) (at high
+\(T_s\)) as evidence of a regime beyond equal load sharing (ELS), signaling a
+crossover to global load-sharing universality. This interpretation is
+incorrect.
+
+In fiber-bundle models, \(\gamma=5/2\) is the exact mean-field result for ELS,
+the limiting case of maximally global stress redistribution (Hemmer \& Hansen,
+J. Appl. Mech. 59, 909, 1992; Daniels, Proc. R. Soc. London A 183, 405, 1945).
+There is no established theoretical framework that predicts or interprets
+exponents above \(5/2\) in this context.
+
+Moreover, Pradhan, Hansen \& Chakrabarti (Rev. Mod. Phys. 82, 499, 2010), also
+cited by the authors, demonstrate that within ELS, the avalanche exponent
+undergoes a crossover from \(\gamma=5/2\) (generic regime, away from failure) to
+\(\gamma=3/2\) (near the critical breakdown point). That is, as stress
+redistribution becomes maximally global near rupture, the exponent DECREASES,
+not increases. The authors' claim that \(\gamma>5/2\) signals increasingly
+global load sharing is therefore the opposite of what the established theory
+predicts.
+
+The observed deviation from \(5/2\) is more plausibly attributable to
+finite-size effects, limited ensemble statistics (10 fibrils per \(T_s\) value),
+the restricted range over which the power law is fitted, or the specific
+definition of avalanche adopted in the model. A sensitivity analysis with
+respect to the Weibull modulus \(m\) (fixed at \(m=2\) throughout, following
+Ref.~[35]) would also help assess the robustness of the exponents.
+\end{refereecomment}
+
+\pointseparator
+
 \subsection*{Point 4 (R1-4): Cross-sectional fractal dimension and three-dimensional mechanical structure}
 
 \refereelabel
@@ -220,7 +254,12 @@ the mean cross-sectional load-bearing area \(\langle N\rangle\); the mean
 molecular coordination \(\langle K\rangle\); the axial coefficient of
 variation of the load-bearing area,
 \[
-  \mathrm{CV}(N)=\frac{\mathrm{SD}[N(i)]}{\langle N\rangle},
+  \mathrm{CV}(N)=
+  \frac{1}{\langle N\rangle}
+  \left[
+    \frac{1}{S_y-1}
+    \sum_{i=1}^{S_y}\left(N(i)-\langle N\rangle\right)^2
+  \right]^{1/2},
 \]
 which quantifies the relative variation of \(N(i)\) along the 201 axial layers;
 and the mean molecular stress exposure at unit force,
@@ -232,8 +271,9 @@ uncertainties reported as standard errors of the mean. The uncertainty in
 Because the relationships are monotonic and approach plateaus rather than
 remaining linear, associations were evaluated using Spearman's rank
 correlation coefficient, \(\rho\)
-(\href{https://doi.org/10.2307/1412159}{Spearman, 1904}), between the ten
-\(T_s\)-averaged conditions.
+(\href{https://doi.org/10.2307/1412159}{Spearman, 1904};
+\href{https://doi.org/10.1213/ANE.0000000000002864}{Schober et al., 2018}),
+between the ten \(T_s\)-averaged conditions.
 
 The cross-sectional \(D_f\) was positively associated with the mean
 load-bearing area (\(\rho=0.988\)) and mean molecular coordination
@@ -256,6 +296,24 @@ its scope explicit.
 
 \pointseparator
 
+\subsection*{Point 5 (R1-5): Empirical structural-mechanical connection}
+
+\refereelabel
+\begin{refereecomment}
+The key result of the paper, that \(D_f\) and \(\gamma\) saturate together at
+\(T_s\geq512\), is presented as if it were a derived causal relationship. In
+fact, it is a numerical correlation observed in simulation. No theoretical
+framework is provided that connects the fractal dimension of the fibril
+cross-section to the avalanche exponent of the fracture process. The statement
+that ``the fibril's fractal dimension serves as a quantitative bridge between
+structural compactness and failure statistics'' in the Conclusion overstates
+what has been demonstrated. The authors should reframe this as an empirical
+observation and discuss what theoretical framework might, in the future,
+explain such a connection.
+\end{refereecomment}
+
+\pointseparator
+
 \subsection*{Point 6 (R1-6): Molecular aspect ratio}
 
 \refereelabel
@@ -268,14 +326,30 @@ acknowledged.
 
 \responselabel
 We thank the Referee and agree that the reduced molecular aspect ratio is an
-important limitation. The model uses rods with an aspect ratio of
-\(18{:}1\), substantially smaller than the approximately \(200{:}1\) aspect
-ratio of real collagen molecules. We now acknowledge that this simplification
-may affect intermolecular overlaps and coordination, packing and void geometry,
-the measured cross-sectional fractal dimension, and rupture statistics. Since
-its quantitative effects were not assessed, the reported results are
-interpreted as trends of the coarse-grained model rather than as quantitative
-predictions for real collagen fibrils.
+important limitation. Our model adopts the \(18\times1\times1\) lattice-rod
+representation used by Parkinson et al. (1997), corresponding to an aspect
+ratio of \(18{:}1\). This provides continuity with the original collagen
+aggregation and fracture framework, but remains a substantial geometric
+simplification relative to the approximately \(200{:}1\) aspect ratio of real
+collagen molecules.
+
+The reduced aspect ratio may affect molecular overlaps and local coordination,
+packing and void geometry, and consequently the measured cross-sectional
+fractal dimension \(D_f\) and the mechanically relevant quantities \(N(i)\),
+\(\mathrm{CV}(N)\), and \(K\). Since \(N(i)\) and \(K\) determine molecular
+stress exposure and removal probability in the rupture model, quantitative
+damage curves, rupture resistance, and avalanche statistics may also depend on
+the assumed aspect ratio.
+
+Although the same aspect ratio is used for all \(T_s\), providing a consistent
+geometry for comparisons within the model, this does not establish that the
+numerical values or observed trends are independent of the aspect-ratio
+approximation. Because an aspect-ratio sensitivity analysis was not performed,
+the results should be interpreted as trends within the present coarse-grained
+model rather than as quantitative predictions for real collagen fibrils. We
+have revised the Methods to cite the origin of the \(18{:}1\) representation
+and expanded the limitations section to state its possible structural and
+mechanical consequences.
 
 \pointseparator
 
@@ -288,18 +362,6 @@ form is not derived from the model and the physical interpretation of the
 parameters \(\alpha\) and \(\beta\), while discussed qualitatively, would
 benefit from more precise justification.
 \end{refereecomment}
-
-\responselabel
-We thank the Referee for this observation and agree that Eq.~(5) is empirical
-and is not derived from the microscopic rupture rules of the model. We have
-revised the manuscript to identify it explicitly as a phenomenological
-interpolation of the simulated damage curves. The power-law and exponential
-contributions are now described only as providing the flexibility needed to
-represent the gradual curvature and the steep high-force increase,
-respectively. Accordingly, \(\alpha\) and \(\beta\) are treated as empirical
-shape parameters, and we no longer associate them with distinct microscopic
-damage mechanisms. Their variation with \(T_s\) is retained only as a compact
-description of the systematic changes in the damage curves.
 
 \clearpage
 \section*{Response to Referee 2}
@@ -324,35 +386,81 @@ clarify this point in the manuscript.
 \end{refereecomment}
 
 \responselabel
-We thank the Referee for identifying an ambiguity in our use of the term
-``stable.'' We agree that, if Eq.~(4) were interpreted as a continuous-time
-hazard rate and the fibril were held indefinitely at fixed \(F\), a finite
-removal probability would imply the possibility of delayed failure. This is
-not the process represented by our model.
+We thank the Referee for pointing out that the meaning of a no-removal sweep
+was insufficiently explained. Our rupture model does not introduce physical
+time, a dwell time at fixed load, or a thermally activated failure rate.
+Accordingly, \(P_R\) is a dimensionless removal probability evaluated during
+a discrete damage-update sweep, not a continuous-time hazard rate.
 
-Our simulations follow the discrete tensile-loading protocol introduced for
-simulated collagen fibrils by Parkinson et al. (1997), which is now cited at
-this point in the revised Methods. At a prescribed force \(F\), every molecule
-in the load-bearing backbone is assessed once. If at least one molecule is
-removed, the backbone is reassessed and another sweep is performed at the same
-force. The first complete sweep with no new removals terminates that force
-step, and only then is the force increased by \(\Delta F=0.5\). Parkinson et
-al. use the same stopping rule: the skeleton and stress state are reassessed
-after breaking events, and the force is increased only when no new breaking
-event occurs.
+The loading and stopping rule follows the procedure introduced by Parkinson et
+al. (1997). At a prescribed force \(F\), every molecule in the load-bearing
+backbone is assessed once. If removals occur, the backbone is reassessed and
+another damage sweep is performed at the same force. The force is increased by
+\(\Delta F=0.5\) only after a complete sweep produces no new removal event, as
+specified in the original model.
 
-We have revised the Methods to make clear that a zero-removal sweep is an
-\textbf{operational stopping criterion} defining a quiescent configuration
-within this discrete loading algorithm. It is not intended to establish
-thermodynamic stability or to predict the long-time response under a force
-held constant indefinitely. The sweep index has no calibrated physical
-duration, and \(P_R\) is a per-assessment removal probability, not a
-continuous-time kinetic rate. Consequently, creep, fatigue, and delayed rupture
-under sustained loading are outside the scope of the model.
+We agree that a no-removal sweep does not establish an absorbing stochastic
+equilibrium. Because \(P_R\) can remain nonzero, another independent assessment
+of the same unchanged configuration could produce additional removals. The
+first no-removal sweep is instead the operational stopping criterion of this
+discrete, progressively stepped loading protocol, separating the damage
+response assigned to the current force from that produced after the next force
+increment.
 
-This clarification preserves the original simulation protocol and the
-resulting data while stating its physical interpretation and limitation
-explicitly.
+Consequently, the model characterizes failure under stepped loading and is not
+intended to describe creep, fatigue, delayed rupture, or lifetime under a force
+held constant for a physical duration. We have revised the Methods to make this
+interpretation and its limitations explicit.
+
+\pointseparator
+
+\subsection*{Point 2 (R2-2): Localized versus equal load sharing}
+
+\refereelabel
+\begin{refereecomment}
+The authors discuss localized and more equal load-sharing regimes in their
+interpretation. However, in the simulations, load sharing appears to be
+determined by Eqs.~(2) and (3), which seem to impose equal load sharing within
+a cross section. If I understand correctly, information about the local
+structure enters only through \(K\) in the rupture probability. The authors
+should discuss more clearly in what precise sense the model realizes localized
+or equal-load-sharing behavior.
+\end{refereecomment}
+
+\responselabel
+We thank the Referee for identifying this ambiguity. We agree that the original
+interpretation invited the conclusion that our model realizes a crossover
+between localized and equal load sharing. In particular, we compared the
+fitted values of \(\gamma\) with exponents from fiber-bundle theory and
+described their variation with \(T_s\) as evidence of increasingly global load
+sharing. This interpretation was not supported by the stress-redistribution
+rule implemented in the model. Numerical proximity between a fitted slope and
+a theoretical fiber-bundle exponent is not sufficient to establish a common
+load-sharing mechanism or universality class.
+
+Equation~(2) distributes the applied force uniformly among all load-bearing
+molecular segments within each cross-section. When a molecule is removed,
+\(N(i)\) decreases only in the cross-sections previously occupied by that
+molecule, and the corresponding stress increase is shared uniformly among the
+remaining segments within each affected cross-section. The model does not
+contain a distance-dependent elastic kernel that preferentially transfers this
+additional stress to the spatial neighbors of the removed molecule.
+
+Local structure enters the rupture probability through the coordination number
+\(K\). Removing a molecule reduces \(K\) for its nearest neighbors and therefore
+lowers their resistance to subsequent removal. This produces spatially
+heterogeneous rupture probabilities, but it does not constitute local load
+sharing in the conventional fiber-bundle sense. Conversely, because \(N(i)\)
+varies along the fibril and molecules span different sets of cross-sections,
+the model is not a conventional equal-load-sharing fiber bundle governed by a
+single globally shared stress.
+
+We therefore describe the model as combining uniform load sharing within each
+cross-section with local coordination-dependent resistance. We have removed
+the interpretation of \(\gamma\) as evidence of a crossover between local and
+global load sharing and no longer assign the model to either universality
+class. The term ``local avalanche'' now refers only to the spatial connectedness
+of removed-molecule clusters and does not imply a local-load-sharing mechanism.
 
 \pointseparator
 

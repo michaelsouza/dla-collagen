@@ -533,11 +533,22 @@ def main():
     parser.add_argument('-file', type=str, help='File argument description', default='data.dat')
     parser.add_argument('-m', type=int, help='Exponent of the rods', default=2)
     parser.add_argument('-n', type=int, help='number of repetitions for statistic', default=1)
+    parser.add_argument(
+        '-start',
+        '--start',
+        type=int,
+        default=0,
+        help='zero-based repetition index from which to resume',
+    )
     args = parser.parse_args()
 
     fn = args.file
     m = args.m
     n = args.n
+    start = args.start
+
+    if start < 0 or start > n:
+        parser.error(f'-start must be between 0 and {n}')
 
     tic = time.time()
     ssd = read_or_create_ssd(fn)
@@ -548,8 +559,13 @@ def main():
     
     base_name = os.path.splitext(fn)[0]
     fn_log = f"{base_name}_m_{m}.txt"
+    if start > 0 and not os.path.isfile(fn_log):
+        parser.error(
+            f'cannot resume at run {start + 1}: output file does not exist: '
+            f'{fn_log}'
+        )
 
-    for k in range(0, n):
+    for k in range(start, n):
         ssd_copy = ssd.copy()
         print(f"\n--- Starting simulation run {k+1}/{n} ---")
         tic = time.time()

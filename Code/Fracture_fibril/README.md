@@ -63,32 +63,25 @@ Parallel instalado.
 
 ## Executar todas as fibrilas de um único \(T_s\)
 
-No exemplo abaixo, altere apenas `TS`, `N` e `JOBS`. `N` é o número de
-realizações por fibrila e `JOBS` é o número de fibrilas executadas em
-paralelo.
+Use `run_parallel.sh`, informando o \(T_s\). `N_REPS` é o número de
+realizações por fibrila e `NUM_JOBS` é o número de fibrilas executadas em
+paralelo:
 
 ```bash
-TS=8192
-N=1000
-JOBS=8
-EXTENDED=Data_fibrils/Avalanche_force_grouped/extended
-RUN_DIR=Data_fibrils/Avalanche_force_grouped/runs/ts_${TS}
-
-mkdir -p "$RUN_DIR"
-
-for fibril in "$EXTENDED"/ts_${TS}_seed_*.dat; do
-  python3 -c 'import sys; sys.path.insert(0, "Code/Fracture_fibril"); import stress_strain_ava as s; s.read_or_create_ssd(sys.argv[1])' "$fibril"
-done
-
-cp "$EXTENDED"/ts_${TS}_seed_*.db "$RUN_DIR"/
-
-parallel -j "$JOBS" --bar \
-  "python3 Code/Fracture_fibril/stress_strain_ava.py -file {} -m 2 -n $N" \
-  ::: "$RUN_DIR"/ts_${TS}_seed_*.db
+N_REPS=1000 NUM_JOBS=8 \
+  bash Code/Fracture_fibril/run_parallel.sh 8192
 ```
 
-O primeiro laço converte cada fibrila estendida em um arquivo `.db`. As
-cópias dos bancos e os resultados ficam isolados em:
+Mais de um \(T_s\) pode ser informado. Nesse caso, os lotes são executados
+sequencialmente:
+
+```bash
+N_REPS=1000 NUM_JOBS=8 \
+  bash Code/Fracture_fibril/run_parallel.sh 8 32 64
+```
+
+O script exige exatamente 50 fibrilas para cada \(T_s\), cria os bancos
+necessários e deixa os resultados isolados em:
 
 ```text
 Data_fibrils/Avalanche_force_grouped/runs/ts_<TS>/
@@ -100,4 +93,24 @@ Cada fibrila produz um arquivo:
 ts_<TS>_seed_<SEED>_m_2.txt
 ```
 
-Repetir o comando no mesmo diretório substitui os resultados anteriores.
+Para evitar perda acidental, `run_parallel.sh` recusa executar quando o
+diretório já contém resultados.
+
+## Retomar um lote interrompido
+
+Depois de uma interrupção, use `resume_parallel.sh` com os mesmos valores de
+`N_REPS`, `M_VALUE` e `NUM_JOBS` do lote original:
+
+```bash
+N_REPS=1000 M_VALUE=2 NUM_JOBS=8 \
+  bash Code/Fracture_fibril/resume_parallel.sh 32
+```
+
+O script conta as realizações já gravadas em cada arquivo, preserva fibrilas
+concluídas, continua arquivos parciais a partir da próxima realização e inicia
+as fibrilas restantes. Para inspecionar a lista sem executar:
+
+```bash
+DRY_RUN=1 N_REPS=1000 M_VALUE=2 NUM_JOBS=8 \
+  bash Code/Fracture_fibril/resume_parallel.sh 32
+```

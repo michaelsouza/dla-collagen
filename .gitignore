@@ -26,3 +26,18 @@ __pycache__/
 
 # LaTeX output PDF in Paper directory
 Paper/*.pdf
+
+# Local transfer bundles and extracted cluster workspaces
+cluster_bundle*/
+cluster_bundle*.tar.gz
+
+# Generated referee-analysis outputs. A small curated subset of figure data,
+# decision records, and editable plotting projects is force-tracked from these
+# directories.
+Reviews/Figure7_damage_reproduction/
+Reviews/Issue5_avalanche_statistics/
+Reviews/Issue5_clauset_pooled_from_scratch/
+Reviews/Issue5_local_avalanche_reanalysis/
+Reviews/Issue7_fractal_proxy/
+Reviews/Research_Clauset2009_method_summary.md
+Reviews/Research_Issue5_avalanche_distribution_statistics.md
