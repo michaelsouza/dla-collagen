@@ -5,13 +5,17 @@
 \usepackage[a4paper,margin=2.5cm]{geometry}
 \usepackage{amsmath}
 \usepackage{newtxtext,newtxmath}
+\usepackage[english]{babel}
 \usepackage{microtype}
 \usepackage{xcolor}
 \usepackage{enumitem}
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage[percent]{overpic}
+\usepackage[numbers,sort&compress]{natbib}
 \usepackage{hyperref}
+
+\bibliographystyle{apsrev4-2}
 
 \definecolor{responseblue}{HTML}{1F4E79}
 \definecolor{commentgray}{HTML}{4D4D4D}
@@ -159,25 +163,16 @@ rigorous grounds.
 \end{refereecomment}
 
 \responselabel
-We thank the Referee for this important correction. We agree that an
-approximately linear regime in a binned log--log plot is insufficient to
-establish Self-Organized Criticality. Because the external force is increased
-stepwise, damage is irreversible, and failed molecules do not recover, we have
-removed the SOC interpretation and instead describe the process as avalanche
-dynamics in a driven disordered fracture system.
+We agree that an approximately linear regime in a binned log--log plot is insufficient to
+establish Self-Organized Criticality. We have removed the SOC interpretation and instead describe the process as avalanche dynamics in a driven disordered fracture system as suggested by the Referee.
 
-Following the Referee's statistical and operational suggestions, we
-reanalyzed the raw, integer-valued sizes of preterminal avalanches. At
-each fixed force \(F\), an avalanche comprises all
+Also, following the Referee's statistical and operational suggestions, we reanalyzed the raw, integer-valued sizes of preterminal avalanches. At each fixed force \(F\), an avalanche comprises all
 molecules removed during the successive damage sweeps performed before the
-next force increment. Here, an avalanche denotes the complete damage response
-at one force step and does not imply spatial connectivity or system-spanning
-failure. The terminal event that eliminates the continuous
-load-bearing path and causes complete rupture is excluded. The revised data
-set contains 67,026,212 preterminal events across the ten values of \(T_s\).
-We then evaluated whether the upper tail of the avalanche-size distribution
-could be described by a power law with an exponential cutoff. For compact
-presentation, we write this model in scaling form as
+next force increment. The terminal event that eliminates the continuous
+load-bearing path and causes complete rupture is excluded. 
+
+We now evaluate whether the upper tail of the avalanche-size distribution
+could be described by a power law with an exponential cutoff as following
 
 \[
 p(s)\sim s^{-\gamma}\exp(-s/s_c),
@@ -186,49 +181,20 @@ p(s)\sim s^{-\gamma}\exp(-s/s_c),
 
 This form is widely used for algebraic tails limited by a finite
 characteristic scale, including avalanche and fracture processes
-(\href{https://doi.org/10.1103/PhysRevE.59.5049}{Zapperi et al., 1999};
-\href{https://doi.org/10.1137/070710111}{Clauset, Shalizi, and Newman, 2009};
-\href{https://doi.org/10.1371/journal.pone.0019779}{Klaus, Yu, and Plenz,
-2011}).
-The exponent \(\gamma\) characterizes the algebraic sector, while \(s_c\)
-characterizes the cutoff scale, which may reflect finite-size and
-model-specific constraints. The scaling expression is used here for
-readability; numerical estimation and KS calculations use the fully normalized
-discrete model.
+(\cite{Zapperi1999,Clauset2009,Klaus2011}).
+The exponent \(\gamma\) characterizes the power-law tail, while \(s_c\)
+characterizes the finite-size effects.
 
 We estimated \(\gamma\) and \(s_c\) by exact discrete maximum likelihood without
 binning. For each \(T_s\), the lower threshold \(s_{\min}\) was selected
 objectively by minimizing the discrete Kolmogorov--Smirnov distance after
 fitting the model parameters, following the procedure of
-\href{https://doi.org/10.1137/070710111}{Clauset, Shalizi, and Newman (2009)}
+\cite{Clauset2009}
 for identifying the onset of a tail regime. Alternative selection criteria and
 limitations of this procedure are discussed by
-\href{https://arxiv.org/abs/1209.1270}{Corral, Deluca, and Ferrer-i-Cancho
-(2012)}. Thus, neither the fitted interval nor the exponent was selected by
+\cite{Corral2012}. Thus, neither the fitted interval nor the exponent was selected by
 visual inspection.
 
-In the compact-fibril regime, \(T_s\geq512\), the independently selected
-thresholds are tightly grouped, \(18\leq s_{\min}\leq21\), and each fit
-contains between 354,967 and 465,153 tail events. The observed KS distances
-are only \(8.5\times10^{-4}\) to \(1.4\times10^{-3}\). At the same time, both
-tail parameters stabilize:
-
-\[
-\gamma=2.204\pm0.034,
-\qquad
-s_c=101.0\pm5.6,
-\]
-
-where the quoted dispersions describe variation among the four compact-regime
-conditions. The simultaneous stability of \(s_{\min}\), \(\gamma\), and \(s_c\),
-together with the very small KS discrepancy and the large number of fitted
-events, provides the central evidence for a common cutoff-power-law tail in
-the compact regime. Events below \(s_{\min}\) remain visible in the revised
-figure but are not assumed to follow the same tail model, which is precisely
-the role of a statistically selected lower threshold. The complete
-distributions and the evolution of the fitted parameters are shown in
-Figs.~\ref{fig:avalanche-distributions} and
-\ref{fig:avalanche-parameters}, respectively.
 
 \begin{figure}[!htbp]
   \centering
@@ -284,18 +250,16 @@ such deviations detectable even when maximum likelihood accurately recovers
 the exponent and the tail form. This situation has direct precedents: it has
 been reported for neuronal-avalanche data analyzed using maximum likelihood,
 KS, finite-size scaling, and comparisons with alternatives
-(\href{https://doi.org/10.1371/journal.pone.0019779}{Klaus, Yu, and Plenz,
-2011}; \href{https://doi.org/10.1016/j.neuron.2018.10.045}{Ponce-Alvarez et
-al., 2018}), and Deluca and Corral documented related limitations for
+(\cite{Klaus2011,PonceAlvarez2018}), and Deluca and Corral documented related limitations for
 simulated power-law tails and truncated distributions
-(\href{https://doi.org/10.2478/s11600-013-0154-9}{Deluca and Corral, 2013}).
+(\cite{Deluca2013}).
 We therefore report the synthetic test, but interpret it together with the
 magnitude of the observed KS distance, parameter stability, same-support model
 comparisons, and the finite-size control described below.
 
 As an independent control, we applied the same maximum-likelihood analysis to
 two-dimensional percolation exactly at the critical point. Following Stauffer
-and Aharony (1994), the finite-size cluster distribution satisfies
+and Aharony~\cite{Stauffer1994}, the finite-size cluster distribution satisfies
 
 \[
 n_s(L)\sim s^{-\tau_{\mathrm{perc}}}f(s/s_c),
@@ -454,8 +418,7 @@ uncertainties reported as standard errors of the mean. The uncertainty in
 Because the relationships are monotonic and approach plateaus rather than
 remaining linear, associations were evaluated using Spearman's rank
 correlation coefficient, \(\rho\)
-(\href{https://doi.org/10.2307/1412159}{Spearman, 1904};
-\href{https://doi.org/10.1213/ANE.0000000000002864}{Schober et al., 2018}),
+(\cite{Spearman1904,Schober2018}),
 between the ten \(T_s\)-averaged conditions.
 
 The cross-sectional \(D_f\) was positively associated with the mean
@@ -554,31 +517,11 @@ acknowledged.
 \end{refereecomment}
 
 \responselabel
-We thank the Referee and agree that the reduced molecular aspect ratio is an
-important limitation. Our model adopts the \(18\times1\times1\) lattice-rod
-representation used by Parkinson et al. (1997), corresponding to an aspect
-ratio of \(18{:}1\). This provides continuity with the original collagen
-aggregation and fracture framework, but remains a substantial geometric
-simplification relative to the approximately \(200{:}1\) aspect ratio of real
-collagen molecules.
+We have included the following paragraphs discussing this issue in the new version of the manuscript.
 
-The reduced aspect ratio may affect molecular overlaps and local coordination,
-packing and void geometry, and consequently the measured cross-sectional
-fractal dimension \(D_f\) and the mechanically relevant quantities \(N(i)\),
-\(\mathrm{CV}(N)\), and \(K\). Since \(N(i)\) and \(K\) determine molecular
-stress exposure and removal probability in the rupture model, quantitative
-damage curves, rupture resistance, and avalanche statistics may also depend on
-the assumed aspect ratio.
+\textit{Several idealizations of our coarse-grained framework warrant discussion. In the assembly model, collagen molecules are represented as rigid lattice rods with an aspect ratio of $18{:}1$, following Parkinson et al.~\cite{Parkinson1997}. This aspect ratio is substantially smaller than the $\approx 200{:}1$ ratio of real collagen monomers \cite{Buehler2008b}, and molecular motion excludes rotational diffusion. While a fixed aspect ratio ensures a consistent geometry across all $T_s$, these simplifications may quantitatively affect molecular coordination $K$, cross-sectional area $N(i)$, and the resulting fractal dimension $D_f$. Consequently, our findings capture the qualitative structural and mechanical trends of the model rather than exact quantitative predictions for biological fibrils.}
 
-Although the same aspect ratio is used for all \(T_s\), providing a consistent
-geometry for comparisons within the model, this does not establish that the
-numerical values or observed trends are independent of the aspect-ratio
-approximation. Because an aspect-ratio sensitivity analysis was not performed,
-the results should be interpreted as trends within the present coarse-grained
-model rather than as quantitative predictions for real collagen fibrils. We
-have revised the Methods to cite the origin of the \(18{:}1\) representation
-and expanded the limitations section to state its possible structural and
-mechanical consequences.
+\textit{Regarding the mechanical response, the probabilistic fracture framework omits continuous elastic deformation, internal bond kinetics, and explicit time scales \cite{RuizFranco2022,Provenzano2006}, precluding stress--strain curves or Young's moduli \cite{Innocenti2022-lp}. Similarly, while $T_s$ captures the balance between incorporation and surface relaxation, direct calibration against specific experimental variables (such as pH or ionic strength) remains beyond our scope \cite{Jiang2004,Yang2009,Kalbitzer2018}. Nevertheless, this discrete framework successfully captures the broad preterminal avalanche dynamics and establishes a clear empirical association between structural compactness and mechanical resilience.}
 
 \pointseparator
 
@@ -593,40 +536,12 @@ benefit from more precise justification.
 \end{refereecomment}
 
 \responselabel
-We thank the Referee for this observation. We agree that Eq.~(5) is a
-phenomenological representation of the simulated damage curves rather than a
-constitutive law derived from the microscopic removal rule. We have revised the
-manuscript to clarify the functional roles of \(\alpha\) and \(\beta\) and to
-relate their trends qualitatively to the structural quantities entering the
-rupture model.
+We have included the following discussion in the revised manuscript to clarify the interpretation of the phenomenological function \(f(F)\) in Eq.~(5).
 
-The \(F^{\alpha}\) contribution describes the gradual accumulation of damage at
-low and intermediate forces. Mathematically, \(\alpha\) is the logarithmic slope
-of this contribution and therefore controls its nonlinear sensitivity to
-force. Its decrease with increasing \(T_s\) is consistent with the larger
-load-bearing areas and greater molecular coordination of more compact fibrils.
-A larger \(N(i)\) reduces the stress increase produced by a given force
-increment through \(\sigma(i)=F/N(i)\), while a larger \(K\) decreases the
-molecular removal probability. These structural changes buffer gradual damage
-accumulation, producing the weaker force dependence represented by smaller
-values of \(\alpha\). Because \(\alpha\) describes the cumulative damage curve,
-it is treated as an effective force-sensitivity exponent.
+\textit{The two terms in Eq.~(5) describe complementary stages of progressive failure rather than independent microscopic mechanisms. The power-law contribution $F^{\alpha}$ captures gradual damage accumulation at low and intermediate forces, where $\alpha$ serves as an effective force-sensitivity exponent. In more compact fibrils, larger load-bearing areas $N(i)$ and higher coordination numbers $K$ dilute local stresses and lower removal probabilities, buffering damage and decreasing $\alpha$ with increasing $T_s$.}
 
-The exponential contribution describes the rapid amplification of damage at
-larger forces. As molecules are removed, \(N(i)\) decreases in the affected
-cross-sections and the coordination number \(K\) is reduced for neighboring
-molecules. The resulting increase in molecular stress and decrease in local
-resistance create a positive feedback for subsequent removal. The parameter
-\(\beta\) controls the force sensitivity of this late-stage amplification,
-while \(1/\beta\) provides its characteristic force scale within the
-dimensionless model. Its decrease with \(T_s\) is therefore consistent with the
-delayed amplification observed in more compact and better-connected fibrils.
+\textit{At higher forces, the exponential term accounts for late-stage damage amplification. Molecule removals locally reduce $N(i)$ and diminish neighboring coordination $K$, creating a positive-feedback cascade that accelerates failure. The parameter $\beta$ governs the force sensitivity of this instability, which is delayed to higher forces in better-connected fibrils (smaller $\beta$). Both $\alpha$ and $\beta$ stabilize for $T_s\geq 512$, paralleling the saturation of the structural backbone descriptors.}
 
-The revised discussion presents the two terms as complementary descriptions of
-gradual damage accumulation and its subsequent amplification, rather than as
-independent microscopic mechanisms. Their common approach to a plateau for
-\(T_s\geq512\) also parallels the saturation of the structural characteristics
-of the load-bearing backbone.
 
 \pointseparator
 
@@ -660,7 +575,7 @@ Accordingly, \(P_R\) is a dimensionless removal probability evaluated during
 a discrete damage-update sweep, not a continuous-time hazard rate.
 
 The loading and stopping rule follows the procedure introduced by Parkinson et
-al. (1997). At a prescribed force \(F\), every molecule in the load-bearing
+al.~\cite{Parkinson1997}. At a prescribed force \(F\), every molecule in the load-bearing
 backbone is assessed once. If removals occur, the backbone is reassessed and
 another damage sweep is performed at the same force. The force is increased by
 \(\Delta F=0.5\) only after a complete sweep produces no new removal event, as
@@ -796,81 +711,7 @@ scale-free distribution. This formulation retains the statistically supported
 algebraic tail while distinguishing it clearly from an SOC interpretation.
 
 \clearpage
-\section*{References cited in the responses}
-\small
-\begin{enumerate}
-  \item Clauset, A., Shalizi, C. R., and Newman, M. E. J. (2009).
-  Power-law distributions in empirical data. \textit{SIAM Review},
-  \textbf{51}, 661--703.
-  \href{https://doi.org/10.1137/070710111}{doi:10.1137/070710111}.
-
-  \item Corral, A., Deluca, A., and Ferrer-i-Cancho, R. (2012).
-  A practical recipe to fit discrete power-law distributions.
-  \href{https://arxiv.org/abs/1209.1270}{arXiv:1209.1270}.
-
-  \item Deluca, A., and Corral, A. (2013). Fitting and goodness-of-fit test of
-  non-truncated and truncated power-law distributions.
-  \textit{Acta Geophysica}, \textbf{61}, 1351--1394.
-  \href{https://doi.org/10.2478/s11600-013-0154-9}{doi:10.2478/s11600-013-0154-9}.
-
-  \item Gobeaux, F., Mosser, G., Anglo, A., Panine, P., Davidson, P.,
-  Giraud-Guille, M.-M., and Belamie, E. (2008). Fibrillogenesis in dense
-  collagen solutions: A physicochemical study. \textit{Journal of Molecular
-  Biology}, \textbf{376}, 1509--1522.
-  \href{https://doi.org/10.1016/j.jmb.2007.12.047}{doi:10.1016/j.jmb.2007.12.047}.
-
-  \item Kadler, K. E., Hojima, Y., and Prockop, D. J. (1988). Assembly of type
-  I collagen fibrils de novo. Between 37 and 41 degrees C the process is
-  limited by micro-unfolding of monomers. \textit{Journal of Biological
-  Chemistry}, \textbf{263}, 10517--10523.
-
-  \item Kalbitzer, L., and Pompe, T. (2018). Fibril growth kinetics link
-  buffer conditions and topology of 3D collagen I networks.
-  \textit{Acta Biomaterialia}, \textbf{67}, 206--214.
-  \href{https://doi.org/10.1016/j.actbio.2017.11.051}{doi:10.1016/j.actbio.2017.11.051}.
-
-  \item Klaus, A., Yu, S., and Plenz, D. (2011). Statistical analyses support
-  power law distributions found in neuronal avalanches. \textit{PLoS ONE},
-  \textbf{6}, e19779.
-  \href{https://doi.org/10.1371/journal.pone.0019779}{doi:10.1371/journal.pone.0019779}.
-
-  \item Morozova, S., and Muthukumar, M. (2018). Electrostatic effects in
-  collagen fibril formation. \textit{The Journal of Chemical Physics},
-  \textbf{149}, 163333.
-  \href{https://doi.org/10.1063/1.5036526}{doi:10.1063/1.5036526}.
-
-  \item Parkinson, J., Brass, A., Canova, G., and Brechet, Y. (1997). The
-  mechanical properties of simulated collagen fibrils. \textit{Journal of
-  Biomechanics}, \textbf{30}, 549--554.
-
-  \item Ponce-Alvarez, A., Jouary, A., Privat, M., Deco, G., and Sumbre, G.
-  (2018). Whole-brain neuronal activity displays crackling noise dynamics.
-  \textit{Neuron}, \textbf{100}, 1446--1459.
-  \href{https://doi.org/10.1016/j.neuron.2018.10.045}{doi:10.1016/j.neuron.2018.10.045}.
-
-  \item Schober, P., Boer, C., and Schwarte, L. A. (2018). Correlation
-  coefficients: Appropriate use and interpretation. \textit{Anesthesia \&
-  Analgesia}, \textbf{126}, 1763--1768.
-  \href{https://doi.org/10.1213/ANE.0000000000002864}{doi:10.1213/ANE.0000000000002864}.
-
-  \item Spearman, C. (1904). The proof and measurement of association between
-  two things. \textit{The American Journal of Psychology}, \textbf{15},
-  72--101. \href{https://doi.org/10.2307/1412159}{doi:10.2307/1412159}.
-
-  \item Stauffer, D., and Aharony, A. (1994). \textit{Introduction to
-  Percolation Theory}, 2nd ed. Taylor \& Francis, London.
-
-  \item Yang, Y.-L., and Kaufman, L. J. (2009). Rheology and confocal
-  reflectance microscopy as probes of mechanical properties and structure
-  during collagen and collagen/hyaluronan self-assembly. \textit{Biophysical
-  Journal}, \textbf{96}, 1566--1585.
-  \href{https://doi.org/10.1016/j.bpj.2008.10.063}{doi:10.1016/j.bpj.2008.10.063}.
-
-  \item Zapperi, S., Ray, P., Stanley, H. E., and Vespignani, A. (1999).
-  Avalanches in breakdown and fracture processes. \textit{Physical Review E},
-  \textbf{59}, 5049--5057.
-  \href{https://doi.org/10.1103/PhysRevE.59.5049}{doi:10.1103/PhysRevE.59.5049}.
-\end{enumerate}
-\normalsize
+\renewcommand{\refname}{References cited in the responses}
+\bibliography{../Paper/apssamp}
 
 \end{document}

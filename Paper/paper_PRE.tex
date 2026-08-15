@@ -284,22 +284,20 @@ Each molecule (gray) is assigned a removal probability $P_{R}$ (Eq.~\ref{eq4}); 
 
 \rev{Taken together, these results provide direct numerical validation that $D_f$ captures structural changes relevant to axial load bearing. Within its stated scope, which is the comparison of fibril ensembles generated at different $T_s$, $D_f$ therefore provides a compact and quantitatively supported proxy for mechanically relevant transverse compactness.}
 
-\rev{Since our rupture model is probabilistic, for each value of $T_s$ we analyzed an ensemble of $50$ distinct fibrils, each containing $3\times 10^4$ molecules, and performed $10^3$ independent rupture simulations per fibril, yielding $5\times10^4$ realizations per $T_s$. During each simulation, the force was increased gradually, and at each level we recorded the molecules removed from the backbone.}
+Since our rupture model is probabilistic, for each value of $T_s$ we analyzed an ensemble of $50$ distinct fibrils, each containing $3\times 10^4$ molecules, and performed $10^3$ independent rupture simulations per fibril, yielding $5\times10^4$ realizations per $T_s$. During each simulation, the force was increased gradually, and at each level we recorded the molecules removed from the backbone.
 
-\rev{To quantify the mechanical resistance of the fibrils, we analyzed the evolution of the average fraction of removed molecules, denoted by $\varphi$, as a function of the applied force $F$ \cite{Parkinson1997}. As shown in Fig.~\ref{fig_8}(a), $\varphi$ increases monotonically with $F$, reflecting progressive intermolecular bond ruptures and subsequent loss of load-bearing connectivity.}
+To quantify the mechanical resistance of the fibrils, we analyzed the evolution of the average fraction of removed molecules, denoted by $\varphi$, as a function of the applied force $F$ \cite{Parkinson1997}. As shown in Fig.~\ref{fig_8}(a), $\varphi$ increases monotonically with $F$, reflecting progressive intermolecular bond ruptures and subsequent loss of load-bearing connectivity.
 
-The force threshold for complete fibril rupture increases with $T_s$, consistent with \rev{the} enhanced connectivity \rev{of} more compact fibrils.
-\rev{The simulated damage curves were fitted using the phenomenological form}
+The force threshold for complete fibril rupture increases with $T_s$, consistent with the enhanced connectivity of more compact fibrils.
+The simulated damage curves were fitted using the phenomenological form
 
 \begin{equation}
-	f(F) = 10^{-3}\left[\exp(\beta F) -1 + F^{\alpha}\right],
+	f(F) = 10^{-3}\left[\exp(\beta F) -1 + F^{\alpha}\right].
 	\label{eq5}
 \end{equation}
-\rev{The $F^{\alpha}$ contribution describes the gradual accumulation of damage at low and intermediate forces. Mathematically, $\alpha$ is the logarithmic slope of this contribution and therefore controls its nonlinear sensitivity to force. Its decrease with increasing $T_s$ is consistent with the larger load-bearing areas and greater molecular coordination of more compact fibrils. A larger $N(i)$ reduces the stress increase produced by a given force increment through $\sigma(i)=F/N(i)$, while a larger $K$ decreases the molecular removal probability. These structural changes buffer gradual damage accumulation, producing the weaker force dependence represented by smaller values of $\alpha$. Because $\alpha$ describes the cumulative damage curve, it is treated as an effective force-sensitivity exponent.}
+\rev{The two terms in Eq.~(\ref{eq5}) describe complementary stages of progressive failure rather than independent microscopic mechanisms. The power-law contribution $F^{\alpha}$ captures gradual damage accumulation at low and intermediate forces, where $\alpha$ serves as an effective force-sensitivity exponent. In more compact fibrils, larger load-bearing areas $N(i)$ and higher coordination numbers $K$ dilute local stresses and lower removal probabilities, buffering damage and decreasing $\alpha$ with increasing $T_s$.}
 
-\rev{The exponential contribution describes the rapid amplification of damage at larger forces. As molecules are removed, $N(i)$ decreases in the affected cross-sections and the coordination number $K$ is reduced for neighboring molecules. The resulting increase in molecular stress and decrease in local resistance create a positive feedback for subsequent removal. The parameter $\beta$ controls the force sensitivity of this late-stage amplification, while $1/\beta$ provides its characteristic force scale within the dimensionless model. Its decrease with $T_s$ is therefore consistent with the delayed amplification observed in more compact and better-connected fibrils.}
-
-\rev{The two terms are thus interpreted as complementary descriptions of gradual damage accumulation and its subsequent amplification, rather than as independent microscopic mechanisms. Their common approach to a plateau for $T_s\geq512$ also parallels the saturation of the structural characteristics of the load-bearing backbone.}
+\rev{At higher forces, the exponential term accounts for late-stage damage amplification. Molecule removals locally reduce $N(i)$ and diminish neighboring coordination $K$, creating a positive-feedback cascade that accelerates failure. The parameter $\beta$ governs the force sensitivity of this instability, which is delayed to higher forces in better-connected fibrils (smaller $\beta$). Both $\alpha$ and $\beta$ stabilize for $T_s\geq 512$, paralleling the saturation of the structural backbone descriptors.}
 
 \begin{figure}[ht!]
 	\centering
@@ -309,7 +307,7 @@ The force threshold for complete fibril rupture increases with $T_s$, consistent
 	\label{fig_8}
 \end{figure}
 
-\rev{To better characterize the collective dynamics of the fracture process, we analyze the distribution of avalanche sizes. At each fixed force $F$, all molecules removed during the successive reassessment sweeps performed before the next force increment are grouped into a single avalanche of size $s$, irrespective of their spatial connectivity. Here, an avalanche denotes the complete damage response at one force step and does not imply spatial connectivity or system-spanning failure. A force step with no removals does not generate an avalanche. The terminal event that eliminates the continuous load-bearing path is excluded, so the statistical analysis is restricted to preterminal damage.}
+To better characterize the collective dynamics of the fracture process, we analyze the distribution of avalanche sizes. At each fixed force $F$, all molecules removed during the successive reassessment sweeps performed before the next force increment are grouped into a single avalanche of size $s$, irrespective of their spatial connectivity. Here, an avalanche denotes the complete damage response at one force step and does not imply spatial connectivity or system-spanning failure. A force step with no removals does not generate an avalanche. The terminal event that eliminates the continuous load-bearing path is excluded, so the statistical analysis is restricted to preterminal damage.
 
 \rev{To characterize the avalanche-size distributions, we fitted their upper tails using a power law with an exponential cutoff~\cite{Zapperi1999,Klaus2011},}
 
@@ -320,7 +318,7 @@ The force threshold for complete fibril rupture increases with $T_s$, consistent
 	\label{eq6}
 }
 \end{equation}
-\rev{where $\gamma$ is the exponent of the algebraic power-law factor and $s_c$ is the characteristic cutoff size. The parameters were estimated from the raw, integer-valued avalanche sizes by exact discrete maximum likelihood, without binning. For each $T_s$, the lower threshold $s_{\min}$ was selected by minimizing the discrete Kolmogorov--Smirnov distance after fitting the model~\cite{Clauset2009,Deluca2013}. The log-binned distributions in Fig.~\ref{fig_9}(a) are used only for visualization.}
+\rev{where $\gamma$ is the power-law exponent and $s_c$ is the characteristic cutoff size. The parameters were estimated from the raw, integer-valued avalanche sizes by exact discrete maximum likelihood, without binning. For each $T_s$, the lower threshold $s_{\min}$ was selected by minimizing the discrete Kolmogorov--Smirnov distance after fitting the model~\cite{Clauset2009,Deluca2013}. The log-binned distributions in Fig.~\ref{fig_9}(a) are used only for visualization.}
 
 \rev{Figure~\ref{fig_9}(a) shows representative distributions for $T_s=2$, $32$, $128$, and $8192$. The systematic downward curvature at large $s$ is captured by the exponential cutoff and demonstrates that the distributions retain a characteristic avalanche-size scale rather than following a pure scale-free power law. Across the explored range, $\gamma$ rises overall from $1.019\pm0.010$ at $T_s=2$ to $2.253\pm0.009$ at $T_s=8192$, while $s_c$ changes from $44.3$ to $109.2$. The individual estimates of $\gamma$ and $s_c$ for all ten conditions are shown in Figs.~\ref{fig_9}(b) and \ref{fig_9}(c), respectively.}
 
@@ -333,9 +331,7 @@ The force threshold for complete fibril rupture increases with $T_s$, consistent
 s_c=101.0\pm5.6,
 }
 \]
-\rev{where the quoted dispersions describe the variation among the four compact-regime conditions. The corresponding thresholds are also narrowly distributed, $18\leq s_{\min}\leq21$, with Kolmogorov--Smirnov distances between $8.5\times10^{-4}$ and $1.4\times10^{-3}$. The simultaneous stability of $\gamma$, $s_c$, and $s_{\min}$ indicates that further increases in surface relaxation have little influence on the avalanche-tail statistics once the compact structural regime is reached.}
-
-\rev{The stabilization of the avalanche parameters parallels the saturation of the structural descriptors with $T_s$. This structural evolution is summarized by the fractal dimension $D_f$, which increases with $T_s$ and approaches a plateau as the fibril cross-sections become more compact. The parallel stabilization of $D_f$, $\gamma$, and $s_c$ therefore provides an empirical association between structural compactness and avalanche statistics, rather than establishing a direct causal relationship or identifying the model with a particular load-sharing universality class. In particular, the finite value of $s_c$ distinguishes the observed behavior from a pure scale-free distribution and supports its interpretation as cutoff avalanche dynamics in a driven disordered fracture system.}
+\rev{where the quoted dispersions describe variation across the four compact conditions ($18\leq s_{\min}\leq21$, Kolmogorov--Smirnov distances $\leq 1.4\times10^{-3}$). The stabilization of $\gamma$ and $s_c$ mirrors the plateau in structural compactness ($D_f$), providing an empirical association between fibril architecture and avalanche statistics rather than a causal relationship or a specific universality class. The finite cutoff $s_c$ indicates cutoff avalanche dynamics rather than pure scale-free behavior.}
 
 \begin{figure}[ht!]
 	\centering
@@ -344,19 +340,11 @@ s_c=101.0\pm5.6,
 	\label{fig_9}
 \end{figure}
 
-\rev{Avalanche-like rupture in physical fracture systems is often associated with sudden stress drops \cite{Noguchi2024}. Our model does not predict strain or physical event durations and therefore cannot generate stress--strain curves or compare avalanche propagation with the loading rate. Nevertheless, experiments on collagen fibrils have observed force or stress drops associated with rupture. Gutsmann et al. \cite{Gutsmann2004} used force spectroscopy on single microfibrils and directly observed force drops caused by intermolecular cross-link ruptures. Svensson et al. \cite{Svensson2013} found clear stress drops in tensile tests of individual collagen fibrils, while Deng et al. \cite{Deng2024} observed similar drops in the stress--strain curves.}
+\rev{In physical fracture systems, avalanche dynamics typically manifest as intermittent drops in stress or force \cite{Noguchi2024}. Similar discrete force relaxations have been directly observed during tensile loading of individual collagen fibrils and microfibrils \cite{Gutsmann2004,Svensson2013,Deng2024}, supporting the physical relevance of intermittent molecular failure. Because our discrete model does not incorporate elastic deformation or continuous time, it does not generate full stress--strain curves or resolve rate-dependent propagation; nevertheless, it captures the underlying statistical distributions of these collective rupture events.}
 
-\rev{Our coarse-grained model adopts the rigid $18{:}1$ lattice-rod representation of Parkinson et al.~\cite{Parkinson1997}.}
-\rev{This aspect ratio is substantially smaller than the approximately $200{:}1$ aspect ratio of real collagen molecules \cite{Buehler2008b}; molecular movement is also restricted by the lattice, and rotational diffusion is excluded.}
-\rev{This simplification may affect molecular overlaps and local coordination, packing and void geometry, and consequently the measured cross-sectional fractal dimension $D_f$ and the mechanically relevant quantities $N(i)$, $\mathrm{CV}(N)$, and $K$.}
-\rev{Since $N(i)$ and $K$ enter the rupture model, quantitative damage curves, rupture resistance, and avalanche statistics may also depend on the assumed aspect ratio.}
-\rev{Although the same aspect ratio is used for all $T_s$, providing a consistent geometry for comparisons within the model, no aspect-ratio sensitivity analysis was performed.}
-\rev{The results should therefore be interpreted as trends of the present coarse-grained model rather than as quantitative predictions for real collagen fibrils.}
-\rev{Post-attachment surface relaxation is represented through $T_s$, an effective coarse-grained parameter describing the opportunity for local rearrangement relative to continued growth.}
-\rev{Physicochemical assembly conditions may modify this balance, but the model does not provide a quantitative calibration of $T_s$ against any single experimental variable \cite{Jiang2004,Yang2009,Kalbitzer2018}.}
-Fracture is implemented as a probabilistic model, omitting detailed force transmission and internal bond-breaking mechanics \cite{RuizFranco2022,Provenzano2006}.
-Consequently, the model does not produce stress--strain curves or elastic moduli \cite{Innocenti2022-lp}.
-\rev{Nevertheless, it captures broadly distributed preterminal avalanches and an empirical association between structural compactness and mechanical resilience.}
+\rev{Several idealizations of our coarse-grained framework warrant discussion. In the assembly model, collagen molecules are represented as rigid lattice rods with an aspect ratio of $18{:}1$, following Parkinson et al.~\cite{Parkinson1997}. This aspect ratio is substantially smaller than the $\approx 200{:}1$ ratio of real collagen monomers \cite{Buehler2008b}, and molecular motion excludes rotational diffusion. While a fixed aspect ratio ensures a consistent geometry across all $T_s$, these simplifications may quantitatively affect molecular coordination $K$, cross-sectional area $N(i)$, and the resulting fractal dimension $D_f$. Consequently, our findings capture the qualitative structural and mechanical trends of the model rather than exact quantitative predictions for biological fibrils.}
+
+\rev{Regarding the mechanical response, the probabilistic fracture framework omits continuous elastic deformation, internal bond kinetics, and explicit time scales \cite{RuizFranco2022,Provenzano2006}, precluding stress--strain curves or Young's moduli \cite{Innocenti2022-lp}. Similarly, while $T_s$ captures the balance between incorporation and surface relaxation, direct calibration against specific experimental variables (such as pH or ionic strength) remains beyond our scope \cite{Jiang2004,Yang2009,Kalbitzer2018}. Nevertheless, this discrete framework successfully captures the broad preterminal avalanche dynamics and establishes a clear empirical association between structural compactness and mechanical resilience.}
 
 \section{Conclusion}
 
