@@ -41,14 +41,21 @@ Reviews/Issue5_local_avalanche_reanalysis/
 Reviews/Issue7_fractal_proxy/
 Reviews/Research_Clauset2009_method_summary.md
 Reviews/Research_Issue5_avalanche_distribution_statistics.md
+Reviews/Issue14_araujo_validation/checkpoints/
+
+# Local visual-QA render of the Araújo source PDF
+tmp/pdfs/araujo-page-2.png
 
 # Data 
 Data/runs
+/Data_avalanches_all_fibrils.zip
+/Data_avalanches_all_fibrils/
+/Data_avalanches/figures/
+/Data_avalanches/results/
+/Reviews/Issue5_clauset_hierarchical_pilot/
 Paper/apssamp.bib
 Carta_Resposta.zip
 Paper_corrijido.zip
 Data/Data_avalanches_all_fibrils.zip
 Carta_Resposta/Response_to_Referees.pdf
-Code/Data_analysis/README-avalanche-data.md
-Code/Data_analysis/test_read_avalanche_runs.py
-Code/Data_analysis/read_avalanche_runs.py
+*.zip
