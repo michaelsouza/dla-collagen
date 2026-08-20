@@ -1,0 +1,17 @@
+{
+  "model": "p(s) proportional to s^-alpha exp[-(s/scale)^beta]",
+  "normalization": "exact discrete infinite support with bounded remainder",
+  "population": "local preterminal connected avalanches; singletons retained in body",
+  "support": "common fixed xmin=8",
+  "conditions": [
+    512,
+    1024,
+    4096,
+    8192
+  ],
+  "individual_replicates": 199,
+  "joint_replicates": 199,
+  "seed": 161803,
+  "selection_status": "exploratory; family selected after inspecting high-Ts curvature",
+  "database": "/home/michael/gitrepos/dla-collagen/Data_avalanches_all_fibrils/derived/avalanche_analysis_v1.duckdb"
+}

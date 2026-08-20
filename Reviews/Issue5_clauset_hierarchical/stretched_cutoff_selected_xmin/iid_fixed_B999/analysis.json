@@ -1,0 +1,16 @@
+{
+  "method": "iid parametric bootstrap with joint six-parameter refit",
+  "role": "secondary sensitivity; avalanche events are not iid",
+  "model": "discrete stretched-cutoff power law",
+  "xmin": 29,
+  "ts": [
+    512,
+    1024,
+    4096,
+    8192
+  ],
+  "replicates": 999,
+  "workers": 6,
+  "seed": 271828,
+  "database": "/home/michael/gitrepos/dla-collagen/Data_avalanches_all_fibrils/derived/avalanche_analysis_v1.duckdb"
+}

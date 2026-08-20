@@ -315,6 +315,155 @@ def fit_cutoff_power_law(
     )
 
 
+def _stretched_cutoff_log_normalization(
+    alpha: float,
+    scale: float,
+    beta: float,
+    xmin: int,
+    *,
+    relative_tolerance: float = 1e-13,
+) -> float:
+    """Normalize s^-alpha exp[-(s/scale)^beta] on integer s >= xmin.
+
+    The remainder is bounded by replacing the decreasing stretched
+    exponential with its value at the first omitted integer and integrating
+    the remaining power law. This keeps the infinite-support normalization
+    explicit rather than truncating it at the largest observation.
+    """
+    if alpha <= 1.0 or scale <= 0.0 or beta <= 0.0 or xmin < 1:
+        return float("inf")
+    log_total = float("-inf")
+    lower = xmin
+    chunk_size = 2048
+    while True:
+        upper = lower + chunk_size
+        support = np.arange(lower, upper, dtype=float)
+        log_weights = (
+            -alpha * np.log(support / float(xmin))
+            - (support / scale) ** beta
+        )
+        log_total = float(np.logaddexp(log_total, special.logsumexp(log_weights)))
+        log_integral_bound = (
+            alpha * np.log(float(xmin))
+            - (upper / scale) ** beta
+            + (1.0 - alpha) * np.log(float(upper))
+            - np.log(alpha - 1.0)
+        )
+        log_first_omitted = (
+            -alpha * np.log(float(upper) / float(xmin))
+            - (upper / scale) ** beta
+        )
+        log_remainder_bound = float(
+            np.logaddexp(log_first_omitted, log_integral_bound)
+        )
+        if log_remainder_bound <= log_total + np.log(relative_tolerance):
+            return log_total
+        lower = upper
+        if lower - xmin > 5_000_000:
+            raise RuntimeError("stretched-cutoff normalization exceeded five million sizes")
+
+
+def fit_stretched_cutoff_power_law(
+    histogram: Histogram,
+    xmin: int,
+    *,
+    initial: dict[str, float] | None = None,
+) -> ModelFit:
+    """Fit a discrete power law with a stretched-exponential cutoff."""
+    sizes, frequencies = _tail_arrays(histogram, xmin)
+    n = int(frequencies.sum())
+    log_ratios = np.log(sizes / float(xmin))
+    pure = fit_power_law_model(histogram, xmin)
+
+    def unpack(parameters: np.ndarray) -> tuple[float, float, float]:
+        return (
+            1.0 + float(np.exp(parameters[0])),
+            float(np.exp(parameters[1])),
+            float(np.exp(parameters[2])),
+        )
+
+    def objective(parameters: np.ndarray) -> float:
+        alpha, scale, beta = unpack(parameters)
+        try:
+            log_normalization = _stretched_cutoff_log_normalization(
+                alpha, scale, beta, xmin
+            )
+        except RuntimeError:
+            return float("inf")
+        log_probabilities = (
+            -alpha * log_ratios
+            - (sizes / scale) ** beta
+            - log_normalization
+        )
+        value = -float(np.dot(frequencies, log_probabilities)) / n
+        return value if np.isfinite(value) else 1e300
+
+    bounds = (
+        (np.log(0.01), np.log(50.0)),
+        (np.log(float(xmin)), np.log(100_000.0)),
+        (np.log(0.25), np.log(5.0)),
+    )
+    if initial is None:
+        alpha_log = np.log(max(pure.parameters["alpha"] - 1.0, 0.01))
+        scale_starts = (max(4.0 * xmin, 30.0), 100.0, 300.0)
+        starts = [
+            (alpha_log, np.log(scale), np.log(beta))
+            for scale in scale_starts
+            for beta in (0.6, 1.0, 2.0)
+        ]
+    else:
+        starts = [
+            (
+                np.log(max(initial["alpha"] - 1.0, 0.01)),
+                np.log(initial["scale"]),
+                np.log(initial["beta"]),
+            )
+        ]
+    results = [
+        optimize.minimize(
+            objective,
+            np.asarray(start),
+            method="L-BFGS-B",
+            bounds=bounds,
+            options={"maxiter": 1500, "ftol": 1e-12, "gtol": 1e-7},
+        )
+        for start in starts
+    ]
+    valid = [result for result in results if result.success and np.isfinite(result.fun)]
+    if not valid:
+        if initial is not None:
+            return fit_stretched_cutoff_power_law(histogram, xmin, initial=None)
+        raise RuntimeError("all stretched-cutoff optimizations failed")
+    best = min(valid, key=lambda result: result.fun)
+    alpha, scale, beta = unpack(best.x)
+    log_normalization = _stretched_cutoff_log_normalization(
+        alpha, scale, beta, xmin
+    )
+    full_support = np.arange(xmin, int(sizes[-1]) + 1, dtype=float)
+    full_log_probabilities = (
+        -alpha * np.log(full_support / float(xmin))
+        - (full_support / scale) ** beta
+        - log_normalization
+    )
+    full_cdf = np.cumsum(np.exp(full_log_probabilities))
+    cdf_after = full_cdf[sizes - xmin]
+    cdf_before = np.where(sizes == xmin, 0.0, full_cdf[sizes - xmin - 1])
+    observed_log_probabilities = (
+        -alpha * log_ratios
+        - (sizes / scale) ** beta
+        - log_normalization
+    )
+    return ModelFit(
+        model="stretched_cutoff_power_law",
+        xmin=xmin,
+        parameters={"alpha": alpha, "scale": scale, "beta": beta},
+        log_likelihood=float(np.dot(frequencies, observed_log_probabilities)),
+        ks=_ks_from_cdf(frequencies, cdf_after, cdf_before),
+        n_tail=n,
+        parameter_count=3,
+    )
+
+
 def log_probabilities(fit: ModelFit, sizes: np.ndarray) -> np.ndarray:
     values = np.asarray(sizes, dtype=np.int64)
     if fit.model == "power_law":
@@ -337,6 +486,18 @@ def log_probabilities(fit: ModelFit, sizes: np.ndarray) -> np.ndarray:
         return (
             -alpha * np.log(values / float(fit.xmin))
             - rate * (values - fit.xmin)
+            - normalization
+        )
+    if fit.model == "stretched_cutoff_power_law":
+        alpha = fit.parameters["alpha"]
+        scale = fit.parameters["scale"]
+        beta = fit.parameters["beta"]
+        normalization = _stretched_cutoff_log_normalization(
+            alpha, scale, beta, fit.xmin
+        )
+        return (
+            -alpha * np.log(values / float(fit.xmin))
+            - (values / scale) ** beta
             - normalization
         )
     raise ValueError(f"unknown model {fit.model}")

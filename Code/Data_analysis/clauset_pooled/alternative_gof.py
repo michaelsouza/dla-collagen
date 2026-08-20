@@ -12,9 +12,11 @@ from scipy import special
 from .models import (
     ModelFit,
     _cutoff_log_normalization,
+    _stretched_cutoff_log_normalization,
     fit_cutoff_power_law,
     fit_exponential,
     fit_lognormal,
+    fit_stretched_cutoff_power_law,
 )
 from .power_law import Histogram, histogram_arrays
 
@@ -66,6 +68,8 @@ def sample_model_counts(
         raise ValueError("sample size must be nonnegative")
     if fit.model == "cutoff_power_law":
         return _sample_cutoff_counts(n, fit, rng=rng)
+    if fit.model == "stretched_cutoff_power_law":
+        return _sample_stretched_cutoff_counts(n, fit, rng=rng)
     sampled: Counter[int] = Counter()
     survival_cache: dict[int, float] = {}
 
@@ -140,6 +144,42 @@ def _sample_cutoff_counts(
     return {int(xmin + index): int(allocations[index]) for index in nonzero}
 
 
+def _sample_stretched_cutoff_counts(
+    n: int, fit: ModelFit, *, rng: np.random.Generator
+) -> dict[int, int]:
+    """Sample a stretched-cutoff power law from its exact discrete PMF."""
+    alpha = fit.parameters["alpha"]
+    scale = fit.parameters["scale"]
+    beta = fit.parameters["beta"]
+    xmin = fit.xmin
+    normalization = _stretched_cutoff_log_normalization(
+        alpha, scale, beta, xmin
+    )
+    chunks = []
+    total_probability = 0.0
+    lower = xmin
+    while True:
+        upper = lower + 2048
+        support = np.arange(lower, upper, dtype=float)
+        probabilities = np.exp(
+            -alpha * np.log(support / float(xmin))
+            - (support / scale) ** beta
+            - normalization
+        )
+        chunks.append(probabilities)
+        total_probability += float(probabilities.sum())
+        if 1.0 - total_probability <= 1e-13:
+            break
+        lower = upper
+        if lower - xmin > 5_000_000:
+            raise RuntimeError("stretched-cutoff sampling table is too large")
+    probabilities = np.concatenate(chunks)
+    probabilities /= probabilities.sum()
+    allocations = rng.multinomial(n, probabilities)
+    nonzero = np.flatnonzero(allocations)
+    return {int(xmin + index): int(allocations[index]) for index in nonzero}
+
+
 def _fit_model(
     histogram: Histogram,
     model: str,
@@ -161,6 +201,12 @@ def _fit_model(
         )
     if model == "exponential":
         return fit_exponential(histogram, xmin)
+    if model == "stretched_cutoff_power_law":
+        return fit_stretched_cutoff_power_law(
+            histogram,
+            xmin,
+            initial=initial.parameters if initial is not None else None,
+        )
     raise ValueError(f"unsupported model: {model}")
 
 

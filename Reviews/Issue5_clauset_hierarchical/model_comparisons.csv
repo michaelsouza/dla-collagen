@@ -1,0 +1,31 @@
+ts,first,second,log_likelihood_ratio,cluster_statistic,p_value,favored,test
+2,power_law,lognormal,-69.94376271516954,-1.2526698904295153,0.21627137984563638,lognormal,two-sided cluster-robust Vuong; fibril contributions
+2,power_law,exponential,303.20156759743423,1.6857171648057852,0.09820904254948971,power_law,two-sided cluster-robust Vuong; fibril contributions
+2,power_law,cutoff_power_law,-98.2960201567912,196.5920403135824,1.1575939444161485e-44,cutoff_power_law,descriptive Wilks reference only; boundary/nesting means the cluster-aware decision requires cutoff goodness-of-fit
+8,power_law,lognormal,-4588.349526003394,-4.832217683200616,1.3719385950628052e-05,lognormal,two-sided cluster-robust Vuong; fibril contributions
+8,power_law,exponential,336493.78709269513,17.941879101379833,3.522098404219175e-23,power_law,two-sided cluster-robust Vuong; fibril contributions
+8,power_law,cutoff_power_law,-9396.768571576104,18793.537143152207,0.0,cutoff_power_law,descriptive Wilks reference only; boundary/nesting means the cluster-aware decision requires cutoff goodness-of-fit
+16,power_law,lognormal,-661.0518300851527,-1.9967560453120117,0.05142233803828836,lognormal,two-sided cluster-robust Vuong; fibril contributions
+16,power_law,exponential,397828.3280380596,13.626271749049192,2.732856320293957e-18,power_law,two-sided cluster-robust Vuong; fibril contributions
+16,power_law,cutoff_power_law,-2040.9885452985764,4081.9770905971527,0.0,cutoff_power_law,descriptive Wilks reference only; boundary/nesting means the cluster-aware decision requires cutoff goodness-of-fit
+32,power_law,lognormal,-216.19571484198067,-1.6256992631970228,0.11042900095673726,lognormal,two-sided cluster-robust Vuong; fibril contributions
+32,power_law,exponential,187013.10363559576,16.30065500142778,1.9988049054004805e-21,power_law,two-sided cluster-robust Vuong; fibril contributions
+32,power_law,cutoff_power_law,-652.3480031683575,1304.696006336715,1.0782391670718883e-285,cutoff_power_law,descriptive Wilks reference only; boundary/nesting means the cluster-aware decision requires cutoff goodness-of-fit
+64,power_law,lognormal,-205.0112428012562,-1.3919705519361227,0.17021750551364112,lognormal,two-sided cluster-robust Vuong; fibril contributions
+64,power_law,exponential,61298.17614039064,12.96948954181977,1.8367775228187773e-17,power_law,two-sided cluster-robust Vuong; fibril contributions
+64,power_law,cutoff_power_law,-513.2240427336656,1026.448085467331,3.202430763457907e-225,cutoff_power_law,descriptive Wilks reference only; boundary/nesting means the cluster-aware decision requires cutoff goodness-of-fit
+128,power_law,lognormal,-42.53345929058032,-2.3466897254304633,0.023028111091913397,lognormal,two-sided cluster-robust Vuong; fibril contributions
+128,power_law,exponential,54919.92169615015,18.057073240996775,2.680110448294953e-23,power_law,two-sided cluster-robust Vuong; fibril contributions
+128,power_law,cutoff_power_law,-184.20142530847806,368.40285061695613,4.1681662949289085e-82,cutoff_power_law,descriptive Wilks reference only; boundary/nesting means the cluster-aware decision requires cutoff goodness-of-fit
+512,power_law,lognormal,-50.26481804343155,-1.6068796426475025,0.1145065372034452,lognormal,two-sided cluster-robust Vuong; fibril contributions
+512,power_law,exponential,46549.916568327884,15.473260359936564,1.70784567867188e-20,power_law,two-sided cluster-robust Vuong; fibril contributions
+512,power_law,cutoff_power_law,-141.7570435908856,283.5140871817712,1.2877524623806499e-63,cutoff_power_law,descriptive Wilks reference only; boundary/nesting means the cluster-aware decision requires cutoff goodness-of-fit
+1024,power_law,lognormal,-34.04706065099122,-1.6631442879943328,0.10266772113848575,lognormal,two-sided cluster-robust Vuong; fibril contributions
+1024,power_law,exponential,46439.08189236489,14.696425562087292,1.3740382820399322e-19,power_law,two-sided cluster-robust Vuong; fibril contributions
+1024,power_law,cutoff_power_law,-145.41611517162528,290.83223034325056,3.275078678179196e-65,cutoff_power_law,descriptive Wilks reference only; boundary/nesting means the cluster-aware decision requires cutoff goodness-of-fit
+4096,power_law,lognormal,-81.19177873228722,-2.0288532318379557,0.04792507786957527,lognormal,two-sided cluster-robust Vuong; fibril contributions
+4096,power_law,exponential,45289.745932699516,14.68852433838554,1.4039994462441695e-19,power_law,two-sided cluster-robust Vuong; fibril contributions
+4096,power_law,cutoff_power_law,-211.31663334253244,422.6332666850649,6.520619284516444e-94,cutoff_power_law,descriptive Wilks reference only; boundary/nesting means the cluster-aware decision requires cutoff goodness-of-fit
+8192,power_law,lognormal,-32.826961968103106,-1.779923697551266,0.0812899879452607,lognormal,two-sided cluster-robust Vuong; fibril contributions
+8192,power_law,exponential,23582.419431497365,14.709193400897721,1.3269892820013187e-19,power_law,two-sided cluster-robust Vuong; fibril contributions
+8192,power_law,cutoff_power_law,-138.36533579294337,276.73067158588674,3.8730593025994185e-62,cutoff_power_law,descriptive Wilks reference only; boundary/nesting means the cluster-aware decision requires cutoff goodness-of-fit

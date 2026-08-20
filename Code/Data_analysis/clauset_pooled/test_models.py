@@ -10,6 +10,7 @@ from .models import (
     fit_exponential,
     fit_lognormal,
     fit_power_law_model,
+    fit_stretched_cutoff_power_law,
     vuong_test,
 )
 
@@ -86,6 +87,32 @@ class CompetingModelTest(unittest.TestCase):
         fit = fit_cutoff_power_law(counts, xmin=xmin)
         self.assertAlmostEqual(fit.parameters["alpha"], alpha, delta=0.03)
         self.assertAlmostEqual(fit.parameters["lambda"], rate, delta=0.003)
+
+    def test_stretched_cutoff_recovers_synthetic_parameters(self):
+        alpha = 2.1
+        scale = 70.0
+        beta = 1.7
+        xmin = 8
+        sizes = np.arange(xmin, 1000)
+        log_weights = -alpha * np.log(sizes / xmin) - (sizes / scale) ** beta
+        probabilities = np.exp(log_weights - np.logaddexp.reduce(log_weights))
+        counts = {
+            int(size): int(count)
+            for size, count in zip(
+                sizes, np.rint(2_000_000 * probabilities).astype(int), strict=True
+            )
+            if count
+        }
+        fit = fit_stretched_cutoff_power_law(counts, xmin=xmin)
+        self.assertAlmostEqual(fit.parameters["alpha"], alpha, delta=0.04)
+        self.assertAlmostEqual(fit.parameters["scale"], scale, delta=3.0)
+        self.assertAlmostEqual(fit.parameters["beta"], beta, delta=0.12)
+        self.assertLess(fit.ks, 0.002)
+        sampled = sample_model_counts(
+            25_000, fit, rng=np.random.default_rng(9191)
+        )
+        self.assertEqual(sum(sampled.values()), 25_000)
+        self.assertGreaterEqual(min(sampled), xmin)
 
     def test_histogram_sampler_and_parametric_gof_are_reproducible(self):
         rate = 0.3
