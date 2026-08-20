@@ -14,6 +14,7 @@ from .analysis import (
     fit_block_power_law,
     fit_block_model_gof,
     load_fibril_histograms,
+    select_model_xmin,
 )
 from .diagnostics import leave_one_fibril_out, subset_stability, weighted_quantile
 from .stretched_cutoff import (
@@ -131,6 +132,23 @@ class BlockPowerLawTest(unittest.TestCase):
 
         self.assertEqual(first, second)
         self.assertGreaterEqual(first.p_value, 0.10)
+        self.assertEqual(len(first.bootstrap), 19)
+        self.assertIn("lambda", first.bootstrap[0].parameters)
+
+        selection = select_model_xmin(
+            data,
+            model="exponential",
+            minimum_xmin=2,
+            maximum_xmin=5,
+            minimum_tail=100,
+        )
+        self.assertEqual(
+            selection.selected.ks,
+            min(fit.ks for fit in selection.candidates),
+        )
+        self.assertEqual(
+            tuple(fit.xmin for fit in selection.candidates), (2, 3, 4, 5)
+        )
 
 
 class DiagnosticUtilityTest(unittest.TestCase):

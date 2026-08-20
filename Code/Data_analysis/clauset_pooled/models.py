@@ -415,7 +415,7 @@ def fit_stretched_cutoff_power_law(
         starts = [
             (
                 np.log(max(initial["alpha"] - 1.0, 0.01)),
-                np.log(initial["scale"]),
+                np.log(max(initial["scale"], float(xmin))),
                 np.log(initial["beta"]),
             )
         ]

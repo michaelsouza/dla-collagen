@@ -88,6 +88,23 @@ class BlockModelGoodnessOfFit:
     exceedances: int
     replicates: int
     centered_ks: tuple[float, ...]
+    bootstrap: tuple["BlockModelBootstrapFit", ...]
+
+
+@dataclass(frozen=True)
+class BlockModelBootstrapFit:
+    replicate: int
+    ks: float
+    centered_ks: float
+    parameters: dict[str, float]
+
+
+@dataclass(frozen=True)
+class ModelXminSelection:
+    """Condition-specific support selected by minimum KS for one model."""
+
+    selected: ModelFit
+    candidates: tuple[ModelFit, ...]
 
 
 def available_ts(database: str | Path) -> list[int]:
@@ -348,6 +365,63 @@ def _fit_named_model(
     raise ValueError(f"unsupported model: {model}")
 
 
+def select_model_xmin(
+    data: FibrilHistograms,
+    *,
+    model: str,
+    minimum_xmin: int = 1,
+    maximum_xmin: int | None = None,
+    minimum_tail: int = 1000,
+) -> ModelXminSelection:
+    """Select a separate lower cutoff by the model's minimum KS distance.
+
+    Adjacent candidates are warm-started because their empirical tails differ
+    by only one integer size.  The provisional winner is then fitted again
+    from the model's full default set of starting values, which protects the
+    selected result against a warm-start local optimum.
+    """
+    if minimum_xmin < 1:
+        raise ValueError("minimum_xmin must be positive")
+    if minimum_tail < 1:
+        raise ValueError("minimum_tail must be positive")
+    pooled = data.pooled
+    tail_counts = np.cumsum(pooled[::-1], dtype=np.int64)[::-1]
+    eligible = np.flatnonzero(tail_counts >= minimum_tail)
+    if eligible.size == 0:
+        raise ValueError(
+            f"Ts={data.ts}: no xmin candidate has {minimum_tail} tail events"
+        )
+    upper = int(eligible[-1])
+    if maximum_xmin is not None:
+        upper = min(upper, maximum_xmin)
+    if upper < minimum_xmin:
+        raise ValueError("no xmin candidate satisfies the tail constraint")
+
+    candidates = tuple(range(minimum_xmin, upper + 1))
+    anchor_index = len(candidates) // 2
+    fits_by_xmin: dict[int, ModelFit] = {}
+    anchor = _fit_named_model(pooled, model, candidates[anchor_index])
+    fits_by_xmin[anchor.xmin] = anchor
+
+    initial = anchor
+    for xmin in reversed(candidates[:anchor_index]):
+        initial = _fit_named_model(pooled, model, xmin, initial=initial)
+        fits_by_xmin[xmin] = initial
+
+    initial = anchor
+    for xmin in candidates[anchor_index + 1:]:
+        initial = _fit_named_model(pooled, model, xmin, initial=initial)
+        fits_by_xmin[xmin] = initial
+
+    fits = [fits_by_xmin[xmin] for xmin in candidates]
+    provisional = min(fits, key=lambda fit: (fit.ks, fit.xmin))
+    validated = _fit_named_model(pooled, model, provisional.xmin)
+    if validated.log_likelihood > provisional.log_likelihood + 1e-6:
+        fits[candidates.index(provisional.xmin)] = validated
+    selected = min(fits, key=lambda fit: (fit.ks, fit.xmin))
+    return ModelXminSelection(selected=selected, candidates=tuple(fits))
+
+
 def _generic_model_cdf_arrays(
     fit: ModelFit,
     maximum: int,
@@ -388,8 +462,9 @@ def fit_block_model_gof(
         )
     rng = np.random.default_rng(seed)
     centered_statistics: list[float] = []
+    bootstrap_fits: list[BlockModelBootstrapFit] = []
     exceedances = 0
-    for _ in range(replicates):
+    for replicate in range(replicates):
         indices = rng.integers(0, data.fibrils, size=data.fibrils)
         histogram = data.counts[indices].sum(axis=0, dtype=np.int64)
         fitted = _fit_named_model(
@@ -418,6 +493,14 @@ def fit_block_model_gof(
             )
         )
         centered_statistics.append(statistic)
+        bootstrap_fits.append(
+            BlockModelBootstrapFit(
+                replicate=replicate,
+                ks=fitted.ks,
+                centered_ks=statistic,
+                parameters=dict(fitted.parameters),
+            )
+        )
         exceedances += statistic >= observed.ks
     return BlockModelGoodnessOfFit(
         model=model,
@@ -427,4 +510,5 @@ def fit_block_model_gof(
         exceedances=exceedances,
         replicates=replicates,
         centered_ks=tuple(centered_statistics),
+        bootstrap=tuple(bootstrap_fits),
     )

@@ -329,11 +329,14 @@ def fit_joint_block_gof(
     xmin: int = 8,
     replicates: int = 199,
     seed: int = 161803,
+    initial: JointStretchedCutoffFit | None = None,
 ) -> JointBlockGoodnessOfFit:
     """Centered block GOF for the common-shape high-Ts model."""
     if replicates < 1:
         raise ValueError("replicates must be positive")
-    observed = fit_joint_stretched_cutoff(datasets, xmin=xmin)
+    observed = fit_joint_stretched_cutoff(
+        datasets, xmin=xmin, initial=initial
+    )
     empirical = []
     modeled = []
     maxima = []
@@ -592,11 +595,14 @@ def fit_joint_parametric_gof(
     replicates: int = 999,
     seed: int = 271828,
     workers: int = 1,
+    initial: JointStretchedCutoffFit | None = None,
 ) -> JointParametricGoodnessOfFit:
     """Literal iid parametric-bootstrap sensitivity for the joint model."""
     if replicates < 1 or workers < 1:
         raise ValueError("replicates and workers must be positive")
-    observed = fit_joint_stretched_cutoff(datasets, xmin=xmin)
+    observed = fit_joint_stretched_cutoff(
+        datasets, xmin=xmin, initial=initial
+    )
     seeds = [
         int(child.generate_state(1, dtype=np.uint64)[0])
         for child in np.random.SeedSequence(seed).spawn(replicates)

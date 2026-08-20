@@ -49,8 +49,17 @@ def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
 
 
 def plot_ccdfs(datasets, fits, path: Path) -> None:
-    figure, axes = plt.subplots(2, 2, figsize=(10, 8), constrained_layout=True)
-    for axis, data, fit in zip(axes.flat, datasets, fits, strict=True):
+    columns = 2
+    rows = math.ceil(len(datasets) / columns)
+    figure, axes = plt.subplots(
+        rows,
+        columns,
+        figsize=(10, 4 * rows),
+        constrained_layout=True,
+        squeeze=False,
+    )
+    active_axes = axes.flat[:len(datasets)]
+    for axis, data, fit in zip(active_axes, datasets, fits, strict=True):
         histogram = data.pooled
         xmin = fit.xmin
         maximum = int(np.flatnonzero(histogram)[-1])
@@ -67,6 +76,8 @@ def plot_ccdfs(datasets, fits, path: Path) -> None:
         )
         axis.set_xlabel("s")
         axis.set_ylabel(rf"$P(S\geq s\mid S\geq{xmin})$")
+    for axis in axes.flat[len(datasets):]:
+        axis.set_visible(False)
     axes.flat[0].legend(fontsize=8)
     figure.savefig(path, dpi=180)
     plt.close(figure)
@@ -164,6 +175,7 @@ def main() -> int:
             xmin=xmin,
             replicates=args.joint_replicates,
             seed=args.seed + 10_000,
+            initial=joint,
         )
     else:
         joint_gof, gof_selection = fit_joint_selected_block_gof(

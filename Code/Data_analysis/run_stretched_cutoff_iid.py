@@ -9,7 +9,10 @@ import json
 from pathlib import Path
 
 from clauset_hierarchical.analysis import load_fibril_histograms
-from clauset_hierarchical.stretched_cutoff import fit_joint_parametric_gof
+from clauset_hierarchical.stretched_cutoff import (
+    JointStretchedCutoffFit,
+    fit_joint_parametric_gof,
+)
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
@@ -22,6 +25,30 @@ DEFAULT_OUTPUT = (
     / "stretched_cutoff_high_ts" / "iid_joint_B999"
 )
 DEFAULT_TS = (512, 1024, 4096, 8192)
+
+
+def read_joint_initial(
+    path: Path,
+    ts_values: tuple[int, ...],
+    xmin: int,
+) -> JointStretchedCutoffFit:
+    with path.open(encoding="utf-8", newline="") as stream:
+        rows = list(csv.DictReader(stream))
+    if [int(row["ts"]) for row in rows] != list(ts_values):
+        raise ValueError("initial joint fit has different Ts conditions or order")
+    if any(int(row["xmin"]) != xmin for row in rows):
+        raise ValueError("initial joint fit has a different xmin")
+    first = rows[0]
+    return JointStretchedCutoffFit(
+        xmin=xmin,
+        ts_values=ts_values,
+        alpha=float(first["common_alpha"]),
+        beta=float(first["common_beta"]),
+        scales=tuple(float(row["scale"]) for row in rows),
+        log_likelihood=float(first["joint_log_likelihood"]),
+        n_tail=tuple(int(row["n_tail"]) for row in rows),
+        ks=tuple(float(row["ks"]) for row in rows),
+    )
 
 
 def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
@@ -41,6 +68,11 @@ def main() -> int:
     parser.add_argument("--replicates", type=int, default=999)
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--seed", type=int, default=271828)
+    parser.add_argument(
+        "--initial-fit",
+        type=Path,
+        help="joint_fit.csv used to initialize the observed joint optimization",
+    )
     args = parser.parse_args()
     if args.output.exists() and any(args.output.iterdir()):
         raise SystemExit(f"output directory is not empty: {args.output}")
@@ -49,12 +81,17 @@ def main() -> int:
     datasets = tuple(
         load_fibril_histograms(args.database, ts) for ts in ts_values
     )
+    initial = (
+        read_joint_initial(args.initial_fit, ts_values, args.xmin)
+        if args.initial_fit is not None else None
+    )
     result = fit_joint_parametric_gof(
         datasets,
         xmin=args.xmin,
         replicates=args.replicates,
         seed=args.seed,
         workers=args.workers,
+        initial=initial,
     )
     summary = []
     for index, ts in enumerate(ts_values):
@@ -88,6 +125,9 @@ def main() -> int:
         "replicates": args.replicates,
         "workers": args.workers,
         "seed": args.seed,
+        "initial_fit": (
+            None if args.initial_fit is None else str(args.initial_fit.resolve())
+        ),
         "database": str(args.database.resolve()),
     }
     (args.output / "analysis.json").write_text(
