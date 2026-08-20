@@ -1,0 +1,8 @@
+{
+  "pmf_directory": "/home/michael/gitrepos/dla-collagen/Data_avalanches",
+  "audit_basis": "Data_avalanches PMFs plus authoritative com_terminal provenance manifest",
+  "count_reconstruction": "denominator consensus across every PMF entry; never min(P)",
+  "terminal_rule": "com_terminal minus sem_terminal; nonnegative for every integer size",
+  "analysis_support": "s >= 2",
+  "hierarchy_warning": "Data_avalanches does not retain fibril/realization identity and cannot support hierarchical uncertainty."
+}

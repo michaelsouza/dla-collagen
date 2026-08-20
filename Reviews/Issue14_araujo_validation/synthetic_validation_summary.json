@@ -1,0 +1,44 @@
+{
+  "master_seed": 20260818,
+  "benchmark": {
+    "truth_alpha": 2.5,
+    "xmin": 1,
+    "n": 10000,
+    "estimate": 2.510197256201482,
+    "standard_error": 0.01702887733026555,
+    "z_score": 0.5988214022399693,
+    "seed": 1329369002
+  },
+  "power_law_grid": {
+    "alphas": [
+      1.5,
+      2.0,
+      2.5,
+      3.0
+    ],
+    "xmins": [
+      1,
+      2,
+      5,
+      10
+    ],
+    "sample_sizes": [
+      500,
+      2000
+    ],
+    "replicates_per_cell": 8
+  },
+  "gof_calibration": {
+    "threshold": 0.1,
+    "repetitions": 30,
+    "bootstrap_replicates": 39,
+    "false_rejections": 7,
+    "false_rejection_rate": 0.23333333333333334,
+    "exact_binomial_ci": [
+      0.09933786495801977,
+      0.4228365229782195
+    ],
+    "compatible_with_0_1": true
+  },
+  "generator_independence": "Synthetic generators invert survival functions or sample standard variates; they do not call any fitted-model probability implementation."
+}

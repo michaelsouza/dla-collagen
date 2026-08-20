@@ -1,0 +1,15 @@
+{
+  "master_seed": 20260819,
+  "bootstrap_replicates_per_fit": 49,
+  "primary_population": "sem_terminal",
+  "sensitivity_population": "com_terminal",
+  "support": "all exact integer event sizes s >= 2",
+  "models": [
+    "araujo",
+    "cutoff_power_law",
+    "lognormal",
+    "two_population"
+  ],
+  "uncertainty_warning": "Intervals and parametric goodness-of-fit operate on aggregated event counts. They do not preserve fibril/realization identity and must not be used as hierarchical uncertainty for a manuscript claim.",
+  "mechanistic_boundary": "Ara\u00fajo et al. describe backbone mass between two sites in critical 2D percolation. Here s is a connected local-damage cluster during driven 3D fibril rupture. Relative empirical fit does not transfer the percolation mechanism, exponent-fractal-dimension relation, SOC, or universality."
+}

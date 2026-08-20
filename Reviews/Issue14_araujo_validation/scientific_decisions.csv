@@ -1,0 +1,21 @@
+ts,population,araujo_decision,best_bic_model,delta_bic_araujo_from_best,araujo_gof_p_add_one,araujo_gof_ci_high
+2,sem_terminal,not supported,two_population,33489.71417210065,0.02,0.07251926366427738
+8,sem_terminal,not supported,two_population,63231.73224310577,0.02,0.07251926366427738
+16,sem_terminal,not supported,two_population,78895.4718942307,0.02,0.07251926366427738
+32,sem_terminal,not supported,two_population,84698.55289668404,0.02,0.07251926366427738
+64,sem_terminal,not supported,two_population,91376.80882821046,0.02,0.07251926366427738
+128,sem_terminal,not supported,two_population,78692.44368482195,0.02,0.07251926366427738
+512,sem_terminal,not supported,two_population,71373.8912142627,0.02,0.07251926366427738
+1024,sem_terminal,not supported,two_population,70086.29764980916,0.02,0.07251926366427738
+4096,sem_terminal,not supported,two_population,72692.99139737431,0.02,0.07251926366427738
+8192,sem_terminal,not supported,two_population,66871.86115155369,0.02,0.07251926366427738
+2,com_terminal,not supported,two_population,27132.24647248909,0.02,0.07251926366427738
+8,com_terminal,not supported,two_population,159383.31004537456,0.02,0.07251926366427738
+16,com_terminal,not supported,two_population,340732.72811671346,0.02,0.07251926366427738
+32,com_terminal,not supported,two_population,553827.1357825119,0.02,0.07251926366427738
+64,com_terminal,not supported,two_population,740845.2724460177,0.02,0.07251926366427738
+128,com_terminal,not supported,two_population,841031.3167613689,0.02,0.07251926366427738
+512,com_terminal,not supported,two_population,875085.325995246,0.02,0.07251926366427738
+1024,com_terminal,not supported,two_population,884901.5551780909,0.02,0.07251926366427738
+4096,com_terminal,not supported,two_population,870080.7199388351,0.02,0.07251926366427738
+8192,com_terminal,not supported,two_population,894572.0306289159,0.02,0.07251926366427738
