@@ -170,6 +170,10 @@ class Rod:
         self.p = 0
         self.F = 1.0
         self.sigma_mean = 0.0
+        # Cross-sections occupied by this rod.  A rod keeps its particles for as
+        # long as it is active and a particle never changes layer, so this list
+        # is constant and is derived once, on first use.
+        self.lids = None
 
     def copy(self):
         rod = Rod(self.ssd, self.rid)
@@ -183,6 +187,7 @@ class Rod:
         rod.p = self.p
         rod.F = self.F
         rod.sigma_mean = self.sigma_mean
+        rod.lids = None if self.lids is None else list(self.lids)
         return rod
         
     def add_pid(self, pid:int):
@@ -222,27 +227,42 @@ class Rod:
         self.F = F
         return self.p
 
+    def layer_ids(self):
+        if self.lids is None:
+            lids = []
+            for pid in self.pids:
+                particle = self.ssd.particles.get(pid)
+                if particle is not None:
+                    lids.append(particle.lid)
+            self.lids = lids
+        return self.lids
+
     def update_sigma(self, F: float):
-        n = np.zeros(len(self.pids))
-        for i, pid_A in enumerate(self.pids):
-            if pid_A in self.ssd.particles:
-                particle: Particle = self.ssd.particles[pid_A]
-                if particle.lid in self.ssd.layers:
-                    n[i] = self.ssd.layers[particle.lid].len()
-        
-        valid_n = n[n > 0]
-        if len(valid_n) > 0:
-            self.sigma_mean = np.mean(self.F / valid_n)
+        inverse_n = []
+        for lid in self.layer_ids():
+            layer = self.ssd.layers.get(lid)
+            if layer is not None:
+                n = layer.len()
+                if n > 0:
+                    inverse_n.append(1.0 / n)
+
+        if inverse_n:
+            self.sigma_mean = F * (sum(inverse_n) / len(inverse_n))
         else:
             self.sigma_mean = 0
         self.updated = True
+        # sigma_mean already refers to F, so the rescaling inside update_force
+        # is a no-op; update_force still supplies the coordination number N.
+        self.F = F
         return self.update_force(F)
-            
+
     def prob_break(self, F:float):
-        if self.updated:
-            return self.update_force(F)
-        else:
-            return self.update_sigma(F)
+        # sigma(i) = F / N(i) must be re-evaluated after every removal: a rod
+        # loses cross-sectional area whenever ANY molecule sharing one of its
+        # layers is removed, not only when its own neighbourhood changes.
+        # Caching on the `updated` flag missed the former case and biased
+        # sigma_mean low, so it is not used as a correctness gate.
+        return self.update_sigma(F)
     
     def to_str(self):
         s = f'"rid": {self.rid}, "pids": ['
