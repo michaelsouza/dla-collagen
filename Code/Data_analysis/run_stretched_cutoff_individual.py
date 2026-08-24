@@ -7,6 +7,7 @@ import argparse
 import csv
 import json
 import math
+import shutil
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
@@ -354,6 +355,163 @@ def plot_model_gof(results: list[ConditionResult], path: Path) -> None:
     plt.close(figure)
 
 
+def write_xmgrace_ccdfs(
+    database: Path, results: list[ConditionResult], path: Path
+) -> list[dict[str, object]]:
+    """Write alternating empirical/model CCDF sets for direct Grace import."""
+    manifest: list[dict[str, object]] = []
+    with path.open("w", encoding="utf-8") as stream:
+        stream.write("# Individual stretched-cutoff fits; xmgrace XY sets\n")
+        stream.write("# Columns: avalanche_size conditional_CCDF\n")
+        stream.write("# Sets alternate empirical data and fitted model.\n")
+        for result_index, result in enumerate(results):
+            data = load_fibril_histograms(database, result.ts)
+            histogram = data.pooled
+            fit = result.selected
+            support = np.arange(fit.xmin, result.maximum_size + 1)
+            tail = histogram[fit.xmin:result.maximum_size + 1]
+            empirical = np.cumsum(tail[::-1], dtype=np.int64)[::-1] / fit.n_tail
+            probabilities = np.exp(log_probabilities(fit, support))
+            model = 1.0 - np.concatenate(([0.0], np.cumsum(probabilities[:-1])))
+            for kind, values in (("empirical", empirical), ("model", model)):
+                set_index = len(manifest)
+                stream.write(
+                    f"# S{set_index}: Ts={result.ts}; {kind}; xmin={fit.xmin}\n"
+                )
+                for size, value in zip(support, values, strict=True):
+                    stream.write(f"{size:d} {value:.12g}\n")
+                manifest.append({
+                    "file": path.name,
+                    "set": f"S{set_index}",
+                    "ts": result.ts,
+                    "content": kind,
+                    "type": "xy",
+                    "xmin": fit.xmin,
+                    "points": support.size,
+                })
+                is_last = (
+                    result_index == len(results) - 1 and kind == "model"
+                )
+                if not is_last:
+                    stream.write("&\n")
+    return manifest
+
+
+def write_xmgrace_parameter(
+    results: list[ConditionResult], parameter: str, path: Path
+) -> None:
+    """Write one asymmetric-error xydydy set for a fitted parameter."""
+    with path.open("w", encoding="utf-8") as stream:
+        stream.write("@type xydydy\n")
+        stream.write(
+            f"# Columns: Ts {parameter} error_below error_above; 95% block CI\n"
+        )
+        for result in results:
+            goodness = next(
+                item for item in result.goodness
+                if item.model == "stretched_cutoff_power_law"
+            )
+            estimate = result.selected.parameters[parameter]
+            low, high = parameter_interval(goodness, parameter)
+            stream.write(
+                f"{result.ts:d} {estimate:.12g} "
+                f"{estimate - low:.12g} {high - estimate:.12g}\n"
+            )
+
+
+def write_xmgrace_model_gof(
+    results: list[ConditionResult], path: Path
+) -> list[dict[str, object]]:
+    """Write one XY set per competing model's block goodness-of-fit values."""
+    manifest: list[dict[str, object]] = []
+    with path.open("w", encoding="utf-8") as stream:
+        stream.write("# Block goodness-of-fit; one XY set per model\n")
+        stream.write("# Columns: Ts p_block\n")
+        for model_index, model in enumerate(MODELS):
+            stream.write(f"# S{model_index}: {model}; {MODEL_LABELS[model]}\n")
+            for result in results:
+                goodness = next(
+                    item for item in result.goodness if item.model == model
+                )
+                stream.write(f"{result.ts:d} {goodness.p_value:.12g}\n")
+            manifest.append({
+                "file": path.name,
+                "set": f"S{model_index}",
+                "ts": "all",
+                "content": model,
+                "type": "xy",
+                "xmin": "condition-specific",
+                "points": len(results),
+            })
+            if model_index != len(MODELS) - 1:
+                stream.write("&\n")
+    return manifest
+
+
+def write_pooled_counts(
+    database: Path, results: list[ConditionResult], package: Path
+) -> None:
+    """Write the complete preterminal pooled histogram for every condition."""
+    for result in results:
+        histogram = load_fibril_histograms(database, result.ts).pooled
+        total = int(histogram.sum())
+        path = package / f"pooled_counts_Ts_{result.ts}.dat"
+        with path.open("w", encoding="utf-8") as stream:
+            stream.write(f"# Ts = {result.ts}; local preterminal avalanches\n")
+            stream.write(f"# total_events = {total}\n")
+            stream.write("# Columns: s event_count probability\n")
+            for size in np.flatnonzero(histogram):
+                count = int(histogram[size])
+                stream.write(f"{size:d} {count:d} {count / total:.17g}\n")
+
+
+def write_xmgrace_package(
+    database: Path, results: list[ConditionResult], output: Path
+) -> None:
+    """Create a self-describing package of figure data for Grace users."""
+    package = output / "xmgrace_export"
+    package.mkdir(parents=True, exist_ok=False)
+    manifest = write_xmgrace_ccdfs(
+        database, results, package / "individual_ccdf_xy.dat"
+    )
+    for parameter in ("alpha", "beta", "scale"):
+        write_xmgrace_parameter(
+            results, parameter, package / f"ts_vs_{parameter}_xydydy.dat"
+        )
+    manifest.extend(
+        write_xmgrace_model_gof(results, package / "model_gof_xy.dat")
+    )
+    write_pooled_counts(database, results, package)
+    write_csv(package / "sets_manifest.csv", manifest)
+    shutil.copyfile(output / "model_fits.csv", package / "model_fits.csv")
+    (package / "README.md").write_text(
+        """# xmgrace export — individual stretched-cutoff fits
+
+These plain-text files reproduce the numerical content of the report figures.
+Comments begin with `#`; `&` separates Grace data sets.
+
+- `individual_ccdf_xy.dat`: alternating empirical and fitted conditional CCDF
+  sets. The exact S-number mapping is in `sets_manifest.csv`. Use logarithmic
+  x and y axes.
+- `ts_vs_alpha_xydydy.dat`, `ts_vs_beta_xydydy.dat`, and
+  `ts_vs_scale_xydydy.dat`: estimate with asymmetric lower/upper 95% block
+  bootstrap errors. Grace type `xydydy` is declared in each file. Use a base-2
+  logarithmic x axis.
+- `model_gof_xy.dat`: one XY set per candidate model. Add a horizontal
+  reference line at p=0.10 and use a base-2 logarithmic x axis.
+- `pooled_counts_Ts_<value>.dat`: complete preterminal pooled histogram for
+  one condition. Columns are integer size `s`, integer `event_count`, and
+  normalized `probability`. These include the body below the fitted `xmin`.
+- `model_fits.csv`: full fit table, included for labels and auditability.
+
+The CCDF is conditioned on each condition-specific selected `xmin`. Fits use
+integer, unbinned, local preterminal avalanche sizes. The model is
+`p(s) proportional to s^-alpha exp[-(s/scale)^beta]`.
+""",
+        encoding="utf-8",
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--database", type=Path, default=DEFAULT_DATABASE)
@@ -413,6 +571,7 @@ def main() -> int:
     plot_parameter(results, "beta", r"$\beta$", args.output / "ts_vs_beta.png")
     plot_parameter(results, "scale", r"$s_c$", args.output / "ts_vs_sc.png")
     plot_model_gof(results, args.output / "model_gof.png")
+    write_xmgrace_package(args.database, results, args.output)
 
     metadata = {
         "model": "p(s) proportional to s^-alpha exp[-(s/sc)^beta]",

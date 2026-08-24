@@ -116,4 +116,4 @@ parcimônia é condicionada aos suportes escolhidos pelo próprio corte estendid
 - [réplicas por blocos](../Data_avalanches_all_fibrils/reproduction/stretched_cutoff_individual_all_ts/block_bootstrap.csv);
 - [comparações relativas](../Data_avalanches_all_fibrils/reproduction/stretched_cutoff_individual_all_ts/model_comparisons.csv);
 - [metadados](../Data_avalanches_all_fibrils/reproduction/stretched_cutoff_individual_all_ts/analysis.json).
-
+- [pacote de dados para xmgrace](xmgrace_export/README.md).
