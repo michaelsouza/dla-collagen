@@ -89,6 +89,33 @@ Cada tarefa pega uma fatia contígua do manifesto e a roda com `xargs -P`
 Ajuste com `CAMPAIGN_TASKS` e `CAMPAIGN_CPUS`. Para um lote pequeno, poucas
 tarefas pequenas começam antes e consomem menos da alocação do grupo.
 
+## Exclusividade e memória
+
+A campanha **não** pede `--exclusive`, e não precisa. Cada item de trabalho — uma
+fibrila, ou a fratura de uma fibrila num dado $m$ — é de núcleo único e
+independente: não há MPI, nem memória compartilhada entre itens, nem
+comunicação. A escrita vai para `$DLA_TMP` node-local, então nem a I/O é
+disputada. Nada se ganha em ter o nó só para si, e numa partição sem nós
+ociosos a exclusividade só serve para ficar na fila.
+
+Como consequência, é preciso **pedir memória explicitamente**: sem
+`--exclusive`, o job recebe só o que pede. O `DefMemPerCPU` da `cpu_amd` é
+7800 MB, então uma tarefa de 48 núcleos reservaria 374 GB por omissão. O uso
+medido é bem menor:
+
+| Medição | Valor |
+|:--|:--|
+| MaxRSS, tarefa de 24 processos de geração | 0,56 GB |
+| Por processo | ~23 MB |
+| Reservado por omissão (24 núcleos) | 187 GB |
+
+Reservar 334× o necessário não é gratuito num cluster compartilhado: um nó de
+1,5 TB comportaria só quatro tarefas de memória padrão, de modo que a **memória,
+e não os núcleos**, vira o limite de empacotamento, e outros usuários ficam sem
+núcleos que estão ociosos. O padrão é `--mem-per-cpu=2G`, ajustável por
+`CAMPAIGN_MEM_PER_CPU`, com margem larga sobre as poucas centenas de MB por
+processo do protocolo de fratura.
+
 ## Retomada
 
 Reenvie o mesmo array. Ambos os workers são idempotentes:

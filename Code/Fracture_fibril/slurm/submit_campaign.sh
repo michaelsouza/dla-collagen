@@ -32,6 +32,15 @@ manifest="$(campaign_root)/manifest_${kind}.tsv"
 # queue behind everyone else.
 tasks="${CAMPAIGN_TASKS:-40}"
 cpus="${CAMPAIGN_CPUS:-48}"
+
+# Ask for the memory we actually use.  DefMemPerCPU on cpu_amd is 7800 MB, so a
+# 48-core task would silently reserve 374 GB; measured MaxRSS for a 24-process
+# generation task is 0.56 GB, about 23 MB per process.  Over-reserving is not
+# free on a shared cluster: a 1.5 TB node would fit only four default-memory
+# tasks, so memory, not cores, becomes the packing constraint and other users
+# are locked out of cores that sit idle.  2 GB per core leaves a wide margin
+# over the fracture protocol's few hundred MB per process.
+mem_per_cpu="${CAMPAIGN_MEM_PER_CPU:-2G}"
 concurrent="${CAMPAIGN_CONCURRENT:-$tasks}"
 if ((concurrent > 100)); then
     echo "QOS allows at most 100 running jobs; capping." >&2
@@ -61,6 +70,7 @@ echo "submitted .. $in_queue in queue, limit $limit"
 echo "items ...... $(wc -l < "$manifest")"
 echo "array ...... 0-$((tasks - 1))%${concurrent}"
 echo "cpus/task .. $cpus"
+echo "mem/cpu .... $mem_per_cpu"
 echo "account .... $DLA_ACCOUNT"
 echo "partition .. ${DLA_PARTITION}"
 
@@ -69,6 +79,7 @@ echo "partition .. ${DLA_PARTITION}"
 if ! sbatch --test-only \
         --account="$DLA_ACCOUNT" --partition="$DLA_PARTITION" \
         --array="0-$((tasks - 1))%${concurrent}" --cpus-per-task="$cpus" \
+        --mem-per-cpu="$mem_per_cpu" \
         "$@" "$here/campaign.sbatch" 2>&1 | tee /dev/stderr | grep -q "to start at"; then
     echo "dry run rejected; not submitting" >&2
     exit 1
@@ -79,6 +90,7 @@ sbatch \
     --partition="$DLA_PARTITION" \
     --array="0-$((tasks - 1))%${concurrent}" \
     --cpus-per-task="$cpus" \
+    --mem-per-cpu="$mem_per_cpu" \
     --export=ALL,CAMPAIGN_KIND="$kind",DLA_REPO="$repo" \
     "$@" \
     "$here/campaign.sbatch"
