@@ -26,8 +26,8 @@ Production runs execute on SDumont2 (LNCC), account `solverbrict`, partition `cp
 - Move code between the laptop and the cluster through git only; never copy a working tree.
 - Activate the environment with `source Code/cluster/sdumont2nd/env.sh` at the start of every session and at the top of every job script. Do not build a new conda environment: the `anaconda3/2024.10` module already covers `requirements.txt`.
 - Never run a simulation, benchmark, or full test suite on the login node.
-- Write per-task scratch and databases to node-local storage (`$DLA_SCRATCH`), then copy the finished file to Lustre and `mv` it into place, so an interrupted job never publishes a partial result.
-- Write production results to the `solverbrict` project area (`$DLA_PROJECT`, 6 TB group quota), never to `$HOME`, which has a 100 GB quota sized only for the clone and the venv. `$SCRATCH` is an alias for `$HOME` and buys no extra space.
+- Write per-task scratch and databases to node-local storage (`$DLA_TMP`), then copy the finished file to Lustre and `mv` it into place, so an interrupted job never publishes a partial result.
+- Write production results to `$DLA_PROJECT` (`~/scratch/dla-collagen`, in the 6 TB `solverbrict` project area), never to `$HOME`, whose 100 GB quota fits only the clone and the venv. The project quota is shared with other users; check it before a large batch. `$SCRATCH` is an alias for `$HOME` and buys no extra space.
 - `SLURM_TMPDIR` does not exist on SDumont2; fall back through `${SLURM_TMPDIR:-${TMPDIR:-/tmp}}`.
 - Respect the QOS caps: 100 running jobs and 300 submitted jobs per user. Throttle job arrays to at most `%100`.
 - Record in the relevant ticket which cluster, partition, and job ID produced any result that enters the manuscript.

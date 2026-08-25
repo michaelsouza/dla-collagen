@@ -72,7 +72,7 @@ source Code/cluster/sdumont2nd/env.sh
 
 `env.sh` loads the module, activates the venv, pins all BLAS/OpenMP thread
 counts to 1, sets `MPLBACKEND=Agg`, and exports `DLA_ACCOUNT`,
-`DLA_PARTITION`, `DLA_PARTITION_DEV`, `DLA_REPO`, and `DLA_SCRATCH`. It is
+`DLA_PARTITION`, `DLA_PARTITION_DEV`, `DLA_REPO`, and `DLA_TMP`. It is
 idempotent and safe to source more than once.
 
 numpy on this module is linked against MKL, running on AMD hardware. Since
@@ -103,7 +103,7 @@ launching a batch:
 
 ```bash
 lfs quota -h -p "$(id -u)" /petrobr        # personal home quota
-lfs quota -h -g solverbrict /petrobr       # project area quota
+lfs quota -h -g solverbrict /petrobr       # project area (~/scratch)
 ```
 
 **Home** (`$HOME` = `/petrobr/parceirosbr/home/<user>`) has a **100 GB**
@@ -112,13 +112,23 @@ sized for simulation output.
 
 **Project area** (`/petrobr/parceirosbr/solverbrict`) has a **6 TB** group
 quota, shared with the other `solverbrict` users and roughly 2.6 TB full as of
-August 2026. It is group-writable (setgid, group `solverbrict`) and is where
-production results belong. Work under a directory named after your user, and
-remember that the quota is shared: announce and clean up large batches.
+August 2026. It is group-writable and setgid, so files created there inherit
+the `solverbrict` group. This is where production results belong.
 
-Note that `$SCRATCH` is set to `$HOME` and buys no extra space. The 3 PB
-`/scratch` filesystem (and `/prj`, a symlink into it) belongs to other
-projects and denies us write access — do not plan around it.
+`~/scratch` is a symlink to the personal directory inside that area, and
+`env.sh` exports its resolved path as `$DLA_PROJECT`
+(`.../solverbrict/<user>/dla-collagen`). Two consequences worth keeping in
+mind: anything written through `~/scratch` counts against the **group** quota,
+not the home quota, so `lfs quota -g solverbrict /petrobr` is the number to
+watch; and any tool that copies `$HOME` while following symlinks would try to
+pull the whole project area with it.
+
+The quota is shared with other people. Check it before a large batch and clean
+up afterwards.
+
+Two things that look like extra space but are not: `$SCRATCH` is merely an
+alias for `$HOME`, and the 3 PB `/scratch` filesystem (with `/prj`, a symlink
+into it) belongs to other projects and denies us write access.
 
 Compute nodes have node-local storage: `/tmp` (492 GB, 455 GB free) and
 `/dev/shm` (756 GB). Both are wiped when the job ends.
@@ -126,10 +136,10 @@ Compute nodes have node-local storage: `/tmp` (492 GB, 455 GB free) and
 **`SLURM_TMPDIR` is not set on this cluster.** `TMPDIR` is, and points at the
 node-local `/tmp`. Job scripts must fall back through both:
 `${SLURM_TMPDIR:-${TMPDIR:-/tmp}}`, which is what `env.sh` exports as
-`DLA_SCRATCH`.
+`DLA_TMP`.
 
 Simulations are chatty on I/O. Each task should write its scratch files and its
-database to `$DLA_SCRATCH` on the node, then copy the finished result to the
+database to `$DLA_TMP` on the node, then copy the finished result to the
 project area and `mv` it into place, so a killed job never publishes a partial
 file. `run_array.sbatch` already follows this pattern.
 

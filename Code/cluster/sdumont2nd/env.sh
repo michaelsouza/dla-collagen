@@ -49,7 +49,18 @@ export DLA_REPO="${DLA_REPO:-$HOME/gitrepos/dla-collagen}"
 
 # $HOME carries a 100 GB quota and is not sized for simulation output. The
 # solverbrict project area has a 6 TB group quota; production results go there.
-export DLA_PROJECT="${DLA_PROJECT:-/petrobr/parceirosbr/solverbrict/$USER/dla-collagen}"
+# ~/scratch is a symlink into it, so resolve to the real path: a job that
+# stores an unresolved path in a manifest breaks if the link is ever moved.
+if [ -z "${DLA_PROJECT:-}" ]; then
+    if [ -d "$HOME/scratch" ]; then
+        DLA_PROJECT="$(readlink -f "$HOME/scratch")/dla-collagen"
+    else
+        DLA_PROJECT="/petrobr/parceirosbr/solverbrict/$USER/dla-collagen"
+    fi
+fi
+export DLA_PROJECT
 
-# SLURM_TMPDIR does not exist on SDumont2; TMPDIR points at node-local /tmp.
-export DLA_SCRATCH="${SLURM_TMPDIR:-${TMPDIR:-/tmp}}"
+# Node-local, wiped when the job ends -- not to be confused with ~/scratch,
+# which is durable project storage. SLURM_TMPDIR does not exist on SDumont2;
+# TMPDIR does, and points at node-local /tmp.
+export DLA_TMP="${SLURM_TMPDIR:-${TMPDIR:-/tmp}}"
