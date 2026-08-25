@@ -30,8 +30,33 @@ manifest="$(campaign_root)/manifest_${kind}.tsv"
 # task backfills.  Forty tasks of 48 cores reach the CPU ceiling while each one
 # fits in the spare cores of a partially used node; ten exclusive nodes would
 # queue behind everyone else.
-tasks="${CAMPAIGN_TASKS:-40}"
+max_tasks="${CAMPAIGN_TASKS:-40}"
 cpus="${CAMPAIGN_CPUS:-48}"
+
+# Size the array to the work that is LEFT, not to the manifest.
+#
+# The shared claim queue means any surviving task can reach any item, so a
+# round only needs enough tasks to keep its cores busy.  Without this, the last
+# round of a stage asks for the full array to finish a handful of items -- 960
+# cores were once requested for a single fibril.  On an allocation shared with
+# other people that is not merely wasteful, it is queue-hogging.
+#
+# One task per cpus-worth of remaining items, clamped to [1, max_tasks].
+# check_campaign.sh exits 1 when items are outstanding, which is the normal
+# case here.  Under `set -o pipefail` that status propagates out of the
+# pipeline and `set -e` then kills the assignment, so the failure has to be
+# swallowed explicitly.
+remaining="$( { "$here/check_campaign.sh" "$kind" || true; } 2>/dev/null \
+             | awk '/^missing|^short/ {sum += $3} END {print sum + 0}')"
+if [[ -z "$remaining" || "$remaining" -le 0 ]]; then
+    remaining="$(wc -l < "$manifest")"
+fi
+# NOTE: never `(( expr )) && x=y` under set -e.  A false arithmetic test
+# returns exit status 1 and aborts the script -- the same trap that silently
+# broke check_campaign.sh's counters.  Use if/then.
+tasks=$(( (remaining + cpus - 1) / cpus ))
+if (( tasks < 1 )); then tasks=1; fi
+if (( tasks > max_tasks )); then tasks=$max_tasks; fi
 
 # Ask for the memory we actually use.  DefMemPerCPU on cpu_amd is 7800 MB, so a
 # 48-core task would silently reserve 374 GB; measured MaxRSS for a 24-process
@@ -77,7 +102,7 @@ fi
 
 echo "stage ...... $kind"
 echo "submitted .. $in_queue in queue, limit $limit"
-echo "items ...... $(wc -l < "$manifest")"
+echo "items ...... $(wc -l < "$manifest") total, $remaining outstanding"
 echo "array ...... 0-$((tasks - 1))%${concurrent}"
 echo "cpus/task .. $cpus"
 echo "mem/cpu .... $mem_per_cpu"
