@@ -3,7 +3,7 @@
 **Manuscrito:** ER12738, *Scaling behaviors in simulated collagen fibrils*
 **Spec de revisão:** [issue #1](https://github.com/michaelsouza/dla-collagen/issues/1)
 **Artefatos governados:** `Paper/paper_PRE.tex`, `Carta_Resposta/Response_to_Referees.tex`
-**Última atualização:** 2026-08-24
+**Última atualização:** 2026-08-25 (consolidação, ver §13)
 
 ## 1. Objetivo
 
@@ -27,204 +27,171 @@ reabrir A obriga a reabrir B".
 
 ## 2. Nós de decisão
 
-| Nó | Decisão | Críticas atendidas | Issue | Estado |
+Estado em 2026-08-25. A adoção do protocolo fiber-bundle de desordem congelada
+(§12) reabriu nós que estavam fechados e **dissolveu** outros: quando a
+resposta deixa de ser um argumento e passa a ser uma propriedade estrutural do
+modelo, o nó não é "fechado", é retirado da mesa.
+
+| Nó | Decisão | Críticas | Issue | Estado |
 |:--|:--|:--|:--|:--|
-| **N0** | Fidelidade da implementação às Eqs. (2)–(4): $\sigma_M$ deve seguir as ocupações correntes das seções | R2-1 (mecanismo), e a montante de toda a mecânica | #3/#5 | **código corrigido 2026-08-24; recomputação pendente** |
-| **N1** | Interpretação física de $T_s$ como parâmetro cinético efetivo, sem calibração experimental; remoção das extrapolações evolutivas e de doença | R1-1 | #9 | revisado 2026-08-24 (ver §9) |
-| **N2** | Protocolo de carga: varredura de dano, critério de parada por varredura sem remoção, $\Delta F=0{,}5$; $P_R$ é probabilidade por avaliação, não taxa temporal | R2-1 | #3 | fechado |
-| **N3** | Leitura mecanicista das Eqs. (2)–(4): carga uniforme dentro da seção + resistência local dependente de $K$; o modelo não é LLS nem ELS convencional | R2-2 | #6 | texto escrito, issue aberta |
-| **N4** | Remoção da terminologia SOC e adoção de "avalanches em fratura desordenada dirigida" | R1-2 (parte terminológica), R2-4 | — | fechado |
-| **N5** | Escopo estatístico: $m=2$ fixo, 50 geometrias por $T_s$, 1000 realizações por geometria; recusa explícita de varredura em $m$ | R1-3 (sensibilidade a $m$) | #5 | decisão de escopo tomada |
-| **N6** | Limitações de coarse-graining: razão de aspecto 18:1, ausência de difusão rotacional e de deformação elástica | R1-6 | #10 | fechado |
-| **N7** | Validação do $D_f$ 2D contra quatro descritores do backbone 3D, via correlação de Spearman | R1-4 | #7 | quase fechado |
-| **N8** | Definição operacional de avalanche (por passo de força × por aglomerado conexo) | R2-3, R2-2 | #4 | **decisão registrada diverge dos dados analisados** |
-| **N9** | Interpretação de $\alpha$ e $\beta$ na função fenomenológica $f(F)$, Eq. (5) | R1-7 | #10 | fechado |
-| **N10** | Reanálise estatística: família da cauda, seleção de $s_{\min}$, estimativas, incertezas e testes de ajuste | R1-2, R2-4 | #5 | **aberto — portão principal** |
-| **N11** | Interpretação do expoente frente ao valor ELS $5/2$ e recusa de atribuição de classe de universalidade | R1-3 | #6 | aberto |
-| **N12** | Estatuto da relação $D_f \leftrightarrow$ estatística de ruptura: associação empírica, sem causalidade | R1-5 | #8 | aberto |
-| **N13** | Revisão integral e consistente do manuscrito | todas | #11 | aberto |
-| **N14** | Carta ponto a ponto verificada contra o manuscrito | todas | #12 | aberto |
+| **N0** | Fidelidade da implementação às Eqs. (2)–(4) | a montante de toda a mecânica | #3/#5 | código corrigido (`a834c53`); recomputação sob o protocolo novo |
+| **N15** | Validação do gerador otimizado `fast_dla2` ($D_f$ contra o publicado, em escala de campanha) | — (infraestrutura) | #2 | **aberto — porta de entrada dos dados** |
+| **N16** | Campanha de dados sob o protocolo quenched | — (infraestrutura) | #5 | bloqueado por N15 |
+| **N1** | Interpretação física de $T_s$; remoção das extrapolações de doença | R1-1 | #9 | fechado (§9) |
+| **N2** | Protocolo de carga | R2-1 | #3 | **reaberto** — protocolo substituído (§12); falta escrever o texto |
+| **N3** | Leitura mecanicista: carga uniforme na seção + resistência local em $K$ | R2-2 | #6 | texto escrito, sobrevive ao novo protocolo |
+| **N4** | Remoção da terminologia SOC | R1-2, R2-4 | — | fechado |
+| **N5** | Escopo estatístico e sensibilidade ao módulo de Weibull $m$ | R1-3 | #5 | **reaberto** (§11) — mas agora barato de atender |
+| **N6** | Limitações de coarse-graining (18:1) | R1-6 | #10 | fechado |
+| **N7** | $D_f$ 2D contra descritores do backbone 3D | R1-4 | #7 | aberto — três pendências (I6, perímetro, $D_f$ do gerador novo) |
+| **N8** | Definição operacional de avalanche | R2-3, R2-2 | #4 | **dissolvido** — a cascata determinística é a avalanche canônica |
+| **N9** | $\alpha$ e $\beta$ da função fenomenológica $f(F)$, Eq. (5) | R1-7 | #10 | **reaberto** — $\varphi(F)$ é específica do protocolo |
+| **N10** | Reanálise estatística da cauda | R1-2, R2-4 | #5 | aberto — aguarda N16 |
+| **N11** | Interpretação do expoente frente a $5/2$ | R1-3 | #6 | aberto — aguarda N10 |
+| **N12** | Estatuto da relação $D_f \leftrightarrow$ estatística de ruptura | R1-5 | #8 | aberto — aguarda N7 e N10 |
+| **N13** | Revisão integral do manuscrito | todas | #11 | aberto |
+| **N14** | Carta ponto a ponto verificada | todas | #12 | aberto |
+
+**Por que N9 reabriu.** A curva $\varphi(F)$ ajustada pela Eq. (5) é produzida
+pelo protocolo. Sob a dinâmica quenched a escala de força muda por uma ordem de
+grandeza (piloto: $F_{rup}\simeq1150$ em $T_s=128$, contra $\simeq150$ no
+protocolo recozido corrigido), então $\alpha$ e $\beta$ precisam ser
+reajustados e a própria forma funcional pode não se sustentar.
+
+**Por que N5 ficou mais fácil.** No protocolo quenched, $m$ é o módulo de
+Weibull da distribuição de limiares — o parâmetro canônico de fiber-bundle.
+Varrer $m$ deixa de ser um pedido incômodo e vira o eixo natural do modelo,
+que é exatamente o que Parkinson1997 fez.
 
 ## 3. Grafo
 
 ```mermaid
 graph TD
+  N0["N0 · Fidelidade Eqs. (2)-(4)<br/>corrigido"]
+  N15["N15 · Validação do gerador<br/>Df vs publicado"]
+  N16["N16 · Campanha quenched<br/>dados novos"]
   N1["N1 · Ts físico<br/>R1-1"]
-  N2["N2 · Protocolo de carga<br/>R2-1"]
-  N3["N3 · Leitura do load sharing<br/>R2-2"]
+  N2["N2 · Protocolo de carga<br/>R2-1 · reaberto"]
+  N3["N3 · Load sharing<br/>R2-2"]
   N4["N4 · Sai SOC<br/>R1-2t / R2-4"]
-  N5["N5 · Escopo: m=2, 50 fibrilas<br/>R1-3b"]
+  N5["N5 · Sensibilidade a m<br/>R1-3b · reaberto"]
   N6["N6 · Coarse-graining 18:1<br/>R1-6"]
-  N7["N7 · Df 2D vs backbone 3D<br/>R1-4"]
-  N8["N8 · Definição de avalanche<br/>R2-3"]
-  N9["N9 · alpha, beta de f(F)<br/>R1-7"]
+  N7["N7 · Df vs backbone 3D<br/>R1-4"]
+  N8["N8 · Def. de avalanche<br/>R2-3 · dissolvido"]
+  N9["N9 · alpha, beta de f(F)<br/>R1-7 · reaberto"]
   N10["N10 · Reanálise estatística<br/>R1-2 / R2-4"]
   N11["N11 · Expoente vs 5/2<br/>R1-3"]
   N12["N12 · Df ↔ ruptura<br/>R1-5"]
   N13["N13 · Manuscrito"]
   N14["N14 · Carta"]
 
-  N0["N0 · Fidelidade Eqs. (2)-(4)<br/>sigma corrente"]
-  N0 --> N2
-  N0 --> N9
-  N0 --> N10
-  N2 --> N8
-  N3 --> N8
-  N2 --> N9
+  N0 --> N16
+  N2 --> N16
+  N15 --> N16
+  N5 --> N16
+  N16 --> N9
+  N16 --> N10
   N7 --> N9
-  N8 --> N10
-  N5 --> N10
   N4 --> N10
   N10 --> N11
   N3 --> N11
   N7 --> N12
   N10 --> N12
   N11 --> N12
-  N10 -.simbolo beta.-> N9
   N1 --> N13
   N6 --> N13
+  N2 --> N13
   N9 --> N13
   N11 --> N13
   N12 --> N13
   N13 --> N14
+  N8 -. dissolvido pelo protocolo .-> N16
 
   classDef fechado fill:#d7f0d7,stroke:#2e7d32,color:#000;
   classDef aberto fill:#ffe0b2,stroke:#e65100,color:#000;
   classDef critico fill:#ffcdd2,stroke:#b71c1c,color:#000;
-  class N1,N2,N4,N5,N6,N9 fechado;
-  class N3,N7,N11,N12,N13,N14 aberto;
-  class N8,N10,N0 critico;
+  classDef morto fill:#eeeeee,stroke:#9e9e9e,color:#616161;
+  class N0,N1,N4,N6,N3 fechado;
+  class N2,N5,N7,N9,N10,N11,N12,N13,N14 aberto;
+  class N15,N16 critico;
+  class N8 morto;
 ```
 
 ## 4. Arestas e por que cada uma é um portão real
 
 | Aresta | Justificativa |
 |:--|:--|
-| **N2 → N8** | A avalanche "por passo de força" só existe porque o protocolo define um passo de força terminado pela primeira varredura sem remoção. Alterar o critério de parada redefine as fronteiras dos eventos e reamostra toda a distribuição. |
-| **N3 → N8** | O argumento de R2-3 é condicional: *"como a carga é global na seção, não há concentração de tensão em torno das falhas, logo aglomerados conexos não se justificam"*. Se N3 concluísse que existe algum mecanismo de localização, a definição por aglomerado voltaria a ser defensável. |
-| **N2 → N9** | A curva $\varphi(F)$ ajustada pela Eq. (5) é produzida pelo protocolo de carga. Mudar o critério de parada muda $\varphi$ em cada $F$ e, portanto, $\alpha$ e $\beta$. |
-| **N7 → N9** | A interpretação de $\alpha$ e $\beta$ na carta e no manuscrito é escrita em termos de $\langle N\rangle$ e $\langle K\rangle$ ("áreas maiores diluem tensões, logo $\alpha$ cai"). Se N7 mudasse o sinal ou a força dessas associações, a leitura de $\alpha$ e $\beta$ cairia junto. |
-| **N8 → N10** | Portão mais forte do grafo. A amostra estatística *é* a definição de avalanche. Trocar entre aglomerado conexo e passo de força muda o número de eventos, a escala típica, $s_{\min}$, o expoente e a família de cauda selecionada. Nenhum resultado de N10 sobrevive a uma mudança em N8. |
-| **N5 → N10** | Tamanho de ensemble e $m$ fixam a variância e o alcance da cauda; a recusa de varredura em $m$ é o que permite reportar um único conjunto de parâmetros por $T_s$. |
-| **N4 → N10** | A retirada de SOC define o que N10 precisa demonstrar: uma cauda com corte finito, e não ausência de escala característica. Se SOC voltasse à mesa, o alvo estatístico seria outro. |
-| **N10 → N11** | O expoente comparado (ou não) a $5/2$ é o parâmetro estimado em N10, e o argumento central da resposta a R1-3 é que ele é parâmetro de uma família com corte, não expoente assintótico puro. Depende da família escolhida em N10. |
-| **N3 → N11** | A recusa de atribuir classe de universalidade repousa na leitura mecanicista de N3, não no valor numérico. As duas justificativas precisam concordar. |
-| **N7 → N12** | O lado estrutural da associação de R1-5 é exatamente o resultado de N7. |
-| **N10, N11 → N12** | O lado mecânico da associação é o platô dos parâmetros de cauda. Se N10 não produzir platô para $T_s\geq512$, a afirmação central de R1-5 ("$D_f$ e a estatística saturam juntas") perde o objeto. |
-| **N10 ⇢ N9** (aresta fraca, editorial) | Se N10 adotar o corte esticado $\exp[-(s/s_c)^\beta]$, o símbolo $\beta$ colide com o $\beta$ da Eq. (5) (N9). Um dos dois precisa ser renomeado, e a renomeação atravessa manuscrito, legendas e carta. |
-| **N13 → N14** | A carta cita trechos literais do manuscrito. A carta é o último nó por construção. |
+| **N0 → N16** | O $\sigma$ corrigido muda força de ruptura (−13% a −28%) e número de avalanches (−19% a −32%). Gerar dados com a versão antiga produziria números que não correspondem às Eqs. (2)–(3). |
+| **N15 → N16** | Se o gerador otimizado não reproduzir o $D_f$ publicado, as fibrilas da campanha não são as do artigo e toda a parte estrutural cai junto. É a porta de entrada. |
+| **N2 → N16** | O protocolo define o que é gerado. A troca para dinâmica quenched é o que dá sentido à campanha. |
+| **N5 → N16** | A varredura em $m$, se aceita, multiplica a campanha: $m$ passa a ser eixo de produção, não pós-processamento. Decidir depois obriga a re-rodar. |
+| **N16 → N10** | A amostra estatística *é* a campanha. Nenhum resultado de N10 sobrevive a uma mudança nos dados. |
+| **N16 → N9** | $\varphi(F)$ vem da campanha; $\alpha$ e $\beta$ são ajustes sobre ela. |
+| **N7 → N9** | A leitura de $\alpha,\beta$ é escrita em termos de $\langle N\rangle$ e $\langle K\rangle$. Se N7 mudar sinal ou força dessas associações, a leitura cai junto. |
+| **N4 → N10** | A retirada de SOC define o alvo estatístico: cauda com corte finito, não ausência de escala. |
+| **N10 → N11** | O expoente comparado (ou não) a $5/2$ é o parâmetro estimado em N10. |
+| **N3 → N11** | A recusa de atribuir classe de universalidade repousa na leitura mecanicista, não no valor numérico. As duas justificativas precisam concordar. |
+| **N7 → N12** | O lado estrutural da associação de R1-5 é o resultado de N7. |
+| **N10, N11 → N12** | O lado mecânico é o platô dos parâmetros de cauda. Sem platô, a afirmação de R1-5 perde o objeto. |
+| **N2 → N13** | O texto do protocolo no manuscrito precisa descrever a dinâmica nova, incluindo Eq. (4) reinterpretada como distribuição de limiares. |
+| **N13 → N14** | A carta cita trechos literais do manuscrito. É o último nó por construção. |
 
-**Nós-raiz seguros para trabalhar em paralelo agora:** N1, N6 (fechados), e o
-lado puramente estrutural de N7. Nada em N10/N11/N12 deve ser redigido em
-forma final antes de N8 e N10 estarem fechados.
+**Arestas extintas.** `N2 → N8`, `N3 → N8`, `N8 → N10` e a aresta editorial
+`N10 ⇢ N9` (colisão do símbolo $\beta$) morreram com N8 e com o abandono da
+família de corte esticado do protocolo antigo. A colisão de $\beta$ pode
+ressurgir se a nova cauda também exigir um expoente de corte — verificar em
+N10.
 
 ## 5. Ordem topológica de trabalho
 
-1. **Onda A (fechada):** N1, N2, N4, N5, N6.
-2. **Onda B:** N3, N7 — fechar N7 exige a fibrila faltante em $T_s=16$ e a
-   regeneração da Fig. 7.
-3. **Onda C:** N8 — decidir formalmente qual definição de avalanche é a
-   primária e **regerar os dados sob essa definição**.
-4. **Onda D:** N10 — refazer/consolidar a estatística sobre a amostra de N8.
-5. **Onda E:** N9 (revisão de símbolo), N11.
-6. **Onda F:** N12.
-7. **Onda G:** N13, depois N14.
+1. **Fechado:** N0, N1, N4, N6; N3 no essencial.
+2. **Agora, em paralelo:**
+   - **N15** — validar $D_f$ do gerador otimizado contra os valores publicados
+     ($D_f=1{,}708$ em $T_s=2$ até $1{,}963$ em $T_s=8192$);
+   - **N7** — resolver I6 (qual tabela de Spearman é a corrente) e regenerar a
+     Fig. 7;
+   - **N5** — decidir a varredura em $m$ **antes** da campanha.
+3. **N16** — campanha: geração (~1,5 h em 32 núcleos) e fratura quenched.
+4. **N10** — reanálise estatística sobre os dados novos (substitui a Issue #5).
+5. **N9, N11** — refit de $\varphi(F)$; interpretação do expoente.
+6. **N12** — estatuto da associação.
+7. **N2** — redigir o protocolo novo no manuscrito (pode começar antes; só o
+   texto dos *números* espera).
+8. **N13**, depois **N14**.
 
 ## 6. Conflitos de artefato compartilhado
 
 Trechos escritos por mais de um nó. Editar por um nó sem checar o outro é a
-principal fonte de retrabalho silencioso.
+principal fonte de retrabalho silencioso. Linhas conferidas em 2026-08-25;
+reconferir após qualquer edição do manuscrito.
 
 | Trecho | Nós que escrevem | Risco |
 |:--|:--|:--|
-| Parágrafo pós-Eq. (4) do manuscrito (linha 228) | N3, N8 | A leitura de load sharing e a justificativa da definição de avalanche estão no mesmo bloco |
-| Parágrafo de definição de avalanche (linha 310) | N8, N10 | Definição e método de estimativa juntos |
-| Eq. (6) e parágrafo seguinte | N10, N11 | Forma funcional e sua interpretação |
-| Símbolo $\beta$ | N9, N10 | Colisão de notação entre Eq. (5) e o corte esticado |
-| Bloco de valores $\gamma$, $s_c$ (linhas ~325–335 + legenda da Fig. 9) | N10, N11, N12 | Os mesmos números aparecem em três lugares no manuscrito e em dois na carta |
-| Resposta R1-2 da carta | N4, N8, N10 | Terminologia, definição e estatística no mesmo ponto |
-| Conclusão do manuscrito | N1, N11, N12 | Escopo de $T_s$, escopo do expoente e escopo da associação |
+| Parágrafo pós-Eq. (4) (`paper_PRE.tex:230`) | N2, N3 | A leitura de load sharing e a descrição da regra de falha estão no mesmo bloco; a Eq. (4) passa a ser distribuição de limiares |
+| Parágrafo de definição de avalanche (`:312`) | N2, N10 | Definição da cascata e método de estimativa juntos |
+| Eq. (6) e parágrafo seguinte | N10, N11 | Forma funcional da cauda e sua interpretação |
+| Bloco de valores $\gamma$, $s_c$ (`:331` + legenda da Fig. 9 em `:341`) | N10, N11, N12 | Os mesmos números aparecem em três pontos do manuscrito e dois da carta |
+| Eq. (5) e Fig. 8 | N2, N9 | $\varphi(F)$ e seus $\alpha,\beta$ dependem do protocolo |
+| Símbolo $\beta$ | N9, N10 | Colisão latente entre Eq. (5) e um eventual expoente de corte |
+| Resposta R1-2 da carta | N4, N2, N10 | Terminologia, protocolo e estatística no mesmo ponto |
+| Conclusão do manuscrito | N1, N11, N12 | Escopo de $T_s$, do expoente e da associação |
 
-## 7. Inconsistências já presentes (dívida da ordem invertida)
+## 7. Inconsistências: estado em 2026-08-25
 
-Estas divergências existem hoje entre `Paper/paper_PRE.tex`,
-`Carta_Resposta/Response_to_Referees.tex` e os relatórios em `Reviews/`.
-Todas decorrem de N10/N11 terem sido redigidos antes de N8 estar realmente
-fechado.
-
-### I1 — A definição de avalanche do texto não é a dos dados analisados
-
-- Manuscrito (`Paper/paper_PRE.tex:310`) e carta (R1-2, R2-3): avalanche é
-  *tudo o que é removido em um passo de força*, independentemente de
-  conectividade espacial.
-- Todos os relatórios de N10 (`Report_all_Ts_Clauset.md:53`,
-  `Report_stretched_cutoff_all_Ts.md`,
-  `Report_stretched_cutoff_individual_all_Ts_concise.md`,
-  `xmgrace_export/README.md`) ajustam **avalanches locais**, isto é,
-  componentes espacialmente conexos.
-- Todo o código de suporte é local: `local_avalanche_counts.py`,
-  `prepare_local_avalanche_sizes.py`, `compare_local_discrete_models.py`,
-  `fit_local_power_law.py`.
-
-**Consequência:** a carta afirma ao Revisor 2 que a definição sugerida por ele
-foi adotada, mas os números apresentados ao Revisor 1 vêm da definição que ele
-questionou. Este é o item bloqueante.
-
-### I2 — Família de cauda divergente
-
-- Manuscrito Eq. (6) e carta R1-2: corte exponencial simples,
-  $P(s)\propto s^{-\gamma}\exp(-s/s_c)$.
-- Relatórios atuais: corte **esticado**,
-  $p(s)\propto s^{-\alpha}\exp[-(s/s_c)^{\beta}]$, com $\beta$ estimado e
-  claramente distinto de 1 em várias condições ($\beta\simeq2{,}4$–$4{,}0$
-  para $T_s\geq512$).
-
-### I3 — Números desatualizados
-
-| Grandeza | No manuscrito e na carta | Nos relatórios atuais |
+| # | Inconsistência | Estado |
 |:--|:--|:--|
-| Expoente, $T_s\geq512$ | $\gamma=2{,}204\pm0{,}034$ | $\alpha=2{,}484$–$2{,}674$ |
-| Corte, $T_s\geq512$ | $s_c=101{,}0\pm5{,}6$ | $s_c=211$–$273$ |
-| $\gamma$ em $T_s=2$ | $1{,}019\pm0{,}010$ | $\alpha=1{,}815$ |
-| $\gamma$ em $T_s=8192$ | $2{,}253\pm0{,}009$ | $\alpha=2{,}484$ |
-| $s_{\min}$, regime compacto | $18\leq s_{\min}\leq21$ | $8$, $13$, $18$, $21$ |
+| **I1** | Texto promete avalanche por passo de força; dados analisados são aglomerados conexos | **resolvida** — a cascata determinística do protocolo quenched é a avalanche, sem escolha a fazer |
+| **I2** | Eq. (6) com corte simples vs. relatórios com corte esticado | **superada** — a família de cauda será reestimada em N10 sobre dados novos |
+| **I3** | $\gamma=2{,}204$, $s_c=101{,}0$ não reproduzidos por nenhum relatório | **superada** — todos os números mecânicos serão substituídos |
+| **I4** | Colisão do símbolo $\beta$ (Eq. 5 × corte esticado) | latente — só ressurge se a cauda nova exigir expoente de corte |
+| **I5** | Corte esticado não é o modelo mínimo em $T_s=2,8,16,64$ | **superada** — pertence à análise antiga |
+| **I6** | Spearman do manuscrito ($0{,}997$; $0{,}997$; $-0{,}778$; $-0{,}979$) divergem do CSV ($0{,}9879$; $1{,}0000$; $-0{,}7818$; $-0{,}9636$) | **aberta** — falta identificar a tabela corrente e regenerar a Fig. 7 |
+| **I7** | `% TODO Issue #5` pendente na carta | **aberta** |
 
-Nenhum relatório em `Reviews/` reproduz o par $(2{,}204;\,101{,}0)$.
-
-### I4 — Colisão do símbolo $\beta$
-
-O $\beta$ do corte esticado colide com o $\beta$ da Eq. (5). Se N10 adotar o
-corte esticado, é preciso renomear um dos dois em manuscrito, figuras e carta.
-
-### I5 — A parcimônia não é uniforme entre condições
-
-`Report_stretched_cutoff_individual_all_Ts_concise.md` §5: o corte esticado é
-a única família não rejeitada em todas as condições, mas **não é o modelo
-mínimo** em $T_s=2$, $8$, $16$ e $64$ (corte simples, lognormal ou até
-potência pura bastam). A afirmação atual da carta em R1-2 — "a cauda é
-descrita por uma potência com corte exponencial" — precisa dessa qualificação,
-sob pena de o revisor apontar que a potência pura não foi rejeitada em
-$T_s=8$. O próprio relatório já registra a defesa correta: em $T_s=8$ a cauda
-cobre 0,86 década e 0,071% dos eventos.
-
-### I6 — Coeficientes de Spearman divergentes (N7)
-
-| Descritor | Manuscrito e carta | `Issue7_fractal_proxy/proxy_correlations.csv` |
-|:--|:--|:--|
-| $\langle N\rangle$ | $0{,}997$ | $0{,}9879$ |
-| $\langle K\rangle$ | $0{,}997$ | $1{,}0000$ |
-| $\mathrm{CV}(N)$ | $-0{,}778$ | $-0{,}7818$ |
-| $\langle\sigma_M\rangle_{F=1}$ | $-0{,}979$ | $-0{,}9636$ |
-
-Segundo `HANDOFF.md`, os valores do CSV são anteriores à inclusão da fibrila
-faltante em $T_s=16$. Falta identificar qual das duas tabelas é a corrente e
-regenerar a Fig. 7 a partir dela.
-
-### I7 — Marcador pendente na carta
-
-`Carta_Resposta/Response_to_Referees.tex` ainda contém o comentário
-`% TODO Issue #5: insert the finalized same-support likelihood comparison and
-block-bootstrap confidence intervals.`
+Note que I1–I3 e I5 não foram "corrigidas": foram **tornadas irrelevantes** pela
+troca de protocolo. A dívida que restava de ter redigido N10/N11 antes de N8
+desapareceu junto com N8. As duas que sobrevivem, I6 e I7, são independentes do
+protocolo.
 
 ## 8. Protocolo para evitar retrabalho
 
@@ -232,8 +199,8 @@ block-bootstrap confidence intervals.`
    contendo cada valor que aparece no manuscrito ou na carta, com o CSV de
    origem. Manuscrito e carta passam a citar essa tabela, nunca um relatório
    diretamente.
-2. **Nada a jusante em forma final.** N11 e N12 permanecem em rascunho
-   marcado até N10 fechar.
+2. **Nada a jusante em forma final.** N9, N11 e N12 permanecem em rascunho
+   marcado até a campanha (N16) e N10 fecharem.
 3. **Toda mudança em um nó dispara a revisão dos seus descendentes.** Ao
    reabrir um nó, listar os descendentes pela §3 e registrar na issue
    correspondente.
@@ -444,8 +411,9 @@ fibrila. Decisão do autor: adotar o protocolo padrão de fiber-bundle.
 
 - **Modo padrão bit-idêntico** ao original (store de colunas $(x,z)\to$ lista
   ordenada em $y$ no lugar da k-d tree, mesma ordem de consumo de `rand()`).
-  Verificado: saídas idênticas byte a byte em ts∈{2,100} nb=300 e ts=2
-  nb=1200 (ts=64 nb=1200 em verificação).
+  Verificado: saídas idênticas byte a byte em ts∈{2,100} nb=300 e em
+  ts∈{2,64} nb=1200 — cobrindo os dois regimes de custo (volume dominante em
+  $T_s$ baixo, superfície dominante em $T_s$ alto).
 - **Aceleradores** (`-rng fast -jumps 1 -coverstop 1`), estatisticamente
   equivalentes:
   - `-jumps`: saltos longos gaussianos com a covariância exata por passo
@@ -472,3 +440,38 @@ fibrila. Decisão do autor: adotar o protocolo padrão de fiber-bundle.
 - As respostas de R2-1/R2-3 mudam de defensivas para estruturais.
 - Pendências: campanha de geração + fratura quenched; validação de $D_f$ do
   gerador otimizado em escala; texto novo das Eqs. (4)–(5) no manuscrito.
+
+## 13. Consolidação (2026-08-25)
+
+As §9–§12 vinham sendo acrescentadas sem atualizar o cabeçalho, e o documento
+passou a se contradizer: a §2 dava N5 como "decisão de escopo tomada" enquanto
+a §11 pedia sua reabertura, e descrevia N2 pelo protocolo de varredura com
+$\Delta F=0{,}5$ que a §12 havia substituído. Um documento de dependências que
+contradiz os próprios apêndices é pior que nenhum.
+
+Reescritos: §2 (tabela de nós), §3 (grafo), §4 (arestas), §5 (ordem
+topológica) e §7 (inconsistências). As §9–§12 ficam como registro datado das
+decisões e não foram alteradas, exceto pela correção de uma linha da §12 que
+dava uma verificação como pendente depois de ela ter concluído.
+
+### Mudanças de estado
+
+| Nó | Antes | Agora | Motivo |
+|:--|:--|:--|:--|
+| N2 | fechado | **reaberto** | protocolo substituído; falta o texto |
+| N5 | escopo decidido | **reaberto** | Parkinson1997 varre $m$ (§11) |
+| N8 | divergente/bloqueante | **dissolvido** | cascata determinística é a avalanche |
+| N9 | fechado | **reaberto** | $\varphi(F)$ muda de escala com o protocolo |
+| N15, N16 | — | **novos** | validação do gerador e campanha viraram portões reais |
+
+### O que a consolidação revelou
+
+Dois achados que só aparecem ao reconciliar cabeçalho e apêndices:
+
+1. **N9 estava fechado indevidamente.** Ninguém havia notado que a troca de
+   protocolo invalida $\alpha$ e $\beta$. O piloto mostra $F_{rup}$ uma ordem
+   de grandeza maior, então o eixo de força da Fig. 8 muda inteiramente.
+2. **N5 precisa ser decidido antes da campanha, não depois.** Se a varredura em
+   $m$ for aceita, $m$ vira eixo de produção e multiplica o custo da campanha.
+   Decidir depois obriga a re-rodar tudo. Por isso N5 → N16 é aresta, e por
+   isso N5 aparece na onda 2 da §5, e não mais adiante.
