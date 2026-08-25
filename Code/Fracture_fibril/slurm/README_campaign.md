@@ -39,13 +39,36 @@ Code/Fracture_fibril/slurm/make_manifest.sh fracture
 CAMPAIGN_KIND=fracture Code/Fracture_fibril/slurm/submit_campaign.sh
 ```
 
-## Duas restrições operacionais descobertas na prática
+## Restrições operacionais, verificadas
 
-- **`cpu_amd_dev` aceita um job por vez.** Um segundo `srun` falha com
-  `QOSMaxSubmitJobPerUserLimit`, mesmo com a fila aparentemente vazia.
-- **Um `srun` sobrevive à queda do ssh.** Se a conexão cair, a alocação
-  continua e bloqueia a partição de desenvolvimento. Confira com
-  `squeue -u "$USER"` e libere com `scancel -u "$USER" -p cpu_amd_dev`.
+**O limite de submissão é o que vincula.** `MaxSubmitPU=100` e **cada elemento
+de array conta como um job submetido**, somado sobre todos os seus jobs, na fila
+ou rodando. O acelerador `%N` não ajuda: ele limita quantas tarefas *rodam*, não
+quantas são submetidas. O orçamento é 100 menos o que já está na fila — uma
+única tarefa retida de uma tentativa anterior basta para derrubar um array de
+100. `submit_campaign.sh` confere isso antes de submeter e faz um `--test-only`.
+
+**As partições `*_dev` aceitam um job por vez**, por limite de **associação**
+(`MaxJobs=1, MaxSubmit=1`), não da QOS — `cpu_amd` e `cpu_amd_dev` usam a mesma
+QOS. Confira com:
+
+```bash
+sacctmgr -P show assoc user="$USER" format=Partition,QOS,MaxJobs,MaxSubmit
+sacctmgr -P show qos ict_cpu-genoa format=Name,MaxTRESPU,MaxJobsPU,MaxSubmitJobsPU
+```
+
+Peça o cabeçalho (`-P` sem `-n`): `sacctmgr -nP` emite uma coluna vazia extra
+que faz `MaxJobsPU` parecer o limite de submissão.
+
+**Um `srun` sobrevive à queda do ssh.** A alocação continua e bloqueia a
+partição de desenvolvimento, que só aceita um job. Confira com
+`squeue -u "$USER"` e libere com `scancel -u "$USER" -p cpu_amd_dev`.
+
+**Uma tarefa de array pode ficar retida.** `launch failed requeued held` não
+produz log nenhum e não sai sozinha do estado. Libere com
+`scontrol release <JOBID>_<TASK>`; se reincidir, deixe as outras terminarem e
+use `check_campaign.sh` + reenvio, que é idempotente. Uma tarefa retida também
+**consome uma vaga do orçamento de submissão**.
 
 ## Forma do job, e por quê
 
