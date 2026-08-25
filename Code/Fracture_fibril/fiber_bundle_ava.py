@@ -29,6 +29,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 import time
 
@@ -54,17 +55,23 @@ def quasistatic_rupture(system):
     """
     events = []
     F = 0.0
+    begin = getattr(system, 'begin_cascade', None)
+    end = getattr(system, 'end_cascade', None)
     while system.num_active() > 0:
         Fnext = system.next_failure_force()
         if Fnext is None:
             break
         F = max(F, Fnext)
+        if begin is not None:
+            begin(F)
         size = 0
         while True:
             removed = system.fail_at(F)
             if removed == 0:
                 break
             size += removed
+        if end is not None:
+            end(F, size)
         if size > 0:
             events.append((F, size))
     return events, F
@@ -155,11 +162,18 @@ class FibrilSystem:
             for i, c in counts.items():
                 rows.append(j); cols.append(i); vals.append(c)
         self.C = coo_matrix((vals, (rows, cols)), shape=(R, R)).tocsr()
+        # Symmetric adjacency list for the cascade cluster decomposition.
+        self.adj = [set() for _ in range(R)]
+        for j, i in zip(rows, cols):
+            self.adj[j].add(i)
+            self.adj[i].add(j)
 
         # quenched disorder: P(X <= x) = x**m  on [0, 1]
         self.X = rng.random(R) ** (1.0 / m)
 
         self.active = np.ones(R, bool)
+        self.log = []
+        self._cascade_idx = []
         self._refresh()
 
     # -- state -----------------------------------------------------------
@@ -183,6 +197,66 @@ class FibrilSystem:
             if self.active[k] and rid not in alive:
                 self.active[k] = False
 
+    # -- cascade bookkeeping ----------------------------------------------
+    def begin_cascade(self, F):
+        self._cascade_idx = []
+
+    def end_cascade(self, F, size):
+        """Close a cascade and record the row the legacy writer needs.
+
+        `avalanche_sizes` is the decomposition of THIS cascade into
+        nearest-neighbour connected clusters.  It is kept only as a geometric
+        diagnostic -- the primary observable is the cascade size -- and it also
+        satisfies the invariant read_avalanche_runs.py enforces,
+        sum(avalanche_sizes) == total_deleted_rods.
+        """
+        if size <= 0:
+            return
+        self.log.append({
+            'F': float(F),
+            'active_particles': self.active_particles(),
+            'rods': int(size),
+            'clusters': self.cluster_sizes(self._cascade_idx),
+        })
+
+    def active_particles(self):
+        """Particles still in the backbone.
+
+        Summed per rod rather than assuming 18 each: the mechanical window
+        clips |y| <= 100, so a rod near either end can contribute fewer.
+        """
+        return int(self.n_parts[self.active].sum())
+
+    def cluster_sizes(self, idx):
+        """Connected components among the rods removed in one cascade.
+
+        Uses the static adjacency C, so no snapshot of the ssd is needed --
+        find_deleted_rod_clusters would require one copy per cascade.
+        """
+        if not idx:
+            return []
+        if len(idx) == 1:
+            return [1]
+        # Plain BFS over a precomputed adjacency list.  Slicing the R x R
+        # sparse matrix (C[order][:, order]) reallocates on every cascade and
+        # dominated the runtime; cascades are small, so an adjacency walk is
+        # far cheaper.
+        pending = set(idx)
+        sizes = []
+        while pending:
+            root = pending.pop()
+            size = 1
+            queue = [root]
+            while queue:
+                node = queue.pop()
+                for neighbour in self.adj[node]:
+                    if neighbour in pending:
+                        pending.discard(neighbour)
+                        size += 1
+                        queue.append(neighbour)
+            sizes.append(size)
+        return sorted(sizes, reverse=True)
+
     # -- engine interface -------------------------------------------------
     def num_active(self):
         return int(self.active.sum())
@@ -198,25 +272,83 @@ class FibrilSystem:
         if len(failing) == 0:
             return 0
         before = self.num_active()
+        was_active = self.active.copy()
         self.ssd.drop_rids({int(self.rids[k]) for k in failing})
         act1, _ = self.ssd.filter_rids(reverse=False)
         if act1:
             self.ssd.filter_rids(reverse=True)
         self._sync_from_ssd()
         self._refresh()
+        # every rod that went in this call: threshold failures plus the rods
+        # that lost the load path as a consequence
+        gone = np.where(was_active & ~self.active)[0]
+        self._cascade_idx.extend(int(g) for g in gone)
         return before - self.num_active()
 
 
+# --------------------------------------------------------------- legacy I/O
+LEGACY_HEADER = ('f,num_active_particles,num_deleted_particles,'
+                 'total_deleted_rods,avalanche_sizes')
+
+
+def write_legacy(path, log, initial_particles, realization):
+    """Append one realization in the schema read_avalanche_runs.py expects.
+
+    That parser enforces, per realization: the first row has f == 0, the force
+    increases strictly, sum(avalanche_sizes) == total_deleted_rods,
+    num_active + num_deleted stays constant, num_active is non-increasing, and
+    no row follows the terminal one.  All of these hold here: cascade forces
+    are strictly increasing by construction (thresholds are continuous, so ties
+    have measure zero), and the synthetic f = 0 row supplies the required
+    opening row.
+    """
+    directory = os.path.dirname(path)
+    if directory:
+        os.makedirs(directory, exist_ok=True)
+
+    lines = []
+    if realization == 0:
+        lines.append(LEGACY_HEADER)
+    else:
+        lines.append('-' * 46 + str(realization))
+    lines.append(f'0,{initial_particles},0,0,"0"')
+    for row in log:
+        active = row['active_particles']
+        deleted = initial_particles - active
+        clusters = '-'.join(str(c) for c in row['clusters']) or '0'
+        lines.append(f'{row["F"]:.10g},{active},{deleted},{row["rods"]},'
+                     f'"{clusters}"')
+
+    with open(path, 'w' if realization == 0 else 'a') as fh:
+        fh.write('\n'.join(lines) + '\n')
+
+
+def legacy_output_path(fn_dat, m, output_dir=None):
+    """ts_<TS>_seed_<SEED>_m_<M>.txt under ts_<TS>/, as the parser requires."""
+    stem = os.path.splitext(os.path.basename(fn_dat))[0]
+    match = re.fullmatch(r'ts_(\d+)_seed_(\d+)', stem)
+    if match is None:
+        raise ValueError(
+            f'unexpected fibril name {stem!r}: expected ts_<TS>_seed_<SEED>')
+    ts = match.group(1)
+    name = f'{stem}_m_{m}.txt'
+    base = output_dir if output_dir else os.path.dirname(fn_dat)
+    return os.path.join(base, f'ts_{ts}', name)
+
+
 # ---------------------------------------------------------------------- main
-def run_realizations(fn_dat, n, m=2, seed=1):
+def run_realizations(fn_dat, n, m=2, seed=1, legacy_path=None, start=0):
     ssd0 = S.read_or_create_ssd(fn_dat)
     ssd0.set_rods_exponent(m)
     out = []
-    for k in range(n):
+    for k in range(start, n):
         rng = np.random.default_rng(seed + k)
         sys_k = FibrilSystem(ssd0.copy(), m=m, rng=rng)
+        initial_particles = sys_k.active_particles()
         t0 = time.time()
         events, F_rup = quasistatic_rupture(sys_k)
+        if legacy_path is not None:
+            write_legacy(legacy_path, sys_k.log, initial_particles, k)
         out.append({
             'F_rupture': F_rup,
             'events': [(float(f), int(s)) for f, s in events],
@@ -235,13 +367,26 @@ def main():
     ap.add_argument('-n', type=int, default=5)
     ap.add_argument('-m', type=int, default=2)
     ap.add_argument('-seed', type=int, default=1)
-    ap.add_argument('-out', required=True)
+    ap.add_argument('-out', help='optional JSON summary')
+    ap.add_argument('-legacy-dir', dest='legacy_dir',
+                    help='write ts_<TS>/ts_<TS>_seed_<SEED>_m_<M>.txt here, in '
+                         'the schema read_avalanche_runs.py expects')
+    ap.add_argument('-start', type=int, default=0,
+                    help='zero-based realization to resume from')
     a = ap.parse_args()
-    runs = run_realizations(a.file, a.n, m=a.m, seed=a.seed)
-    with open(a.out, 'w') as fh:
-        json.dump({'file': os.path.basename(a.file), 'm': a.m,
-                   'seed': a.seed, 'runs': runs}, fh)
-    print('wrote', a.out)
+
+    legacy_path = None
+    if a.legacy_dir:
+        legacy_path = legacy_output_path(a.file, a.m, a.legacy_dir)
+        print('legacy output:', legacy_path)
+
+    runs = run_realizations(a.file, a.n, m=a.m, seed=a.seed,
+                            legacy_path=legacy_path, start=a.start)
+    if a.out:
+        with open(a.out, 'w') as fh:
+            json.dump({'file': os.path.basename(a.file), 'm': a.m,
+                       'seed': a.seed, 'runs': runs}, fh)
+        print('wrote', a.out)
 
 
 if __name__ == '__main__':
