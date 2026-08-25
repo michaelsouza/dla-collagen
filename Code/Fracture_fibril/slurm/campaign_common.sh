@@ -13,6 +13,11 @@ CAMPAIGN_TS=(2 8 16 32 64 128 512 1024 4096 8192)
 # Weibull moduli.  Parkinson et al. (1997) swept five values and derived
 # physics from the sweep; Referee 1 comment 3 asks for the same.
 CAMPAIGN_M=(1 2 3 5 10)
+# The Phase B pilot fixes m=2 and only wants the variance structure, so the
+# sweep is overridable: CAMPAIGN_M_CSV=2
+if [[ -n "${CAMPAIGN_M_CSV:-}" ]]; then
+    IFS=',' read -r -a CAMPAIGN_M <<< "$CAMPAIGN_M_CSV"
+fi
 
 CAMPAIGN_NUM_BIND="${CAMPAIGN_NUM_BIND:-30000}"
 CAMPAIGN_FIBRILS="${CAMPAIGN_FIBRILS:-200}"      # ceiling; Phase B may stop earlier
@@ -43,7 +48,9 @@ campaign_ts_index() {   # <ts>
 # $DLA_PROJECT is exported by Code/cluster/sdumont2nd/env.sh and resolves to the
 # 6 TB project area.  $HOME carries only a 100 GB quota and holds the clone and
 # the venv, never simulation output.
-campaign_root()     { printf '%s' "${DLA_PROJECT:?source Code/cluster/sdumont2nd/env.sh first}/campaign"; }
+# CAMPAIGN_NAME keeps the Phase B pilot in its own tree, so a pilot run can
+# never be mistaken for production data or block it by occupying its paths.
+campaign_root()     { printf '%s/%s' "${DLA_PROJECT:?source Code/cluster/sdumont2nd/env.sh first}" "${CAMPAIGN_NAME:-campaign}"; }
 campaign_compact()  { printf '%s/fibrils/compact' "$(campaign_root)"; }
 campaign_extended() { printf '%s/fibrils/extended' "$(campaign_root)"; }
 campaign_runs()     { printf '%s/avalanches/runs' "$(campaign_root)"; }
