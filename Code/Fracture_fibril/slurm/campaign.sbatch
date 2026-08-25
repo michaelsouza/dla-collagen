@@ -48,34 +48,57 @@ ntasks="${SLURM_ARRAY_TASK_COUNT:-1}"
 taskid="${SLURM_ARRAY_TASK_ID:-0}"
 workers="${CAMPAIGN_WORKERS:-${SLURM_CPUS_PER_TASK:-${SLURM_CPUS_ON_NODE:-8}}}"
 
-# Contiguous slice, ceiling division so the last task absorbs the remainder.
-per=$(( (total + ntasks - 1) / ntasks ))
-first=$(( taskid * per + 1 ))
-last=$(( first + per - 1 ))
-((last > total)) && last=$total
+# SHARED WORK QUEUE, not a fixed slice per task.
+#
+# Launch failures on this cluster are common and scale with the array size: a
+# 40-task array had 29 tasks land in "launch failed requeued held" while 11 ran.
+# With fixed slices those 11 tasks would only ever do their own 550 items and
+# the other 1450 would wait for another round.  Instead every task walks the
+# WHOLE manifest, starting at its own offset so they do not collide head-on,
+# and claims each item atomically before working on it.  Any surviving subset
+# of tasks therefore covers the entire manifest, and one round can finish the
+# stage no matter how many tasks failed to launch.
+claims="$(campaign_root)/claims/${kind}"
+mkdir -p "$claims"
 
 echo "job ........ ${SLURM_JOB_ID:-local} task ${taskid}/${ntasks}"
 echo "host ....... $(hostname)"
 echo "stage ...... $kind"
 echo "manifest ... $manifest ($total items)"
-echo "slice ...... lines $first..$last"
+echo "claims ..... $claims"
 echo "workers .... $workers"
 echo "scratch .... ${DLA_TMP}"
 echo "results .... $(campaign_root)"
 echo "start ...... $(date --iso-8601=seconds)"
 
-((first > last)) && { echo "empty slice; nothing to do"; exit 0; }
-
 worker="$here/worker_${kind}.sh"
 [[ -x "$worker" ]] || { echo "worker not executable: $worker" >&2; exit 1; }
 
-# xargs returns 123 if any invocation failed.  Failures are reported but do not
-# abort the slice: one bad fibril should not discard the rest of the task, and
-# resubmitting picks up exactly what is missing.
+# One claim per item.  mkdir is atomic, so exactly one task wins each item even
+# with every task reading the same manifest.  A claim only prevents duplicated
+# effort; correctness never depends on it, because the workers are idempotent
+# and verify their own output.
+claim_and_run() {
+    local key="${*// /_}"
+    mkdir "$claims/$key" 2>/dev/null || return 0
+    "$CAMPAIGN_WORKER" "$@" || {
+        # Release the claim so a later round retries this item.
+        rmdir "$claims/$key" 2>/dev/null || true
+        return 1
+    }
+}
+export -f claim_and_run
+export claims CAMPAIGN_WORKER="$worker"
+
+fields="$(head -1 "$manifest" | awk '{print NF}')"
+offset=$(( taskid * 97 % (total > 0 ? total : 1) ))
+
+# Rotate the manifest by this task's offset so tasks start in different places
+# and mostly avoid contending for the same claims.
 status=0
-sed -n "${first},${last}p" "$manifest" \
+{ tail -n "+$((offset + 1))" "$manifest"; head -n "$offset" "$manifest"; } \
     | tr '\t' '\n' \
-    | xargs -r -n "$(head -1 "$manifest" | awk '{print NF}')" -P "$workers" "$worker" \
+    | xargs -r -n "$fields" -P "$workers" bash -c 'claim_and_run "$@"' _ \
     || status=$?
 
 echo "end ........ $(date --iso-8601=seconds)"
