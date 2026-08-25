@@ -70,13 +70,23 @@ produz log nenhum e não sai sozinha do estado. Libere com
 use `check_campaign.sh` + reenvio, que é idempotente. Uma tarefa retida também
 **consome uma vaga do orçamento de submissão**.
 
-A causa mais provável, e evitável: o Slurm abre os arquivos de `--output` e
-`--error` **no momento do lançamento**. Um caminho relativo resolve contra o
-diretório de submissão como visto do nó de compute, e no Lustre esse diretório
-pode ainda não ter propagado — o lançamento falha e, como falha antes de abrir o
-log, não deixa rastro nenhum. Por isso `submit_campaign.sh` passa caminhos
-**absolutos**, num diretório criado e confirmado antes de submeter. Se você
-submeter à mão, faça o mesmo.
+**A causa não foi estabelecida.** Numa medição de 2026-08-25 havia **12 jobs
+retidos no cluster inteiro**, de vários usuários e projetos, com a partição
+tendo 344 núcleos livres. Portanto não é falta de recurso nem algo específico
+desta campanha.
+
+Uma hipótese plausível e barata de eliminar: o Slurm abre os arquivos de
+`--output` e `--error` **no momento do lançamento**; um caminho relativo resolve
+contra o diretório de submissão como visto do nó de compute, e no Lustre esse
+diretório pode ainda não ter propagado. Isso explicaria por que a tarefa retida
+não deixa log nenhum — falha antes de abrir o arquivo. Por isso
+`submit_campaign.sh` passa caminhos **absolutos**, num diretório criado e
+confirmado antes de submeter.
+
+Mas isso é mitigação, não diagnóstico: os jobs retidos de outros usuários podem
+ter outra causa, e não temos como inspecioná-los. **Trate o ciclo
+`check_campaign.sh` + reenvio como parte normal da operação**, não como
+exceção — é ele que garante o resultado, independentemente da causa.
 
 ## Forma do job, e por quê
 
