@@ -29,7 +29,7 @@ Production runs execute on SDumont2 (LNCC), account `solverbrict`, partition `cp
 - Write per-task scratch and databases to node-local storage (`$DLA_TMP`), then copy the finished file to Lustre and `mv` it into place, so an interrupted job never publishes a partial result.
 - Write production results to `$DLA_PROJECT` (`~/scratch/dla-collagen`, in the 6 TB `solverbrict` project area), never to `$HOME`, whose 100 GB quota fits only the clone and the venv. The project quota is shared with other users; check it before a large batch. `$SCRATCH` is an alias for `$HOME` and buys no extra space.
 - `SLURM_TMPDIR` does not exist on SDumont2; fall back through `${SLURM_TMPDIR:-${TMPDIR:-/tmp}}`.
-- Respect the QOS caps: 100 running jobs and 300 submitted jobs per user. Throttle job arrays to at most `%100`.
+- The QOS allows only **100 submitted job-array tasks per user** at a time, counting every array element; `%N` throttling does not raise it. Split a larger campaign into successive arrays and confirm with `sbatch --test-only` before submitting.
 - Record in the relevant ticket which cluster, partition, and job ID produced any result that enters the manuscript.
 
 ## Agent skills

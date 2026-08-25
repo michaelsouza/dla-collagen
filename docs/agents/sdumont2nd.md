@@ -39,12 +39,34 @@ sacctmgr -nP show qos ict_cpu-genoa format=Name,MaxWall,MaxTRESPU,MaxJobsPU,MaxS
 - GPU partitions exist under the same account (`ict-h100`, `ict-gh200`,
   `ict-mi300a`) but nothing in this repository uses a GPU.
 
-QOS `ict_cpu-genoa` caps the account at **1920 CPUs**, **100 running jobs**,
-and **300 submitted jobs** per user; `MaxArraySize` is 1001. An array of 300
-tasks therefore fills the submit quota exactly and must be throttled to at most
-`%100` concurrent tasks. `Code/Fracture_fibril/slurm/run_array.sbatch` was
-written for a different cluster and still says `%150` — lower it before
-submitting here.
+### The submit limit is the binding constraint
+
+QOS `ict_cpu-genoa` sets `MaxSubmitJobsPU=100` and leaves `MaxJobsPU`
+unlimited. **Every element of a job array counts as one submitted job**, so the
+cap is 100 array tasks in the queue at any moment, summed over all of your
+jobs. `%N` throttling does not help: it limits how many tasks run
+concurrently, not how many are submitted.
+
+Verify before designing a batch, and note that `sacctmgr -nP` emits an extra
+empty column that makes `MaxJobsPU` easy to misread as the submit limit — ask
+for the header:
+
+```bash
+sacctmgr -P show qos ict_cpu-genoa format=Name,MaxWall,MaxTRESPU,MaxJobsPU,MaxSubmitJobsPU
+sbatch --test-only --account=solverbrict --partition=cpu_amd --array=0-99 script.sbatch
+```
+
+`--test-only` validates against the live QOS without submitting, and is the
+cheapest way to confirm a batch will be accepted. A campaign larger than 100
+tasks has to be split into successive arrays — chained with `--dependency`, or
+re-submitted as tasks drain.
+
+Other limits: `MaxTRESPU` is 1920 CPUs and 14976 GB per user, there is no
+wall-clock cap on `cpu_amd`, and `MaxArraySize` is 1001 (never the binding
+constraint here, given the submit cap).
+
+`Code/Fracture_fibril/slurm/run_array.sbatch` predates this cluster: its
+`--array=0-299%150` is rejected outright.
 
 ## Environment
 
