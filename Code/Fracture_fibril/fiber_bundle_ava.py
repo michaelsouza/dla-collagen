@@ -297,10 +297,17 @@ def write_legacy(path, log, initial_particles, realization):
     That parser enforces, per realization: the first row has f == 0, the force
     increases strictly, sum(avalanche_sizes) == total_deleted_rods,
     num_active + num_deleted stays constant, num_active is non-increasing, and
-    no row follows the terminal one.  All of these hold here: cascade forces
-    are strictly increasing by construction (thresholds are continuous, so ties
-    have measure zero), and the synthetic f = 0 row supplies the required
-    opening row.
+    no row follows the terminal one.  All of these hold here, and the synthetic
+    f = 0 row supplies the required opening row.
+
+    The force is written with %.17g, not a shorter format.  Cascade forces are
+    strictly increasing in exact arithmetic -- thresholds are continuous, so
+    ties have measure zero -- but the parser reads the DECIMAL TEXT, and two
+    distinct doubles that agree to the printed precision collide there.  At
+    %.10g that happened twice in the 165 million forces of the first production
+    campaign, on genuinely distinct events (active particles and removed rods
+    both changed across the tie).  %.17g round-trips float64 exactly, so a
+    printed tie now implies the doubles themselves are equal.
     """
     directory = os.path.dirname(path)
     if directory:
@@ -316,7 +323,7 @@ def write_legacy(path, log, initial_particles, realization):
         active = row['active_particles']
         deleted = initial_particles - active
         clusters = '-'.join(str(c) for c in row['clusters']) or '0'
-        lines.append(f'{row["F"]:.10g},{active},{deleted},{row["rods"]},'
+        lines.append(f'{row["F"]:.17g},{active},{deleted},{row["rods"]},'
                      f'"{clusters}"')
 
     with open(path, 'w' if realization == 0 else 'a') as fh:
