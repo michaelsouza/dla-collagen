@@ -42,14 +42,21 @@ for ((round = 1; round <= max_rounds; round++)); do
     rm -f /tmp/dla-check-$$.log
 
     # A held task from the previous round occupies a submit slot and will never
-    # run; clear ours before asking for more.
-    held="$(squeue -h -u "$USER" -r -t PENDING -o "%i %r" 2>/dev/null \
-            | awk '/launch failed/ {print $1}' | tr '\n' ' ')"
-    if [[ -n "$held" ]]; then
-        echo "cancelling held tasks: $held"
-        # shellcheck disable=SC2086
-        scancel $held 2>/dev/null || true
-        sleep 5
+    # run; clear it before asking for more.
+    #
+    # Scoped to THIS driver's previous job on purpose.  Filtering by user would
+    # also match held tasks from the same person's other projects on this
+    # cluster, and cancelling someone's unrelated work because it happens to
+    # share an account is not ours to do.
+    if [[ -n "${prev_job:-}" ]]; then
+        held="$(squeue -h -j "$prev_job" -r -t PENDING -o "%i %r" 2>/dev/null \
+                | awk '/launch failed/ {print $1}' | tr '\n' ' ')"
+        if [[ -n "$held" ]]; then
+            echo "cancelling held tasks of $prev_job: $held"
+            # shellcheck disable=SC2086
+            scancel $held 2>/dev/null || true
+            sleep 5
+        fi
     fi
 
     job="$("$here/submit_campaign.sh" 2>&1 | tee /dev/stderr \
@@ -59,6 +66,7 @@ for ((round = 1; round <= max_rounds; round++)); do
         exit 1
     fi
 
+    prev_job="$job"
     echo "waiting on job $job ..."
     while squeue -h -j "$job" -r -t PENDING,RUNNING,CONFIGURING 2>/dev/null \
           | grep -qv "launch failed"; do
