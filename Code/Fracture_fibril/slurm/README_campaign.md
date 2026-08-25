@@ -24,6 +24,10 @@ srun --account=solverbrict --partition=cpu_amd_dev \
 Ela roda V0–V8 e sai não-zero se algo falhar. **Não submeta a campanha com
 falhas pendentes.**
 
+Não canalize a saída (`| tail`, `| tee`) se quiser conferir o código de saída: o
+pipe devolve o status do último comando, não o da bateria. Para guardar o log
+sem perder o status, use `bash ... validate.sh > val.log 2>&1; echo $?`.
+
 Depois:
 
 ```bash
