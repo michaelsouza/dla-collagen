@@ -1,0 +1,10 @@
+mode ....... s
+tmax ....... 2
+num_bind ... 30000
+seed ....... 7011
+rng ........ fast(xoshiro256++)
+jumps ...... 1
+coverstop .. 1
+rng seed ... 7011
+coverage ... reached 0 (0.00%), exhausted 30000 (100.00%), capped 0 (0.00%)
+elapsed .... 628.14 s

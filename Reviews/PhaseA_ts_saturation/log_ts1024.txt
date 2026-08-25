@@ -1,0 +1,11 @@
+mode ....... s
+tmax ....... 1024
+num_bind ... 30000
+seed ....... 7011
+rng ........ fast(xoshiro256++)
+jumps ...... 1
+coverstop .. 1
+rng seed ... 7011
+coverage ... reached 5498 (18.33%), exhausted 24502 (81.67%), capped 0 (0.00%)
+cov steps .. mean 481.0, max 1024; largest component 116
+elapsed .... 727.95 s
