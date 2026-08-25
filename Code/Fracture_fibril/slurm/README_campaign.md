@@ -70,6 +70,14 @@ produz log nenhum e não sai sozinha do estado. Libere com
 use `check_campaign.sh` + reenvio, que é idempotente. Uma tarefa retida também
 **consome uma vaga do orçamento de submissão**.
 
+A causa mais provável, e evitável: o Slurm abre os arquivos de `--output` e
+`--error` **no momento do lançamento**. Um caminho relativo resolve contra o
+diretório de submissão como visto do nó de compute, e no Lustre esse diretório
+pode ainda não ter propagado — o lançamento falha e, como falha antes de abrir o
+log, não deixa rastro nenhum. Por isso `submit_campaign.sh` passa caminhos
+**absolutos**, num diretório criado e confirmado antes de submeter. Se você
+submeter à mão, faça o mesmo.
+
 ## Forma do job, e por quê
 
 O QOS limita a conta a **1920 CPUs** e a **100 jobs em execução**, mas na prática

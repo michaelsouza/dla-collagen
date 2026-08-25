@@ -47,7 +47,17 @@ if ((concurrent > 100)); then
     concurrent=100
 fi
 
-mkdir -p "$(campaign_root)/logs" logs
+# Absolute log directory, created and CONFIRMED visible before submitting.
+# See the comment in campaign.sbatch: a relative --output is opened at launch
+# time and a Lustre directory that has not propagated yet fails the launch.
+log_dir="$(campaign_root)/logs/slurm"
+mkdir -p "$log_dir"
+if [[ ! -d "$log_dir" ]]; then
+    echo "could not create $log_dir" >&2
+    exit 1
+fi
+# Force a metadata round trip so the directory is on disk, not just in cache.
+: > "$log_dir/.probe" && sync && rm -f "$log_dir/.probe"
 
 # MaxSubmitPU=100 counts EVERY array element, across all of your jobs, queued or
 # running.  %N throttling does not help: it limits concurrency, not submission.
@@ -71,6 +81,7 @@ echo "items ...... $(wc -l < "$manifest")"
 echo "array ...... 0-$((tasks - 1))%${concurrent}"
 echo "cpus/task .. $cpus"
 echo "mem/cpu .... $mem_per_cpu"
+echo "logs ....... $log_dir"
 echo "account .... $DLA_ACCOUNT"
 echo "partition .. ${DLA_PARTITION}"
 
@@ -90,6 +101,8 @@ sbatch \
     --partition="$DLA_PARTITION" \
     --array="0-$((tasks - 1))%${concurrent}" \
     --cpus-per-task="$cpus" \
+    --output="$log_dir/%x-%A_%a.out" \
+    --error="$log_dir/%x-%A_%a.err" \
     --mem-per-cpu="$mem_per_cpu" \
     --export=ALL,CAMPAIGN_KIND="$kind",DLA_REPO="$repo" \
     "$@" \

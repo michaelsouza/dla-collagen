@@ -18,8 +18,12 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --time=24:00:00
-#SBATCH --output=logs/%x-%A_%a.out
-#SBATCH --error=logs/%x-%A_%a.err
+# No --output/--error here on purpose: submit_campaign.sh passes ABSOLUTE paths.
+# Slurm opens these files at launch time, and a relative path resolves against
+# the submit directory as seen from the compute node.  On Lustre that directory
+# may not be visible yet when the task starts, and the launch then fails with
+# "launch failed requeued held" -- producing no log at all, which is exactly
+# what makes the failure so hard to read.
 
 set -euo pipefail
 
