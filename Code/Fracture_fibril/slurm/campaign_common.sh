@@ -21,7 +21,11 @@ fi
 
 CAMPAIGN_NUM_BIND="${CAMPAIGN_NUM_BIND:-30000}"
 CAMPAIGN_FIBRILS="${CAMPAIGN_FIBRILS:-200}"      # ceiling; Phase B may stop earlier
-CAMPAIGN_REALIZATIONS="${CAMPAIGN_REALIZATIONS:-100}"
+# The Phase B pilot (10 T_s x 20 fibrils x 50 realizations, m=2) measured an
+# ICC of 0.19-0.35, so the within-fibril term stops dominating the variance well
+# before 100 realizations while the fixed-budget argument still forbids 1.  See
+# section 16 of Reviews/DAG_dependencias_revisao.md.  100 was a placeholder.
+CAMPAIGN_REALIZATIONS="${CAMPAIGN_REALIZATIONS:-50}"
 
 # --- seeds -----------------------------------------------------------------
 # seed = 100000 + 1000*i + k, with i the index of T_s in CAMPAIGN_TS and k the
