@@ -39,6 +39,14 @@ Code/Fracture_fibril/slurm/make_manifest.sh fracture
 CAMPAIGN_KIND=fracture Code/Fracture_fibril/slurm/submit_campaign.sh
 ```
 
+## Duas restrições operacionais descobertas na prática
+
+- **`cpu_amd_dev` aceita um job por vez.** Um segundo `srun` falha com
+  `QOSMaxSubmitJobPerUserLimit`, mesmo com a fila aparentemente vazia.
+- **Um `srun` sobrevive à queda do ssh.** Se a conexão cair, a alocação
+  continua e bloqueia a partição de desenvolvimento. Confira com
+  `squeue -u "$USER"` e libere com `scancel -u "$USER" -p cpu_amd_dev`.
+
 ## Forma do job, e por quê
 
 O QOS limita a conta a **1920 CPUs** e a **100 jobs em execução**. Dez tarefas de

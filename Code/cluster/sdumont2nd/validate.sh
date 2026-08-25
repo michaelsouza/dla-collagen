@@ -33,7 +33,19 @@ report() {  # <status> <id> <message>
 
 work="${DLA_TMP:-/tmp}/dla-validate-$$"
 mkdir -p "$work"
-trap 'rm -rf -- "$work"' EXIT
+
+# $work is node-local and vanishes with the job, so a failing check would take
+# its own evidence with it -- the log the report points at would already be
+# gone by the time anyone read the report.  Failures are copied to the project
+# area before the trap fires.
+keep="${DLA_PROJECT:-}/campaign/logs/validate"
+preserve_logs() {
+    [[ -n "${DLA_PROJECT:-}" ]] || return 0
+    mkdir -p "$keep" 2>/dev/null || return 0
+    cp -- "$work"/*.log "$keep/" 2>/dev/null || true
+    echo "logs kept at $keep"
+}
+trap 'preserve_logs; rm -rf -- "$work"' EXIT
 
 echo "repo ....... $repo"
 echo "host ....... $(hostname)"
@@ -69,13 +81,16 @@ then report PASS V1b "production build (-O3 -march=native)"
 else report FAIL V1b "production build: see $work/v1b.log"; fi
 
 # --- V2: test suites -------------------------------------------------------
-if (cd "$repo/Code/Fracture_fibril" && python3 -m pytest -q . > "$work/v2a.log" 2>&1)
-then report PASS V2a "Code/Fracture_fibril suite"
-else report FAIL V2a "Code/Fracture_fibril suite: see $work/v2a.log"; fi
+# Both suites run FROM THE REPOSITORY ROOT.  Five modules in Code/Data_analysis
+# import `from Code.Data_analysis...`, which needs the root on sys.path; running
+# pytest from inside the directory fails collection before any test executes.
+if (cd "$repo" && python3 -m pytest -q Code/Fracture_fibril > "$work/v2a.log" 2>&1)
+then report PASS V2a "Code/Fracture_fibril suite ($(grep -oE '[0-9]+ passed' "$work/v2a.log" | head -1))"
+else report FAIL V2a "Code/Fracture_fibril suite: see v2a.log"; fi
 
-if (cd "$repo/Code/Data_analysis" && python3 -m pytest -q . > "$work/v2b.log" 2>&1)
-then report PASS V2b "Code/Data_analysis suite"
-else report FAIL V2b "Code/Data_analysis suite: see $work/v2b.log"; fi
+if (cd "$repo" && python3 -m pytest -q Code/Data_analysis > "$work/v2b.log" 2>&1)
+then report PASS V2b "Code/Data_analysis suite ($(grep -oE '[0-9]+ passed' "$work/v2b.log" | head -1))"
+else report FAIL V2b "Code/Data_analysis suite: see v2b.log"; fi
 
 # --- V3: bit-identity, fast_dla2 default mode vs fast_dla ------------------
 # Covers both cost regimes: bulk diffusion dominates at low T_s, surface
@@ -113,6 +128,8 @@ fi
 # --- V5/V6: end-to-end micro-campaign -------------------------------------
 # Two conditions, two fibrils each, five realizations: generation, extension,
 # quenched fracture, and the strict parser, with no manual step in between.
+# The micro-campaign gets a throwaway project root, but the log destination
+# resolved above still points at the real one.
 export DLA_PROJECT="$work/project"
 export CAMPAIGN_NUM_BIND=1500
 export CAMPAIGN_REALIZATIONS=5
