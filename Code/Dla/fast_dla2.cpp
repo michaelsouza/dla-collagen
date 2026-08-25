@@ -207,6 +207,39 @@ static inline int energy2(fiber_t &f, const std::vector<int> &neighs,
 }
 
 // ------------------------------------------------------- surface relaxation
+// Largest reachable bound component the coverage test will resolve.  Fixed on
+// purpose: see the comment inside rolling2().  A molecule whose component
+// exceeds it simply falls back to walking the full tmax, which is correct,
+// only slower.
+static const size_t COMPONENT_CAP = 4096;
+
+// Coverage diagnostics (A2).  A molecule ends in exactly one of three states:
+//   reached   -- every position of the reachable component was visited, so the
+//                placement is final and further steps would change nothing;
+//   exhausted -- tmax ran out before the component was covered;
+//   capped    -- the component is larger than COMPONENT_CAP, so the coverage
+//                test was not attempted and the molecule walked the full tmax.
+// Two conditions of T_s produce identical fibrils for the same seed only when
+// every molecule is "reached" in both.
+static long g_cov_reached = 0, g_cov_exhausted = 0, g_cov_capped = 0;
+static long long g_cov_steps_sum = 0;
+static long g_cov_steps_max = 0;
+static long g_cov_comp_max = 0;
+
+static void coverage_report() {
+  const long total = g_cov_reached + g_cov_exhausted + g_cov_capped;
+  if (total == 0) return;
+  printf("coverage ... reached %ld (%.2f%%), exhausted %ld (%.2f%%), "
+         "capped %ld (%.2f%%)\n",
+         g_cov_reached, 100.0 * g_cov_reached / total,
+         g_cov_exhausted, 100.0 * g_cov_exhausted / total,
+         g_cov_capped, 100.0 * g_cov_capped / total);
+  if (g_cov_reached > 0)
+    printf("cov steps .. mean %.1f, max %ld; largest component %ld\n",
+           (double)g_cov_steps_sum / g_cov_reached, g_cov_steps_max,
+           g_cov_comp_max);
+}
+
 static void rolling2(fiber_t &f, std::vector<int> &neighs, std::vector<fiber_t> &fibers,
                      char mode, int tmax, const colmap_t &cm, int coverstop) {
   int xold[3] = {f.m_x[0], f.m_x[1], f.m_x[2]};
@@ -219,7 +252,13 @@ static void rolling2(fiber_t &f, std::vector<int> &neighs, std::vector<fiber_t> 
   size_t comp_size = SIZE_MAX;
   std::unordered_set<uint64_t> visited;
   if (coverstop) {
-    const size_t cap = (size_t)std::min(tmax, 4096);
+    // The cap must NOT depend on tmax.  With a tmax-dependent cap, two runs
+    // that differ only in tmax take different branches for the same molecule
+    // (one resolves the component, the other gives up and walks the full
+    // tmax), so their random streams diverge even above the coverage point.
+    // A fixed cap keeps the accelerated placement law tmax-independent, which
+    // is what makes the coverage-identity test meaningful.
+    const size_t cap = COMPONENT_CAP;
     std::unordered_set<uint64_t> comp;
     std::deque<std::pair<int,int>> bfs;
     fiber_t probe = f;
@@ -244,14 +283,21 @@ static void rolling2(fiber_t &f, std::vector<int> &neighs, std::vector<fiber_t> 
       }
       if (capped) break;
     }
-    if (!capped) comp_size = comp.size();
+    if (!capped) {
+      comp_size = comp.size();
+      if ((long)comp.size() > g_cov_comp_max) g_cov_comp_max = (long)comp.size();
+    } else {
+      ++g_cov_capped;
+    }
     visited.reserve(comp.size() * 2);
     visited.insert(colmap_t::key(f.m_x[0], f.m_x[2]));
     if (visited.size() >= comp_size) {          // single-position component
+      ++g_cov_reached;                           // covered at step 0
       return;                                    // placement already optimal
     }
   }
 
+  bool covered = false;
   for (int ts = 0; ts < tmax; ++ts) {
     walk_rolling(f);                             // one RNG draw, as original
     bool ovl;
@@ -267,12 +313,19 @@ static void rolling2(fiber_t &f, std::vector<int> &neighs, std::vector<fiber_t> 
       for (int i = 0; i < 3; ++i) xold[i] = f.m_x[i];
       if (coverstop) {
         visited.insert(colmap_t::key(f.m_x[0], f.m_x[2]));
-        if (visited.size() >= comp_size) break;  // full coverage: done
+        if (visited.size() >= comp_size) {       // full coverage: done
+          ++g_cov_reached;
+          g_cov_steps_sum += ts + 1;
+          if (ts + 1 > g_cov_steps_max) g_cov_steps_max = ts + 1;
+          covered = true;
+          break;
+        }
       }
       continue;
     }
     for (int i = 0; i < 3; ++i) f.m_x[i] = xold[i];   // overlap or no registry
   }
+  if (coverstop && !covered && comp_size != SIZE_MAX) ++g_cov_exhausted;
   for (int i = 0; i < 3; ++i) f.m_x[i] = xopt[i];
 }
 
@@ -408,6 +461,7 @@ static void run_dla2(int tmax, int num_bind, char mode, unsigned int seed,
     }
   }
   fclose(fid);
+  if (coverstop) coverage_report();
 }
 
 int main(int argc, char const *argv[]) {
