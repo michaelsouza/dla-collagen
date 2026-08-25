@@ -49,13 +49,22 @@ CAMPAIGN_KIND=fracture Code/Fracture_fibril/slurm/submit_campaign.sh
 
 ## Forma do job, e por quê
 
-O QOS limita a conta a **1920 CPUs** e a **100 jobs em execução**. Dez tarefas de
-192 núcleos saturam o teto de CPU usando um décimo dos slots de job; cem tarefas
-de um núcleo usariam todos os slots para 5% da CPU. Por isso `campaign.sbatch`
-pede `--exclusive` e fatia o manifesto, rodando cada fatia com `xargs -P`
-(GNU parallel não é assumido).
+O QOS limita a conta a **1920 CPUs** e a **100 jobs em execução**, mas na prática
+quem decide o tempo de início é outra coisa: a `cpu_amd` é compartilhada e vive
+com **zero nós ociosos** e dezenas de jobs de outros usuários na fila (79 numa
+medição de 2026-08-25, com 10 nós alocados, 9 mistos e 1 drenando).
 
-Aumentar `CAMPAIGN_TASKS` acima de 10 não ajuda: o teto de CPU vincula primeiro.
+Por isso a campanha **não** pede `--exclusive`. Um pedido de nó inteiro entra na
+fila atrás de todo mundo; um pedido de fração de nó entra nos núcleos livres de
+um nó parcialmente usado e começa quase imediatamente. O padrão é **40 tarefas
+de 48 núcleos** — chega ao teto de 1920 CPUs, cabe no limite de 100 jobs, e cada
+tarefa faz backfill.
+
+Cada tarefa pega uma fatia contígua do manifesto e a roda com `xargs -P`
+(GNU parallel não é assumido presente).
+
+Ajuste com `CAMPAIGN_TASKS` e `CAMPAIGN_CPUS`. Para um lote pequeno, poucas
+tarefas pequenas começam antes e consomem menos da alocação do grupo.
 
 ## Retomada
 

@@ -25,9 +25,13 @@ manifest="$(campaign_root)/manifest_${kind}.tsv"
     exit 1
 }
 
-# Ten wide tasks saturate the 1920-CPU ceiling using a tenth of the 100-job
-# allowance.  Raising this past 10 buys nothing: the CPU cap binds first.
-tasks="${CAMPAIGN_TASKS:-10}"
+# The CPU ceiling is 1920 and the job ceiling is 100, but cpu_amd is shared and
+# usually has no idle node, so what actually decides start time is how easily a
+# task backfills.  Forty tasks of 48 cores reach the CPU ceiling while each one
+# fits in the spare cores of a partially used node; ten exclusive nodes would
+# queue behind everyone else.
+tasks="${CAMPAIGN_TASKS:-40}"
+cpus="${CAMPAIGN_CPUS:-48}"
 concurrent="${CAMPAIGN_CONCURRENT:-$tasks}"
 if ((concurrent > 100)); then
     echo "QOS allows at most 100 running jobs; capping." >&2
@@ -39,6 +43,7 @@ mkdir -p "$(campaign_root)/logs" logs
 echo "stage ...... $kind"
 echo "items ...... $(wc -l < "$manifest")"
 echo "array ...... 0-$((tasks - 1))%${concurrent}"
+echo "cpus/task .. $cpus"
 echo "account .... $DLA_ACCOUNT"
 echo "partition .. ${DLA_PARTITION}"
 
@@ -46,6 +51,7 @@ sbatch \
     --account="$DLA_ACCOUNT" \
     --partition="$DLA_PARTITION" \
     --array="0-$((tasks - 1))%${concurrent}" \
+    --cpus-per-task="$cpus" \
     --export=ALL,CAMPAIGN_KIND="$kind",DLA_REPO="$repo" \
     "$@" \
     "$here/campaign.sbatch"

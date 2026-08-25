@@ -6,16 +6,17 @@
 #     Code/Fracture_fibril/slurm/make_manifest.sh generate
 #     CAMPAIGN_KIND=generate Code/Fracture_fibril/slurm/submit_campaign.sh
 #
-# Shape: few wide tasks rather than many single-core ones.  The QOS caps the
-# account at 1920 CPUs AND at 100 running jobs, so ten 192-core tasks saturate
-# the CPU ceiling while using a tenth of the job slots.  Each task takes a
-# contiguous slice of the manifest and runs it with xargs -P (GNU parallel is
-# not assumed to exist).
+# Shape: several medium tasks that BACKFILL.  The QOS caps the account at 1920
+# CPUs and at 100 running jobs, but the binding constraint in practice is the
+# partition: cpu_amd is routinely at zero idle nodes with a long queue from
+# other users.  Asking for whole nodes (--exclusive) means waiting behind every
+# job already queued, so tasks request a fraction of a node instead and start on
+# the free cores of a partially used one.  Each task takes a contiguous slice of
+# the manifest and runs it with xargs -P (GNU parallel is not assumed).
 
 #SBATCH --job-name=dla-campaign
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --exclusive
 #SBATCH --time=24:00:00
 #SBATCH --output=logs/%x-%A_%a.out
 #SBATCH --error=logs/%x-%A_%a.err
@@ -41,7 +42,7 @@ manifest="$(campaign_root)/manifest_${kind}.tsv"
 total="$(wc -l < "$manifest")"
 ntasks="${SLURM_ARRAY_TASK_COUNT:-1}"
 taskid="${SLURM_ARRAY_TASK_ID:-0}"
-workers="${CAMPAIGN_WORKERS:-${SLURM_CPUS_ON_NODE:-8}}"
+workers="${CAMPAIGN_WORKERS:-${SLURM_CPUS_PER_TASK:-${SLURM_CPUS_ON_NODE:-8}}}"
 
 # Contiguous slice, ceiling division so the last task absorbs the remainder.
 per=$(( (total + ntasks - 1) / ntasks ))
