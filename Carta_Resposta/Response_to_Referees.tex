@@ -72,22 +72,22 @@
 \begin{document}
 
 \begin{flushleft}
-\textbf{Re: ER12738}\\
-\textit{Scaling behaviors in simulated collagen fibrils}\\
-by Robert Bertoldo Tavares, Michael Ferreira de Souza, Béla Suki And Ascânio D. Araújo
-
-\medskip
-
-Dear,
-
-Ph.D. Margaret Foster\\
-Senior Assistant Editor\\
-Physical Review E
-
-\medskip
-
-Thank you for obtaining a Referee report on our manuscript by Robert Bertolo et al. (ER12738).
-We would like to submit a new version of our manuscript ER12738, as we feel that we can answer, in an appropriate way, the questions and comments addressed in the reports of the Referees. We would be very pleased if you could give further consideration to our submission.
+  \textbf{Re: ER12738}\\
+  \textit{Scaling behaviors in simulated collagen fibrils}\\
+  by Robert Bertoldo Tavares, Michael Ferreira de Souza, Béla Suki And Ascânio D. Araújo
+  
+  \medskip
+  
+  Dear,
+  
+  Ph.D. Margaret Foster\\
+  Senior Assistant Editor\\
+  Physical Review E
+  
+  \medskip
+  
+  Thank you for obtaining a Referee report on our manuscript by Robert Bertolo et al. (ER12738).
+  We would like to submit a new version of our manuscript ER12738, as we feel that we can answer, in an appropriate way, the questions and comments addressed in the reports of the Referees. We would be very pleased if you could give further consideration to our submission.
 \end{flushleft}
 
 \bigskip
@@ -101,35 +101,75 @@ We would like to submit a new version of our manuscript ER12738, as we feel that
 
 \refereelabel
 \begin{refereecomment}
-\(T_s\) controls the number of post-attachment lateral diffusion steps and
-therefore governs the ratio between the molecular relaxation timescale and the
-fibril growth rate. In real type I collagen fibrillogenesis, this ratio is
-modulated by temperature, collagen concentration, pH, and ionic strength, all
-experimentally accessible quantities. The authors acknowledge that \(T_s\) has
-no direct mapping to biochemical conditions (e.g., pH), yet proceed to
-speculate in the concluding paragraph about evolutionary fine-tuning of fibril
-compactness and its role in diseases such as pulmonary emphysema and aortic
-aneurysm. These biological inferences are unsupported without at least a
-qualitative discussion of how \(T_s\) relates to measurable physical or
-physiological variables. The manuscript would be strengthened considerably by
-such a discussion, even at the order-of-magnitude level.
+  \(T_s\) controls the number of post-attachment lateral diffusion steps and
+  therefore governs the ratio between the molecular relaxation timescale and the
+  fibril growth rate. In real type I collagen fibrillogenesis, this ratio is
+  modulated by temperature, collagen concentration, pH, and ionic strength, all
+  experimentally accessible quantities. The authors acknowledge that \(T_s\) has
+  no direct mapping to biochemical conditions (e.g., pH), yet proceed to
+  speculate in the concluding paragraph about evolutionary fine-tuning of fibril
+  compactness and its role in diseases such as pulmonary emphysema and aortic
+  aneurysm. These biological inferences are unsupported without at least a
+  qualitative discussion of how \(T_s\) relates to measurable physical or
+  physiological variables. The manuscript would be strengthened considerably by
+  such a discussion, even at the order-of-magnitude level.
 \end{refereecomment}
 
 \responselabel
-We thank the Referee for the opportunity to clarify the physical basis
-of the parameter \(T_s\). Experiments show that physicochemical conditions—such as temperature, pH, ionic strength, and concentration—alter electrostatic interactions and growth kinetics, simultaneously affecting incorporation and relaxation. The parameter $T_s$ captures the net effect of assembly conditions on local rearrangement during growth. However, calibrating it against specific experimental variables would require independent estimates of incorporation and relaxation timescales, which is beyond the scope of this work.
+We thank the Referee for the opportunity to clarify the physical basis of the
+parameter \(T_s\), and we have added an explicit, order-of-magnitude
+interpretation to the model description.
 
-We have revised the model description to make this interpretation explicit.
-We also removed the evolutionary and disease-specific
-extrapolations from the conclusion, which is now limited to the model result
-that greater effective post-attachment relaxation produces more compact
-fibrils and greater resistance to failure in the simulations.
+Because molecules are released one at a time and complete their surface
+relaxation before the next is released, \(T_s\) is the number of lateral
+surface-diffusion trials available per deposition event, and therefore
+represents the ratio between the deposition and the surface-hopping
+timescales. Conditions that accelerate incorporation relative to surface
+mobility correspond to a smaller effective \(T_s\), and in the model to more
+open cross-sections.
 
-The following paragraph has been added to the revised manuscript:
+This sequential regime is not an arbitrary idealization. Parkinson et
+al.~\cite{Parkinson1995} estimated that at the critical concentration for
+fibril formation in vitro (\(\approx0.5~\mu\)g/ml), using the measured
+translational diffusion coefficient of collagen, only of order ten molecules
+lie close enough to a given region of the fibril surface to collide with it
+within one second. Molecules therefore arrive essentially in isolation, which
+is the regime our algorithm implements.
 
-\textit{The formation of real fibrils is driven by electrostatic forces \cite{Parkinson1995} that favor lateral association and minimize exposed surface area \cite{Kadler1987,Parkinson1995}.
-During collagen fibrillogenesis, the resulting molecular organization reflects the competition between the rate of molecular incorporation and the opportunity for local rearrangement during growth.
-Experimental studies show that physicochemical conditions—such as temperature, collagen concentration, pH, ionic strength, and buffer composition—modify electrostatic interactions, lateral association, and assembly kinetics \cite{Kadler1988,Yang2009,Gobeaux2008,Kalbitzer2018,Morozova2018}, simultaneously altering incorporation and relaxation rates to shift this balance. Following \cite{Parkinson1995}, this growth-to-relaxation balance is represented in a discrete, coarse-grained form through a dimensionless surface diffusion parameter $T_s$, where increasing $T_s$ provides greater opportunity for post-attachment relaxation relative to continued growth and leads to progressively more compact fibrils.}
+Calibrating \(T_s\) against a single experimental variable would require
+independent estimates of the incorporation and relaxation timescales, which is
+beyond the scope of this work. Beyond that, the model treats fibrillogenesis as
+pure physicochemical self-assembly, whereas in vivo the process is additionally
+organized by the cell through fibronectin, integrins, and minor collagens
+\cite{Kadler1996,Canty2005,Kadler2008}. We have added this limitation to the
+manuscript; it is why \(T_s\) cannot admit a one-to-one mapping to a single
+biochemical condition even in principle.
+
+We have also removed the evolutionary and disease-specific extrapolations from
+the conclusion. Those were the claims that required the calibration we cannot
+provide; the remaining claims are internal to the model and do not require one.
+The conclusion now reads:
+
+\textit{Within the present model, a greater opportunity for post-attachment
+  relaxation produces more compact fibrils with greater resistance to failure.
+  Quantitative connections to physicochemical assembly conditions will require
+  experimental estimates of molecular incorporation and rearrangement
+  timescales, followed by calibration against measured fibril growth and
+  morphology.}
+
+The following passage has been added to the model description:
+
+\textit{Because molecules are released one at a time and complete their surface
+  relaxation before the next is released, \(T_s\) sets the number of lateral
+  surface-diffusion trials available per deposition event, and therefore
+  represents the ratio between the deposition and the surface-hopping
+  timescales. This sequential regime is consistent with the estimate of Parkinson
+  et al.~\cite{Parkinson1995} that, at the critical concentration for fibril
+  formation in vitro, only of order ten collagen molecules lie close enough to a
+  given region of the fibril surface to collide with it within one second, so
+  that molecules effectively arrive in isolation. Conditions that accelerate
+  incorporation relative to surface mobility therefore correspond to a smaller
+  effective \(T_s\).}
 
 \pointseparator
 
@@ -137,29 +177,29 @@ Experimental studies show that physicochemical conditions—such as temperature,
 
 \refereelabel
 \begin{refereecomment}
-The authors claim that the rupture process exhibits SOC on the basis that the
-avalanche size distribution follows a power law. This reasoning is
-insufficient. SOC requires that a system spontaneously evolves toward a
-critical state without external tuning of a control parameter, the canonical
-example being the Bak--Tang--Wiesenfeld sandpile. In the present model, the
-external force \(F\) is continuously increased by the experimenter until
-failure occurs. The system is driven, not self-organizing.
-
-Critically, two of the papers the authors themselves cite to support the SOC
-claim (refs. [42] and [43], Zapperi et al., PRL 1997 and PRE 1999) make no
-reference to SOC. Instead, Zapperi et al. explicitly characterize the breakdown
-point as a first-order transition and draw an analogy with spinodal nucleation,
-a fundamentally different phenomenology. The correct terminology for the
-dynamics observed here is ``avalanche statistics in driven disordered
-fracture,'' not SOC.
-
-Furthermore, the power-law regime in Fig.~9(a) spans at most two orders of
-magnitude in avalanche size, a marginal range. No statistical validation of
-the power-law hypothesis is presented (e.g., maximum likelihood estimation of
-the exponent, Kolmogorov--Smirnov test, or comparison with alternative
-distributions following the methodology of Clauset et al., SIAM Review 51,
-661, 2009). The claim of scale-free behavior therefore rests on insufficiently
-rigorous grounds.
+  The authors claim that the rupture process exhibits SOC on the basis that the
+  avalanche size distribution follows a power law. This reasoning is
+  insufficient. SOC requires that a system spontaneously evolves toward a
+  critical state without external tuning of a control parameter, the canonical
+  example being the Bak--Tang--Wiesenfeld sandpile. In the present model, the
+  external force \(F\) is continuously increased by the experimenter until
+  failure occurs. The system is driven, not self-organizing.
+  
+  Critically, two of the papers the authors themselves cite to support the SOC
+  claim (refs. [42] and [43], Zapperi et al., PRL 1997 and PRE 1999) make no
+  reference to SOC. Instead, Zapperi et al. explicitly characterize the breakdown
+  point as a first-order transition and draw an analogy with spinodal nucleation,
+  a fundamentally different phenomenology. The correct terminology for the
+  dynamics observed here is ``avalanche statistics in driven disordered
+  fracture,'' not SOC.
+  
+  Furthermore, the power-law regime in Fig.~9(a) spans at most two orders of
+  magnitude in avalanche size, a marginal range. No statistical validation of
+  the power-law hypothesis is presented (e.g., maximum likelihood estimation of
+  the exponent, Kolmogorov--Smirnov test, or comparison with alternative
+  distributions following the methodology of Clauset et al., SIAM Review 51,
+  661, 2009). The claim of scale-free behavior therefore rests on insufficiently
+  rigorous grounds.
 \end{refereecomment}
 
 \responselabel
@@ -175,8 +215,8 @@ We now evaluate whether the upper tail of the avalanche-size distribution
 could be described by a power law with an exponential cutoff as following
 
 \[
-p(s)\sim s^{-\gamma}\exp(-s/s_c),
-\qquad s\geq s_{\min}.
+  p(s)\sim s^{-\gamma}\exp(-s/s_c),
+  \qquad s\geq s_{\min}.
 \]
 
 This form is widely used for algebraic tails limited by a finite
@@ -221,25 +261,25 @@ visual inspection.
     \put(92,1.2){\makebox(0,0){\fontsize{5}{5}\selectfont Avalanche size, \(s\)}}
   \end{overpic}
   \caption{Complete distributions of preterminal avalanche sizes
-  (open circles) and the extended exponentially cutoff power-law
-  tails (red lines) for the ten values of \(T_s\). The parameters displayed in
-  each panel were estimated by maximum likelihood using only events with
-  \(s\geq s_{\min}\); the continuation below \(s_{\min}\) is shown only to
-  place the fitted tail in the context of the complete empirical
-  distribution.}
+    (open circles) and the extended exponentially cutoff power-law
+    tails (red lines) for the ten values of \(T_s\). The parameters displayed in
+    each panel were estimated by maximum likelihood using only events with
+    \(s\geq s_{\min}\); the continuation below \(s_{\min}\) is shown only to
+    place the fitted tail in the context of the complete empirical
+    distribution.}
   \label{fig:avalanche-distributions}
 \end{figure}
 
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.98\textwidth]
-    {figure_2.png}
+  {figure_2.png}
   \caption{Evolution of the maximum-likelihood tail parameters with the
-  dimensionless surface-relaxation parameter \(T_s\): (a) power-law exponent
-  \(\gamma\) and (b) exponential
-  cutoff scale \(s_c\). For \(T_s\geq512\), both quantities stabilize around
-  \(\gamma=2.204\pm0.034\) and \(s_c=101.0\pm5.6\), where the quoted dispersions
-  describe variation among the four compact-regime conditions.}
+    dimensionless surface-relaxation parameter \(T_s\): (a) power-law exponent
+    \(\gamma\) and (b) exponential
+    cutoff scale \(s_c\). For \(T_s\geq512\), both quantities stabilize around
+    \(\gamma=2.204\pm0.034\) and \(s_c=101.0\pm5.6\), where the quoted dispersions
+    describe variation among the four compact-regime conditions.}
   \label{fig:avalanche-parameters}
 \end{figure}
 
@@ -262,9 +302,9 @@ two-dimensional percolation exactly at the critical point. Following Stauffer
 and Aharony~\cite{Stauffer1994}, the finite-size cluster distribution satisfies
 
 \[
-n_s(L)\sim s^{-\tau_{\mathrm{perc}}}f(s/s_c),
-\qquad
-\tau_{\mathrm{perc}}=\frac{187}{91}\simeq2.055.
+  n_s(L)\sim s^{-\tau_{\mathrm{perc}}}f(s/s_c),
+  \qquad
+  \tau_{\mathrm{perc}}=\frac{187}{91}\simeq2.055.
 \]
 
 For \(L=1000\), 2000, 5000, and 10000, the fitted exponents were respectively
@@ -283,17 +323,17 @@ universality class.
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.96\textwidth]
-    {figure_3.png}
-
+  {figure_3.png}
+  
   \caption{Validation of the maximum-likelihood exponent estimation using
-  two-dimensional critical percolation. (a) Log-binned cluster-size
-  distributions for different system sizes \(L\). The dashed line indicates
-  the theoretical algebraic behavior \(p(s)\propto s^{-187/91}\). The
-  finite-size cutoff moves toward progressively larger cluster sizes as \(L\)
-  increases. (b) Maximum-likelihood estimate of the exponent as a function of
-  \(L\). The dashed horizontal line indicates the exact value
-  \(\tau=187/91\simeq2.0549\). The estimate approaches the theoretical value
-  monotonically, reaching \(\widehat{\tau}=2.0273\) for \(L=10000\).}
+    two-dimensional critical percolation. (a) Log-binned cluster-size
+    distributions for different system sizes \(L\). The dashed line indicates
+    the theoretical algebraic behavior \(p(s)\propto s^{-187/91}\). The
+    finite-size cutoff moves toward progressively larger cluster sizes as \(L\)
+    increases. (b) Maximum-likelihood estimate of the exponent as a function of
+    \(L\). The dashed horizontal line indicates the exact value
+    \(\tau=187/91\simeq2.0549\). The estimate approaches the theoretical value
+    monotonically, reaching \(\widehat{\tau}=2.0273\) for \(L=10000\).}
   \label{fig:percolation-control}
 \end{figure}
 
@@ -317,32 +357,32 @@ strictly scale-free power law.
 
 \refereelabel
 \begin{refereecomment}
-The authors interpret their measured exponent \(\gamma\approx2.8\) (at high
-\(T_s\)) as evidence of a regime beyond equal load sharing (ELS), signaling a
-crossover to global load-sharing universality. This interpretation is
-incorrect.
-
-In fiber-bundle models, \(\gamma=5/2\) is the exact mean-field result for ELS,
-the limiting case of maximally global stress redistribution (Hemmer \& Hansen,
-J. Appl. Mech. 59, 909, 1992; Daniels, Proc. R. Soc. London A 183, 405, 1945).
-There is no established theoretical framework that predicts or interprets
-exponents above \(5/2\) in this context.
-
-Moreover, Pradhan, Hansen \& Chakrabarti (Rev. Mod. Phys. 82, 499, 2010), also
-cited by the authors, demonstrate that within ELS, the avalanche exponent
-undergoes a crossover from \(\gamma=5/2\) (generic regime, away from failure) to
-\(\gamma=3/2\) (near the critical breakdown point). That is, as stress
-redistribution becomes maximally global near rupture, the exponent DECREASES,
-not increases. The authors' claim that \(\gamma>5/2\) signals increasingly
-global load sharing is therefore the opposite of what the established theory
-predicts.
-
-The observed deviation from \(5/2\) is more plausibly attributable to
-finite-size effects, limited ensemble statistics (10 fibrils per \(T_s\) value),
-the restricted range over which the power law is fitted, or the specific
-definition of avalanche adopted in the model. A sensitivity analysis with
-respect to the Weibull modulus \(m\) (fixed at \(m=2\) throughout, following
-Ref.~[35]) would also help assess the robustness of the exponents.
+  The authors interpret their measured exponent \(\gamma\approx2.8\) (at high
+  \(T_s\)) as evidence of a regime beyond equal load sharing (ELS), signaling a
+  crossover to global load-sharing universality. This interpretation is
+  incorrect.
+  
+  In fiber-bundle models, \(\gamma=5/2\) is the exact mean-field result for ELS,
+  the limiting case of maximally global stress redistribution (Hemmer \& Hansen,
+  J. Appl. Mech. 59, 909, 1992; Daniels, Proc. R. Soc. London A 183, 405, 1945).
+  There is no established theoretical framework that predicts or interprets
+  exponents above \(5/2\) in this context.
+  
+  Moreover, Pradhan, Hansen \& Chakrabarti (Rev. Mod. Phys. 82, 499, 2010), also
+  cited by the authors, demonstrate that within ELS, the avalanche exponent
+  undergoes a crossover from \(\gamma=5/2\) (generic regime, away from failure) to
+  \(\gamma=3/2\) (near the critical breakdown point). That is, as stress
+  redistribution becomes maximally global near rupture, the exponent DECREASES,
+  not increases. The authors' claim that \(\gamma>5/2\) signals increasingly
+  global load sharing is therefore the opposite of what the established theory
+  predicts.
+  
+  The observed deviation from \(5/2\) is more plausibly attributable to
+  finite-size effects, limited ensemble statistics (10 fibrils per \(T_s\) value),
+  the restricted range over which the power law is fitted, or the specific
+  definition of avalanche adopted in the model. A sensitivity analysis with
+  respect to the Weibull modulus \(m\) (fixed at \(m=2\) throughout, following
+  Ref.~[35]) would also help assess the robustness of the exponents.
 \end{refereecomment}
 
 \responselabel
@@ -372,15 +412,15 @@ this model choice and do not claim robustness with respect to \(m\).
 
 \refereelabel
 \begin{refereecomment}
-The fractal dimension is measured in 2D but used to characterize a 3D
-mechanical problem. \(D_f\) is estimated from 2D cross-sectional projections
-(\(x\)-\(z\) plane), yet the backbone identification and the entire fracture
-simulation are three-dimensional. The relationship between the 2D
-cross-sectional \(D_f\) and the 3D structural properties that govern mechanical
-response is not established. The authors use the 2D \(D_f\) as a proxy for
-overall fibril compactness without justification. This connection should
-either be derived or explicitly discussed as an assumption with its
-limitations.
+  The fractal dimension is measured in 2D but used to characterize a 3D
+  mechanical problem. \(D_f\) is estimated from 2D cross-sectional projections
+  (\(x\)-\(z\) plane), yet the backbone identification and the entire fracture
+  simulation are three-dimensional. The relationship between the 2D
+  cross-sectional \(D_f\) and the 3D structural properties that govern mechanical
+  response is not established. The authors use the 2D \(D_f\) as a proxy for
+  overall fibril compactness without justification. This connection should
+  either be derived or explicitly discussed as an assumption with its
+  limitations.
 \end{refereecomment}
 
 \responselabel
@@ -406,7 +446,7 @@ variation of the load-bearing area,
   \left[
     \frac{1}{S_y-1}
     \sum_{i=1}^{S_y}\left(N(i)-\langle N\rangle\right)^2
-  \right]^{1/2},
+    \right]^{1/2},
 \]
 which quantifies the relative variation of \(N(i)\) along the 201 axial layers;
 and the mean molecular stress exposure at unit force,
@@ -434,17 +474,17 @@ applied force.
   \centering
   \includegraphics[width=\textwidth]{figure_4.pdf}
   \caption{Relationship between the cross-sectional fractal dimension \(D_f\)
-  and structural descriptors of the three-dimensional load-bearing backbone:
-  (a) mean load-bearing area \(\langle N\rangle\); (b) mean molecular
-  coordination \(\langle K\rangle\); (c) axial coefficient of variation of
-  the load-bearing area, \(\mathrm{CV}(N)\); and (d) mean molecular stress
-  exposure at unit force, \(\langle\sigma_M\rangle_{F=1}\). Each point
-  represents the ensemble average for one value of \(T_s\). Horizontal error
-  bars are the standard errors of the mass--radius fits used to estimate
-  \(D_f\), and vertical error bars are standard errors of the mean across
-  fibrils. The reported \(\rho\) values are Spearman correlations across the
-  ten \(T_s\) conditions. This figure is reproduced from Fig.~7 of the revised
-  manuscript.}
+    and structural descriptors of the three-dimensional load-bearing backbone:
+    (a) mean load-bearing area \(\langle N\rangle\); (b) mean molecular
+    coordination \(\langle K\rangle\); (c) axial coefficient of variation of
+    the load-bearing area, \(\mathrm{CV}(N)\); and (d) mean molecular stress
+    exposure at unit force, \(\langle\sigma_M\rangle_{F=1}\). Each point
+    represents the ensemble average for one value of \(T_s\). Horizontal error
+    bars are the standard errors of the mass--radius fits used to estimate
+    \(D_f\), and vertical error bars are standard errors of the mean across
+    fibrils. The reported \(\rho\) values are Spearman correlations across the
+    ten \(T_s\) conditions. This figure is reproduced from Fig.~7 of the revised
+    manuscript.}
   \label{fig:response-df-backbone}
 \end{figure}
 
@@ -464,16 +504,16 @@ its scope explicit.
 
 \refereelabel
 \begin{refereecomment}
-The key result of the paper, that \(D_f\) and \(\gamma\) saturate together at
-\(T_s\geq512\), is presented as if it were a derived causal relationship. In
-fact, it is a numerical correlation observed in simulation. No theoretical
-framework is provided that connects the fractal dimension of the fibril
-cross-section to the avalanche exponent of the fracture process. The statement
-that ``the fibril's fractal dimension serves as a quantitative bridge between
-structural compactness and failure statistics'' in the Conclusion overstates
-what has been demonstrated. The authors should reframe this as an empirical
-observation and discuss what theoretical framework might, in the future,
-explain such a connection.
+  The key result of the paper, that \(D_f\) and \(\gamma\) saturate together at
+  \(T_s\geq512\), is presented as if it were a derived causal relationship. In
+  fact, it is a numerical correlation observed in simulation. No theoretical
+  framework is provided that connects the fractal dimension of the fibril
+  cross-section to the avalanche exponent of the fracture process. The statement
+  that ``the fibril's fractal dimension serves as a quantitative bridge between
+  structural compactness and failure statistics'' in the Conclusion overstates
+  what has been demonstrated. The authors should reframe this as an empirical
+  observation and discuss what theoretical framework might, in the future,
+  explain such a connection.
 \end{refereecomment}
 
 \responselabel
@@ -510,10 +550,10 @@ been revised to state this scope explicitly.
 
 \refereelabel
 \begin{refereecomment}
-The aspect ratio of model molecules (18:1) differs substantially from that of
-real collagen molecules (\(\approx 200{:}1\)). The impact of this
-simplification on the fractal dimension and packing geometry should be
-acknowledged.
+  The aspect ratio of model molecules (18:1) differs substantially from that of
+  real collagen molecules (\(\approx 200{:}1\)). The impact of this
+  simplification on the fractal dimension and packing geometry should be
+  acknowledged.
 \end{refereecomment}
 
 \responselabel
@@ -529,10 +569,10 @@ We have included the following paragraphs discussing this issue in the new versi
 
 \refereelabel
 \begin{refereecomment}
-The phenomenological function \(f(F)\) in Eq.~(5) is purely empirical. Its
-form is not derived from the model and the physical interpretation of the
-parameters \(\alpha\) and \(\beta\), while discussed qualitatively, would
-benefit from more precise justification.
+  The phenomenological function \(f(F)\) in Eq.~(5) is purely empirical. Its
+  form is not derived from the model and the physical interpretation of the
+  parameters \(\alpha\) and \(\beta\), while discussed qualitatively, would
+  benefit from more precise justification.
 \end{refereecomment}
 
 \responselabel
@@ -552,19 +592,19 @@ We have included the following discussion in the revised manuscript to clarify t
 
 \refereelabel
 \begin{refereecomment}
-My main concern is the loading protocol. Equation (4) defines the probability
-of failure. As long as fibers carry load, this probability remains finite.
-This seems to imply that, at any finite load, the bundle would fail after a
-finite time, with a characteristic time depending on the load level. The
-authors state that during a sweep through the system, each fiber is given a
-chance to fail according to Eq.~(4), and if no failure occurs, the external
-load is increased. This procedure appears somewhat artificial. If I understand
-the model correctly, the bundle is not fully relaxed after a sweep: failure
-could continue in a subsequent sweep at the same load level. Moreover, fiber
-removal increases (\(\sigma_M\)) and decreases (\(K\)), both of which increase
-the rupture probability (\(P_R\)). Thus, the system does not seem to be in a
-stable state when the external load is further increased. The authors should
-clarify this point in the manuscript.
+  My main concern is the loading protocol. Equation (4) defines the probability
+  of failure. As long as fibers carry load, this probability remains finite.
+  This seems to imply that, at any finite load, the bundle would fail after a
+  finite time, with a characteristic time depending on the load level. The
+  authors state that during a sweep through the system, each fiber is given a
+  chance to fail according to Eq.~(4), and if no failure occurs, the external
+  load is increased. This procedure appears somewhat artificial. If I understand
+  the model correctly, the bundle is not fully relaxed after a sweep: failure
+  could continue in a subsequent sweep at the same load level. Moreover, fiber
+  removal increases (\(\sigma_M\)) and decreases (\(K\)), both of which increase
+  the rupture probability (\(P_R\)). Thus, the system does not seem to be in a
+  stable state when the external load is further increased. The authors should
+  clarify this point in the manuscript.
 \end{refereecomment}
 
 \responselabel
@@ -600,13 +640,13 @@ interpretation and its limitations explicit.
 
 \refereelabel
 \begin{refereecomment}
-The authors discuss localized and more equal load-sharing regimes in their
-interpretation. However, in the simulations, load sharing appears to be
-determined by Eqs.~(2) and (3), which seem to impose equal load sharing within
-a cross section. If I understand correctly, information about the local
-structure enters only through \(K\) in the rupture probability. The authors
-should discuss more clearly in what precise sense the model realizes localized
-or equal-load-sharing behavior.
+  The authors discuss localized and more equal load-sharing regimes in their
+  interpretation. However, in the simulations, load sharing appears to be
+  determined by Eqs.~(2) and (3), which seem to impose equal load sharing within
+  a cross section. If I understand correctly, information about the local
+  structure enters only through \(K\) in the rupture probability. The authors
+  should discuss more clearly in what precise sense the model realizes localized
+  or equal-load-sharing behavior.
 \end{refereecomment}
 
 \responselabel
@@ -652,16 +692,16 @@ not imply a local-load-sharing mechanism.
 
 \refereelabel
 \begin{refereecomment}
-Since load sharing according to Eq.~(2) is global within a cross section, it
-seems that no particular stress concentration can develop around failed
-(removed) fibers in that cross section. If this interpretation is correct,
-then the definition of avalanches may require further justification. If the
-stress field is not localized around failed clusters, it is not obvious why
-avalanches should be defined as steps in the growth of connected failed
-clusters. An alternative, and possibly more natural, definition would be to
-regard an avalanche as the set of fibers that fail between two consecutive
-increments of the external force. The authors should make this aspect of the
-work clearer.
+  Since load sharing according to Eq.~(2) is global within a cross section, it
+  seems that no particular stress concentration can develop around failed
+  (removed) fibers in that cross section. If this interpretation is correct,
+  then the definition of avalanches may require further justification. If the
+  stress field is not localized around failed clusters, it is not obvious why
+  avalanches should be defined as steps in the growth of connected failed
+  clusters. An alternative, and possibly more natural, definition would be to
+  regard an avalanche as the set of fibers that fail between two consecutive
+  increments of the external force. The authors should make this aspect of the
+  work clearer.
 \end{refereecomment}
 
 \responselabel
@@ -691,13 +731,13 @@ terminology consistently with this force-step definition.
 
 \refereelabel
 \begin{refereecomment}
-The interpretation of power-law statistics in terms of self-organized
-criticality should be treated with caution. In rupture processes the system is
-gradually destroyed, and there is no healing mechanism by which failed fibers
-could recover and carry load again. Therefore, the analogy with self-organized
-critical systems may be problematic unless it is carefully qualified. I
-suggest that the authors either provide a more detailed justification for this
-interpretation or reformulate the discussion in more cautious terms.
+  The interpretation of power-law statistics in terms of self-organized
+  criticality should be treated with caution. In rupture processes the system is
+  gradually destroyed, and there is no healing mechanism by which failed fibers
+  could recover and carry load again. Therefore, the analogy with self-organized
+  critical systems may be problematic unless it is carefully qualified. I
+  suggest that the authors either provide a more detailed justification for this
+  interpretation or reformulate the discussion in more cautious terms.
 \end{refereecomment}
 
 \responselabel
