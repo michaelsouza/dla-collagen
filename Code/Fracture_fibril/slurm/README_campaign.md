@@ -70,6 +70,22 @@ produz log nenhum e não sai sozinha do estado. Libere com
 use `check_campaign.sh` + reenvio, que é idempotente. Uma tarefa retida também
 **consome uma vaga do orçamento de submissão**.
 
+**Falhas de lançamento são aleatórias, ~1/3, e o fluxo já lida com isso.**
+Medido num teste controlado (2026-08-25): 3 tarefas retidas em 8, e 5 em 16 nas
+submissões anteriores. **Não dependem do índice** — num array de 2, a tarefa 0
+falhou e a 1 rodou — nem do tamanho do array, nem do nó. Uma leitura inicial de
+que "só os índices 0 e 1 rodam" era coincidência de amostra pequena: com 1/3 de
+falha, um array de 2 sai limpo em 45% das vezes.
+
+Use `run_until_complete.sh`, que submete, espera, verifica e reenvia até fechar.
+Como os workers são idempotentes, cada rodada faz só o que falta; a fração
+ainda pendente após *n* rodadas é ~(1/3)ⁿ — 67% pronto após uma, 89% após duas,
+96% após três.
+
+```bash
+CAMPAIGN_KIND=fracture Code/Fracture_fibril/slurm/run_until_complete.sh
+```
+
 **A causa não foi estabelecida.** Numa medição de 2026-08-25 havia **12 jobs
 retidos no cluster inteiro**, de vários usuários e projetos, com a partição
 tendo 344 núcleos livres. Portanto não é falta de recurso nem algo específico
