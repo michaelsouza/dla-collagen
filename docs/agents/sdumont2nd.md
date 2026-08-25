@@ -98,25 +98,40 @@ Reference: the full suite passes on a compute node in well under a minute —
 
 ## Filesystem and I/O
 
+Two Lustre areas matter, with very different sizes. Check both before
+launching a batch:
+
 ```bash
-lfs quota -h "$HOME"
+lfs quota -h -p "$(id -u)" /petrobr        # personal home quota
+lfs quota -h -g solverbrict /petrobr       # project area quota
 ```
 
-- `$HOME` is Lustre and is the only durable storage; the quota is 100 GB. There
-  is no separate scratch area — on SDumont2 `$HOME` and `$SCRATCH` are the same
-  Lustre filesystem and `/prj` is a symlink into `/scratch`. Watch the quota
-  before launching a batch that writes many result files.
-- Compute nodes have node-local storage: `/tmp` (492 GB, 455 GB free) and
-  `/dev/shm` (756 GB). Both are wiped when the job ends.
-- **`SLURM_TMPDIR` is not set on this cluster.** `TMPDIR` is, and points at the
-  node-local `/tmp`. Job scripts must fall back through both:
-  `${SLURM_TMPDIR:-${TMPDIR:-/tmp}}`, which is what `env.sh` exports as
-  `DLA_SCRATCH`.
+**Home** (`$HOME` = `/petrobr/parceirosbr/home/<user>`) has a **100 GB**
+project quota. It holds the clone, the venv, and nothing else. It is not
+sized for simulation output.
+
+**Project area** (`/petrobr/parceirosbr/solverbrict`) has a **6 TB** group
+quota, shared with the other `solverbrict` users and roughly 2.6 TB full as of
+August 2026. It is group-writable (setgid, group `solverbrict`) and is where
+production results belong. Work under a directory named after your user, and
+remember that the quota is shared: announce and clean up large batches.
+
+Note that `$SCRATCH` is set to `$HOME` and buys no extra space. The 3 PB
+`/scratch` filesystem (and `/prj`, a symlink into it) belongs to other
+projects and denies us write access — do not plan around it.
+
+Compute nodes have node-local storage: `/tmp` (492 GB, 455 GB free) and
+`/dev/shm` (756 GB). Both are wiped when the job ends.
+
+**`SLURM_TMPDIR` is not set on this cluster.** `TMPDIR` is, and points at the
+node-local `/tmp`. Job scripts must fall back through both:
+`${SLURM_TMPDIR:-${TMPDIR:-/tmp}}`, which is what `env.sh` exports as
+`DLA_SCRATCH`.
 
 Simulations are chatty on I/O. Each task should write its scratch files and its
-database to `$DLA_SCRATCH` on the node, then copy the finished result to Lustre
-and `mv` it into place, so a killed job never publishes a partial file.
-`run_array.sbatch` already follows this pattern.
+database to `$DLA_SCRATCH` on the node, then copy the finished result to the
+project area and `mv` it into place, so a killed job never publishes a partial
+file. `run_array.sbatch` already follows this pattern.
 
 ## C++
 

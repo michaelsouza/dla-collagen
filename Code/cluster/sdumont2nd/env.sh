@@ -44,8 +44,12 @@ export DLA_ACCOUNT="${DLA_ACCOUNT:-solverbrict}"
 export DLA_PARTITION="${DLA_PARTITION:-cpu_amd}"
 export DLA_PARTITION_DEV="${DLA_PARTITION_DEV:-cpu_amd_dev}"
 
-# --- repository root ------------------------------------------------------
+# --- storage --------------------------------------------------------------
 export DLA_REPO="${DLA_REPO:-$HOME/gitrepos/dla-collagen}"
+
+# $HOME carries a 100 GB quota and is not sized for simulation output. The
+# solverbrict project area has a 6 TB group quota; production results go there.
+export DLA_PROJECT="${DLA_PROJECT:-/petrobr/parceirosbr/solverbrict/$USER/dla-collagen}"
 
 # SLURM_TMPDIR does not exist on SDumont2; TMPDIR points at node-local /tmp.
 export DLA_SCRATCH="${SLURM_TMPDIR:-${TMPDIR:-/tmp}}"
