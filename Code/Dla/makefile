@@ -13,7 +13,7 @@ SRC = $(SRC_DIR)/fast_dla.cpp
 all: $(TARGET)
 
 $(TARGET): $(SRC)
-$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET)
+	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET)
 
 clean:
-rm -f $(TARGET) *.o
+	rm -f $(TARGET) *.o

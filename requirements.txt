@@ -6,3 +6,4 @@ scikit-learn
 jupyter
 scipy>=1.7.1
 mpmath
+duckdb
