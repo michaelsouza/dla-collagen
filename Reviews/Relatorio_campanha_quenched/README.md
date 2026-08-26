@@ -284,4 +284,141 @@ Um teste que resolveria a questão de $D_f$ em definitivo, se for desejado: gera
 
 ---
 
+## Figura 4 — estatística das cascatas
+
+![CCDF com as quatro famílias ajustadas, expoente e escala de corte](fig04_cascatas.png)
+
+*Painel (a): função de sobrevivência do tamanho de cascata em $T_s$=128, $m$=2, com as quatro famílias da Tabela 1 de Clauset ajustadas ao mesmo suporte (a exponencial é omitida do desenho — é a única que a lei de potência vence). Painéis (b) e (c): expoente e escala de corte do modelo com corte, por condição. 61 000 717 cascatas preterminais; 200 fibrilas × 50 realizações por condição. Barras: bootstrap de blocos por fibrila.*
+
+### A definição adotada
+
+**A cascata é o observável primário**: tudo que é removido numa mesma elevação quase-estática de carga, até o sistema reestabilizar, incluindo as hastes que perdem o caminho de carga por consequência. É `total_deleted_rods` no esquema legado.
+
+Três razões. Ela é **livre de parâmetro** — determinada pelo modelo, não por escolha do operador, ao contrário do protocolo recozido, onde a avalanche era definida por $\Delta F$ e a estatística era propriedade do $\Delta F$ e não da fibrila (§12 da DAG). Ela é a **unidade causal** — partes espacialmente separadas de uma mesma cascata foram causalmente ligadas, e particioná-las por geometria descarta esse vínculo. E é o que **"avalanche" significa na literatura de fiber bundle**, o que dá teoria com que comparar.
+
+A decomposição em aglomerados conexos (`avalanche_sizes`) permanece nos dados como diagnóstico de localização do dano — 12% a 25% das cascatas se partem em mais de um aglomerado — mas não é o estimando primário.
+
+**A cascata terminal é excluída.** É a ruptura catastrófica final, uma por realização, com tamanho típico de centenas contra a média de ~11 das preterminais. Incluí-la engorda a cauda artificialmente.
+
+### O resultado principal: a lei de potência pura é rejeitada
+
+Seguindo a Box 1 de `Bibliograph/Clauset2009.md` — $x_{\min}$ e $\gamma$ por máxima verossimilhança, aderência por bootstrap semiparamétrico, comparação com alternativas por razão de verossimilhança:
+
+| | de 50 condições |
+|:--|--:|
+| Lei de potência pura **rejeitada** ($p \leq 0{,}1$) | **48** |
+| Plausível ($p > 0{,}1$) | 2 |
+
+As duas sobreviventes ($T_s$=128 e 8192 em $m$=10) têm $p$ = 0,106 e 0,123 — no fio do limiar — e mesmo nelas há alternativas favorecidas. Nas outras 48 o $p$ é 0,000: **nenhuma** das 2500 amostras sintéticas teve KS pior que o observado.
+
+### Mas o substituto não é único
+
+| alternativa | favorecida | lei de potência favorecida |
+|:--|--:|--:|
+| log-normal | **49** | 0 |
+| exponencial esticada | **49** | 0 |
+| lei de potência com corte | ~todas | — |
+| exponencial | 1 | **47** |
+
+Este é exatamente o cenário da Tabela 4 de Clauset: *"with cut-off ... however, some of the alternative distributions are also good fits, such as the log-normal or the stretched exponential distribution."*
+
+**O que os dados sustentam:** a distribuição **não é lei de potência pura**, é **mais pesada que exponencial**, e três famílias de cauda curva a descrevem de forma indistinguível entre si. O painel (a) mostra isso — as três curvam junto com os dados enquanto a lei pura dispara sozinha.
+
+**O que os dados não sustentam:** afirmar que é "lei de potência com corte". Essa família ajusta bem, mas não melhor que log-normal ou esticada.
+
+### Expoente do modelo com corte
+
+$\gamma$, com erro padrão de bootstrap de blocos por fibrila:
+
+| $T_s$ | $m$=1 | $m$=2 | $m$=3 | $m$=5 | $m$=10 |
+|---:|---:|---:|---:|---:|---:|
+| 2 | 1.808 ± 0.011 | 1.950 ± 0.015 | 2.001 ± 0.018 | 2.015 ± 0.021 | 1.955 ± 0.028 |
+| 8 | 2.191 ± 0.010 | 2.282 ± 0.013 | 2.308 ± 0.018 | 2.262 ± 0.022 | 2.073 ± 0.026 |
+| 16 | 2.470 ± 0.008 | 2.462 ± 0.015 | 2.404 ± 0.017 | 2.285 ± 0.020 | 2.058 ± 0.022 |
+| 32 | 2.672 ± 0.009 | 2.519 ± 0.014 | 2.321 ± 0.032 | 2.179 ± 0.020 | 1.898 ± 0.027 |
+| 64 | 2.783 ± 0.009 | 2.494 ± 0.013 | 2.286 ± 0.014 | 2.095 ± 0.018 | 1.828 ± 0.021 |
+| 128 | 2.776 ± 0.012 | 2.438 ± 0.011 | 2.203 ± 0.013 | 1.985 ± 0.016 | 1.767 ± 0.016 |
+| 512 | 2.760 ± 0.011 | 2.367 ± 0.010 | 2.129 ± 0.012 | 1.924 ± 0.014 | 1.727 ± 0.017 |
+| 1024 | 2.808 ± 0.008 | 2.383 ± 0.009 | 2.185 ± 0.023 | 1.942 ± 0.016 | 1.743 ± 0.016 |
+| 4096 | 2.802 ± 0.007 | 2.372 ± 0.012 | 2.131 ± 0.015 | 1.920 ± 0.015 | 1.721 ± 0.016 |
+| 8192 | 2.778 ± 0.008 | 2.351 ± 0.010 | 2.111 ± 0.013 | 1.907 ± 0.015 | 1.732 ± 0.018 |
+
+### Escala de corte $s_c = 1/\lambda$
+
+| $T_s$ | $m$=1 | $m$=2 | $m$=3 | $m$=5 | $m$=10 |
+|---:|---:|---:|---:|---:|---:|
+| 2 | 119.5 | 147.2 | 161.3 | 153.2 | 106.8 |
+| 8 | 162.1 | 144.9 | 126.3 | 84.2 | 45.4 |
+| 16 | 163.4 | 94.2 | 71.2 | 49.0 | 31.2 |
+| 32 | 101.9 | 58.7 | 35.7 | 26.1 | 18.6 |
+| 64 | 79.1 | 44.0 | 28.0 | 21.2 | 17.1 |
+| 128 | 74.9 | 40.9 | 25.8 | 19.3 | 17.9 |
+| 512 | 79.7 | 36.5 | 24.7 | 19.4 | 18.9 |
+| 1024 | 111.5 | 39.8 | 27.8 | 20.3 | 19.2 |
+| 4096 | 115.1 | 39.7 | 26.5 | 20.6 | 19.7 |
+| 8192 | 96.0 | 38.5 | 25.4 | 20.2 | 20.4 |
+
+### Leitura
+
+**$\gamma$ satura em $T_s \approx 128$** para todo $m$ — a mesma região das três figuras estruturais. É a quarta medida independente a apontar para 128–512, e a primeira que vem da mecânica e não da geometria.
+
+**$\gamma$ decresce com $m$** em $T_s$ alto: de 2,78 ($m$=1) a 1,73 ($m$=10). Desordem mais estreita produz cascatas com cauda mais pesada, o que é o esperado — limiares próximos rompem juntos.
+
+**O valor 5/2 de campo médio cai entre $m$=1 e $m$=2.** Isso *não* autoriza a dizer que se encontrou campo médio: $m$ é parâmetro livre da desordem, e escolher o $m$ que cruza 5/2 seria ajuste a posteriori. Além disso o modelo não é ELS puro — o limiar $F^*_i = K_i \sigma_c X_i / a_i$ tem canal global (ocupação de camada, via $a_i$) **e** canal local (vizinhos ativos, via $K_i$), então 5/2 é referência, não previsão.
+
+**$s_c$ cai com $T_s$ e com $m$**, e também satura em ~128. Em $m$=10 o corte chega a $s_c \approx 20$, pequeno o bastante para que a "lei de potência" tenha menos de uma década de alcance antes de ser cortada — outra forma de dizer que a descrição de lei pura não se sustenta.
+
+### Código utilizado
+
+| arquivo | papel |
+|:--|:--|
+| `Code/Data_analysis/extract_cascades.py` | reduz os 10 000 arquivos a histogramas de tamanho de cascata por realização, separando a terminal |
+| `Code/Data_analysis/run_cascade_statistics.py` | procedimento de Clauset por condição, com bootstrap de blocos |
+| `Code/Data_analysis/plot_cascade_statistics.py` | desenha os três painéis |
+| `Code/Data_analysis/avalanche_statistics.py` | núcleo de ajuste; recebeu `fit_stretched_exponential` e `vuong_likelihood_ratio` |
+| `Code/Data_analysis/test_stretched_exponential.py` | cinco verificações da nova família e da razão de Vuong |
+
+```bash
+python3 Code/Data_analysis/extract_cascades.py \
+    --runs-dir $DLA_PROJECT/campaign/avalanches/runs \
+    --out      $DLA_PROJECT/campaign/analysis/cascades --workers 48
+
+python3 Code/Data_analysis/run_cascade_statistics.py \
+    --cascades $DLA_PROJECT/campaign/analysis/cascades \
+    --out      $DLA_PROJECT/campaign/analysis/cascades/cascade_stats_clauset.csv \
+    --replicates 400 --gof-replicates 2500 --lr-replicates 500 --workers 48
+
+python3 Code/Data_analysis/plot_cascade_statistics.py
+```
+
+Extração: 12 s em 48 núcleos. Análise: 11 min. Tabela completa em `fig04_cascatas_ajustes.csv`.
+
+### Algoritmo
+
+**Redução.** Cada arquivo vira uma matriz esparsa com uma linha por realização e uma coluna por tamanho de cascata, mais o índice da fibrila a que cada linha pertence — que é o que o bootstrap reamostra. Verificado contra o parser: 61 000 717 preterminais + 500 000 terminais + 500 000 linhas de abertura $f=0$ = 62 000 717 passos de força.
+
+**Seleção de $x_{\min}$.** Minimização da distância KS discreta sobre os $x_{\min}$ observados, **com piso de 5% dos eventos na cauda** — ver ressalva 2.
+
+**Estimativa.** MLE discreto exato via zeta de Hurwitz, não a aproximação contínua. Clauset avisa que a aproximação só é boa para $x_{\min} \gtrsim 6$, e os nossos $x_{\min}$ são quase todos 2.
+
+**Aderência.** Bootstrap semiparamétrico com **2500 réplicas**, seguindo a regra $n \geq \frac{1}{4}\epsilon^{-2}$ para $\epsilon = 0{,}01$. Cada réplica sintética **reseleciona o seu próprio $x_{\min}$**, como o §4 exige.
+
+**Comparação de modelos.** Para as três alternativas não aninhadas (log-normal, exponencial, esticada), a razão normalizada da equação (C.6), assintoticamente normal padrão. Para a lei com corte, que é aninhada e onde a estatística é degenerada (Apêndice C.1), bootstrap paramétrico.
+
+**Incerteza.** Bootstrap de blocos com 400 réplicas, **bloco = fibrila**: realizações da mesma fibrila compartilham topologia e não são independentes. Reamostra-se fibrilas e, dentro de cada uma, as realizações.
+
+### Ressalvas
+
+1. **A rejeição não identifica a distribuição.** Log-normal, esticada e lei-com-corte ajustam de forma equivalente. Escolher uma delas para o manuscrito exigiria um critério além destes testes — mais dados não ajudam, porque com 61 milhões de eventos a estatística já está saturada.
+2. **O piso de 5% na cauda é uma escolha.** Sem ele, a minimização de KS cai numa cauda distante em 4 de 50 condições (todas $m$=10), devolvendo $x_{\min} \approx 30$ e $\gamma \approx 5$ sobre 0,15% a 0,5% dos eventos, com condições vizinhas discordando por um fator 2,3 — instabilidade de estimador, não física. O piso é aplicado uniformemente e as colunas sem piso ficam no CSV para conferência. A instabilidade em si é um sintoma do mesmo fato que o teste de aderência estabelece: não há cauda de lei de potência estável a ser encontrada.
+3. **A exponencial esticada foi implementada agora** e não vinha do pipeline publicado. Cinco testes cobrem a nova família, incluindo o caso $\beta = 1$, em que ela deve reproduzir a exponencial.
+
+### Por que isto importa para a revisão
+
+A Issue #5 e as Figuras 8–10 do manuscrito assumem cauda de lei de potência. Com 61 milhões de cascatas sob o protocolo corrigido, essa descrição é **rejeitada em 48 de 50 condições**. O que sobrevive é uma cauda curva cuja família não se decide pelos dados — o que é uma afirmação mais fraca, mas é a que os dados sustentam.
+
+Isso também dá conteúdo a N11 (interpretação dos expoentes): $\gamma$ existe e é bem determinado dentro do modelo com corte, mas citá-lo sem o corte seria enviesado — a diferença entre o $\gamma$ da lei pura e o do modelo com corte chega a 0,5.
+
+---
+
 *Próximas figuras entram abaixo.*

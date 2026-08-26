@@ -1258,6 +1258,124 @@ def fit_cutoff_power_law(
     )
 
 
+def fit_stretched_exponential(counts: HistogramLike, *, xmin: int) -> DistributionFit:
+    """Fit a rounded stretched exponential (Weibull) on integers ``s >= xmin``.
+
+    Table 1 of Clauset, Shalizi and Newman (2009) lists four alternatives to the
+    pure power law; this is the fourth.  The continuous survival function is
+    ``S(x) = exp(-rate * x**beta)``, so the probability of the integer ``k`` is
+    the mass of the bin ``[k - 1/2, k + 1/2]``, conditioned on the tail:
+
+        P(k) = [S(k - 1/2) - S(k + 1/2)] / S(xmin - 1/2)
+
+    The same half-integer binning as the lognormal fit is used, so the two
+    alternatives are conditioned on an identical support and their likelihoods
+    are directly comparable.  ``beta = 1`` recovers the exponential.
+    """
+
+    all_sizes, all_frequencies = _histogram_arrays(counts)
+    if xmin < 1:
+        raise ValueError("xmin must be positive")
+    selected = all_sizes >= xmin
+    integer_sizes = all_sizes[selected]
+    sizes = integer_sizes.astype(float)
+    frequencies = all_frequencies[selected]
+    n = float(frequencies.sum())
+    if n <= 0:
+        raise ValueError("no observations at or above xmin")
+    boundary = float(xmin) - 0.5
+
+    def log_mass(values: np.ndarray, beta: float, rate: float) -> np.ndarray:
+        lower = -rate * np.power(values - 0.5, beta)
+        upper = -rate * np.power(values + 0.5, beta)
+        return _log_difference(lower, upper)
+
+    def negative_log_likelihood(parameters: np.ndarray) -> float:
+        beta = float(np.exp(parameters[0]))
+        rate = float(np.exp(parameters[1]))
+        if not (np.isfinite(beta) and np.isfinite(rate)) or beta <= 0 or rate <= 0:
+            return np.inf
+        log_tail = -rate * boundary ** beta
+        value = -float(np.dot(frequencies, log_mass(sizes, beta, rate))) + n * log_tail
+        return value if np.isfinite(value) else np.inf
+
+    # A moment start: beta near 1 (exponential) with the rate that matches the
+    # observed mean excess, then a couple of stretched starts.
+    mean_excess = max(float(np.dot(frequencies, sizes) / n) - boundary, 1e-3)
+    starts = [
+        np.array([0.0, np.log(1.0 / mean_excess)]),
+        np.array([np.log(0.5), np.log(1.0 / np.sqrt(mean_excess))]),
+        np.array([np.log(0.3), np.log(0.5)]),
+    ]
+    best = None
+    for start in starts:
+        result = optimize.minimize(
+            negative_log_likelihood, start, method="Nelder-Mead",
+            options={"xatol": 1e-8, "fatol": 1e-10, "maxiter": 4000})
+        if best is None or result.fun < best.fun:
+            best = result
+    if best is None or not np.isfinite(best.fun):
+        raise RuntimeError("stretched exponential optimization failed")
+
+    beta = float(np.exp(best.x[0]))
+    rate = float(np.exp(best.x[1]))
+    log_tail = -rate * boundary ** beta
+
+    def model_cdf(values):
+        values = np.asarray(values, dtype=float)
+        survival = -rate * np.power(np.maximum(values + 0.5, 0.5), beta)
+        return np.where(values < xmin, 0.0, 1.0 - np.exp(survival - log_tail))
+
+    return DistributionFit(
+        model="stretched_exponential",
+        xmin=xmin,
+        parameters={"beta": beta, "lambda": rate},
+        log_likelihood=float(-best.fun),
+        ks=_discrete_ks(integer_sizes, frequencies, model_cdf),
+        n=n,
+    )
+
+
+def vuong_likelihood_ratio(
+    first: DistributionFit,
+    second: DistributionFit,
+    counts: HistogramLike,
+) -> tuple[float, float, float]:
+    """Normalized log-likelihood ratio for two NON-nested fits, and its p-value.
+
+    Implements equation (C.6) of Clauset, Shalizi and Newman (2009): the
+    per-observation log-likelihood differences have a standard deviation that
+    sets the scale of the total, and the normalized ratio is asymptotically
+    standard normal under the null that both models are equally close to the
+    truth.  Returns ``(log_likelihood_ratio, normalized_ratio, p_value)``; a
+    POSITIVE ratio favours ``first``.
+
+    Do not call this for the power law against its own cutoff -- those are
+    nested and the statistic is degenerate (Appendix C.1).
+    """
+
+    if first.xmin != second.xmin:
+        raise ValueError("both fits must share xmin")
+    sizes, frequencies = _histogram_arrays(counts)
+    selected = sizes >= first.xmin
+    sizes = sizes[selected]
+    frequencies = frequencies[selected].astype(float)
+    n = float(frequencies.sum())
+    if n <= 0:
+        raise ValueError("no observations at or above xmin")
+
+    difference = (distribution_log_probabilities(first, sizes)
+                  - distribution_log_probabilities(second, sizes))
+    ratio = float(np.dot(frequencies, difference))
+    mean = ratio / n
+    variance = float(np.dot(frequencies, (difference - mean) ** 2) / n)
+    if variance <= 0:
+        return ratio, 0.0, 1.0
+    normalized = ratio / np.sqrt(n * variance)
+    p_value = float(special.erfc(abs(normalized) / np.sqrt(2.0)))
+    return ratio, float(normalized), p_value
+
+
 def fit_competing_models(
     counts: HistogramLike, *, xmin: int
 ) -> dict[str, DistributionFit]:
@@ -1268,6 +1386,7 @@ def fit_competing_models(
         fit_cutoff_power_law(counts, xmin=xmin),
         fit_discrete_lognormal(counts, xmin=xmin),
         fit_discrete_exponential(counts, xmin=xmin),
+        fit_stretched_exponential(counts, xmin=xmin),
     )
     tail_sizes, tail_frequencies = _histogram_arrays(counts)
     expected_n = float(tail_frequencies[tail_sizes >= xmin].sum())
@@ -1371,6 +1490,13 @@ def distribution_log_probabilities(
             result[selected] = np.log(-np.expm1(-rate)) - rate * (
                 support - fit.xmin
             )
+    elif fit.model == "stretched_exponential":
+        beta = fit.parameters["beta"]
+        rate = fit.parameters["lambda"]
+        boundary = float(fit.xmin) - 0.5
+        lower = -rate * np.power(support - 0.5, beta)
+        upper = -rate * np.power(support + 0.5, beta)
+        result[selected] = _log_difference(lower, upper) + rate * boundary ** beta
     else:
         raise ValueError(f"unsupported fitted model: {fit.model}")
     return result
@@ -1428,6 +1554,13 @@ def distribution_cdf(fit: DistributionFit, sizes: np.ndarray) -> np.ndarray:
             )
             indices = np.minimum(support, upper) - fit.xmin
             result[selected] = cumulative[indices]
+    elif fit.model == "stretched_exponential":
+        beta = fit.parameters["beta"]
+        rate = fit.parameters["lambda"]
+        boundary = float(fit.xmin) - 0.5
+        result[selected] = -np.expm1(
+            -rate * np.power(support + 0.5, beta) + rate * boundary ** beta
+        )
     else:
         raise ValueError(f"unsupported fitted model: {fit.model}")
     return np.clip(result, 0.0, 1.0)
