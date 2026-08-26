@@ -154,4 +154,90 @@ fragilidade identificada nos $D_f$ publicados (§14 da DAG).
 
 ---
 
+## Figura 2 — morfologia da seção central e ordem de incorporação
+
+![Segmentos centrais projetados no plano x-z](fig02_secoes_centrais.png)
+
+*Segmentos centrais ($|y| \leq 25$) projetados no plano $x$–$z$, para
+$T_s$ = 2, 64, 512 e 8192. Cada sítio ocupado é pintado com o índice da primeira
+molécula que o ocupou, de modo que a cor lê "quando esta coluna foi construída".
+**Os quatro painéis compartilham a mesma escala espacial**; a barra no primeiro
+painel mede 20 sítios de rede. Sementes 100000, 104000, 106000 e 109000.*
+
+Reproduz a Figura 2 do manuscrito a partir das fibrilas da campanha nova.
+
+### O que o gráfico mostra
+
+A transição descrita no artigo aparece igual: morfologia **esparsa e irregular**
+em $T_s$ baixo, passando por densa com protuberâncias, até **empacotamento denso
+e radialmente simétrico** em $T_s$ alto. A fração de preenchimento da caixa
+envolvente quantifica isso.
+
+| $T_s$ | sítios ocupados | preenchimento |
+|---:|---:|---:|
+| 2 | 858 | 0,21 |
+| 64 | 526 | 0,51 |
+| 512 | 436 | 0,82 |
+| 8192 | 454 | 0,94 |
+
+O gradiente de cor mostra o mecanismo. Em $T_s = 2$ as moléculas antigas (azul)
+formam um esqueleto ramificado e as recentes (vermelho) se depositam nas pontas
+dos braços, sem preencher os vãos — é blindagem difusiva clássica. Em
+$T_s = 8192$ o núcleo antigo é compacto e as moléculas recentes formam uma
+**casca externa contínua**: a difusão superficial permite que a molécula desça
+para os vãos antes de fixar, então o crescimento é camada a camada em vez de
+dendrítico.
+
+### Diferença deliberada em relação à figura publicada
+
+Na figura do artigo cada painel parece normalizado ao próprio tamanho, o que faz
+os quatro aparentarem largura semelhante e **esconde a compactação**. Aqui a
+escala é comum: $T_s = 2$ preenche o quadro e $T_s = 8192$ ocupa cerca de um
+terço dele.
+
+Isso mantém a Figura 2 consistente com a Figura 1, que mede a mesma compactação
+como número. Com escala independente por painel, as duas figuras diriam coisas
+diferentes sobre o mesmo fenômeno.
+
+### Código utilizado
+
+| arquivo | papel |
+|:--|:--|
+| `Code/Data_analysis/plot_central_sections.py` | lê os compactos, recorta a fatia central e desenha os quatro painéis |
+
+```bash
+python3 Code/Data_analysis/plot_central_sections.py
+```
+
+Reusa `read_compact` de `fibril_diameter_profile.py`.
+
+### Algoritmo
+
+**Recorte.** Molécula entra no painel se a base da haste satisfaz
+$|y| \leq 25$. Cada molécula guarda o seu índice de chegada — a ordem em que o
+gerador a ligou ao agregado, de 0 (semente) a 30 000.
+
+**Projeção.** Uma coluna $(x, z)$ pode ser ocupada por várias moléculas em
+alturas diferentes. O sítio recebe o índice da **primeira** a ocupá-lo. Na
+implementação, os índices são ordenados de forma decrescente antes da escrita na
+grade, de modo que o menor é o último a ser gravado e vence.
+
+**Preenchimento.** Razão entre sítios ocupados e a área da caixa envolvente da
+fatia, $(\Delta x + 1)(\Delta z + 1)$.
+
+### Escolhas que precisam ser declaradas se a figura for para o manuscrito
+
+1. **A espessura da fatia não é neutra.** A legenda original diz "segmento
+   central" sem quantificar. Em $|y| \leq 25$ o preenchimento vai de 0,21 a 0,94;
+   em $|y| \leq 400$ vai de 0,52 a 0,90 e os braços dendríticos desaparecem —
+   uma fatia grossa empasta a projeção e destrói justamente o contraste que a
+   figura existe para mostrar. Foi por isso que se escolheu 25.
+2. **As sementes são as primeiras de cada condição, não escolhidas.** Convém
+   verificar se são representativas do ensemble antes da publicação; se forem
+   selecionadas, a seleção precisa ser declarada.
+3. **Mapa de cores.** Usa-se `turbo` em vez de `jet` — mesma aparência azul→
+   vermelho, sem as bandas falsas que o `jet` introduz.
+
+---
+
 *Próximas figuras entram abaixo.*
