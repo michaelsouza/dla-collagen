@@ -158,11 +158,7 @@ fragilidade identificada nos $D_f$ publicados (§14 da DAG).
 
 ![Segmentos centrais projetados no plano x-z](fig02_secoes_centrais.png)
 
-*Segmentos centrais ($|y| \leq 25$) projetados no plano $x$–$z$, para
-$T_s$ = 2, 64, 512 e 8192. Cada sítio ocupado é pintado com o índice da primeira
-molécula que o ocupou, de modo que a cor lê "quando esta coluna foi construída".
-**Os quatro painéis compartilham a mesma escala espacial**; a barra no primeiro
-painel mede 20 sítios de rede. Sementes 100000, 104000, 106000 e 109000.*
+*Segmentos centrais ($|y| \leq 25$) projetados no plano $x$–$z$, para $T_s$ = 2, 64, 512 e 8192. Cada sítio ocupado é pintado com o índice da primeira molécula que o ocupou, de modo que a cor lê "quando esta coluna foi construída". **Os quatro painéis compartilham a mesma escala espacial**; a barra no primeiro painel mede 20 sítios de rede. Sementes 100000, 104000, 106000 e 109000.*
 
 Reproduz a Figura 2 do manuscrito a partir das fibrilas da campanha nova.
 
@@ -237,6 +233,136 @@ fatia, $(\Delta x + 1)(\Delta z + 1)$.
    selecionadas, a seleção precisa ser declarada.
 3. **Mapa de cores.** Usa-se `turbo` em vez de `jet` — mesma aparência azul→
    vermelho, sem as bandas falsas que o `jet` introduz.
+
+---
+
+## Figura 3 — dimensão fractal e a janela que a define
+
+![D_f em função de log10 T_s, e a inclinação local da curva massa-raio](fig03_df_vs_ts.png)
+
+*Painel (a): $D_f$ em função de $\log_{10} T_s$, calculado a partir das fibrilas da campanha sob duas regras de janela de ajuste, contra os pontos publicados. Painel (b): inclinação local $d\log N/d\log r$ da curva massa–raio média, para cinco condições; a faixa marca a janela fixa usada em (a). 25 fibrilas por condição, 11 seções por fibrila. Barras de erro: erro padrão entre fibrilas.*
+
+Análoga à Figura 3 do manuscrito. **O resultado não é uma reprodução limpa**, e a
+diferença é o conteúdo desta seção.
+
+### O que o gráfico mostra
+
+**Os extremos reproduzem; o meio da curva, não.**
+
+| $T_s$ | publicado | janela fixa $4\leq r\leq 8$ | janela relativa $0{,}15R\leq r\leq 0{,}5R$ |
+|---:|---:|---:|---:|
+| 2 | 1,708 | 1,722 ± 0,018 | 1,676 ± 0,014 |
+| 8 | 1,731 | 1,738 ± 0,028 | 1,649 ± 0,022 |
+| 16 | 1,735 | 1,784 ± 0,026 | 1,680 ± 0,021 |
+| 32 | 1,739 | 1,834 ± 0,018 | 1,797 ± 0,021 |
+| 64 | 1,761 | **1,920 ± 0,011** | **1,913 ± 0,011** |
+| 128 | 1,790 | **1,959 ± 0,010** | **1,953 ± 0,011** |
+| 512 | 1,901 | 1,968 ± 0,007 | 1,961 ± 0,008 |
+| 1024 | 1,934 | 1,945 ± 0,006 | 1,951 ± 0,007 |
+| 4096 | 1,962 | 1,962 ± 0,009 | 1,968 ± 0,011 |
+| 8192 | 1,965 | 1,964 ± 0,007 | 1,981 ± 0,008 |
+
+Em $T_s = 64$ e 128 a diferença chega a **0,16 — dezesseis vezes a barra de
+erro**. As duas regras de janela que testei concordam entre si e discordam da
+publicada exatamente na mesma região.
+
+**A consequência é o ponto de saturação.** Com janela fixa ou relativa, $D_f$
+satura por volta de $T_s = 128$; os pontos publicados só saturam perto de 4096.
+A afirmação de onde o platô começa muda conforme a janela.
+
+### Por que acontece — painel (b)
+
+A inclinação local da curva massa–raio **não é constante**. Há um patamar em $r$
+pequeno e um colapso quando $r$ se aproxima do raio da seção. E esse raio cai de
+33 para 14 sítios ao longo da grade (coluna $R$ da tabela de diagnóstico).
+
+Uma janela de ajuste, portanto, **amostra partes diferentes da curva em condições
+diferentes**. Em $T_s$ alto, $r = 8$ já está na borda do colapso; em $T_s = 2$,
+ainda está no patamar. Um ajuste linear único sobre curvas que mudam de forma só
+produz um número estável se a janela for reescolhida por condição — que é
+precisamente o que o projeto xmgrace do artigo faz.
+
+Medida por oitava de $r$, a inclinação deixa claro que não existe um expoente
+único a ser extraído:
+
+| $T_s$ | $R$ | 2–4 | 4–8 | 8–16 | 16–32 |
+|---:|---:|---:|---:|---:|---:|
+| 2 | 32,2 | 1,82 | 1,72 | 1,72 | 1,11 |
+| 64 | 18,8 | 1,96 | 1,91 | 1,23 | 0,05 |
+| 8192 | 14,2 | 1,94 | 1,98 | 1,09 | 0,00 |
+
+Em $T_s = 2$ há de fato um platô de escala entre $r = 4$ e 16, e ele cai em 1,72
+— o valor de DLA bidimensional. Em $T_s = 8192$ não há platô algum: a curva sai
+de 2,0 direto para o colapso, porque a fibrila tem raio 14 e não sobra década de
+escala nenhuma.
+
+### Código utilizado
+
+| arquivo | papel |
+|:--|:--|
+| `Code/Data_analysis/df_fit_windows.py` | calcula $D_f$ por fibrila sob três regras de janela e salva as curvas médias |
+| `Code/Data_analysis/plot_df_vs_ts.py` | desenha os dois painéis |
+
+```bash
+python3 Code/Data_analysis/df_fit_windows.py 25
+python3 Code/Data_analysis/plot_df_vs_ts.py
+```
+
+Reusa `parse_grown_sections` e `mass_radius_for_sections` de
+`validate_fractal_proxy.py`, de modo que a amostragem de seções e a contagem de
+massa são **idênticas às do pipeline publicado**. A execução leva 7 s.
+
+### Algoritmo
+
+**Seções.** 11 seções transversais por fibrila, em $y = -90, -72, \ldots, 90$.
+Como as seções distam 18 e as hastes têm comprimento 18, cada molécula
+intersecta exatamente uma seção.
+
+**Curva massa–raio.** Para cada seção, calcula-se o centroide e ordenam-se as
+distâncias das partículas a ele; $N(r)$ é o número de partículas dentro do raio
+$r$, obtido por busca binária no vetor ordenado. A curva da fibrila é a média das
+11 seções, sobre uma grade de 96 raios log-espaçados de 1 a 64.
+
+**Ajuste.** $D_f$ é a inclinação de $\log N$ contra $\log r$ por mínimos
+quadrados dentro da janela. Três regras foram avaliadas:
+
+- **fixa estreita**, $4 \leq r \leq 8$ — a mesma para todas as condições;
+- **fixa larga**, $2 \leq r \leq 16$ — igualmente uniforme, mas atravessando o
+  colapso nas condições compactas; produz uma curva quase plana (1,74 a 1,81) e
+  nenhuma transição visível;
+- **relativa**, $0{,}15R \leq r \leq 0{,}5R$, com $R$ o raio médio das seções
+  daquela fibrila — escala com o tamanho, então amostra a mesma parte da curva em
+  toda condição.
+
+**Agregação.** Média e erro padrão **entre fibrilas**, não entre seções — é a
+incerteza que permite comparar condições.
+
+### Ressalvas
+
+1. **Nenhuma destas janelas é "a correta".** Elas são defensáveis por serem
+   aplicadas uniformemente. O ponto desta seção não é que se encontrou o $D_f$
+   verdadeiro, e sim que **não existe um**: a escolha de janela move a conclusão
+   sobre onde o platô começa.
+2. **Os pontos publicados intermediários foram lidos da imagem da Figura 3**, com
+   incerteza de transcrição de ~0,005. Apenas os extremos (1,708 ± 0,005 e
+   1,963 ± 0,001) vêm da legenda e são exatos. A discrepância de 0,16 é grande
+   demais para ser transcrição, mas os valores intermediários merecem conferência
+   contra a fonte antes de entrarem na resposta aos revisores.
+3. **As fibrilas são novas.** Sementes diferentes das publicadas, gerador com o
+   viés azimutal corrigido. A comparação é de ensembles, não fibrila a fibrila.
+
+### Por que isto importa para a revisão
+
+Fecha a pendência **N7** com evidência quantitativa em vez de suspeita. A §14 da
+DAG registrou que os $D_f$ publicados dependem de uma janela por condição e que a
+afirmação de saturação não poderia ser separada dessa escolha sem reanálise. A
+reanálise está feita: a escolha de janela desloca o ponto de saturação de ~128
+para ~4096.
+
+E o resultado é **consistente com a Figura 1**. O diâmetro satura em
+$T_s = 512$; $D_f$ sob janela uniforme satura em $T_s \approx 128$. Duas medidas
+estruturais independentes apontam para a região 128–512. A curva publicada, que
+satura perto de 4096, é a que destoa.
 
 ---
 
