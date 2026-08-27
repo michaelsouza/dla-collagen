@@ -16,6 +16,8 @@ O documento é organizado por **tema**, não por figura. As figuras aparecem den
 
 **A distribuição de avalanches não é lei de potência.** Rejeitada em 48 de 50 condições sobre 61 milhões de cascatas. O que a descreve melhor é o ansatz de Araújo — lei de potência com corte mais abrupto que exponencial — mas a leitura que ele faz do expoente em termos de dimensão fractal **não** transfere para cá.
 
+**O empacotamento passa de agrupado a quase aleatório.** A correlação de pares à distância 1 vale 1,90 em $T_s = 2$ — os sítios ocupados têm quase o dobro dos vizinhos que teriam por acaso, que é o que um braço dendrítico é — e cai para 1,07 a partir de $T_s = 128$.
+
 **As medidas não saturam todas no mesmo ponto.** A região é 128–512, e a §6 detalha quem satura onde, incluindo as duas que não saturam dentro da grade.
 
 ---
@@ -28,7 +30,8 @@ O documento é organizado por **tema**, não por figura. As figuras aparecem den
 | Realizações | 500 000 (10 $T_s$ × 200 fibrilas × 5 valores de $m$ × 50) |
 | Eventos | 79 719 965, dos quais 19 508 453 selecionados |
 | Cascatas preterminais | 61 000 717 |
-| Geração | job 576131 no SDumont2, 1 h 43 min, 384 núcleos |
+| Geração | 386 CPU-h em 192 tarefas, concluída em 25/ago 15:42 |
+| Fratura | job 576131, 634 CPU-h, 1 h 39 min de parede em 384 núcleos |
 | Verificação | 10 000/10 000 por conteúdo; 0 falhas; 0 claims órfãos |
 | Dados | `$DLA_PROJECT/campaign/` (1,7 GB de fratura, 21 GB de fibrilas) |
 
@@ -163,6 +166,39 @@ $$ D = 2 + \frac{\ln\left[\rho(3)/\rho(R/2)\right]}{\ln\left(6/R\right)} $$
 1. **A razão não é totalmente livre de escolhas.** Ela usa $r=3$ e $r=R/2$. A diferença em relação ao ajuste de $D_f$ é que ambas são principiadas (corte de rede; metade do objeto), aplicadas uniformemente, e o resultado é uma razão entre duas densidades **medidas** — não a inclinação de uma reta ajustada onde não há lei de potência. A coordenação, essa sim, não tem escolha nenhuma.
 2. **A coordenação é sensível à rede.** Ela é natural aqui porque o modelo é de rede, mas não tem análogo direto em dados experimentais.
 
+### 3.4 Correlação de pares — Figura 5
+
+![Coordenação contra densidade, e g(1) contra T_s](fig05_correlacao_pares.png)
+
+*Painel esquerdo: coordenação contra a densidade da seção $\phi = \rho(R/2)$, uma condição por ponto, cor pelo $T_s$; a diagonal é o que um meio aleatório daria. Painel direito: $g(1) = $ coordenação$/\phi$ contra $T_s$. 25 fibrilas por condição, 11 seções por fibrila.*
+
+Coordenação e densidade **não são independentes**. Num meio aleatório de densidade $\phi$, um sítio ocupado tem em média $4\phi$ vizinhos ocupados, ou seja **coordenação $= \phi$** — a diagonal do painel esquerdo. A distância até essa diagonal é a função de correlação de pares à distância unitária,
+
+$$ g(1) = \frac{\text{coordenação}}{\phi} $$
+
+que vale 1 por construção para um meio sem correlação espacial.
+
+| $T_s$ | $\phi = \rho(R/2)$ | coordenação | $g(1)$ |
+|---:|---:|---:|---:|
+| 2 | 0,181 ± 0,003 | 0,342 ± 0,001 | **1,896 ± 0,029** |
+| 8 | 0,237 ± 0,004 | 0,439 ± 0,001 | 1,864 ± 0,030 |
+| 16 | 0,305 ± 0,006 | 0,514 ± 0,002 | 1,698 ± 0,033 |
+| 32 | 0,440 ± 0,008 | 0,591 ± 0,002 | 1,355 ± 0,024 |
+| 64 | 0,581 ± 0,008 | 0,656 ± 0,001 | 1,134 ± 0,014 |
+| 128 | 0,650 ± 0,006 | 0,693 ± 0,001 | **1,069 ± 0,010** |
+| 512 | 0,693 ± 0,002 | 0,736 ± 0,001 | **1,063 ± 0,003** |
+| 1024 | 0,703 ± 0,002 | 0,750 ± 0,001 | **1,068 ± 0,004** |
+| 4096 | 0,701 ± 0,006 | 0,757 ± 0,001 | **1,083 ± 0,011** |
+| 8192 | 0,706 ± 0,002 | 0,760 ± 0,001 | **1,077 ± 0,004** |
+
+**Em $T_s = 2$ os sítios ocupados têm quase o dobro dos vizinhos que teriam por acaso.** É a assinatura quantitativa do braço dendrítico: localmente denso, globalmente esparso. Conforme $T_s$ cresce, $g(1)$ cai para $\approx 1{,}07$ e **satura em $T_s = 128$** — o empacotamento passa a ser quase o de um meio aleatório na mesma densidade.
+
+**Isto resolve uma exceção aparente.** A §3.3 registra que a coordenação continua subindo até o topo da grade, ao contrário das outras medidas estruturais. A figura mostra por quê: o que continua subindo é a **densidade**, não a correlação. Normalizada por ela, a correlação satura em 128, junto com a razão de densidade, o $D_f$ sob janela uniforme e o expoente das cascatas.
+
+**Algoritmo.** $\phi$ é a densidade local já calculada na §3.3, avaliada em $r = R/2$. O $g(1)$ é formado **por fibrila** antes de promediado, de modo que a barra de erro carrega a correlação entre numerador e denominador — se fosse a razão das médias, a incerteza estaria errada.
+
+**Ressalva.** $g(1)$ herda a escolha de $R/2$ como raio de referência. É a mesma escolha declarada na §3.3, aplicada uniformemente a todas as condições, mas não é liberdade nula. A coordenação sozinha continua sendo a única grandeza do relatório sem escolha alguma.
+
 ---
 
 ## 4. Dimensão fractal: o problema da janela
@@ -181,9 +217,11 @@ A dimensão fractal só existe se a inclinação de $\log N$ contra $\log r$ for
 | 64 | 19 | 3 → 9 | 0,50 |
 | 8192 | 14 | 3 → 7 | 0,38 |
 
-Ajustar um expoente de lei de potência sobre um fator 2,4 não é medir. O padrão da área pede ao menos uma década.
+Ajustar uma reta de lei de potência em um intervalo tão estreito (onde o raio varia apenas por um fator 2,4, em vez de ao menos uma década / fator 10 como manda o padrão da literatura) gera estimativas pouco confiáveis.
 
-A consequência é mensurável. Recalculando $D_f$ sobre as fibrilas da campanha, os extremos reproduzem o publicado (1,722 contra 1,708; 1,964 contra 1,965) mas o meio não: em $T_s = 64$ e 128 a diferença chega a **0,16, dezesseis vezes a barra de erro**, e duas regras de janela uniformes concordam entre si enquanto discordam da publicada no mesmo lugar.
+A consequência prática é mensurável ao recalcular $D_f$ com critérios objetivos:
+- **Nos extremos** ($T_s = 2$ e $8192$), o resultado reproduz com precisão o publicado (1,722 contra 1,708; 1,964 contra 1,965).
+- **Na região intermediária** ($T_s = 64$ e $128$), surge uma discrepância grave: enquanto o artigo publicou valores em torno de 1,76 e 1,79, qualquer regra padronizada de ajuste resulta em 1,92 e 1,95. A diferença chega a **0,16 — dezesseis vezes a barra de erro ($\pm 0{,}01$)**, e duas regras de janela uniformes concordam entre si enquanto discordam fortemente da publicada no mesmo ponto.
 
 | $T_s$ | publicado | janela fixa $4\leq r\leq 8$ | janela relativa $0{,}15R\leq r\leq 0{,}5R$ |
 |---:|---:|---:|---:|
@@ -197,6 +235,11 @@ A consequência é mensurável. Recalculando $D_f$ sobre as fibrilas da campanha
 Isso desloca o **ponto de saturação**: sob janela uniforme $D_f$ satura perto de $T_s = 128$, contra ~4096 nos pontos publicados. Fecha a pendência **N7** com medição em vez de suspeita.
 
 Os pontos publicados intermediários foram lidos da imagem da Figura 3 do manuscrito, com incerteza de transcrição de ~0,005; apenas os extremos (1,708 ± 0,005 e 1,963 ± 0,001) vêm da legenda. A discrepância de 0,16 é grande demais para ser transcrição, mas os valores merecem conferência contra a fonte antes de entrarem na carta-resposta.
+
+**Por que valores intermediários de $D_f$ não sustentam uma transição contínua.** Poder-se-ia supor que, adicionando mais valores de $T_s$ entre 2 e 128, obter-se-ia uma curva suave de $D_f(T_s)$, sugerindo uma variação contínua de dimensão fractal. No entanto, esses valores intermediários são um **artefato de *crossover* geométrico**, e não uma nova família de fractais autossimilares:
+1. **Perda da autossimilaridade:** Um fractal genuíno exige que a densidade decaia com a mesma regra em todas as escalas (uma linha reta em $\log N$ vs. $\log r$). Conforme $T_s$ cresce, a difusão preenche as cavidades de dentro para fora: a fibrila passa a ter um **núcleo central compacto** ($D=2$) cercado por uma **borda irregular**. A curva $\log N$ vs. $\log r$ dobra e deixa de ser reta; ajustar uma linha sobre essa curva produz apenas uma média geométrica entre o miolo sólido e a borda rala.
+2. **Sensibilidade à janela:** Se a estrutura fosse um fractal autossimilar com dimensão $1{,}83$, qualquer intervalo de medida devolveria $1{,}83$. Mas nos estados intermediários, medições mais próximas do centro devolvem $D \approx 1{,}95$ (quase sólido) e medições externas devolvem valores menores.
+3. ***Crossover* entre duas fases bem definidas:** A continuidade observável é a do processo de compactação física (densidade local e preenchimento aumentam continuamente), e não de uma dimensão fractal. Trata-se de uma transição entre dois estados bem definidos: um **agregado DLA puro** ($D_f \approx 1{,}71$) em $T_s$ baixo e um **sólido euclidiano compacto** ($D = 2{,}0$) a partir de $T_s \approx 128$.
 
 **O que fica no lugar da afirmação atual.** Não "$D_f$ cresce de 1,71 a 1,96", que sugere um expoente variando continuamente, e sim: em $T_s$ baixo a seção é um agregado DLA bidimensional com $D_f \approx 1{,}71$ sobre um intervalo de escala real — o valor que a geometria de crescimento prevê, sem ajuste de nada; conforme $T_s$ cresce, **o intervalo de escala encolhe até desaparecer** e a seção passa a ser compacta. A transição é a perda do regime fractal, e é isso que a §3.3 mede.
 
@@ -345,14 +388,24 @@ Quatro grandezas independentes mudam de comportamento na mesma faixa de $T_s$, m
 | $D_f$ sob janela uniforme | 4 | $T_s \approx 128$ |
 | expoente $\gamma$ das cascatas | 5.4 | $T_s \approx 128$ |
 | diâmetro $d_{gyr}$ | 3.1 | $T_s = 512$ |
-| coordenação | 3.3 | **não satura**: ainda sobe 3,3% de 512 a 8192 |
+| correlação de pares $g(1)$ | 3.4 | $T_s = 128$ |
+| coordenação bruta | 3.3 | **não satura**: mas o que sobe é a densidade, não a correlação (§3.4) |
 | fração de preenchimento | 3.2 | **não satura**: 0,82 em 512, 0,94 em 8192 |
 
-A leitura consistente é que **o regime fractal acaba em $T_s \approx 128$** — é onde a densidade deixa de decair, onde $D_f$ para de crescer e onde o expoente de avalanche estabiliza. O **tamanho** do objeto só para de encolher em 512, e o **empacotamento local** continua melhorando devagar até o fim da grade.
+A leitura consistente é que **o regime fractal acaba em $T_s \approx 128$** — é onde a densidade deixa de decair, onde a correlação de pares chega ao valor de empacotamento aleatório, onde $D_f$ para de crescer e onde o expoente de avalanche estabiliza. Quatro grandezas, o mesmo ponto. O **tamanho** do objeto só para de encolher em 512, e o **empacotamento local** continua melhorando devagar até o fim da grade.
 
 Ou seja: perder a fractalidade e terminar de compactar não são o mesmo evento. O primeiro é uma transição de regime de escala; o segundo é um processo contínuo que ainda não terminou em $T_s = 8192$.
 
 Isso é relevante para a revisão porque o manuscrito situa o platô de $D_f$ em $T_s \approx 512$. A Fase A mostrou que a cobertura de difusão superficial **não** satura ali — apenas 9,8% das moléculas cobrem o componente acessível em 512, contra 82,9% em 8192 — de modo que o mecanismo de cobertura não explica o platô, o que enfraquecia a resposta a R1-5 / N12. As medidas desta campanha situam a transição de regime **em 128**, e a de tamanho em 512, ambas sem depender de janela de ajuste.
+
+**Por que relacionar $\gamma$ à compactação e a $m$ — e não a $D_f$.** Seria tentador buscar uma relação funcional direta $\gamma(D_f)$ ou $\gamma(D_f, m)$ para associar a geometria à quebra mecânica. No entanto, essa formulação falha conceitual e matematicamente por três razões:
+1. **Separação física de parâmetros:** A geometria da fibrila depende unicamente de $T_s$ durante o crescimento ($D_f = D_f(T_s)$). A fratura depende da geometria **e** da distribuição de Weibull dos limiares moleculares de ruptura ($\gamma = \gamma(T_s, m)$). Como $m$ varia independentemente da geometria, para uma mesma fibrila com $D_f$ fixo existem múltiplos valores de $\gamma$ (ex.: em $T_s=2$, $\gamma$ varia de 1,87 a 2,05 conforme $m$ vai de 1 a 5).
+2. **Perda de poder discriminatório de $D_f$ ($T_s \geq 128$):** A partir de $T_s = 128$, a seção atinge o limite euclidiano compacto ($D_f = 2{,}0$) e não varia mais. Uma função $\gamma(D_f, m)$ não pode ser invertida nessa região, pois múltiplos estados estruturais ($T_s = 128, 512, \dots, 8192$) compartilham o mesmo $D_f$.
+3. **Mecanismo microscópico de fratura:** A transferência de carga e a dinâmica das avalanches não "enxergam" um expoente de autossimilaridade fractal (que nem existe mais no sólido), mas sim as conexões mecânicas locais (coordenação de vizinhos) e a ocupação da seção (preenchimento).
+
+Portanto, a associação física legítima entre estrutura e mecânica é dupla:
+- **No regime geral:** $\gamma$ é governado pela desordem intrínseca $m$ e pelas métricas diretas de densificação (coordenação local e preenchimento), $\gamma = \gamma(\text{coordenação}, m)$.
+- **Na transição:** A perda do regime fractal ($D_f \to 2{,}0$) e a estabilização do expoente de avalanche ($\gamma \to \text{const}$ para cada $m$) ocorrem **simultaneamente em $T_s \approx 128$**, estabelecendo uma assinatura comum e robusta entre a física de crescimento e a física de ruptura.
 
 ---
 
@@ -366,6 +419,7 @@ Isso é relevante para a revisão porque o manuscrito situa o platô de $D_f$ em
 | `Code/Data_analysis/plot_central_sections.py` | recorta a fatia central e desenha a Figura 2 | 3.2 |
 | `Code/Data_analysis/fibril_compaction.py` | coordenação, perfil de densidade e razão | 3.3 |
 | `Code/Data_analysis/plot_fibril_compaction.py` | desenha a Figura 3 | 3.3 |
+| `Code/Data_analysis/plot_pair_correlation.py` | desenha a Figura 5 | 3.4 |
 | `Code/Data_analysis/df_fit_windows.py` | $D_f$ sob três regras de janela | 4 |
 | `Code/Data_analysis/plot_df_vs_ts.py` | desenha o diagnóstico de janela | 4 |
 | `Code/Data_analysis/extract_cascades.py` | reduz os 10 000 arquivos a histogramas de cascata | 5 |
@@ -385,6 +439,7 @@ python3 Code/Data_analysis/plot_fibril_diameter.py
 python3 Code/Data_analysis/plot_central_sections.py
 python3 Code/Data_analysis/fibril_compaction.py 25
 python3 Code/Data_analysis/plot_fibril_compaction.py
+python3 Code/Data_analysis/plot_pair_correlation.py
 python3 Code/Data_analysis/df_fit_windows.py 25
 python3 Code/Data_analysis/plot_df_vs_ts.py
 
