@@ -284,89 +284,128 @@ Um teste que resolveria a questão de $D_f$ em definitivo, se for desejado: gera
 
 ---
 
-## Figura 4 — estatística das cascatas
+## Figura 4 — estatística das cascatas e o ansatz de Araújo
 
-![CCDF com as quatro famílias ajustadas, expoente e escala de corte](fig04_cascatas.png)
+![Razão dados/modelo, KS das quatro famílias, expoente e nitidez do corte](fig04_cascatas.png)
 
-*Painel (a): função de sobrevivência do tamanho de cascata em $T_s$=128, $m$=2, com as quatro famílias da Tabela 1 de Clauset ajustadas ao mesmo suporte (a exponencial é omitida do desenho — é a única que a lei de potência vence). Painéis (b) e (c): expoente e escala de corte do modelo com corte, por condição. 61 000 717 cascatas preterminais; 200 fibrilas × 50 realizações por condição. Barras: bootstrap de blocos por fibrila.*
+*Painel (a): razão entre a sobrevivência observada e a de cada modelo em $T_s$=128, $m$=10; o valor 1 significa modelo exato. Painel (b): distância KS das três famílias competitivas nas 50 condições, cinco pontos por modelo (um por $m$), com opacidade crescente em $m$. Painéis (c) e (d): expoente e nitidez do corte do ansatz de Araújo, com bootstrap de blocos por fibrila (120 réplicas). 61 000 717 cascatas preterminais.*
 
 ### A definição adotada
 
 **A cascata é o observável primário**: tudo que é removido numa mesma elevação quase-estática de carga, até o sistema reestabilizar, incluindo as hastes que perdem o caminho de carga por consequência. É `total_deleted_rods` no esquema legado.
 
-Três razões. Ela é **livre de parâmetro** — determinada pelo modelo, não por escolha do operador, ao contrário do protocolo recozido, onde a avalanche era definida por $\Delta F$ e a estatística era propriedade do $\Delta F$ e não da fibrila (§12 da DAG). Ela é a **unidade causal** — partes espacialmente separadas de uma mesma cascata foram causalmente ligadas, e particioná-las por geometria descarta esse vínculo. E é o que **"avalanche" significa na literatura de fiber bundle**, o que dá teoria com que comparar.
+Ela é **livre de parâmetro** — determinada pelo modelo, não por escolha do operador, ao contrário do protocolo recozido, em que a avalanche era definida por $\Delta F$ e a estatística era propriedade do $\Delta F$ e não da fibrila (§12 da DAG). É a **unidade causal**: partes espacialmente separadas de uma mesma cascata foram causalmente ligadas, e particioná-las por geometria descarta esse vínculo. E é o que **"avalanche" significa na literatura de fiber bundle**.
 
-A decomposição em aglomerados conexos (`avalanche_sizes`) permanece nos dados como diagnóstico de localização do dano — 12% a 25% das cascatas se partem em mais de um aglomerado — mas não é o estimando primário.
+A decomposição em aglomerados conexos permanece nos dados como diagnóstico de localização do dano — 12% a 25% das cascatas se partem em mais de um aglomerado — mas não é o estimando primário. **A cascata terminal é excluída**: é a ruptura catastrófica final, uma por realização, com tamanho de centenas contra a média de ~11 das preterminais.
 
-**A cascata terminal é excluída.** É a ruptura catastrófica final, uma por realização, com tamanho típico de centenas contra a média de ~11 das preterminais. Incluí-la engorda a cauda artificialmente.
+### A lei de potência pura é rejeitada
 
-### O resultado principal: a lei de potência pura é rejeitada
-
-Seguindo a Box 1 de `Bibliograph/Clauset2009.md` — $x_{\min}$ e $\gamma$ por máxima verossimilhança, aderência por bootstrap semiparamétrico, comparação com alternativas por razão de verossimilhança:
+Pelo procedimento de `Bibliograph/Clauset2009.md` (Box 1), com 2500 réplicas semiparamétricas e o limiar $p > 0{,}1$:
 
 | | de 50 condições |
 |:--|--:|
-| Lei de potência pura **rejeitada** ($p \leq 0{,}1$) | **48** |
-| Plausível ($p > 0{,}1$) | 2 |
+| Lei de potência pura **rejeitada** | **48** |
+| Plausível | 2 (no fio: $p$ = 0,106 e 0,123) |
 
-As duas sobreviventes ($T_s$=128 e 8192 em $m$=10) têm $p$ = 0,106 e 0,123 — no fio do limiar — e mesmo nelas há alternativas favorecidas. Nas outras 48 o $p$ é 0,000: **nenhuma** das 2500 amostras sintéticas teve KS pior que o observado.
+Em 47 das 48, $p = 0{,}000$: **nenhuma** das 2500 amostras sintéticas alcançou o KS observado. Comparada às quatro alternativas da Tabela 1 de Clauset pela razão normalizada de Vuong, a lei pura perde para log-normal e esticada em 49 de 50, e só vence a exponencial simples.
 
-### Mas o substituto não é único
+### O ansatz de Araújo é o melhor dos quatro
 
-| alternativa | favorecida | lei de potência favorecida |
-|:--|--:|--:|
-| log-normal | **49** | 0 |
-| exponencial esticada | **49** | 0 |
-| lei de potência com corte | ~todas | — |
-| exponencial | 1 | **47** |
+Araújo, Moreira, Costa Filho e Andrade (Phys. Rev. E **67**, 027102) descrevem a massa do esqueleto de percolação por
 
-Este é exatamente o cenário da Tabela 4 de Clauset: *"with cut-off ... however, some of the alternative distributions are also good fits, such as the log-normal or the stretched exponential distribution."*
+$$ F(M) \sim M^{-\alpha} \exp\left[-\left(\frac{M}{M_0}\right)^{\eta}\right] $$
 
-**O que os dados sustentam:** a distribuição **não é lei de potência pura**, é **mais pesada que exponencial**, e três famílias de cauda curva a descrevem de forma indistinguível entre si. O painel (a) mostra isso — as três curvam junto com os dados enquanto a lei pura dispara sozinha.
+uma lei de potência cujo corte tem **nitidez livre** em vez de fixada em exponencial. Escrito como função de massa, $p(s) \propto s^{-\gamma}\exp[-(s/s_c)^{\eta}]$. Esta família **contém** o corte exponencial em $\eta = 1$, então o parâmetro extra é testável por razão de verossimilhança com um grau de liberdade.
 
-**O que os dados não sustentam:** afirmar que é "lei de potência com corte". Essa família ajusta bem, mas não melhor que log-normal ou esticada.
+**O corte é mais abrupto que exponencial em 50 de 50 condições.** Mediana $\eta$ = 2,30, faixa 1,13 a 5,19; em 46 das 50, $\eta - 2\,\mathrm{SE} > 1$. Contra $\eta = 1$, $p < 0{,}001$ em 49 das 50.
 
-### Expoente do modelo com corte
+| menor KS | condições |
+|:--|--:|
+| **Araújo** | **34** |
+| corte exponencial | 9 |
+| log-normal | 7 |
+| esticada pura | 0 |
 
-$\gamma$, com erro padrão de bootstrap de blocos por fibrila:
+Isto **desfaz a degenerescência** que a análise anterior encontrara. Log-normal, esticada e corte exponencial pareciam equivalentes porque nenhuma delas tem a forma certa de corte; com $\eta$ livre, a diferença aparece. Em $T_s$=128, $m$=10 o KS cai de 0,0109 (exponencial) e 0,0148 (log-normal) para **0,0039**.
 
-| $T_s$ | $m$=1 | $m$=2 | $m$=3 | $m$=5 | $m$=10 |
-|---:|---:|---:|---:|---:|---:|
-| 2 | 1.808 ± 0.011 | 1.950 ± 0.015 | 2.001 ± 0.018 | 2.015 ± 0.021 | 1.955 ± 0.028 |
-| 8 | 2.191 ± 0.010 | 2.282 ± 0.013 | 2.308 ± 0.018 | 2.262 ± 0.022 | 2.073 ± 0.026 |
-| 16 | 2.470 ± 0.008 | 2.462 ± 0.015 | 2.404 ± 0.017 | 2.285 ± 0.020 | 2.058 ± 0.022 |
-| 32 | 2.672 ± 0.009 | 2.519 ± 0.014 | 2.321 ± 0.032 | 2.179 ± 0.020 | 1.898 ± 0.027 |
-| 64 | 2.783 ± 0.009 | 2.494 ± 0.013 | 2.286 ± 0.014 | 2.095 ± 0.018 | 1.828 ± 0.021 |
-| 128 | 2.776 ± 0.012 | 2.438 ± 0.011 | 2.203 ± 0.013 | 1.985 ± 0.016 | 1.767 ± 0.016 |
-| 512 | 2.760 ± 0.011 | 2.367 ± 0.010 | 2.129 ± 0.012 | 1.924 ± 0.014 | 1.727 ± 0.017 |
-| 1024 | 2.808 ± 0.008 | 2.383 ± 0.009 | 2.185 ± 0.023 | 1.942 ± 0.016 | 1.743 ± 0.016 |
-| 4096 | 2.802 ± 0.007 | 2.372 ± 0.012 | 2.131 ± 0.015 | 1.920 ± 0.015 | 1.721 ± 0.016 |
-| 8192 | 2.778 ± 0.008 | 2.351 ± 0.010 | 2.111 ± 0.013 | 1.907 ± 0.015 | 1.732 ± 0.018 |
+### Onde o ansatz falha
 
-### Escala de corte $s_c = 1/\lambda$
+O painel (a) mostra o limite. Até $s \approx 30$ a razão dados/modelo é 1 para Araújo — descrição exata. Além disso ela **sobe até 30**: o modelo **subestima os maiores eventos**. O corte exponencial erra na direção oposta, superestimando-os por um fator 3.
+
+Ou seja: nenhuma das famílias acerta a cauda extrema. Araújo vence porque acerta o corpo e a região de corte, que é onde está a massa de probabilidade e o que o KS mede. **Não se trata de um modelo exato, e sim do melhor entre os disponíveis.**
+
+### Parâmetros medidos
+
+Expoente $\gamma$:
 
 | $T_s$ | $m$=1 | $m$=2 | $m$=3 | $m$=5 | $m$=10 |
 |---:|---:|---:|---:|---:|---:|
-| 2 | 119.5 | 147.2 | 161.3 | 153.2 | 106.8 |
-| 8 | 162.1 | 144.9 | 126.3 | 84.2 | 45.4 |
-| 16 | 163.4 | 94.2 | 71.2 | 49.0 | 31.2 |
-| 32 | 101.9 | 58.7 | 35.7 | 26.1 | 18.6 |
-| 64 | 79.1 | 44.0 | 28.0 | 21.2 | 17.1 |
-| 128 | 74.9 | 40.9 | 25.8 | 19.3 | 17.9 |
-| 512 | 79.7 | 36.5 | 24.7 | 19.4 | 18.9 |
-| 1024 | 111.5 | 39.8 | 27.8 | 20.3 | 19.2 |
-| 4096 | 115.1 | 39.7 | 26.5 | 20.6 | 19.7 |
-| 8192 | 96.0 | 38.5 | 25.4 | 20.2 | 20.4 |
+| 2 | 1.874 ± 0.008 | 1.995 ± 0.013 | 2.037 ± 0.018 | 2.055 ± 0.019 | 2.022 ± 0.021 |
+| 8 | 2.229 ± 0.007 | 2.322 ± 0.011 | 2.356 ± 0.013 | 2.335 ± 0.018 | 2.110 ± 0.058 |
+| 16 | 2.503 ± 0.008 | 2.519 ± 0.010 | 2.479 ± 0.013 | 2.387 ± 0.016 | 2.169 ± 0.034 |
+| 32 | 2.719 ± 0.008 | 2.605 ± 0.009 | 2.547 ± 0.019 | 2.306 ± 0.028 | 2.075 ± 0.032 |
+| 64 | 2.842 ± 0.006 | 2.605 ± 0.009 | 2.396 ± 0.021 | 2.201 ± 0.028 | 2.011 ± 0.023 |
+| 128 | 2.865 ± 0.007 | 2.552 ± 0.008 | 2.343 ± 0.015 | 2.119 ± 0.021 | 1.982 ± 0.012 |
+| 512 | 2.846 ± 0.009 | 2.485 ± 0.011 | 2.238 ± 0.020 | 2.033 ± 0.022 | 1.933 ± 0.015 |
+| 1024 | 2.851 ± 0.005 | 2.493 ± 0.009 | 2.449 ± 0.021 | 1.993 ± 0.035 | 1.921 ± 0.021 |
+| 4096 | 2.845 ± 0.006 | 2.482 ± 0.012 | 2.202 ± 0.025 | 1.990 ± 0.031 | 1.904 ± 0.017 |
+| 8192 | 2.830 ± 0.005 | 2.452 ± 0.013 | 2.188 ± 0.022 | 1.975 ± 0.028 | 1.912 ± 0.013 |
+
+Nitidez do corte $\eta$ ($\eta = 1$ seria corte exponencial):
+
+| $T_s$ | $m$=1 | $m$=2 | $m$=3 | $m$=5 | $m$=10 |
+|---:|---:|---:|---:|---:|---:|
+| 2 | 2.57 ± 0.11 | 3.54 ± 0.27 | 3.99 ± 0.66 | 4.03 ± 0.46 | 4.18 ± 0.69 |
+| 8 | 3.12 ± 0.18 | 3.71 ± 0.43 | 3.63 ± 0.79 | 3.01 ± 1.92 | 1.18 ± 0.31 |
+| 16 | 3.20 ± 0.24 | 3.14 ± 0.46 | 2.90 ± 0.45 | 2.44 ± 0.49 | 1.63 ± 0.29 |
+| 32 | 2.81 ± 0.29 | 3.30 ± 0.34 | 2.90 ± 0.33 | 1.71 ± 0.29 | 1.73 ± 0.26 |
+| 64 | 3.58 ± 0.36 | 3.19 ± 0.32 | 1.62 ± 0.15 | 1.39 ± 0.13 | 1.68 ± 0.15 |
+| 128 | 4.25 ± 0.33 | 2.72 ± 0.21 | 1.86 ± 0.13 | 1.48 ± 0.10 | 2.01 ± 0.12 |
+| 512 | 4.81 ± 0.47 | 2.23 ± 0.18 | 1.47 ± 0.12 | 1.34 ± 0.08 | 1.93 ± 0.14 |
+| 1024 | 4.54 ± 0.45 | 2.22 ± 0.18 | 2.30 ± 0.22 | 1.13 ± 0.10 | 1.70 ± 0.14 |
+| 4096 | 5.19 ± 0.50 | 2.20 ± 0.21 | 1.27 ± 0.11 | 1.20 ± 0.10 | 1.75 ± 0.13 |
+| 8192 | 4.30 ± 0.37 | 1.87 ± 0.16 | 1.29 ± 0.09 | 1.19 ± 0.09 | 1.77 ± 0.13 |
+
+Escala de corte $s_c$:
+
+| $T_s$ | $m$=1 | $m$=2 | $m$=3 | $m$=5 | $m$=10 |
+|---:|---:|---:|---:|---:|---:|
+| 2 | 135.8 ± 4.3 | 124.8 ± 5.7 | 118.1 ± 6.1 | 116.2 ± 7.3 | 105.0 ± 7.6 |
+| 8 | 128.0 ± 4.3 | 108.0 ± 6.7 | 103.7 ± 7.8 | 91.7 ± 10.2 | 52.6 ± 12.3 |
+| 16 | 111.5 ± 5.6 | 84.6 ± 5.2 | 75.4 ± 5.5 | 62.3 ± 5.6 | 44.2 ± 4.7 |
+| 32 | 82.6 ± 4.7 | 61.6 ± 3.3 | 56.5 ± 3.1 | 38.0 ± 3.1 | 30.0 ± 2.2 |
+| 64 | 65.3 ± 1.9 | 53.5 ± 1.6 | 38.9 ± 2.3 | 29.4 ± 2.1 | 27.9 ± 1.3 |
+| 128 | 67.1 ± 1.6 | 51.6 ± 1.5 | 38.3 ± 1.7 | 28.4 ± 1.6 | 31.1 ± 0.9 |
+| 512 | 70.0 ± 1.7 | 49.4 ± 1.5 | 34.6 ± 2.2 | 26.9 ± 1.8 | 32.6 ± 1.1 |
+| 1024 | 73.4 ± 2.0 | 52.4 ± 1.8 | 49.9 ± 2.1 | 23.9 ± 2.6 | 31.4 ± 1.5 |
+| 4096 | 73.9 ± 1.7 | 52.7 ± 2.3 | 33.7 ± 2.9 | 25.9 ± 2.4 | 32.5 ± 1.3 |
+| 8192 | 72.8 ± 1.9 | 51.2 ± 2.3 | 32.8 ± 2.4 | 25.1 ± 2.1 | 33.5 ± 1.1 |
 
 ### Leitura
 
-**$\gamma$ satura em $T_s \approx 128$** para todo $m$ — a mesma região das três figuras estruturais. É a quarta medida independente a apontar para 128–512, e a primeira que vem da mecânica e não da geometria.
+**$\gamma$ satura em $T_s \approx 128$** para todo $m$ — a mesma região das três figuras estruturais, e a primeira medida a vir da mecânica e não da geometria.
 
-**$\gamma$ decresce com $m$** em $T_s$ alto: de 2,78 ($m$=1) a 1,73 ($m$=10). Desordem mais estreita produz cascatas com cauda mais pesada, o que é o esperado — limiares próximos rompem juntos.
+**$\gamma$ decresce com $m$** em $T_s$ alto, de 2,83 ($m$=1) a 1,91 ($m$=10): desordem mais estreita dá cauda mais pesada, o que é o esperado, pois limiares próximos rompem juntos.
 
-**O valor 5/2 de campo médio cai entre $m$=1 e $m$=2.** Isso *não* autoriza a dizer que se encontrou campo médio: $m$ é parâmetro livre da desordem, e escolher o $m$ que cruza 5/2 seria ajuste a posteriori. Além disso o modelo não é ELS puro — o limiar $F^*_i = K_i \sigma_c X_i / a_i$ tem canal global (ocupação de camada, via $a_i$) **e** canal local (vizinhos ativos, via $K_i$), então 5/2 é referência, não previsão.
+**O 5/2 de campo médio cai entre $m$=1 e $m$=2.** Isso **não** autoriza dizer que se encontrou campo médio: $m$ é parâmetro livre da desordem, e escolher o $m$ que cruza 5/2 seria ajuste a posteriori. Além disso o modelo não é ELS puro — o limiar $F^*_i = K_i \sigma_c X_i / a_i$ tem canal global (ocupação de camada, via $a_i$) **e** canal local (vizinhos ativos, via $K_i$).
 
-**$s_c$ cai com $T_s$ e com $m$**, e também satura em ~128. Em $m$=10 o corte chega a $s_c \approx 20$, pequeno o bastante para que a "lei de potência" tenha menos de uma década de alcance antes de ser cortada — outra forma de dizer que a descrição de lei pura não se sustenta.
+**$\eta$ não é universal.** Varia por um fator 4,6 na grade e depende sistematicamente de $m$ e $T_s$: cresce com $T_s$ em $m$=1, decresce em $m$=5. Araújo tem dois valores fixos, um por grau de correlação. Apenas 11 das nossas 50 condições caem na faixa 1,5–2,0 dele. Um $\eta$ que varia assim é parâmetro de ajuste, não assinatura de classe de universalidade.
+
+### O que NÃO transfere: a leitura do expoente
+
+Araújo liga $\alpha$ à dimensão fractal do esqueleto por $\alpha = d/d_B - 1$, o que dá o expoente da função de massa $\tau = d/d_B$, e para eles fecha: $\tau = 1{,}26$ implica $d_B = 1{,}59$, contra a estimativa independente de 1,64.
+
+Para nós **não fecha**:
+
+| | Araújo | esta campanha |
+|:--|--:|--:|
+| expoente da função de massa | 1,26 | 1,87 a 2,87 |
+| $d_B$ implícito ($d=2$) | **1,59** ✓ | **0,70 a 1,07** ✗ |
+| condições com $d_B < 1$ | — | **40 de 50** |
+
+Um $d_B$ menor que 1 é impossível para um aglomerado conexo, e incompatível com o $D_f$ estrutural que a Figura 3 mede (1,7 a 2,0). A razão é física: o $M_B$ de Araújo é um **objeto geométrico estático** — o esqueleto de percolação — e a relação vem da estatística de *blobs*; a nossa cascata é um **evento dinâmico** num processo de carga.
+
+**A forma funcional transfere; a interpretação do expoente não.** Isso importa para N12: seria tentador usar Araújo para ligar o expoente de avalanche a $D_f$ e responder R1-5 — os números não permitem.
 
 ### Código utilizado
 
@@ -374,9 +413,11 @@ $\gamma$, com erro padrão de bootstrap de blocos por fibrila:
 |:--|:--|
 | `Code/Data_analysis/extract_cascades.py` | reduz os 10 000 arquivos a histogramas de tamanho de cascata por realização, separando a terminal |
 | `Code/Data_analysis/run_cascade_statistics.py` | procedimento de Clauset por condição, com bootstrap de blocos |
-| `Code/Data_analysis/plot_cascade_statistics.py` | desenha os três painéis |
-| `Code/Data_analysis/avalanche_statistics.py` | núcleo de ajuste; recebeu `fit_stretched_exponential` e `vuong_likelihood_ratio` |
-| `Code/Data_analysis/test_stretched_exponential.py` | cinco verificações da nova família e da razão de Vuong |
+| `Code/Data_analysis/run_araujo_fits.py` | ajusta o ansatz de Araújo, testa $\eta=1$ e compara o KS das quatro famílias |
+| `Code/Data_analysis/plot_araujo_adequacy.py` | desenha os quatro painéis |
+| `Code/Data_analysis/avalanche_statistics.py` | núcleo de ajuste; recebeu `fit_generalized_cutoff`, `fit_stretched_exponential` e `vuong_likelihood_ratio` |
+| `Code/Data_analysis/test_generalized_cutoff.py` | cinco verificações do ansatz de Araújo |
+| `Code/Data_analysis/test_stretched_exponential.py` | cinco verificações da esticada e da razão de Vuong |
 
 ```bash
 python3 Code/Data_analysis/extract_cascades.py \
@@ -388,36 +429,41 @@ python3 Code/Data_analysis/run_cascade_statistics.py \
     --out      $DLA_PROJECT/campaign/analysis/cascades/cascade_stats_clauset.csv \
     --replicates 400 --gof-replicates 2500 --lr-replicates 500 --workers 48
 
-python3 Code/Data_analysis/plot_cascade_statistics.py
+python3 Code/Data_analysis/run_araujo_fits.py \
+    --cascades $DLA_PROJECT/campaign/analysis/cascades \
+    --stats    $DLA_PROJECT/campaign/analysis/cascades/cascade_stats_clauset.csv \
+    --out      $DLA_PROJECT/campaign/analysis/cascades/araujo_fits.csv --replicates 120
+
+python3 Code/Data_analysis/plot_araujo_adequacy.py
 ```
 
-Extração: 12 s em 48 núcleos. Análise: 11 min. Tabela completa em `fig04_cascatas_ajustes.csv`.
+Extração 12 s; Clauset 11 min; ajustes de Araújo 4 min. Tabelas completas em `fig04_araujo_ajustes.csv` e `cascade_stats_clauset.csv`.
 
 ### Algoritmo
 
-**Redução.** Cada arquivo vira uma matriz esparsa com uma linha por realização e uma coluna por tamanho de cascata, mais o índice da fibrila a que cada linha pertence — que é o que o bootstrap reamostra. Verificado contra o parser: 61 000 717 preterminais + 500 000 terminais + 500 000 linhas de abertura $f=0$ = 62 000 717 passos de força.
+**Redução.** Cada arquivo vira uma matriz esparsa com uma linha por realização e uma coluna por tamanho de cascata, mais o índice da fibrila de cada linha — que é o que o bootstrap reamostra. Verificado contra o parser: 61 000 717 preterminais + 500 000 terminais + 500 000 linhas de abertura $f=0$ = 62 000 717 passos de força.
 
-**Seleção de $x_{\min}$.** Minimização da distância KS discreta sobre os $x_{\min}$ observados, **com piso de 5% dos eventos na cauda** — ver ressalva 2.
+**Seleção de $x_{\min}$.** Minimização da distância KS discreta, **com piso de 5% dos eventos na cauda** — ver ressalva 2.
 
-**Estimativa.** MLE discreto exato via zeta de Hurwitz, não a aproximação contínua. Clauset avisa que a aproximação só é boa para $x_{\min} \gtrsim 6$, e os nossos $x_{\min}$ são quase todos 2.
+**Estimativa.** MLE discreto exato via zeta de Hurwitz, não a aproximação contínua: Clauset avisa que a aproximação só é boa para $x_{\min} \gtrsim 6$, e os nossos são quase todos 2. Para o ansatz de Araújo a normalização é uma soma explícita sobre o suporte inteiro, truncada onde o corte já matou a massa, e a otimização parte de três pontos distintos.
 
-**Aderência.** Bootstrap semiparamétrico com **2500 réplicas**, seguindo a regra $n \geq \frac{1}{4}\epsilon^{-2}$ para $\epsilon = 0{,}01$. Cada réplica sintética **reseleciona o seu próprio $x_{\min}$**, como o §4 exige.
+**Aderência.** Bootstrap semiparamétrico com **2500 réplicas**, seguindo $n \geq \frac{1}{4}\epsilon^{-2}$ para $\epsilon = 0{,}01$; cada réplica sintética resseleciona o próprio $x_{\min}$, como o §4 exige.
 
-**Comparação de modelos.** Para as três alternativas não aninhadas (log-normal, exponencial, esticada), a razão normalizada da equação (C.6), assintoticamente normal padrão. Para a lei com corte, que é aninhada e onde a estatística é degenerada (Apêndice C.1), bootstrap paramétrico.
+**Comparação de modelos.** Para as três alternativas não aninhadas, a razão normalizada da equação (C.6). Para o corte exponencial e para o ansatz de Araújo, que são aninhados, razão de verossimilhança — bootstrap paramétrico no primeiro caso, $\chi^2$ com um grau de liberdade no segundo.
 
-**Incerteza.** Bootstrap de blocos com 400 réplicas, **bloco = fibrila**: realizações da mesma fibrila compartilham topologia e não são independentes. Reamostra-se fibrilas e, dentro de cada uma, as realizações.
+**Incerteza.** Bootstrap de blocos, **bloco = fibrila**: realizações da mesma fibrila compartilham topologia e não são independentes.
 
 ### Ressalvas
 
-1. **A rejeição não identifica a distribuição.** Log-normal, esticada e lei-com-corte ajustam de forma equivalente. Escolher uma delas para o manuscrito exigiria um critério além destes testes — mais dados não ajudam, porque com 61 milhões de eventos a estatística já está saturada.
-2. **O piso de 5% na cauda é uma escolha.** Sem ele, a minimização de KS cai numa cauda distante em 4 de 50 condições (todas $m$=10), devolvendo $x_{\min} \approx 30$ e $\gamma \approx 5$ sobre 0,15% a 0,5% dos eventos, com condições vizinhas discordando por um fator 2,3 — instabilidade de estimador, não física. O piso é aplicado uniformemente e as colunas sem piso ficam no CSV para conferência. A instabilidade em si é um sintoma do mesmo fato que o teste de aderência estabelece: não há cauda de lei de potência estável a ser encontrada.
-3. **A exponencial esticada foi implementada agora** e não vinha do pipeline publicado. Cinco testes cobrem a nova família, incluindo o caso $\beta = 1$, em que ela deve reproduzir a exponencial.
+1. **Araújo é o melhor dos quatro, não um modelo exato.** Ele subestima a cauda extrema por até um fator 30 (painel a). Vence porque acerta o corpo e a zona de corte, que é o que o KS pesa.
+2. **O piso de 5% na cauda é uma escolha.** Sem ele, a minimização de KS cai numa cauda distante em 4 de 50 condições (todas $m$=10), devolvendo $x_{\min} \approx 30$ e $\gamma \approx 5$ sobre 0,15% dos eventos, com condições vizinhas discordando por um fator 2,3. O piso é uniforme e as colunas sem piso ficam no CSV. A instabilidade é sintoma do mesmo fato que o teste de aderência estabelece.
+3. **`fit_generalized_cutoff` foi implementado agora**, com cinco testes — inclusive o caso $\eta=1$, em que deve reproduzir o corte exponencial, e o caso $\eta=2$, que deve ser detectado com $2\Delta\ell > 100$.
 
 ### Por que isto importa para a revisão
 
-A Issue #5 e as Figuras 8–10 do manuscrito assumem cauda de lei de potência. Com 61 milhões de cascatas sob o protocolo corrigido, essa descrição é **rejeitada em 48 de 50 condições**. O que sobrevive é uma cauda curva cuja família não se decide pelos dados — o que é uma afirmação mais fraca, mas é a que os dados sustentam.
+A Issue #5 e as Figuras 8–10 do manuscrito assumem cauda de lei de potência. Com 61 milhões de cascatas sob o protocolo corrigido essa descrição é **rejeitada em 48 de 50 condições**, e o que a substitui é uma lei de potência com **corte mais abrupto que exponencial** — a mesma forma que descreve o esqueleto de percolação e a fragmentação por impacto.
 
-Isso também dá conteúdo a N11 (interpretação dos expoentes): $\gamma$ existe e é bem determinado dentro do modelo com corte, mas citá-lo sem o corte seria enviesado — a diferença entre o $\gamma$ da lei pura e o do modelo com corte chega a 0,5.
+Isso dá conteúdo a N11: $\gamma$ existe e é bem determinado dentro do ansatz, mas citá-lo sem o corte seria enviesado. E fecha uma porta em N12: a ponte de Araújo entre expoente de avalanche e dimensão fractal não é utilizável aqui.
 
 ---
 

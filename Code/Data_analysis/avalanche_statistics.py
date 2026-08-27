@@ -1376,6 +1376,106 @@ def vuong_likelihood_ratio(
     return ratio, float(normalized), p_value
 
 
+def fit_generalized_cutoff(
+    counts: HistogramLike, *, xmin: int, cap_factor: float = 60.0
+) -> DistributionFit:
+    """Power law with a STRETCHED-exponential cutoff, as in Araujo et al. (2003).
+
+    Araujo, Moreira, Costa Filho and Andrade (Phys. Rev. E 67, 027102) describe
+    the percolation-backbone mass by ``F(M) ~ M^-alpha exp[-(M/M0)^eta]``, a
+    power law whose cutoff sharpness is a free parameter rather than fixed at
+    exponential.  Written as a probability mass function on integers,
+
+        p(k) proportional to k^-gamma * exp[-(k/s_c)^eta],   k >= xmin
+
+    This family CONTAINS ``fit_cutoff_power_law`` at ``eta = 1``, so the two can
+    be compared by a likelihood-ratio test on one degree of freedom, and it
+    contains the pure power law at ``s_c -> infinity``.  ``eta > 1`` is a cutoff
+    that bites faster than exponential -- what Araujo et al. report for both
+    correlated (eta = 2.0) and uncorrelated (eta = 1.5) backbones, and what
+    impact-fragmentation experiments show.
+
+    The normalisation is an explicit sum, truncated where the cutoff has killed
+    the mass; ``cap_factor`` sets that point in units of ``(k/s_c)^eta``.
+    """
+
+    all_sizes, all_frequencies = _histogram_arrays(counts)
+    if xmin < 1:
+        raise ValueError("xmin must be positive")
+    selected = all_sizes >= xmin
+    integer_sizes = all_sizes[selected]
+    sizes = integer_sizes.astype(float)
+    frequencies = all_frequencies[selected].astype(float)
+    n = float(frequencies.sum())
+    if n <= 0:
+        raise ValueError("no observations at or above xmin")
+    sum_log_sizes = float(np.dot(frequencies, np.log(sizes)))
+    largest = float(sizes.max())
+
+    def support_and_log_kernel(gamma: float, scale: float, eta: float):
+        upper = max(largest, scale * cap_factor ** (1.0 / eta)) + 1.0
+        upper = min(upper, 5.0e6)
+        grid = np.arange(xmin, int(upper) + 1, dtype=float)
+        return grid, -gamma * np.log(grid) - np.power(grid / scale, eta)
+
+    def negative_log_likelihood(parameters: np.ndarray) -> float:
+        gamma = float(parameters[0])
+        scale = float(np.exp(parameters[1]))
+        eta = float(np.exp(parameters[2]))
+        if not np.isfinite(scale) or not np.isfinite(eta) or scale <= 0 or eta <= 0:
+            return np.inf
+        try:
+            grid, log_kernel = support_and_log_kernel(gamma, scale, eta)
+        except (ValueError, MemoryError):
+            return np.inf
+        peak = float(log_kernel.max())
+        log_norm = peak + float(np.log(np.sum(np.exp(log_kernel - peak))))
+        value = (n * log_norm + gamma * sum_log_sizes
+                 + float(np.dot(frequencies, np.power(sizes / scale, eta))))
+        return value if np.isfinite(value) else np.inf
+
+    exponential = fit_cutoff_power_law(counts, xmin=xmin)
+    scale0 = (1.0 / exponential.parameters["lambda"]
+              if exponential.parameters["lambda"] > 0 else largest)
+    starts = [
+        np.array([exponential.parameters["gamma"], np.log(scale0), 0.0]),
+        np.array([exponential.parameters["gamma"] - 0.3, np.log(scale0), np.log(1.5)]),
+        np.array([exponential.parameters["gamma"] - 0.6, np.log(scale0 * 1.5), np.log(2.0)]),
+    ]
+    best = None
+    for start in starts:
+        result = optimize.minimize(
+            negative_log_likelihood, start, method="Nelder-Mead",
+            options={"xatol": 1e-7, "fatol": 1e-9, "maxiter": 6000})
+        if best is None or result.fun < best.fun:
+            best = result
+    if best is None or not np.isfinite(best.fun):
+        raise RuntimeError("generalized cutoff optimization failed")
+
+    gamma = float(best.x[0])
+    scale = float(np.exp(best.x[1]))
+    eta = float(np.exp(best.x[2]))
+    grid, log_kernel = support_and_log_kernel(gamma, scale, eta)
+    peak = float(log_kernel.max())
+    log_norm = peak + float(np.log(np.sum(np.exp(log_kernel - peak))))
+    cumulative = np.cumsum(np.exp(log_kernel - log_norm))
+
+    def model_cdf(values):
+        values = np.asarray(values, dtype=float)
+        indices = np.clip(values - xmin, 0, len(cumulative) - 1).astype(int)
+        return np.where(values < xmin, 0.0, cumulative[indices])
+
+    return DistributionFit(
+        model="generalized_cutoff",
+        xmin=xmin,
+        parameters={"gamma": gamma, "s_c": scale, "eta": eta},
+        log_likelihood=float(-best.fun),
+        ks=_discrete_ks(integer_sizes, frequencies, model_cdf),
+        n=n,
+        diagnostics={"log_normalizer": log_norm},
+    )
+
+
 def fit_competing_models(
     counts: HistogramLike, *, xmin: int
 ) -> dict[str, DistributionFit]:
@@ -1451,6 +1551,24 @@ def _cutoff_lr_replica(arguments) -> float:
     return 2.0 * max(0.0, cutoff.log_likelihood - power_law.log_likelihood)
 
 
+def _generalized_cutoff_grid(fit: DistributionFit, cap_factor: float = 60.0):
+    """Normalised PMF of the Araujo-style cutoff on its integer support.
+
+    NOTE: a new distribution has to be registered in THREE places -- the fitter,
+    distribution_log_probabilities and distribution_cdf.  Adding it to only the
+    first is silent until something asks for a probability.
+    """
+    gamma = fit.parameters["gamma"]
+    scale = fit.parameters["s_c"]
+    eta = fit.parameters["eta"]
+    upper = min(scale * cap_factor ** (1.0 / eta) + 1.0, 5.0e6)
+    grid = np.arange(fit.xmin, int(max(upper, fit.xmin + 1)) + 1, dtype=float)
+    log_kernel = -gamma * np.log(grid) - np.power(grid / scale, eta)
+    peak = float(log_kernel.max())
+    log_norm = peak + float(np.log(np.sum(np.exp(log_kernel - peak))))
+    return grid, log_kernel - log_norm
+
+
 def distribution_log_probabilities(
     fit: DistributionFit, sizes: np.ndarray
 ) -> np.ndarray:
@@ -1497,6 +1615,10 @@ def distribution_log_probabilities(
         lower = -rate * np.power(support - 0.5, beta)
         upper = -rate * np.power(support + 0.5, beta)
         result[selected] = _log_difference(lower, upper) + rate * boundary ** beta
+    elif fit.model == "generalized_cutoff":
+        grid, log_pmf = _generalized_cutoff_grid(fit)
+        indices = np.clip(support - fit.xmin, 0, len(log_pmf) - 1).astype(int)
+        result[selected] = np.where(support <= grid[-1], log_pmf[indices], -np.inf)
     else:
         raise ValueError(f"unsupported fitted model: {fit.model}")
     return result
@@ -1561,6 +1683,11 @@ def distribution_cdf(fit: DistributionFit, sizes: np.ndarray) -> np.ndarray:
         result[selected] = -np.expm1(
             -rate * np.power(support + 0.5, beta) + rate * boundary ** beta
         )
+    elif fit.model == "generalized_cutoff":
+        grid, log_pmf = _generalized_cutoff_grid(fit)
+        cumulative = np.cumsum(np.exp(log_pmf))
+        indices = np.clip(support - fit.xmin, 0, len(cumulative) - 1).astype(int)
+        result[selected] = cumulative[indices]
     else:
         raise ValueError(f"unsupported fitted model: {fit.model}")
     return np.clip(result, 0.0, 1.0)
