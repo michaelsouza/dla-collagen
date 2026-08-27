@@ -2,7 +2,16 @@
 
 Resultados do conjunto de dados gerado sob o protocolo de fibra em feixe com desordem congelada, depois da correção do cálculo de $\sigma$ (`a834c53`) e da troca do protocolo de carga (§12 da DAG).
 
-O documento é organizado por **tema**, não por figura. As figuras aparecem dentro do tema a que pertencem e mantêm a numeração pela qual foram produzidas.
+O documento é organizado por **tema**, não por figura. As figuras são numeradas **por seção** — Figura 3.1, 3.2, …, 4.1, 5.1 — de modo que inserir uma figura numa seção não renumera as demais.
+
+| figura | seção | assunto |
+|:--|:--|:--|
+| 3.1 | 3.1 | perfil de diâmetro ao longo do eixo |
+| 3.2 | 3.2 | morfologia da seção central e ordem de incorporação |
+| 3.3 | 3.3 | densidade local, coordenação e razão de densidade |
+| 3.4 | 3.4 | coordenação contra densidade, e a correlação de pares |
+| 4.1 | 4 | $D_f$ e a janela de ajuste que o define |
+| 5.1 | 5 | adequação do ansatz de Araújo às cascatas |
 
 ---
 
@@ -47,11 +56,11 @@ O documento é organizado por **tema**, não por figura. As figuras aparecem den
 
 Três medidas independentes, nenhuma delas dependente de ajuste de reta, dizem a mesma coisa: a difusão superficial transforma um agregado dendrítico esparso num objeto compacto, e o efeito se esgota.
 
-### 3.1 O perfil ao longo do eixo — Figura 1
+### 3.1 O perfil ao longo do eixo
 
-![Perfil de diâmetro de seção transversal](fig01_perfil_diametro.png)
+![Perfil de diâmetro de seção transversal](fig3-1_perfil_diametro.png)
 
-*Painel esquerdo: diâmetro de giração em função da posição ao longo do eixo, para $T_s$ = 2, 16, 64 e $\geq$ 512. Painel direito: diâmetro na região central em função de $T_s$. 25 fibrilas por condição; camadas sustentadas por menos de 20 fibrilas (as pontas) foram omitidas. As curvas de $T_s$ = 512 a 8192 se sobrepõem e por isso recebem um rótulo único.*
+***Figura 3.1.*** *Painel esquerdo: diâmetro de giração em função da posição ao longo do eixo, para $T_s$ = 2, 16, 64 e $\geq$ 512. Painel direito: diâmetro na região central em função de $T_s$. 25 fibrilas por condição; camadas sustentadas por menos de 20 fibrilas (as pontas) foram omitidas. As curvas de $T_s$ = 512 a 8192 se sobrepõem e por isso recebem um rótulo único.*
 
 **A fibrila não é um cilindro — é um fuso.** Mais grossa na semente ($y = 0$) e afinando monotonicamente até as pontas, ao longo de ~3 900 sítios de rede. O perfil é simétrico em torno da semente, o que é esperado para agregação por difusão a partir de um germe central: a semente teve todo o tempo de deposição para engrossar, as pontas são recentes.
 
@@ -99,13 +108,13 @@ O $d_{max}$ exige os extremos e não sai de somas, então custa mais 18 passagen
 
 **Ressalva.** São 25 fibrilas por condição, não as 200 disponíveis. Suficiente para o gráfico e para o erro padrão da tabela, mas o platô merece o ensemble completo antes de virar afirmação no manuscrito. O custo é trivial: 5 s viram ~40 s.
 
-### 3.2 A transição morfológica — Figura 2
+### 3.2 A transição morfológica
 
-![Segmentos centrais projetados no plano x-z](fig02_secoes_centrais.png)
+![Segmentos centrais projetados no plano x-z](fig3-2_secoes_centrais.png)
 
-*Segmentos centrais ($|y| \leq 25$) projetados no plano $x$–$z$, para $T_s$ = 2, 64, 512 e 8192. Cada sítio ocupado é pintado com o índice da primeira molécula que o ocupou, de modo que a cor lê "quando esta coluna foi construída". **Os quatro painéis compartilham a mesma escala espacial**; a barra no primeiro painel mede 20 sítios de rede. Sementes 100000, 104000, 106000 e 109000.*
+***Figura 3.2.*** *Segmentos centrais ($|y| \leq 25$) projetados no plano $x$–$z$, para $T_s$ = 2, 64, 512 e 8192. Cada sítio ocupado é pintado com o índice da primeira molécula que o ocupou, de modo que a cor lê "quando esta coluna foi construída". **Os quatro painéis compartilham a mesma escala espacial**; a barra no primeiro painel mede 20 sítios de rede. Sementes 100000, 104000, 106000 e 109000.*
 
-Reproduz a Figura 2 do manuscrito a partir das fibrilas da campanha nova. A transição descrita no artigo aparece igual: morfologia **esparsa e irregular** em $T_s$ baixo, passando por densa com protuberâncias, até **empacotamento denso e radialmente simétrico** em $T_s$ alto.
+Reproduz a Figura 2 **do manuscrito** a partir das fibrilas da campanha nova. A transição descrita no artigo aparece igual: morfologia **esparsa e irregular** em $T_s$ baixo, passando por densa com protuberâncias, até **empacotamento denso e radialmente simétrico** em $T_s$ alto.
 
 | $T_s$ | sítios ocupados | preenchimento |
 |---:|---:|---:|
@@ -116,7 +125,7 @@ Reproduz a Figura 2 do manuscrito a partir das fibrilas da campanha nova. A tran
 
 O gradiente de cor mostra o mecanismo. Em $T_s = 2$ as moléculas antigas (azul) formam um esqueleto ramificado e as recentes (vermelho) se depositam nas pontas dos braços, sem preencher os vãos — é blindagem difusiva clássica. Em $T_s = 8192$ o núcleo antigo é compacto e as moléculas recentes formam uma **casca externa contínua**: a difusão superficial permite que a molécula desça para os vãos antes de fixar, então o crescimento é camada a camada em vez de dendrítico.
 
-**Diferença deliberada em relação à figura publicada.** No artigo cada painel parece normalizado ao próprio tamanho, o que faz os quatro aparentarem largura semelhante e **esconde a compactação**. Aqui a escala é comum: $T_s = 2$ preenche o quadro e $T_s = 8192$ ocupa cerca de um terço dele. Isso mantém a figura consistente com a §3.1, que mede a mesma compactação como número; com escala independente por painel, as duas diriam coisas diferentes sobre o mesmo fenômeno.
+**Diferença deliberada em relação à figura publicada.** Na figura do artigo cada painel parece normalizado ao próprio tamanho, o que faz os quatro aparentarem largura semelhante e **esconde a compactação**. Aqui a escala é comum: $T_s = 2$ preenche o quadro e $T_s = 8192$ ocupa cerca de um terço dele. Isso mantém a figura consistente com a §3.1, que mede a mesma compactação como número; com escala independente por painel, as duas diriam coisas diferentes sobre o mesmo fenômeno.
 
 **Algoritmo.** Molécula entra no painel se a base da haste satisfaz $|y| \leq 25$, e guarda o seu índice de chegada — a ordem em que o gerador a ligou ao agregado, de 0 (semente) a 30 000. Uma coluna $(x, z)$ pode ser ocupada por várias moléculas em alturas diferentes; o sítio recebe o índice da **primeira** a ocupá-lo (na implementação os índices são ordenados de forma decrescente antes da escrita na grade, de modo que o menor é o último a ser gravado e vence). O preenchimento é a razão entre sítios ocupados e a área da caixa envolvente da fatia, $(\Delta x + 1)(\Delta z + 1)$.
 
@@ -126,17 +135,18 @@ O gradiente de cor mostra o mecanismo. Em $T_s = 2$ as moléculas antigas (azul)
 2. **As sementes são as primeiras de cada condição, não escolhidas.** Convém verificar se são representativas do ensemble antes da publicação; se forem selecionadas, a seleção precisa ser declarada.
 3. **Mapa de cores.** Usa-se `turbo` em vez de `jet` — mesma aparência azul→vermelho, sem as bandas falsas que o `jet` introduz.
 
-### 3.3 Compactação sem parâmetro livre — Figura 3
+### 3.3 Compactação sem parâmetro livre
 
-![Densidade local, coordenação e razão de densidade em função de T_s](fig03_compactacao.png)
+![Densidade local, coordenação e razão de densidade em função de T_s](fig3-3_compactacao.png)
 
-*Painel (a): densidade local $\rho(r)=N(r)/\pi r^2$ das seções transversais; cada curva termina em $R/2$, o maior raio ainda dentro do corpo da sua condição. Painel (b): coordenação — fração dos 4 vizinhos de rede ocupados. Painel (c): razão $\rho(3)/\rho(R/2)$, que vale 1 para densidade uniforme. 25 fibrilas por condição, 11 seções por fibrila. Barras de erro: erro padrão entre fibrilas.*
+***Figura 3.3.*** *Painel (a): densidade local $\rho(r)=N(r)/\pi r^2$ das seções transversais; cada curva termina em $R/2$, o maior raio ainda dentro do corpo da sua condição. Painel (b): coordenação — fração dos 4 vizinhos de rede ocupados. Painel (c): razão $\rho(3)/\rho(R/2)$, que vale 1 para densidade uniforme. 25 fibrilas por condição, 11 seções por fibrila. Barras de erro: erro padrão entre fibrilas.*
 
 **Nenhuma grandeza desta figura envolve ajuste de reta ou janela de escala.** Essa é a razão de ela existir — ver a §4.
 
 **Painel (a) é o mecanismo.** Um objeto compacto tem densidade uniforme: $\rho(r)$ é uma reta horizontal. Um fractal de dimensão $D$ tem $\rho \sim r^{D-2}$, isto é, densidade que **cai** conforme se olha mais longe, porque há buracos em toda escala. Em $T_s = 2$ a curva desce de 0,31 a 0,18; em $T_s \geq 512$ ela é plana. A transição de fractal para compacto se lê direto, sem ajustar nada.
 
 **Painel (b) é o empacotamento local.** A coordenação não usa centroide, raio nem janela — só conta quantos dos 4 vizinhos de rede estão ocupados. Vai de 0,34 a 0,76: em $T_s$ baixo uma molécula tem em média 1,4 vizinhos, em $T_s$ alto tem 3,0.
+- *Por que o platô converge para 0,76 e não 1,0?* A coordenação só atingiria 1,0 (4/4 vizinhos) no limite de raio infinito ($R \to \infty$). Como a seção transversal da fibrila tem tamanho finito ($R \approx 14$ sítios de rede), a razão superfície/volume é considerável: entre $20\%$ e $25\%$ de todas as moléculas residem na borda externa exposta ou na rugosidade superficial (tendo apenas 2 ou 3 vizinhos). Enquanto o miolo interno atinge empacotamento completo (4 vizinhos), a média ponderada com a casca externa resulta no platô de $\approx 0{,}76$.
 
 **Painel (c) mede quanto ainda resta de fractal.** A razão $\rho(3)/\rho(R/2)$ vale 1 se a densidade for uniforme e cresce conforme a estrutura fica rarefeita para fora. Cai de 1,68 para 1,02 e fica **indistinguível de compacto a partir de $T_s = 128$**.
 
@@ -166,11 +176,11 @@ $$ D = 2 + \frac{\ln\left[\rho(3)/\rho(R/2)\right]}{\ln\left(6/R\right)} $$
 1. **A razão não é totalmente livre de escolhas.** Ela usa $r=3$ e $r=R/2$. A diferença em relação ao ajuste de $D_f$ é que ambas são principiadas (corte de rede; metade do objeto), aplicadas uniformemente, e o resultado é uma razão entre duas densidades **medidas** — não a inclinação de uma reta ajustada onde não há lei de potência. A coordenação, essa sim, não tem escolha nenhuma.
 2. **A coordenação é sensível à rede.** Ela é natural aqui porque o modelo é de rede, mas não tem análogo direto em dados experimentais.
 
-### 3.4 Correlação de pares — Figura 5
+### 3.4 Correlação de pares
 
-![Coordenação contra densidade, e g(1) contra T_s](fig05_correlacao_pares.png)
+![Coordenação contra densidade, e g(1) contra T_s](fig3-4_correlacao_pares.png)
 
-*Painel esquerdo: coordenação contra a densidade da seção $\phi = \rho(R/2)$, uma condição por ponto, cor pelo $T_s$; a diagonal é o que um meio aleatório daria. Painel direito: $g(1) = $ coordenação$/\phi$ contra $T_s$. 25 fibrilas por condição, 11 seções por fibrila.*
+***Figura 3.4.*** *Painel esquerdo: coordenação contra a densidade da seção $\phi = \rho(R/2)$, uma condição por ponto, cor pelo $T_s$; a diagonal é o que um meio aleatório daria. Painel direito: $g(1) = $ coordenação$/\phi$ contra $T_s$. 25 fibrilas por condição, 11 seções por fibrila.*
 
 Coordenação e densidade **não são independentes**. Num meio aleatório de densidade $\phi$, um sítio ocupado tem em média $4\phi$ vizinhos ocupados, ou seja **coordenação $= \phi$** — a diagonal do painel esquerdo. A distância até essa diagonal é a função de correlação de pares à distância unitária,
 
@@ -203,9 +213,9 @@ que vale 1 por construção para um meio sem correlação espacial.
 
 ## 4. Dimensão fractal: o problema da janela
 
-![Diagnóstico: D_f e a janela que o define](fig03b_df_janelas.png)
+![Diagnóstico: D_f e a janela que o define](fig4-1_df_janelas.png)
 
-*Material de apoio, mantido como evidência da pendência N7. Painel (a): $D_f$ contra $\log_{10} T_s$ sob duas regras de janela, contra os pontos publicados. Painel (b): inclinação local da curva massa–raio.*
+***Figura 4.1.*** *Material de apoio, mantido como evidência da pendência N7. Painel (a): $D_f$ contra $\log_{10} T_s$ sob duas regras de janela, contra os pontos publicados. Painel (b): inclinação local da curva massa–raio.*
 
 Esta seção é **metodológica**, não um resultado sobre fibrilas: trata do que se pode e do que não se pode extrair de um ajuste de dimensão fractal em objetos deste tamanho.
 
@@ -234,7 +244,7 @@ A consequência prática é mensurável ao recalcular $D_f$ com critérios objet
 
 Isso desloca o **ponto de saturação**: sob janela uniforme $D_f$ satura perto de $T_s = 128$, contra ~4096 nos pontos publicados. Fecha a pendência **N7** com medição em vez de suspeita.
 
-Os pontos publicados intermediários foram lidos da imagem da Figura 3 do manuscrito, com incerteza de transcrição de ~0,005; apenas os extremos (1,708 ± 0,005 e 1,963 ± 0,001) vêm da legenda. A discrepância de 0,16 é grande demais para ser transcrição, mas os valores merecem conferência contra a fonte antes de entrarem na carta-resposta.
+Os pontos publicados intermediários foram lidos da imagem da Figura 3 **do manuscrito**, com incerteza de transcrição de ~0,005; apenas os extremos (1,708 ± 0,005 e 1,963 ± 0,001) vêm da legenda. A discrepância de 0,16 é grande demais para ser transcrição, mas os valores merecem conferência contra a fonte antes de entrarem na carta-resposta.
 
 **Por que valores intermediários de $D_f$ não sustentam uma transição contínua.** Poder-se-ia supor que, adicionando mais valores de $T_s$ entre 2 e 128, obter-se-ia uma curva suave de $D_f(T_s)$, sugerindo uma variação contínua de dimensão fractal. No entanto, esses valores intermediários são um **artefato de *crossover* geométrico**, e não uma nova família de fractais autossimilares:
 1. **Perda da autossimilaridade:** Um fractal genuíno exige que a densidade decaia com a mesma regra em todas as escalas (uma linha reta em $\log N$ vs. $\log r$). Conforme $T_s$ cresce, a difusão preenche as cavidades de dentro para fora: a fibrila passa a ter um **núcleo central compacto** ($D=2$) cercado por uma **borda irregular**. A curva $\log N$ vs. $\log r$ dobra e deixa de ser reta; ajustar uma linha sobre essa curva produz apenas uma média geométrica entre o miolo sólido e a borda rala.
@@ -249,9 +259,9 @@ Os pontos publicados intermediários foram lidos da imagem da Figura 3 do manusc
 
 ## 5. Fratura: estatística das cascatas
 
-![Razão dados/modelo, KS das quatro famílias, expoente e nitidez do corte](fig04_cascatas.png)
+![Razão dados/modelo, KS das quatro famílias, expoente e nitidez do corte](fig5-1_cascatas.png)
 
-*Figura 4. Painel (a): razão entre a sobrevivência observada e a de cada modelo em $T_s$=128, $m$=10; o valor 1 significa modelo exato. Painel (b): distância KS das três famílias competitivas nas 50 condições, cinco pontos por modelo (um por $m$), com opacidade crescente em $m$. Painéis (c) e (d): expoente e nitidez do corte do ansatz de Araújo, com bootstrap de blocos por fibrila (120 réplicas). 61 000 717 cascatas preterminais.*
+***Figura 5.1.*** *Painel (a): razão entre a sobrevivência observada e a de cada modelo em $T_s$=128, $m$=10; o valor 1 significa modelo exato. Painel (b): distância KS das três famílias competitivas nas 50 condições, cinco pontos por modelo (um por $m$), com opacidade crescente em $m$. Painéis (c) e (d): expoente e nitidez do corte do ansatz de Araújo, com bootstrap de blocos por fibrila (120 réplicas). 61 000 717 cascatas preterminais.*
 
 ### 5.1 A definição adotada
 
@@ -291,7 +301,7 @@ uma lei de potência cujo corte tem **nitidez livre** em vez de fixada em expone
 
 Isto **desfaz a degenerescência** que uma análise anterior encontrara. Log-normal, esticada e corte exponencial pareciam equivalentes porque nenhuma delas tem a forma certa de corte; com $\eta$ livre, a diferença aparece. Em $T_s$=128, $m$=10 o KS cai de 0,0109 (exponencial) e 0,0148 (log-normal) para **0,0039**.
 
-**Onde o ansatz falha.** O painel (a) mostra o limite. Até $s \approx 30$ a razão dados/modelo é 1 para Araújo — descrição exata. Além disso ela **sobe até 30**: o modelo **subestima os maiores eventos**. O corte exponencial erra na direção oposta, superestimando-os por um fator 3. Nenhuma das famílias acerta a cauda extrema; Araújo vence porque acerta o corpo e a região de corte, que é onde está a massa de probabilidade e o que o KS mede. **Não se trata de um modelo exato, e sim do melhor entre os disponíveis.**
+**Onde o ansatz falha.** O painel (a) da Figura 5.1 mostra o limite. Até $s \approx 30$ a razão dados/modelo é 1 para Araújo — descrição exata. Além disso ela **sobe até 30**: o modelo **subestima os maiores eventos**. O corte exponencial erra na direção oposta, superestimando-os por um fator 3. Nenhuma das famílias acerta a cauda extrema; Araújo vence porque acerta o corpo e a região de corte, que é onde está a massa de probabilidade e o que o KS mede. **Não se trata de um modelo exato, e sim do melhor entre os disponíveis.**
 
 ### 5.4 Parâmetros medidos
 
@@ -414,18 +424,18 @@ Portanto, a associação física legítima entre estrutura e mecânica é dupla:
 | arquivo | papel | seção |
 |:--|:--|:--|
 | `Code/Data_analysis/fibril_diameter_profile.py` | perfil de diâmetro por camada, a partir dos compactos | 3.1 |
-| `Code/Data_analysis/plot_fibril_diameter.py` | desenha a Figura 1 | 3.1 |
+| `Code/Data_analysis/plot_fibril_diameter.py` | desenha a Figura 3.1 | 3.1 |
 | `Code/Data_analysis/test_fibril_diameter_profile.py` | quatro verificações de geometria | 3.1 |
-| `Code/Data_analysis/plot_central_sections.py` | recorta a fatia central e desenha a Figura 2 | 3.2 |
+| `Code/Data_analysis/plot_central_sections.py` | recorta a fatia central e desenha a Figura 3.2 | 3.2 |
 | `Code/Data_analysis/fibril_compaction.py` | coordenação, perfil de densidade e razão | 3.3 |
-| `Code/Data_analysis/plot_fibril_compaction.py` | desenha a Figura 3 | 3.3 |
-| `Code/Data_analysis/plot_pair_correlation.py` | desenha a Figura 5 | 3.4 |
+| `Code/Data_analysis/plot_fibril_compaction.py` | desenha a Figura 3.3 | 3.3 |
+| `Code/Data_analysis/plot_pair_correlation.py` | desenha a Figura 3.4 | 3.4 |
 | `Code/Data_analysis/df_fit_windows.py` | $D_f$ sob três regras de janela | 4 |
-| `Code/Data_analysis/plot_df_vs_ts.py` | desenha o diagnóstico de janela | 4 |
+| `Code/Data_analysis/plot_df_vs_ts.py` | desenha a Figura 4.1 | 4 |
 | `Code/Data_analysis/extract_cascades.py` | reduz os 10 000 arquivos a histogramas de cascata | 5 |
 | `Code/Data_analysis/run_cascade_statistics.py` | procedimento de Clauset por condição | 5 |
 | `Code/Data_analysis/run_araujo_fits.py` | ajusta o ansatz de Araújo e testa $\eta=1$ | 5 |
-| `Code/Data_analysis/plot_araujo_adequacy.py` | desenha a Figura 4 | 5 |
+| `Code/Data_analysis/plot_araujo_adequacy.py` | desenha a Figura 5.1 | 5 |
 | `Code/Data_analysis/avalanche_statistics.py` | núcleo de ajuste; recebeu `fit_generalized_cutoff`, `fit_stretched_exponential` e `vuong_likelihood_ratio` | 5 |
 | `Code/Data_analysis/test_generalized_cutoff.py` | cinco verificações do ansatz de Araújo | 5 |
 | `Code/Data_analysis/test_stretched_exponential.py` | cinco verificações da esticada e da razão de Vuong | 5 |
@@ -460,7 +470,7 @@ python3 Code/Data_analysis/plot_araujo_adequacy.py
 
 Custos: diâmetro 5 s, compactação 12 s, janelas de $D_f$ 7 s, extração de cascatas 12 s em 48 núcleos, Clauset 11 min, ajustes de Araújo 4 min.
 
-A tabela completa dos ajustes de Araújo está aqui, em `fig04_araujo_ajustes.csv`; a dos testes de Clauset — aderência, razões de Vuong e as colunas sem piso de cauda — fica em `$DLA_PROJECT/campaign/analysis/cascades/cascade_stats_clauset.csv`, junto dos dados. O código das seções 3 a 5 está coberto por 133 testes.
+A tabela completa dos ajustes de Araújo está aqui, em `fig5-1_araujo_ajustes.csv`; a dos testes de Clauset — aderência, razões de Vuong e as colunas sem piso de cauda — fica em `$DLA_PROJECT/campaign/analysis/cascades/cascade_stats_clauset.csv`, junto dos dados. O código das seções 3 a 5 está coberto por 133 testes.
 
 ---
 
@@ -478,4 +488,4 @@ A tabela completa dos ajustes de Araújo está aqui, em `fig04_araujo_ajustes.cs
 
 ---
 
-*Novas figuras entram no tema a que pertencem; se não couber em nenhum, abre-se um tema novo.*
+*Novas figuras entram no tema a que pertencem e recebem o próximo número daquela seção — o que renumera, no máximo, as figuras da mesma seção. Se a figura não couber em nenhum tema, abre-se um tema novo.*
