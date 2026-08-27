@@ -437,7 +437,7 @@ python3 Code/Data_analysis/run_araujo_fits.py \
 python3 Code/Data_analysis/plot_araujo_adequacy.py
 ```
 
-Extração 12 s; Clauset 11 min; ajustes de Araújo 4 min. Tabelas completas em `fig04_araujo_ajustes.csv` e `cascade_stats_clauset.csv`.
+Extração 12 s; Clauset 11 min; ajustes de Araújo 4 min. A tabela completa dos ajustes de Araújo está aqui, em `fig04_araujo_ajustes.csv`; a dos testes de Clauset — aderência, razões de Vuong e as colunas sem piso de cauda — fica em `$DLA_PROJECT/campaign/analysis/cascades/cascade_stats_clauset.csv`, junto dos dados.
 
 ### Algoritmo
 
