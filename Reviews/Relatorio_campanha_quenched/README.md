@@ -12,6 +12,7 @@ O documento é organizado por **tema**, não por figura. As figuras são numerad
 | 3.4 | 3.4 | coordenação contra densidade, e a correlação de pares |
 | 4.1 | 4 | $D_f$ e a janela de ajuste que o define |
 | 5.1 | 5 | adequação do ansatz de Araújo às cascatas |
+| 5.2 | 5.3 | sobrevivência e ajuste, $m$ = 2, ao longo de $T_s$ |
 
 ---
 
@@ -253,7 +254,39 @@ Os pontos publicados intermediários foram lidos da imagem da Figura 3 **do manu
 
 **O que fica no lugar da afirmação atual.** Não "$D_f$ cresce de 1,71 a 1,96", que sugere um expoente variando continuamente, e sim: em $T_s$ baixo a seção é um agregado DLA bidimensional com $D_f \approx 1{,}71$ sobre um intervalo de escala real — o valor que a geometria de crescimento prevê, sem ajuste de nada; conforme $T_s$ cresce, **o intervalo de escala encolhe até desaparecer** e a seção passa a ser compacta. A transição é a perda do regime fractal, e é isso que a §3.3 mede.
 
-**O teste que resolveria a questão em definitivo**, se for desejado: gerar fibrilas maiores. Se o problema é o intervalo de escala curto, aumentar $R$ de 33 para ~100 — cerca de 7× mais moléculas, viável com o `fast_dla2` — deve alargar o platô. Se $D_f$ convergir, ótimo; se o platô continuar ausente em $T_s$ alto, confirma-se que não há fractal ali e a releitura acima vira conclusão, não alternativa.
+**O teste de tamanho: medido, e o resultado dispensa o teste.** A versão anterior desta seção propunha gerar fibrilas com $R \approx 100$ e estimava "cerca de 7× mais moléculas". **A estimativa estava errada por uma a três ordens de grandeza**, porque supunha que a fibrila engorda em proporção à massa acrescentada. Ela não engorda: cresce sobretudo em comprimento.
+
+Medindo `nb` de 3 750 a 120 000 em duas condições (job 580370, semente única):
+
+$$ R \sim nb^{0,29}, \qquad t_{\text{geração}} \sim nb^{1,49} $$
+
+| | $T_s = 2$ | $T_s = 8192$ |
+|:--|--:|--:|
+| $R$ em `nb`=30 000 | 30,3 | 14,4 |
+| `nb` para $R = 100$ | **1,6 milhão** (53×) | **28 milhões** (930×) |
+| tempo por fibrila | **43 h** | **155 dias** |
+| 25 fibrilas | ~1 100 CPU-h | ~93 000 CPU-h |
+
+Para $T_s = 2$ é caro mas viável (três vezes o custo de toda a geração da campanha). Para $T_s$ alto é proibitivo — e a razão é física, não computacional: a difusão superficial **afina** a fibrila, então condições compactas precisam de massa desproporcional para alargar a seção.
+
+**Mas o teste não é necessário**, porque a série de tamanhos já mostra convergência sobre um fator 32 em `nb` e 2,8 em $R$:
+
+| $T_s$ | `nb` | $R$ | décadas | $D_f$ (janela relativa) |
+|---:|---:|---:|---:|---:|
+| 2 | 3 750 | 17,0 | 0,45 | 1,757 |
+| 2 | 15 000 | 25,3 | 0,62 | 1,664 |
+| 2 | 30 000 | 30,3 | 0,70 | 1,676 |
+| 2 | 120 000 | 47,4 | 0,90 | 1,686 |
+| 8192 | 3 750 | 7,9 | 0,12 | 2,113 |
+| 8192 | 15 000 | 11,3 | 0,28 | 2,094 |
+| 8192 | 30 000 | 14,4 | 0,38 | 2,012 |
+| 8192 | 60 000 | 17,4 | 0,46 | 2,025 |
+
+Em $T_s = 2$, $D_f$ flutua em torno de **1,68 sem tendência** enquanto o intervalo de escala dobra — é o valor de DLA bidimensional, já convergido. Em $T_s = 8192$ ele sobe e **estaciona em 2,0**, o limite euclidiano; valores ligeiramente acima de 2 são ruído, já que uma seção plana não pode excedê-lo.
+
+Ou seja: os dois extremos da grade já respondem. Em $T_s$ baixo há fractal com $D_f \approx 1{,}68$; em $T_s$ alto não há fractal, há um sólido. Fibrilas maiores mediriam com mais precisão o que já está decidido. **A releitura da §4 é conclusão, não alternativa.**
+
+*Ressalva: uma semente por ponto, sem barra de erro. A ausência de tendência em $T_s = 2$ é clara ante a dispersão observada (±0,05), mas um ensemble tornaria a afirmação quantitativa.*
 
 ---
 
@@ -302,6 +335,18 @@ uma lei de potência cujo corte tem **nitidez livre** em vez de fixada em expone
 Isto **desfaz a degenerescência** que uma análise anterior encontrara. Log-normal, esticada e corte exponencial pareciam equivalentes porque nenhuma delas tem a forma certa de corte; com $\eta$ livre, a diferença aparece. Em $T_s$=128, $m$=10 o KS cai de 0,0109 (exponencial) e 0,0148 (log-normal) para **0,0039**.
 
 **Onde o ansatz falha.** O painel (a) da Figura 5.1 mostra o limite. Até $s \approx 30$ a razão dados/modelo é 1 para Araújo — descrição exata. Além disso ela **sobe até 30**: o modelo **subestima os maiores eventos**. O corte exponencial erra na direção oposta, superestimando-os por um fator 3. Nenhuma das famílias acerta a cauda extrema; Araújo vence porque acerta o corpo e a região de corte, que é onde está a massa de probabilidade e o que o KS mede. **Não se trata de um modelo exato, e sim do melhor entre os disponíveis.**
+
+![Sobrevivência e ajuste de Araújo para m=2 ao longo de T_s](fig5-2_sobrevivencia_m2.png)
+
+***Figura 5.2.*** *Painel (a): sobrevivência do tamanho de cascata para $m = 2$ em cinco valores de $T_s$; pontos são os dados, linhas o ajuste de Araújo sobre $s \geq x_{min}$. Painel (b): razão entre os dois. 200 fibrilas × 50 realizações por condição.*
+
+A Figura 5.2 mostra o ajuste condição a condição, com $m$ fixo. Três leituras:
+
+**As distribuições colapsam acima de $T_s = 16$.** As curvas de $T_s$ = 16, 128, 1024 e 8192 quase coincidem, enquanto a de $T_s = 2$ se destaca com cauda visivelmente mais longa. Os parâmetros confirmam: $s_c$ cai de 124,8 ($T_s$=2) para 84,6 ($T_s$=16) e depois estabiliza em ~51 de 128 a 8192, e $\gamma$ vai de 1,995 a ~2,45–2,55 e para. A mudança na estatística de fratura acontece quase toda entre $T_s = 2$ e 16.
+
+**O ajuste é exato no corpo.** No painel (b) a razão fica em 1 por quase duas décadas em $s$, com desvios abaixo de 20% até $s \approx 50$ — que é onde reside praticamente toda a massa de probabilidade.
+
+**A direção do erro se inverte com $T_s$.** Na cauda extrema, o ajuste **subestima** a frequência dos eventos grandes em $T_s$ baixo (razão sobe acima de 20 para $T_s$ = 2, 16 e 128) e **superestima** em $T_s$ alto (razão cai a ~0,3 em $T_s$ = 1024 e 8192). Não é um viés sistemático de uma direção só: o valor de $\eta$ que melhor descreve o corpo produz um corte alto demais num extremo da grade e baixo demais no outro. É outra forma de ver que $\eta$ não é universal (§5.4).
 
 ### 5.4 Parâmetros medidos
 
@@ -436,6 +481,7 @@ Portanto, a associação física legítima entre estrutura e mecânica é dupla:
 | `Code/Data_analysis/run_cascade_statistics.py` | procedimento de Clauset por condição | 5 |
 | `Code/Data_analysis/run_araujo_fits.py` | ajusta o ansatz de Araújo e testa $\eta=1$ | 5 |
 | `Code/Data_analysis/plot_araujo_adequacy.py` | desenha a Figura 5.1 | 5 |
+| `Code/Data_analysis/plot_survival_by_ts.py` | desenha a Figura 5.2 | 5.3 |
 | `Code/Data_analysis/avalanche_statistics.py` | núcleo de ajuste; recebeu `fit_generalized_cutoff`, `fit_stretched_exponential` e `vuong_likelihood_ratio` | 5 |
 | `Code/Data_analysis/test_generalized_cutoff.py` | cinco verificações do ansatz de Araújo | 5 |
 | `Code/Data_analysis/test_stretched_exponential.py` | cinco verificações da esticada e da razão de Vuong | 5 |
@@ -466,6 +512,7 @@ python3 Code/Data_analysis/run_araujo_fits.py \
     --stats    $DLA_PROJECT/campaign/analysis/cascades/cascade_stats_clauset.csv \
     --out      $DLA_PROJECT/campaign/analysis/cascades/araujo_fits.csv --replicates 120
 python3 Code/Data_analysis/plot_araujo_adequacy.py
+python3 Code/Data_analysis/plot_survival_by_ts.py
 ```
 
 Custos: diâmetro 5 s, compactação 12 s, janelas de $D_f$ 7 s, extração de cascatas 12 s em 48 núcleos, Clauset 11 min, ajustes de Araújo 4 min.
@@ -484,7 +531,7 @@ A tabela completa dos ajustes de Araújo está aqui, em `fig5-1_araujo_ajustes.c
 
 **Ensemble completo.** As §§3.1 e 3.3 usam 25 fibrilas das 200 disponíveis. O custo de refazer com todas é de segundos.
 
-**Teste de tamanho.** Fibrilas ~7× maiores decidiriam se a ausência de platô de $D_f$ em $T_s$ alto é limitação de tamanho ou ausência real de fractalidade (§4).
+**Teste de tamanho: resolvido, e negativamente.** Medido em §4: $R \sim nb^{0,29}$, de modo que $R = 100$ exigiria 53× a massa em $T_s = 2$ e 930× em $T_s$ alto — inviável neste último. Desnecessário, porém: sobre um fator 32 em `nb`, $D_f$ já converge a 1,68 em $T_s = 2$ e a 2,0 em $T_s = 8192$. Falta apenas repetir com ensemble em vez de semente única.
 
 ---
 
