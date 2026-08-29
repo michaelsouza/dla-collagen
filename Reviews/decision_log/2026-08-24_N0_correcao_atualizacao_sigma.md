@@ -29,7 +29,7 @@ Com $m=2$, isso subestima $P_R$ em ~17% em carga alta.
 #### Por que é um defeito, e não uma escolha de modelagem
 
 Parkinson et al. 1997, o protocolo de referência que o artigo cita, é explícito
-(`Bibliograph/Parkinson1997.md:84`): *"After the rods had been assessed and the
+(`Bibliography/Parkinson1997.md:84`): *"After the rods had been assessed and the
 appropriate particles removed, the skeleton was reassessed and **the stress
 re-evaluated**."* Sem elasticidade, essa reavaliação **é** o passo de relaxação
 da linhagem de fratura desordenada que ele invoca

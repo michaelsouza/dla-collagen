@@ -6,7 +6,7 @@
 > Entrada de registro. **Append-only** — não editar. Se um fato aqui deixar de
 > valer, escreva uma entrada nova com a correção e cite esta.
 
-Auditoria de N1 contra as fontes em `Bibliograph/`. Edições cirúrgicas em
+Auditoria de N1 contra as fontes em `Bibliography/`. Edições cirúrgicas em
 `Paper/paper_PRE.tex` e `Carta_Resposta/Response_to_Referees.tex`; ambos
 compilam sem citações indefinidas.
 

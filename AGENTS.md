@@ -76,7 +76,7 @@ descrição. Descrição nunca fica errada e por isso nunca ajuda:
 """Estima D_f por T_s a partir das seções transversais.
 
 Lê:      Data_fibrils/.../extended/ts_<TS>_seed_<SEED>.dat
-Escreve: Reviews/Issue7_fractal_proxy/df_por_ts.csv
+Escreve: Reviews/N7_fractal_proxy/df_por_ts.csv
 Chamado: Code/cluster/sdumont2nd/validate.sh; df_fit_windows.py
 """
 ```

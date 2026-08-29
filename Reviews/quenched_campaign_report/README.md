@@ -341,7 +341,7 @@ A decomposição em aglomerados conexos permanece nos dados como diagnóstico de
 
 ### 5.2 A lei de potência pura é rejeitada
 
-Pelo procedimento de `Bibliograph/Clauset2009.md` (Box 1), com 2500 réplicas semiparamétricas e o limiar $p > 0{,}1$:
+Pelo procedimento de `Bibliography/Clauset2009.md` (Box 1), com 2500 réplicas semiparamétricas e o limiar $p > 0{,}1$:
 
 | | de 50 condições |
 |:--|--:|

@@ -20,7 +20,7 @@ loading protocol”.
 
 - Parkinson et al., “The Mechanical Properties of Simulated Collagen Fibrils”,
   *Journal of Biomechanics* 30, 549–554 (1997), integralmente transcrito em
-  [`Bibliograph/Parkinson1997.md`](../Bibliograph/Parkinson1997.md).
+  [`Bibliography/Parkinson1997.md`](../Bibliography/Parkinson1997.md).
 - Equações e descrição atuais do manuscrito em
   [`Paper/paper_PRE.tex`, Eqs. 2–4 e protocolo](../Paper/paper_PRE.tex#L173-L204).
 - Implementação atual em
@@ -49,7 +49,7 @@ O artigo justifica essa expressão dizendo que equilíbrio mecânico requer carg
 constante ao longo da amostra. Nesse trecho, “mechanical equilibrium” descreve
 o balanço axial que fundamenta a distribuição de tensão, não um critério
 estocástico de parada
-([Parkinson, Methods, p. 551, linhas 68–72](../Bibliograph/Parkinson1997.md#L68-L72)).
+([Parkinson, Methods, p. 551, linhas 68–72](../Bibliography/Parkinson1997.md#L68-L72)).
 
 Para uma haste, Parkinson usa a média de \(\sigma(i)\) nas seções atravessadas
 e define a probabilidade de remoção
@@ -60,7 +60,7 @@ P_b=\left(\frac{\sigma}{n\sigma_c}\right)^m,
 
 onde \(n\) representa coordenação, \(\sigma_c\) a resistência típica da ligação
 e \(m\) a dispersão das resistências, relacionada ao módulo de Weibull
-([Parkinson, Methods, p. 551, linhas 74–82](../Bibliograph/Parkinson1997.md#L74-L82)).
+([Parkinson, Methods, p. 551, linhas 74–82](../Bibliography/Parkinson1997.md#L74-L82)).
 Logo, a escolha atual da **tensão média** nas Eqs. 3–4 do manuscrito tem
 precedente explícito nessa fonte. Esse precedente documenta a origem da escolha,
 mas, por si só, não substitui uma justificativa física ou uma análise de
@@ -70,7 +70,7 @@ O passo decisivo está no fim da seção Methods. As hastes são avaliadas em um
 valor de \(F\), as selecionadas probabilisticamente são removidas, o esqueleto é
 reavaliado e a tensão é recalculada. O procedimento se repete, e \(F\) só
 aumenta, em incrementos de \(0.5\), quando não ocorrem novos eventos de quebra
-([Parkinson, Methods, p. 551, linha 84](../Bibliograph/Parkinson1997.md#L84)).
+([Parkinson, Methods, p. 551, linha 84](../Bibliography/Parkinson1997.md#L84)).
 
 Assim, Parkinson sustenta diretamente que:
 
@@ -92,7 +92,7 @@ particular, o artigo não diz se:
 A associação de \(m\) à dispersão de resistências e o uso da expressão
 “fracture thresholds” não bastam para concluir que um limiar persistente foi
 armazenado; o procedimento computacional correspondente não é descrito
-([Parkinson, Methods, p. 551, linhas 80–84](../Bibliograph/Parkinson1997.md#L80-L84)).
+([Parkinson, Methods, p. 551, linhas 80–84](../Bibliography/Parkinson1997.md#L80-L84)).
 Portanto, não é fiel à fonte afirmar que Parkinson usou thresholds *quenched*,
 nem é possível provar, somente pelo artigo, a identidade dos sorteios entre
 passagens.
@@ -131,21 +131,21 @@ está correto sob essa interpretação.
 
 Parkinson não chama a passagem sem quebra de equilíbrio ou estabilidade. O
 artigo somente diz que a ausência de um novo evento aciona o próximo incremento
-de força ([Methods, p. 551, linha 84](../Bibliograph/Parkinson1997.md#L84)).
+de força ([Methods, p. 551, linha 84](../Bibliography/Parkinson1997.md#L84)).
 Há duas menções próximas que não devem ser confundidas com esse critério:
 
 - a introdução descreve genericamente outros modelos, com nós indeformáveis e
   ligações elásticas, nos quais a rede relaxa após a quebra até um novo
   equilíbrio
-  ([Introduction, p. 550, linha 41](../Bibliograph/Parkinson1997.md#L41));
+  ([Introduction, p. 550, linha 41](../Bibliography/Parkinson1997.md#L41));
 - o modelo específico de Parkinson é declarado frágil, sem deformação e sem
   reassociação das hastes removidas
-  ([Methods, p. 551, linha 84](../Bibliograph/Parkinson1997.md#L84)).
+  ([Methods, p. 551, linha 84](../Bibliography/Parkinson1997.md#L84)).
 
 Além disso, como observado acima, a expressão “mechanical equilibrium” na
 formulação específica justifica carga axial constante e equipartição em uma
 seção, não transforma uma realização sem falha em estado absorvente
-([Methods, p. 551, linhas 68–72](../Bibliograph/Parkinson1997.md#L68-L72)).
+([Methods, p. 551, linhas 68–72](../Bibliography/Parkinson1997.md#L68-L72)).
 
 Logo, o primeiro sweep vazio deve ser apresentado como uma **regra de parada e
 avanço da carga**, não como prova de que \(P_R\) se anulou ou de que nenhuma
@@ -158,7 +158,7 @@ tempo de permanência em cada \(F\) e não trata \(P_b\) como taxa de risco por
 unidade de tempo. A grandeza que o procedimento controla é a força aplicada:
 \(F\) é aumentada em passos de \(0.5\), enquanto a tensão em uma seção é
 \(F/N(i)\)
-([Methods, p. 551, linhas 68–84](../Bibliograph/Parkinson1997.md#L68-L84)).
+([Methods, p. 551, linhas 68–84](../Bibliography/Parkinson1997.md#L68-L84)).
 
 Assim, a interpretação mais estrita e defensável é:
 
@@ -191,7 +191,7 @@ como relaxamento estocástico completo nem como limite de tempo infinito.
 | Dano | irreversível, sem reassociação | hastes removidas não retornam |
 
 Fontes: [Parkinson, Methods, p. 551, linhas
-68–84](../Bibliograph/Parkinson1997.md#L68-L84);
+68–84](../Bibliography/Parkinson1997.md#L68-L84);
 [manuscrito, linhas 173–204](../Paper/paper_PRE.tex#L173-L204);
 [código, linhas 214–245](../Code/Fracture_fibril/stress_strain_ava.py#L214-L245)
 e [473–514](../Code/Fracture_fibril/stress_strain_ava.py#L473-L514).
@@ -207,7 +207,7 @@ atualização são “exactly the same”, pois o artigo não os especifica.
 
 2. **Coordenação.** Parkinson introduz \(n\) como o número de vizinhos de uma
    partícula antes de escrever a probabilidade para a haste
-   ([p. 551, linha 74](../Bibliograph/Parkinson1997.md#L74)). O manuscrito atual
+   ([p. 551, linha 74](../Bibliography/Parkinson1997.md#L74)). O manuscrito atual
    usa \(K\), soma de contatos ao longo da molécula
    ([`paper_PRE.tex`, linhas 187–195](../Paper/paper_PRE.tex#L187-L195)), e o
    código usa `len(self.neigh_pids)`
