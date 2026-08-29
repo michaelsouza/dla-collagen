@@ -16,14 +16,14 @@ avalanches espaciais.
 O arquivo compactado que será versionado junto ao código está em:
 
 ```text
-Code/Fracture_fibril/compact.zip
+Data_fibrils/fibrilas_publicadas_artigo_10Ts_nb30000.zip
 ```
 
 Partindo da raiz do repositório, extraia-o com:
 
 ```bash
 mkdir -p Data_fibrils/Avalanche_force_grouped
-unzip Code/Fracture_fibril/compact.zip \
+unzip Data_fibrils/fibrilas_publicadas_artigo_10Ts_nb30000.zip \
   -d Data_fibrils/Avalanche_force_grouped
 ```
 

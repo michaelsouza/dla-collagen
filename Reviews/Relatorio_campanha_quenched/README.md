@@ -296,7 +296,42 @@ Ou seja: os dois extremos da grade já respondem. Em $T_s$ baixo há fractal com
 
 ***Figura 5.1.*** *Painel (a): razão entre a sobrevivência observada e a de cada modelo em $T_s$=128, $m$=10; o valor 1 significa modelo exato. Painel (b): distância KS das três famílias competitivas nas 50 condições, cinco pontos por modelo (um por $m$), com opacidade crescente em $m$. Painéis (c) e (d): expoente e nitidez do corte do ansatz de Araújo, com bootstrap de blocos por fibrila (120 réplicas). 61 000 717 cascatas preterminais.*
 
-### 5.1 A definição adotada
+### 5.1 As definições adotadas
+
+#### O protocolo de falha
+
+**O que é carregado.** Não a fibrila inteira, e sim o **corpo de prova extraído do miolo** — os sítios com $|x| \leq 8$, $|y| \leq 100$ e $|z| \leq 8$, um prisma de 17 × 201 × 17 sítios de rede em torno da semente. É o análogo direto do *core sample* de Parkinson1997 (200 × 16 × 16), e existe pela mesma razão: a fibrila é um fuso (§3.1), então tracioná-la inteira mediria a ponta mais fina, não o material.
+
+**O elemento que quebra é a molécula, não a partícula.** A haste inteira é removida de uma vez — as suas 18 partículas, ou menos, se a janela de $|y| \leq 100$ cortar uma das pontas. Dois elementos estão em contato quando têm partículas **na mesma camada** $y$ a distância de rede $\leq 1$ em $(x,z)$ — ou seja, os contatos são **laterais**, entre moléculas vizinhas. A fratura é intermolecular e nunca intramolecular, que é a premissa física de Parkinson: a tripla hélice não rompe, o que rompe é a interação entre hélices.
+
+**Só o esqueleto ativo carrega.** Antes de cada avaliação, duas varreduras de conectividade ao longo de $y$ — uma de cada extremidade — marcam os elementos ligados de forma contínua às duas pontas. Quem sobrevive às duas passagens está num caminho de carga; o resto não transmite nada e é retirado. É o mesmo filtro de dupla direção do artigo original.
+
+**A tensão é equipartida por camada.** O equilíbrio impõe carga constante ao longo do eixo, então cada camada $l$ com $N(l)$ partículas ativas atribui $\sigma(l) = F/N(l)$ a cada uma. O elemento $i$ atravessa até 18 camadas, e a tensão que ele vê é a média sobre as que ocupa:
+
+$$ \sigma_i(F) = F\,a_i, \qquad a_i = \left\langle \frac{1}{N(l)} \right\rangle_{l \,\in\, i} $$
+
+**O limiar de quebra combina desordem intrínseca e suporte dos vizinhos.** A força necessária para romper uma molécula depende de sua resistência própria e de quantas moléculas vizinhas a estão apoiando:
+- **Resistência intrínseca ($X_i$, congelada):** No início ($t=0$), cada molécula sorteia uma resistência fixa $X_i \in [0,1]$ com distribuição $P(X \leq x) = x^m$ (com média $\langle X \rangle = m/(m+1)$). Essa qualidade individual não muda durante o ensaio mecânico.
+- **Suporte local ($K_i(t)$, dinâmico):** $K_i(t)$ é o número de contatos laterais com moléculas ativas naquele instante. Conforme vizinhos quebram, $K_i(t)$ diminui e a molécula enfraquece por perder sustentação.
+- **Unidade de força ($\sigma_c = 1$):** Fixa a escala padrão de uma ligação lateral (apenas o produto $K_i \sigma_c X_i$ é observável).
+
+Assim, o limiar de tensão $\sigma^{\rm th}_i(t)$ e a força externa global $F^*_i(t)$ necessária para romper a molécula $i$ são:
+
+$$ \sigma^{\rm th}_i(t) = K_i(t)\,\sigma_c\,X_i, \qquad F^*_i(t) = \frac{K_i(t)\,\sigma_c\,X_i}{a_i(t)} $$
+
+onde $a_i(t)$ é a fatia da carga total que passa por essa molécula. Quando uma molécula quebra, as vizinhas perdem apoio ($K_i$ cai) e recebem mais carga ($a_i$ sobe), o que derruba seus $F^*_i$ e dispara as avalanches em cadeia.
+
+**A carga sobe até o próximo evento, e só até ele.** Não há incremento $\Delta F$, nem varredura, nem critério de parada: $F$ é elevada exatamente ao menor $F^*_i$ do sistema. É esta a diferença que elimina a dependência de protocolo do regime recozido (§2), em que a estatística era propriedade do $\Delta F$ escolhido.
+
+**A cascata a $F$ fixo é determinística.** Com a força parada, remove-se todo elemento com $F^*_i \leq F$; recalculam-se $N(l)$, $K_i$, $a_i$ e o esqueleto ativo; repete-se até que nada mais falhe. Cada rodada retira por **dois canais**: os que passaram do limiar e os que perderam o caminho de carga por consequência. A cascata termina sozinha, sem parâmetro.
+
+**A ruptura é o esvaziamento de uma camada.** Quando alguma camada fica sem nenhuma partícula ativa, o caminho de carga foi cortado e todo o restante sai de uma vez. É a cascata terminal, uma por realização.
+
+**Dois canais de redistribuição, e por isso não é ELS puro.** Remover um elemento aumenta $\sigma$ de todos os que dividem suas camadas (canal **global**, via $a_i$) e derruba o limiar apenas dos seus vizinhos laterais (canal **local**, via $K_i$). O modelo fica entre a partilha igualitária e a partilha local, o que importa para a leitura dos expoentes (§5.4).
+
+**Validação.** O mesmo motor de carga extremal, alimentado com um feixe de partilha igualitária e limiares uniformes, reproduz a distribuição de rajadas $D(s) \sim s^{-5/2}$ de Hemmer & Hansen — um dos quatro testes de `test_fiber_bundle_ava.py`, junto da fórmula de $F^*$, da monotonicidade da ruptura e da aderência de $X$ à Eq. (4).
+
+#### A cascata como observável
 
 **A cascata é o observável primário**: tudo que é removido numa mesma elevação quase-estática de carga, até o sistema reestabilizar, incluindo as hastes que perdem o caminho de carga por consequência. É `total_deleted_rods` no esquema legado.
 
@@ -477,6 +512,9 @@ Portanto, a associação física legítima entre estrutura e mecânica é dupla:
 | `Code/Data_analysis/plot_pair_correlation.py` | desenha a Figura 3.4 | 3.4 |
 | `Code/Data_analysis/df_fit_windows.py` | $D_f$ sob três regras de janela | 4 |
 | `Code/Data_analysis/plot_df_vs_ts.py` | desenha a Figura 4.1 | 4 |
+| `Code/Fracture_fibril/fiber_bundle_ava.py` | protocolo de falha: carga extremal, limiares e cascatas | 5.1 |
+| `Code/Fracture_fibril/stress_strain_ava.py` | corpo de prova, contatos laterais e filtro de caminho de carga | 5.1 |
+| `Code/Fracture_fibril/test_fiber_bundle_ava.py` | quatro verificações do protocolo, incluindo o $s^{-5/2}$ de ELS | 5.1 |
 | `Code/Data_analysis/extract_cascades.py` | reduz os 10 000 arquivos a histogramas de cascata | 5 |
 | `Code/Data_analysis/run_cascade_statistics.py` | procedimento de Clauset por condição | 5 |
 | `Code/Data_analysis/run_araujo_fits.py` | ajusta o ansatz de Araújo e testa $\eta=1$ | 5 |

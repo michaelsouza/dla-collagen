@@ -1,2 +1,0 @@
-ts,fibrils,events,xmin,alpha,ks,n_tail,tail_fraction,maximum_size,scaling_decades,block_gof_p,block_gof_exceedances,block_gof_replicates,alpha_ci_low,alpha_ci_high,xmin_ci_low,xmin_ci_high,cutoff_block_gof_p,lognormal_block_gof_p,exponential_block_gof_p,decision
-64,50,35462519,6,2.5343002675046598,0.007670448157151344,296050,0.00834825072635139,531,1.9469432706978254,0.1104,551,4999,2.484413108876338,3.6419621393668966,1.0,7.0,0.5,0.5,0.5,pure_power_law_plausible

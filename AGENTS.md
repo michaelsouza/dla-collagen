@@ -1,47 +1,118 @@
-# Repository guidance
+# Política de trabalho — dla-collagen
 
-These instructions apply to the entire repository.
+**Este arquivo não contém objetivos, prioridades nem estado de tickets.** Só
+regras que sobrevivem à troca de assunto. O que está sendo feito agora está em
+`Reviews/Estado_revisao_ER12738.md`; os tickets estão em `Issues/`.
 
-## Manuscript revision workflow
+## 1. Como conversar comigo
 
-The current priority is the major revision of manuscript ER12738, *Scaling behaviors in simulated collagen fibrils*.
+- **Linguagem simples por padrão.** Mecanismo concreto primeiro, analogia física quando ajudar, um argumento por parágrafo, números medidos em tabela curta. Michael avisa quando faltar rigor — não antecipe subindo o nível técnico.
+- **Matemática:** `\( \)` e `\[ \]` nas respostas do chat; `$ $` nos `.md` do repositório.
+- **Meça antes de afirmar.** Este repositório tem dados; estimativa de cabeça quando a medição é possível é erro, não atalho.
 
-- Use [GitHub issue #1](https://github.com/michaelsouza/dla-collagen/issues/1) as the umbrella revision Spec.
-- Track the revision through one umbrella GitHub Spec issue and a set of linked implementation issues.
-- Use issues as the coordination and decision trail. Keep the consolidated scientific record with the manuscript under `Reviews/`, including the revision spec and the response to the referees.
-- Preserve traceability to the reports: every ticket must name all referee comments it addresses, even when one ticket resolves comments from both referees.
-- Organize tickets around a scientific decision or independently verifiable deliverable, not mechanically one ticket per numbered referee comment.
-- Treat a blocking edge as a real gate: use it only when the blocker can change or invalidate the downstream work. Record native GitHub issue dependencies and repeat them in the ticket body for portability.
-- Follow the critical chain: rupture protocol → avalanche definition → statistical reanalysis → interpretation of the avalanche exponent and load sharing → manuscript revision → response letter.
-- Work only on tickets whose blockers are closed. Before editing a claim, read the umbrella Spec, the relevant ticket, and its dependency history.
-- Each ticket must contain: parent Spec, referee comments addressed, scientific question or decision, end-to-end deliverable, acceptance criteria, blockers, evidence/results, final decision, and proposed response to the referees.
-- Do not use Self-Organized Criticality, scale-free behavior, or local/global load-sharing universality as established conclusions unless a completed ticket supplies explicit statistical and mechanistic support.
-- Distinguish empirical correlations from causal or theoretical relationships, especially for the relation between cross-sectional fractal dimension and rupture statistics.
-- Preserve unrelated local changes. Do not rewrite or discard existing manuscript, bibliography, data, or simulation edits while working on a revision ticket.
+## 2. Onde mora o conhecimento
 
-## Cluster runs (SDumont2)
+Três lugares, com papéis **que** não se misturam:
 
-Production runs execute on SDumont2 (LNCC), account `solverbrict`, partition `cpu_amd` (`cpu_amd_dev` for tests). See `docs/agents/sdumont2nd.md`.
+| Onde | Papel | Regra |
+|:--|:--|:--|
+| `AGENTS.md` | política de trabalho | durável; sem objetivos, sem estado |
+| `Issues/NN_assunto.md` | um ticket por arquivo: pergunta, entregável, critério de aceite, bloqueadores | **conteúdo científico mora aqui**, não no GitHub |
+| `Reviews/Estado_revisao_ER12738.md` | grafo de dependências e uma linha por ticket | **sempre verdadeiro**; cabe numa tela; editado, nunca acrescido |
+| `Reviews/registro_decisoes/AAAA-MM-DD_assunto.md` | por que cada decisão foi tomada | **append-only**; nunca editar entrada antiga |
+| GitHub Issues | aberto/fechado, dependências nativas, notificação | **só estado operacional**; nunca a única cópia de um argumento |
 
-- Move code between the laptop and the cluster through git only; never copy a working tree.
-- Activate the environment with `source Code/cluster/sdumont2nd/env.sh` at the start of every session and at the top of every job script. Do not build a new conda environment: the `anaconda3/2024.10` module already covers `requirements.txt`.
-- Never run a simulation, benchmark, or full test suite on the login node.
-- Write per-task scratch and databases to node-local storage (`$DLA_TMP`), then copy the finished file to Lustre and `mv` it into place, so an interrupted job never publishes a partial result.
-- Write production results to `$DLA_PROJECT` (`~/scratch/dla-collagen`, in the 6 TB `solverbrict` project area), never to `$HOME`, whose 100 GB quota fits only the clone and the venv. The project quota is shared with other users; check it before a large batch. `$SCRATCH` is an alias for `$HOME` and buys no extra space.
-- `SLURM_TMPDIR` does not exist on SDumont2; fall back through `${SLURM_TMPDIR:-${TMPDIR:-/tmp}}`.
-- The QOS allows only **100 submitted job-array tasks per user** at a time, counting every array element; `%N` throttling does not raise it. Split a larger campaign into successive arrays and confirm with `sbatch --test-only` before submitting.
-- Record in the relevant ticket which cluster, partition, and job ID produced any result that enters the manuscript.
+Regra de fronteira: se o GitHub sumisse amanhã, nada de científico se perderia.
 
-## Agent skills
+**Por que separado.** Entre 25 e 29 de agosto de 2026 o documento único afirmou que a campanha estava bloqueada enquanto ela rodava até o fim, e que as fibrilas brutas estavam ausentes quando estavam num zip do próprio repositório. Um arquivo que é 85% arquivo morto não é atualizado no lugar certo.
 
-### Issue tracker
+**Toda afirmação de estado deve ser verificável por script.** "N16 bloqueado" é checável contando arquivos no cluster. `Code/Data_analysis/validate_review_state.py` confere as afirmações; rode-o antes de confiar no estado.
 
-Issues and revision Specs are tracked in GitHub Issues for `michaelsouza/dla-collagen`; external pull requests are not a triage request surface. See `docs/agents/issue-tracker.md`.
+## 3. Convenção de nomes
 
-### Triage labels
+Nome genérico é o começo do problema — foi assim que nasceram nove versões de `extend_fibrils` e um `compact.zip` que ninguém sabia conter as fibrilas do artigo.
 
-Use the canonical labels `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, and `wontfix`. See `docs/agents/triage-labels.md`.
+- **Nomeie pelo conteúdo específico, não pela categoria.**
+  `fibrilas_publicadas_artigo_10Ts_nb30000.zip`, não `compact.zip`.
+  `validate_review_state.py`, não `status.py`.
+- **Código em inglês, documentos em português**, seguindo o que já existe.
+- **Verbo primeiro nos executáveis:** `validate_`, `run_`, `plot_`, `extract_`,
+  `compare_`. Módulos importáveis levam substantivo: `avalanche_statistics.py`.
+- **Documento datado:** `AAAA-MM-DD_assunto.md`.
+- **Sem sufixos de versão.** Nada de `_fixed`, `_v2`, `_new`, `_REBUILT`, `.bak`.
+  O histórico do git é a versão anterior.
 
-### Domain docs
+## 4. Cabeçalho de arquivo de código
 
-This is a single-context repository. Read the root domain context and relevant ADRs when they exist. See `docs/agents/domain.md`.
+Todo arquivo deve abrir com um cabeçalho que carregue **fatos verificáveis**, não
+descrição. Descrição nunca fica errada e por isso nunca ajuda:
+
+```python
+"""Estima D_f por T_s a partir das seções transversais.
+
+Lê:      Data_fibrils/.../extended/ts_<TS>_seed_<SEED>.dat
+Escreve: Reviews/Issue7_fractal_proxy/df_por_ts.csv
+Chamado: Code/cluster/sdumont2nd/validate.sh; df_fit_windows.py
+"""
+```
+
+As três últimas linhas podem ser conferidas por script. Um cabeçalho que diz
+"chamado por X" e X não existe mais é um erro detectável.
+
+## 5. Regras de conteúdo científico
+
+- **Nunca** trate criticalidade auto-organizada, comportamento livre de escala ou
+  universalidade de load sharing como conclusão estabelecida sem suporte
+  estatístico e mecanístico explícito e concluído.
+- **Distinga correlação empírica de relação causal**, em especial entre dimensão
+  fractal da seção e estatística de ruptura (é o objeto de R1-5 / N12).
+- **Não ajuste lei de potência sobre menos de duas décadas.** A campanha atual dá
+  ~1 década; `Clauset2009` é a autoridade para **não** afirmar.
+- **Rastreabilidade:** todo resultado que entra no manuscrito nomeia o CSV de
+  origem, e todo ticket nomeia todos os comentários de revisor que atende.
+- **Ao citar uma fonte, abra a fonte.** Já houve caso de citar `Parkinson1995` e
+  `Kadler1987` para o oposto do que dizem.
+- **Preserve alterações locais não relacionadas.** Michael trabalha em várias
+  sessões ao mesmo tempo; confira `git status` e o estado remoto antes de editar
+  ou commitar, e não commite sem pedirem.
+
+## 6. Cluster SDumont2 (LNCC)
+
+Conta `solverbrict`, partição `cpu_amd` (`cpu_amd_dev` para teste). Alias
+`ssh sdumont2nd`. Ambiente: `source Code/cluster/sdumont2nd/env.sh`.
+
+- **Código vai por git**, nunca cópia de working tree.
+- **Nunca** rode simulação, benchmark ou suíte completa no nó de login.
+- **Resultados em `$DLA_PROJECT`** (`~/scratch/dla-collagen`, área de 6 TB), nunca
+  em `$HOME`, cuja cota de 100 GB só cabe o clone e o venv. `$SCRATCH` é apelido
+  de `$HOME` e não dá espaço extra.
+- **Escreva primeiro no disco local do nó** (`$DLA_TMP`), depois copie para o
+  Lustre e `mv` no lugar, para que job interrompido nunca publique parcial.
+  `SLURM_TMPDIR` não existe aqui: use `${SLURM_TMPDIR:-${TMPDIR:-/tmp}}`.
+- **Teto de 100 tarefas de array submetidas por usuário**, contando cada
+  elemento; `%N` não levanta isso. Confirme com `sbatch --test-only`.
+- Registre cluster, partição e job ID de todo resultado que entra no manuscrito.
+- A rede para o cluster cai de forma intermitente. Se cair, siga com o que houver
+  e diga explicitamente o que não deu para verificar.
+
+## 7. Ambiente local e ferramentas
+
+- **Instale pacotes livremente** quando ajudarem. Ferramenta pronta é melhor que
+  reimplementar.
+- Não há `pip` nem `conda` nesta máquina. Use:
+  `uv pip install --python .venv/bin/python <pacote>` (venv do projeto, Python 3.12).
+- `ls` está aliasado para um formato com permissões — não faça parsing da saída
+  dele; use glob do shell.
+- O shell é **zsh**: variável não citada **não** é dividida em palavras. Use
+  `while read` em vez de `for x in $lista`.
+
+## 8. Higiene do repositório
+
+- `Code/` é código. Dado vai em `Data_fibrils/`, documento em `Reviews/`.
+- Notebook não é entregável: converta com `nbconvert` e versione o `.py`.
+  Notebook com saída embutida chegou a 49 MB para 168 KB de código.
+- Análise superada vai para uma subpasta com README explicando **por que** saiu,
+  não é apagada em silêncio.
+- Apagar do working tree **não** encolhe o `.git` (702 MB de 1,5 GB). O objetivo
+  da limpeza é clareza, não espaço.
+- Ao remover um conjunto, registre o commit onde ele ainda existe.

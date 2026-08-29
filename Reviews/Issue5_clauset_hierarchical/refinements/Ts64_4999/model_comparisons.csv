@@ -1,4 +1,0 @@
-ts,first,second,log_likelihood_ratio,cluster_statistic,p_value,favored,test
-64,power_law,lognormal,-205.0112428012562,-1.3919705519361227,0.17021750551364112,lognormal,two-sided cluster-robust Vuong; fibril contributions
-64,power_law,exponential,61298.17614039064,12.96948954181977,1.8367775228187773e-17,power_law,two-sided cluster-robust Vuong; fibril contributions
-64,power_law,cutoff_power_law,-513.2240427336656,1026.448085467331,3.202430763457907e-225,cutoff_power_law,descriptive Wilks reference only; boundary/nesting means the cluster-aware decision requires cutoff goodness-of-fit
