@@ -12,9 +12,9 @@ continua com 702 MB — apagar do working tree não toca no histórico.
 | Removido | Motivo |
 |:--|:--|
 | 9 variantes de `extend_fibrils` | a viva é `extend_fibrils_batch.py` (`worker_generate.sh:83`) |
-| 7 notebooks (49 MB) | convertidos com `nbconvert` para 168 KB em `Code/Data_analysis/notebooks_extraidos/` |
+| 7 notebooks (49 MB) | convertidos com `nbconvert` para 168 KB em `Code/Data_analysis/extracted_notebooks/` |
 | `Reviews/Issue5_*`, `Issue14_*`, `Issue3_*`, `Report_stretched_cutoff_*` | protocolo recozido; entrada (`Data_avalanches/`) já removida |
-| 34 scripts → `Code/Data_analysis/protocolo_recozido/` | mesma razão; os 26 vivos ficaram no topo |
+| 34 scripts → `Code/Data_analysis/annealed_protocol/` | mesma razão; os 26 vivos ficaram no topo |
 
 `Code/Fracture_fibril/compact.zip` →
 `Data_fibrils/fibrilas_publicadas_artigo_10Ts_nb30000.zip`. **Não é redundante

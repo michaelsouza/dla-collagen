@@ -7,7 +7,7 @@
 > valer, escreva uma entrada nova com a correção e cite esta.
 
 Medições sobre `$DLA_PROJECT/campaign` no SDumont2. Detalhamento e plano
-experimental em `Reviews/PhaseC_cilindro_periodico/`.
+experimental em `Reviews/PhaseC_periodic_cylinder/`.
 
 #### Mudança de estado que a DAG não registrava
 
@@ -67,7 +67,7 @@ Cilindro periódico em $y$ com lançamento externo, aberto antes da fratura para
 motor de fratura rodar sem alteração. Ganho: ~2.500 moléculas por seção contra
 192 hoje, **ao mesmo custo**, porque o comprimento deixa de consumir massa.
 Plano de validação, tolerâncias e previsões em
-`Reviews/PhaseC_cilindro_periodico/README.md`.
+`Reviews/PhaseC_periodic_cylinder/README.md`.
 
 Experimento barato e independente: alargar o corte até a fibrila inteira deixa a
 seção em ~300 em todas as condições e isola arquitetura de tamanho — resolve o

@@ -64,5 +64,5 @@ Carta_Resposta/Response_to_Referees.pdf
 # Memória automática do Claude: fica visível no projeto, mas não versionada.
 # É local à máquina por desenho, o Claude a reescreve sozinho (conflitaria entre
 # sessões paralelas), e o caminho absoluto em settings.local.json não vale no cluster.
-.claude/memoria/
+.claude/memory/
 .claude/settings.local.json

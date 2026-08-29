@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Confere se as afirmações de Reviews/Estado_revisao_ER12738.md ainda são verdade.
 
-Lê:      Reviews/Estado_revisao_ER12738.md; Reviews/registro_decisoes/;
+Lê:      Reviews/Estado_revisao_ER12738.md; Reviews/decision_log/;
          Code/**/*.py; $DLA_PROJECT no SDumont2 (opcional, via ssh)
 Escreve: nada — só relatório em stdout; código de saída 1 se algo falhou
 Chamado: à mão, antes de confiar no estado; idealmente semanal
@@ -23,7 +23,7 @@ import sys
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ESTADO = os.path.join(RAIZ, "Reviews", "Estado_revisao_ER12738.md")
-REGISTRO = os.path.join(RAIZ, "Reviews", "registro_decisoes")
+REGISTRO = os.path.join(RAIZ, "Reviews", "decision_log")
 FIBRILAS = os.path.join(RAIZ, "Data_fibrils",
                         "fibrilas_publicadas_artigo_10Ts_nb30000.zip")
 
@@ -97,13 +97,13 @@ def c3_registro_append_only() -> None:
     """Nenhuma entrada de registro foi modificada depois de criada."""
     print("\nC3 · registro append-only")
     if not os.path.isdir(REGISTRO):
-        falhou("Reviews/registro_decisoes/ não existe")
+        falhou("Reviews/decision_log/ não existe")
         return
     alterados = []
     for nome in sorted(os.listdir(REGISTRO)):
         if not nome.endswith(".md"):
             continue
-        caminho = os.path.join("Reviews", "registro_decisoes", nome)
+        caminho = os.path.join("Reviews", "decision_log", nome)
         r = subprocess.run(["git", "log", "--oneline", "--", caminho],
                            cwd=RAIZ, capture_output=True, text=True)
         n = len([l for l in r.stdout.splitlines() if l.strip()])
@@ -138,7 +138,7 @@ def c5_cabecalhos_chamado_por() -> None:
     print("\nC5 · cabeçalhos 'Chamado:'")
     checados = quebrados = 0
     for base, _, arquivos in os.walk(os.path.join(RAIZ, "Code")):
-        if "protocolo_recozido" in base or "notebooks_extraidos" in base:
+        if "annealed_protocol" in base or "extracted_notebooks" in base:
             continue
         for nome in arquivos:
             if not nome.endswith(".py"):
@@ -174,7 +174,7 @@ def c6_sufixos_de_versao() -> None:
     r = subprocess.run(["git", "ls-files"], cwd=RAIZ,
                        capture_output=True, text=True)
     for caminho in r.stdout.splitlines():
-        if "protocolo_recozido" in caminho or "notebooks_extraidos" in caminho:
+        if "annealed_protocol" in caminho or "extracted_notebooks" in caminho:
             continue
         if not os.path.exists(os.path.join(RAIZ, caminho)):
             continue  # apagado no working tree, ainda no índice

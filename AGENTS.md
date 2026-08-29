@@ -18,20 +18,25 @@ Três lugares, com papéis **que** não se misturam:
 |:--|:--|:--|
 | `AGENTS.md` (= `CLAUDE.md`) | política de trabalho | porque Michael o edita; durável, sem objetivos, sem estado |
 | `Reviews/Estado_revisao_ER12738.md` | nós, arestas e estado da revisão; a tabela de nós **é** a lista de tickets | porque `validate_review_state.py` confere; cabe numa tela; editado, nunca acrescido |
-| `Reviews/registro_decisoes/AAAA-MM-DD_assunto.md` | por que cada decisão foi tomada | porque **nunca muda**; append-only |
-| `.claude/memoria/` (fora do git) | memória automática do Claude: preferências e correções de Michael | escrita pelo Claude, visível e editável por Michael; **não versionada** |
+| `Reviews/decision_log/AAAA-MM-DD_assunto.md` | por que cada decisão foi tomada | porque **nunca muda**; append-only |
+
+**Única exceção ao append-only:** correção mecânica de caminho, quando um arquivo
+ou diretório citado é renomeado. Proibir isso obrigaria o registro a apodrecer,
+que é o oposto do objetivo. Nenhum fato, número ou raciocínio pode mudar — só a
+referência. Registre a renomeação no commit.
+| `.claude/memory/` (fora do git) | memória automática do Claude: preferências e correções de Michael | escrita pelo Claude, visível e editável por Michael; **não versionada** |
 
 **Sem GitHub Issues.** Foram abandonadas em 2026-08-29: para um projeto de um
 autor só, não compravam nada que a tabela de nós não dê, e eram mais um lugar
 para o estado apodrecer. Nada científico mora fora do repositório.
 
-**Fronteira com `.claude/memoria/`.** Regra do próprio Claude Code: a memória
+**Fronteira com `.claude/memory/`.** Regra do próprio Claude Code: a memória
 automática deve pular o que o `CLAUDE.md` já diz. Então o que é específico deste
 projeto mora **aqui**, onde Michael vê e corrige; a memória guarda só o que
 segue Michael para outros repositórios. Se um fato aparecer nos dois, o
 `AGENTS.md` vence e a memória aponta para ele em vez de repetir.
 
-Ela fica em `.claude/memoria/` por causa de `autoMemoryDirectory` em
+Ela fica em `.claude/memory/` por causa de `autoMemoryDirectory` em
 `.claude/settings.local.json` — o mecanismo suportado, sem link simbólico. Não é
 versionada: o Claude a reescreve sozinho (conflitaria entre sessões paralelas),
 o caminho absoluto não vale no clone do cluster, e ela é local à máquina por
@@ -51,7 +56,11 @@ Nome genérico é o começo do problema — foi assim que nasceram nove versões
 - **Nomeie pelo conteúdo específico, não pela categoria.**
   `fibrilas_publicadas_artigo_10Ts_nb30000.zip`, não `compact.zip`.
   `validate_review_state.py`, não `status.py`.
-- **Código em inglês, documentos em português**, seguindo o que já existe.
+- **Diretórios sempre em en-US**, mesmo os que guardam documentos em português:
+  `decision_log/`, não `registro_decisoes/`; `annealed_protocol/`, não
+  `protocolo_recozido/`.
+- **Código em inglês, conteúdo dos documentos em português**, seguindo o que já
+  existe. O nome do arquivo datado pode ser em português; o diretório, não.
 - **Verbo primeiro nos executáveis:** `validate_`, `run_`, `plot_`, `extract_`,
   `compare_`. Módulos importáveis levam substantivo: `avalanche_statistics.py`.
 - **Documento datado:** `AAAA-MM-DD_assunto.md`.

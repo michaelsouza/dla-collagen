@@ -5,7 +5,7 @@
 **Conferido em:** 2026-08-29
 
 > **Este arquivo é editado, nunca acrescido.** Ele diz o que é verdade agora.
-> O *porquê* de cada decisão está em `registro_decisoes/`, que é append-only.
+> O *porquê* de cada decisão está em `decision_log/`, que é append-only.
 > Confira as afirmações com `Code/Data_analysis/validate_review_state.py`.
 
 Convenção: `A → B` significa "B não fecha antes de A, e reabrir A reabre B".
@@ -29,7 +29,7 @@ Convenção: `A → B` significa "B não fecha antes de A, e reabrir A reabre B"
 | **N10** | Reanálise estatística da cauda | R1-2, R2-4 | aberto — **alvo mudou**: descrever a distribuição, não ajustar expoente |
 | **N11** | Expoente frente a $5/2$ | R1-3 | aberto — **provável encerramento como não-afirmação** |
 | **N12** | Estatuto de $D_f \leftrightarrow$ ruptura | R1-5 | aberto — **confundimento novo** ($N$ varia junto com $D_f$) |
-| **N17** | Fase C — o corte é físico ou de tamanho? | sustenta N10–N12 | **novo** — plano em `PhaseC_cilindro_periodico/` |
+| **N17** | Fase C — o corte é físico ou de tamanho? | sustenta N10–N12 | **novo** — plano em `PhaseC_periodic_cylinder/` |
 | **N13** | Revisão integral do manuscrito | todas | aberto |
 | **N14** | Carta ponto a ponto verificada | todas | aberto |
 
@@ -76,7 +76,7 @@ graph TD
 ```
 
 Nós fechados (N0, N1, N3, N4, N6) e dissolvidos (N8) saíram do grafo: já não
-são portões. Ver `registro_decisoes/`.
+são portões. Ver `decision_log/`.
 
 ## Arestas — por que cada uma é um portão
 
