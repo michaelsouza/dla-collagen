@@ -14,15 +14,31 @@ regras que sobrevivem à troca de assunto. O que está sendo feito agora está e
 
 Três lugares, com papéis **que** não se misturam:
 
-| Onde | Papel | Regra |
+| Onde | Papel | Por que é verdadeiro |
 |:--|:--|:--|
-| `AGENTS.md` | política de trabalho | durável; sem objetivos, sem estado |
-| `Issues/NN_assunto.md` | um ticket por arquivo: pergunta, entregável, critério de aceite, bloqueadores | **conteúdo científico mora aqui**, não no GitHub |
-| `Reviews/Estado_revisao_ER12738.md` | grafo de dependências e uma linha por ticket | **sempre verdadeiro**; cabe numa tela; editado, nunca acrescido |
-| `Reviews/registro_decisoes/AAAA-MM-DD_assunto.md` | por que cada decisão foi tomada | **append-only**; nunca editar entrada antiga |
-| GitHub Issues | aberto/fechado, dependências nativas, notificação | **só estado operacional**; nunca a única cópia de um argumento |
+| `AGENTS.md` (= `CLAUDE.md`) | política de trabalho | porque Michael o edita; durável, sem objetivos, sem estado |
+| `Reviews/Estado_revisao_ER12738.md` | nós, arestas e estado da revisão; a tabela de nós **é** a lista de tickets | porque `validate_review_state.py` confere; cabe numa tela; editado, nunca acrescido |
+| `Reviews/registro_decisoes/AAAA-MM-DD_assunto.md` | por que cada decisão foi tomada | porque **nunca muda**; append-only |
+| `.claude/memoria/` (fora do git) | memória automática do Claude: preferências e correções de Michael | escrita pelo Claude, visível e editável por Michael; **não versionada** |
 
-Regra de fronteira: se o GitHub sumisse amanhã, nada de científico se perderia.
+**Sem GitHub Issues.** Foram abandonadas em 2026-08-29: para um projeto de um
+autor só, não compravam nada que a tabela de nós não dê, e eram mais um lugar
+para o estado apodrecer. Nada científico mora fora do repositório.
+
+**Fronteira com `.claude/memoria/`.** Regra do próprio Claude Code: a memória
+automática deve pular o que o `CLAUDE.md` já diz. Então o que é específico deste
+projeto mora **aqui**, onde Michael vê e corrige; a memória guarda só o que
+segue Michael para outros repositórios. Se um fato aparecer nos dois, o
+`AGENTS.md` vence e a memória aponta para ele em vez de repetir.
+
+Ela fica em `.claude/memoria/` por causa de `autoMemoryDirectory` em
+`.claude/settings.local.json` — o mecanismo suportado, sem link simbólico. Não é
+versionada: o Claude a reescreve sozinho (conflitaria entre sessões paralelas),
+o caminho absoluto não vale no clone do cluster, e ela é local à máquina por
+desenho.
+
+**`CLAUDE.md` é link para `AGENTS.md`.** O Claude Code lê `CLAUDE.md`, **não**
+`AGENTS.md` — o link é necessário, não conveniência.
 
 **Por que separado.** Entre 25 e 29 de agosto de 2026 o documento único afirmou que a campanha estava bloqueada enquanto ela rodava até o fim, e que as fibrilas brutas estavam ausentes quando estavam num zip do próprio repositório. Um arquivo que é 85% arquivo morto não é atualizado no lugar certo.
 
@@ -116,3 +132,6 @@ Conta `solverbrict`, partição `cpu_amd` (`cpu_amd_dev` para teste). Alias
 - Apagar do working tree **não** encolhe o `.git` (702 MB de 1,5 GB). O objetivo
   da limpeza é clareza, não espaço.
 - Ao remover um conjunto, registre o commit onde ele ainda existe.
+- **Michael trabalha em várias sessões ao mesmo tempo neste repositório.**
+  Rode `git fetch` e confira divergência antes de editar em lote ou commitar;
+  nunca faça rebase ou force-push sobre trabalho que pode não ser seu.
