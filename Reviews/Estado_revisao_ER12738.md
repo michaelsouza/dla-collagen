@@ -23,8 +23,8 @@ Convenção: `A → B` significa "B não fecha antes de A, e reabrir A reabre B"
 | **N16** | Campanha sob protocolo quenched | infraestrutura | **concluído** — 10.000 arquivos, 2.000 fibrilas |
 | **N5** | Sensibilidade ao módulo de Weibull $m$ | R1-3 | **fechado** — $m=2$ como caso ilustrativo da varredura $\{1,2,3,5,10\}$; forças normalizadas |
 | **N2** | Protocolo de carga | R2-1 | **dados prontos**; falta escrever o protocolo novo no manuscrito |
-| **N15** | Validação do gerador ($D_f$ em escala) | infraestrutura | **não verificado** — a campanha já rodou com ele |
-| **N7** | $D_f$ 2D contra descritores do backbone 3D | R1-4 | aberto — I6; perímetro por $T_s$ (**desbloqueado**); $D_f$ do gerador novo |
+| **N15** | Validação do gerador ($D_f$ em escala) | infraestrutura | **não verificado**, e o alvo é frágil — valida contra um $D_f$ ajustado sobre <1 década; melhor validar depois da Fase C |
+| **N7** | $D_f$ 2D contra descritores do backbone 3D | R1-4 | aberto — I6; perímetro por $T_s$ (**desbloqueado**); e o $D_f$ é ajustado sobre **0,57–0,90 décadas** (ver registro de 2026-08-30) |
 | **N9** | $\alpha,\beta$ da Eq. (5) | R1-7 | aberto — refit sobre a campanha |
 | **N10** | Reanálise estatística da cauda | R1-2, R2-4 | aberto — **alvo mudou**: descrever a distribuição, não ajustar expoente |
 | **N11** | Expoente frente a $5/2$ | R1-3 | aberto — **provável encerramento como não-afirmação** |
@@ -109,6 +109,8 @@ Trechos do `.tex` escritos por mais de um nó. Reconferir após qualquer ediçã
 | **I6** | Spearman do manuscrito ($0{,}997$; $0{,}997$; $-0{,}778$; $-0{,}979$) diverge do CSV ($0{,}9879$; $1{,}0000$; $-0{,}7818$; $-0{,}9636$) | aberta — falta identificar a tabela corrente |
 | **I7** | `% TODO Issue #5` pendente na carta | aberta |
 | **I8** | O modelo não fixa escala física: casar a largura do bastão dá 1 l.u. = 1,5 nm (fibrila de **42–99 nm**), casar o comprimento dá 16,7 nm (fibrila de **470–1100 nm**). Fibrilas reais medidas: 101–313 nm (Quigley2018), 140–490 nm (Yamamoto2017), ~200 nm (Yang2012). **Nenhuma das duas calibrações cai na faixa medida** — uma fica abaixo, a outra acima | **aberta** — decide como o manuscrito descreve a fibrila |
+
+| **I9** | O manuscrito vai argumentar que 0,7 décadas não sustentam um expoente de avalanche, e reporta $D_f$ ajustado sobre 0,57–0,90 décadas | **nova** — o mesmo critério tem de valer para as duas medidas |
 
 Resolvidas ou superadas: I1, I2, I3, I5 (troca de protocolo). I4 é latente.
 
