@@ -45,6 +45,18 @@ def aviso(msg: str) -> None:
     avisos.append(msg)
 
 
+def _sem_caminhos(diff: str, sinal: str) -> str:
+    """Linhas do diff com o sinal dado, sem os tokens que parecem caminho.
+
+    Serve para distinguir renomeação mecânica de edição de conteúdo: se o texto
+    restante de adições e remoções coincide, só caminhos mudaram.
+    """
+    linhas = [l[1:] for l in diff.splitlines()
+              if l.startswith(sinal) and not l.startswith(sinal * 3)]
+    texto = "\n".join(linhas)
+    return re.sub(r"[\w.\-]+/[\w./\-]*", "", texto)
+
+
 def c1_fibrilas_publicadas() -> None:
     """As fibrilas do artigo existem localmente e cobrem as 10 condições."""
     print("\nC1 · fibrilas publicadas")
@@ -94,25 +106,45 @@ def c2_campanha_no_cluster() -> None:
 
 
 def c3_registro_append_only() -> None:
-    """Nenhuma entrada de registro foi modificada depois de criada."""
+    """Nenhuma entrada de registro teve o conteúdo alterado depois de criada.
+
+    Renomeação de arquivo ou diretório não conta: `--diff-filter=M` pede ao git
+    só os commits que de fato modificaram o conteúdo, deixando de fora criação
+    (A) e renomeação pura (R). Entre os que sobram, ainda são aceitáveis os que
+    só corrigiram caminhos — a exceção registrada na §2 do AGENTS.md.
+    """
     print("\nC3 · registro append-only")
     if not os.path.isdir(REGISTRO):
         falhou("Reviews/decision_log/ não existe")
         return
-    alterados = []
-    for nome in sorted(os.listdir(REGISTRO)):
-        if not nome.endswith(".md"):
-            continue
+    alterados, so_caminho = [], []
+    entradas = [n for n in sorted(os.listdir(REGISTRO))
+                if n.endswith(".md") and n != "README.md"]
+    for nome in entradas:
         caminho = os.path.join("Reviews", "decision_log", nome)
-        r = subprocess.run(["git", "log", "--oneline", "--", caminho],
-                           cwd=RAIZ, capture_output=True, text=True)
-        n = len([l for l in r.stdout.splitlines() if l.strip()])
-        if n > 1:
-            alterados.append(f"{nome} ({n} commits)")
+        r = subprocess.run(
+            ["git", "log", "--follow", "--diff-filter=M", "--format=%H",
+             "--", caminho], cwd=RAIZ, capture_output=True, text=True)
+        commits = [c for c in r.stdout.split() if c]
+        if not commits:
+            continue
+        conteudo_mudou = False
+        for commit in commits:
+            d = subprocess.run(
+                ["git", "show", "--format=", "--unified=0", commit,
+                 "--", caminho], cwd=RAIZ, capture_output=True, text=True)
+            if _sem_caminhos(d.stdout, "+") != _sem_caminhos(d.stdout, "-"):
+                conteudo_mudou = True
+                break
+        (alterados if conteudo_mudou else so_caminho).append(
+            f"{nome} ({len(commits)})")
     if alterados:
-        falhou("entradas editadas após criação: " + ", ".join(alterados))
+        falhou("entradas com conteúdo editado após criação: "
+               + ", ".join(alterados))
     else:
-        ok(f"{len(os.listdir(REGISTRO))} entradas, nenhuma editada")
+        extra = (f"; {len(so_caminho)} com correção de caminho apenas, "
+                 f"permitida pela §2 do AGENTS.md" if so_caminho else "")
+        ok(f"{len(entradas)} entradas, nenhuma com conteúdo editado{extra}")
 
 
 def c4_caminhos_do_estado() -> None:
