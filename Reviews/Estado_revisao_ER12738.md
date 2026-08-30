@@ -2,7 +2,7 @@
 
 **Manuscrito:** *Scaling behaviors in simulated collagen fibrils*
 **Governa:** `Paper/paper_PRE.tex`, `Carta_Resposta/Response_to_Referees.tex`
-**Conferido em:** 2026-08-29
+**Conferido em:** 2026-08-30
 
 > **Este arquivo é editado, nunca acrescido.** Ele diz o que é verdade agora.
 > O *porquê* de cada decisão está em `decision_log/`, que é append-only.
@@ -21,7 +21,7 @@ Convenção: `A → B` significa "B não fecha antes de A, e reabrir A reabre B"
 | **N6** | Limitações de coarse-graining (18:1) | R1-6 | fechado |
 | **N8** | Definição operacional de avalanche | R2-3, R2-2 | **dissolvido** — a cascata determinística é a avalanche |
 | **N16** | Campanha sob protocolo quenched | infraestrutura | **concluído** — 10.000 arquivos, 2.000 fibrilas |
-| **N5** | Sensibilidade ao módulo de Weibull $m$ | R1-3 | **dados prontos** ($m\in\{1,2,3,5,10\}$); falta o texto e a faixa com respaldo experimental |
+| **N5** | Sensibilidade ao módulo de Weibull $m$ | R1-3 | **fechado** — $m=2$ como caso ilustrativo da varredura $\{1,2,3,5,10\}$; forças normalizadas |
 | **N2** | Protocolo de carga | R2-1 | **dados prontos**; falta escrever o protocolo novo no manuscrito |
 | **N15** | Validação do gerador ($D_f$ em escala) | infraestrutura | **não verificado** — a campanha já rodou com ele |
 | **N7** | $D_f$ 2D contra descritores do backbone 3D | R1-4 | aberto — I6; perímetro por $T_s$ (**desbloqueado**); $D_f$ do gerador novo |
@@ -41,7 +41,6 @@ graph TD
   N16["N16 · Campanha quenched<br/>CONCLUÍDA"]
   N17["N17 · Fase C · cilindro periódico<br/>o corte é físico?"]
   N2["N2 · Protocolo de carga<br/>falta texto"]
-  N5["N5 · Varredura em m<br/>falta texto"]
   N7["N7 · Df vs backbone 3D"]
   N9["N9 · alpha, beta de f(F)"]
   N10["N10 · Reanálise estatística<br/>alvo mudou"]
@@ -61,7 +60,6 @@ graph TD
   N10 --> N12
   N11 --> N12
   N2 --> N13
-  N5 --> N13
   N9 --> N13
   N11 --> N13
   N12 --> N13
@@ -71,11 +69,11 @@ graph TD
   classDef aberto fill:#ffe0b2,stroke:#e65100,color:#000;
   classDef critico fill:#ffcdd2,stroke:#b71c1c,color:#000;
   class N16 feito;
-  class N2,N5,N7,N9,N10,N11,N12,N13,N14,N17 aberto;
+  class N2,N7,N9,N10,N11,N12,N13,N14,N17 aberto;
   class N15 critico;
 ```
 
-Nós fechados (N0, N1, N3, N4, N6) e dissolvidos (N8) saíram do grafo: já não
+Nós fechados (N0, N1, N3, N4, N5, N6) e dissolvidos (N8) saíram do grafo: já não
 são portões. Ver `decision_log/`.
 
 ## Arestas — por que cada uma é um portão
@@ -110,7 +108,7 @@ Trechos do `.tex` escritos por mais de um nó. Reconferir após qualquer ediçã
 |:--|:--|:--|
 | **I6** | Spearman do manuscrito ($0{,}997$; $0{,}997$; $-0{,}778$; $-0{,}979$) diverge do CSV ($0{,}9879$; $1{,}0000$; $-0{,}7818$; $-0{,}9636$) | aberta — falta identificar a tabela corrente |
 | **I7** | `% TODO Issue #5` pendente na carta | aberta |
-| **I8** | O modelo não fixa escala física: casar a largura dá 1 l.u. = 1,5 nm, casar o comprimento dá 16,7 nm — 11× de diferença | **nova** — decide como o manuscrito descreve a fibrila |
+| **I8** | O modelo não fixa escala física: casar a largura do bastão dá 1 l.u. = 1,5 nm (fibrila de **42–99 nm**), casar o comprimento dá 16,7 nm (fibrila de **470–1100 nm**). Fibrilas reais medidas: 101–313 nm (Quigley2018), 140–490 nm (Yamamoto2017), ~200 nm (Yang2012). **Nenhuma das duas calibrações cai na faixa medida** — uma fica abaixo, a outra acima | **aberta** — decide como o manuscrito descreve a fibrila |
 
 Resolvidas ou superadas: I1, I2, I3, I5 (troca de protocolo). I4 é latente.
 
