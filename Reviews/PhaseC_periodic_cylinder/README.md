@@ -121,6 +121,28 @@ passou de 23% abaixo da média em $T_s=2$ para 19% abaixo em $T_s=8192$.
 **Mas $T_s$ muda arquitetura e seção ao mesmo tempo.** O teste é confundido. Só
 um experimento que varie a seção com a arquitetura fixa decide.
 
+## 2b. O crescimento livre foi testado e descartado (2026-08-30)
+
+Antes de escrever o modo periódico, testamos a rota barata: bastaria lançar mais
+moléculas no gerador atual? **Não basta.** Job 584509, uma fibrila por célula,
+mesma semente nos dois $n_b$ — detalhes em `nb_scaling_test.md`.
+
+| $T_s$ | $R_{\max}$ (30k) | $R_{\max}$ (120k) | razão | comprimento |
+|---:|---:|---:|---:|---:|
+| 2 | 37,4 | 52,3 | 1,40× | 1,99× |
+| 128 | 18,4 | 24,2 | 1,32× | 2,01× |
+| 8192 | 17,8 | 22,0 | 1,24× | 1,96× |
+
+Quadruplicar a massa dobra o comprimento e a massa por camada; o raio quase não
+anda. $R \propto n_b^{\alpha}$ com $\alpha$ caindo de 0,24 (aberta) a 0,15
+(compacta) — e a compacta é onde o ajuste de $D_f$ é mais curto.
+
+Chegar a $R_{\max}=158$ exigiria de $1{,}2\times10^{7}$ a $4{,}8\times10^{10}$
+moléculas conforme a condição, contra **180.000** no cilindro periódico. O
+crescimento livre não é impossível: é seis a nove ordens de grandeza caro demais.
+
+**O cilindro periódico deixa de ser otimização e passa a ser a única rota.**
+
 ## 3. Desenho proposto
 
 Gerar um **cilindro periódico em $y$** com lançamento externo, e **abrir o
