@@ -355,7 +355,13 @@ def find_deleted_rod_clusters(ssd: StressStrainData, deleted_rids: set) -> list[
     return sorted(cluster_sizes, reverse=True)
 
 
-def create_neighs(layers: dict, particles: dict):
+def create_neighs_allpairs(layers: dict, particles: dict):
+    """Original all-pairs builder, kept only as the reference for the test.
+
+    O(sum over layers of n_layer^2) with one numpy call per pair: 8e6 pairs for
+    the 17x17 trunk, 2.3e8 for a 41x41 window, 6e9 for a whole 181x181
+    section (hours before the first cascade).  Do not call in production.
+    """
     for pid_A in particles:
         particle_A: Particle = particles[pid_A]
         for pid_B in layers[particle_A.lid].pids:
@@ -365,6 +371,35 @@ def create_neighs(layers: dict, particles: dict):
             if np.linalg.norm(particle_A.xz - particle_B.xz) <= 1:
                 particle_A.add_neigh_rid(particle_B.rid)
                 particle_B.add_neigh_rid(particle_A.rid)
+
+
+def create_neighs(layers: dict, particles: dict):
+    """Neighbor sets by spatial hash: O(n) per layer, same result as all-pairs.
+
+    Two particles in the same layer are neighbors when their (x,z) Euclidean
+    distance is <= 1, which on the integer lattice means the same site or one
+    of the four axis-adjacent sites (a diagonal is sqrt(2) > 1).  Hashing each
+    layer by site and probing those five offsets visits exactly the pairs the
+    all-pairs loop accepted, so the neighbor sets are identical; the
+    equivalence is checked by test_create_neighs_matches_allpairs.
+    Ported from validate_fractal_proxy.efficient_create_neighs (2026-09-01).
+    """
+    offsets = ((0, 0), (-1, 0), (1, 0), (0, -1), (0, 1))
+    for layer in layers.values():
+        by_site: dict = {}
+        for pid in layer.pids:
+            xz = particles[pid].xz
+            by_site.setdefault((int(xz[0]), int(xz[1])), []).append(pid)
+        for pid_A in layer.pids:
+            particle_A: Particle = particles[pid_A]
+            x, z = int(particle_A.xz[0]), int(particle_A.xz[1])
+            for dx, dz in offsets:
+                for pid_B in by_site.get((x + dx, z + dz), ()):
+                    if pid_B <= pid_A:
+                        continue
+                    particle_B: Particle = particles[pid_B]
+                    particle_A.add_neigh_rid(particle_B.rid)
+                    particle_B.add_neigh_rid(particle_A.rid)
 
 
 def read_or_create_ssd(fn_dat: str, half_width: int = 8, half_length: int = 100):
