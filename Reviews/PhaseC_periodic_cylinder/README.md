@@ -371,6 +371,10 @@ forma da distribuição e a fração do sistema que vai no evento terminal:
 | 41×41 | 3 | 0,75 | 3 | 11 | 127 | 0,87 |
 | 81×81 | em execução | | | | | |
 | 181×181 | em execução | | | | | |
+| *$T_s=8192$, mesmo desenho:* | | | | | | |
+| campanha 8192 (referência) | 1000 | 0,71 | 3 | 13 | 72 | 0,87 |
+| 17×17 no cilindro 8192 | 5 | 0,73 | 3 | 14 | 40 | 0,88 |
+| 141×141 (seção inteira, 58.322 mol.) | em execução | | | | | |
 
 O primeiro degrau (5,1× em $N$) não move nenhuma das três colunas de forma
 (frac. 1, p90, p99, terminal/$N$). Mas a terceira realização produziu **uma**
