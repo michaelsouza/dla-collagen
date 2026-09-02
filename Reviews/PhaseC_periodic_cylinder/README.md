@@ -368,12 +368,20 @@ forma da distribuição e a fração do sistema que vai no evento terminal:
 |:--|---:|---:|---:|---:|---:|---:|
 | campanha (referência) | 1000 | 0,72 | 3 | 12 | 91 | 0,88 |
 | 17×17 | 5 | 0,75 | 2 | 10 | 39 | 0,88 |
-| 41×41 | 2 | 0,75 | 3 | 10 | 32 | 0,88 |
+| 41×41 | 3 | 0,75 | 3 | 11 | 127 | 0,87 |
 | 81×81 | em execução | | | | | |
 | 181×181 | em execução | | | | | |
 
-O primeiro degrau (5,1× em $N$) não move nenhuma das três colunas. Os dois
-seguintes cobrem mais de uma década em $N$ e decidem.
+O primeiro degrau (5,1× em $N$) não move nenhuma das três colunas de forma
+(frac. 1, p90, p99, terminal/$N$). Mas a terceira realização produziu **uma**
+cascata pré-terminal de 127 moléculas — maior que qualquer uma das 1.000
+realizações da campanha em 17×17 (máximo 91). Uma ocorrência em três não decide
+nada, e o máximo foi excluído do critério por isso mesmo; fica registrado porque,
+se os degraus grandes mostrarem p99 parado e o máximo crescendo, a leitura
+correta será: **o corte da distribuição é dinâmico, mas a maior cascata
+alcançável cresce com o sistema** — duas afirmações compatíveis, e a segunda
+importa para como N10 será escrito. Os dois degraus seguintes cobrem mais de uma
+década em $N$ e decidem.
 
 **Nota operacional.** O carregador original construía vizinhanças por
 todos-os-pares por camada ($2{,}3\times10^8$ pares numa janela 41×41, horas
