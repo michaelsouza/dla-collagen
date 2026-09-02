@@ -276,6 +276,67 @@ estavam em `/tmp` e foram apagados pelo sistema. Os números acima sobreviveram
 na conversa; o script foi reescrito no repositório. Tudo passou a ir para o
 scratchpad da sessão, como o `AGENTS.md` já mandava.
 
+## 4c. Passo 2a executado — o $D_f$ (2026-09-01)
+
+**Antes de tudo:** `Reviews/quenched_campaign_report/README.md` §4, da outra
+sessão, já havia estabelecido — sobre as fibrilas livres da campanha — que o
+$D_f$ publicado depende da janela de ajuste, que qualquer regra uniforme dá
+~1,95 em $T_s=64$–$128$ onde o artigo publicou 1,76–1,79, e que os valores
+intermediários são *crossover* entre DLA puro (~1,7) e sólido compacto (2,0),
+não uma dimensão variando. Aquele relatório **fecha N7**. O que segue é
+corroboração por um objeto independente, com o *ensemble* que a ressalva final
+daquela §4 pedia.
+
+Cinco cilindros periódicos por condição, `nb`=60.000 (5.000 partículas por
+seção, 17× a fibrila livre), $R_{\max}$ de 68 a 161. Dados e receita de
+regeneração em `df_wide_cylinders.csv`; inclinações locais em
+`df_local_slopes_wide.csv`; método em `measure_df_periodic.py`.
+
+| $T_s$ | $R_{\max}$ | décadas | fixa $4$–$8$ | relativa $0{,}15R$–$0{,}5R$ | faixa cheia $5$–$R_{\max}$ | publicado | relatório (fixa / rel.) |
+|---:|---:|---:|---:|---:|---:|---:|:--|
+| 2 | 161 ± 11 | 1,51 | 1,96 ± 0,23 | **1,675 ± 0,023** | 1,617 ± 0,020 | 1,708 | 1,722 / 1,676 |
+| 128 | 86 ± 5 | 1,24 | **1,964 ± 0,041** | 1,691 ± 0,047 | 1,577 ± 0,045 | 1,790 | 1,959 / 1,953 |
+| 8192 | 68 ± 3 | 1,13 | 1,946 ± 0,031 | **1,955 ± 0,012** | 1,753 ± 0,042 | 1,963 | 1,964 / 1,981 |
+
+**O que confirma.** Nos extremos, cilindro e relatório coincidem à terceira
+casa (1,675 vs 1,676 em $T_s=2$; 1,955 vs 1,981 e 1,946 vs 1,964 em 8192) e
+batem com o publicado. Em $T_s=128$ a janela fixa também coincide (1,964 vs
+1,959) — e **nenhuma regra reproduz o 1,790 publicado**.
+
+**O que acrescenta.** Três coisas que a fibrila livre não podia dar:
+
+1. *Alcance.* Em $T_s=2$ o ajuste cobre 1,5 década e o $D_f$ relativo fica em
+   1,675 ± 0,023 — o valor de DLA bidimensional, agora sobre um intervalo de
+   escala real, com barra de erro entre sementes.
+2. *A anomalia de $T_s=128$ é evidência, não ruído.* A janela relativa dá 1,69
+   no cilindro e 1,95 na fibrila livre porque $0{,}15R$–$0{,}5R$ cai em
+   $r=13$–$43$ num objeto de $R=86$ e em $r=3$–$10$ num de $R=20$. Uma regra
+   "invariante de escala" devolve valores diferentes conforme o tamanho —
+   **porque em $T_s=128$ não há invariância de escala**. As inclinações locais
+   com 5 sementes descem sem patamar: 1,93 → 1,87 → 1,78 → 1,67 → 1,73 → 1,41 →
+   0,48 de $r=5$ a $90$.
+3. *Controle de objeto.* Uma fibrila livre gerada pelo mesmo binário e medida
+   pelo mesmo script, em $T_s=128$: faixa cheia 1,582 (cilindro 1,577), fixa
+   1,944 (cilindro 1,964). Periódico e livre dão o mesmo número sob cada regra.
+   A distância ao publicado é a janela, não a geometria.
+
+**Ressalva.** A janela fixa $4$–$8$ em $T_s=2$ tem desvio 0,23 entre sementes:
+oito unidades de raio numa seção aberta e fractal contêm poucas dezenas de
+partículas, e o eixo carrega a coluna-semente. É a regra errada para a
+estrutura aberta; a relativa é a que se sustenta ali.
+
+**Para o manuscrito.** O que o relatório propõe fica reforçado: não "$D_f$ cresce
+de 1,71 a 1,96", e sim "em $T_s$ baixo a seção é um agregado DLA com
+$D_f \approx 1{,}68$ sobre 1,5 década; conforme $T_s$ cresce o regime fractal
+encolhe até desaparecer e a seção passa a ser compacta ($D=2$)". Isso resolve o
+lado estrutural da I9 sem ampliar nada — substituindo um número ajustado onde
+não há lei de potência por uma descrição do que há.
+
+**O que a Fase C ainda deve.** O lado das avalanches (passo 2b): o cilindro
+largo de $T_s=128$ fraturado pela janela padrão 17×17 reproduz a campanha
+(frac. tam. 1 = 0,75; p99 = 9; terminal = 2.077 moléculas); a fratura pela
+seção inteira (181×181, 1,08 milhão de partículas) está em execução.
+
 ## 5. Decisão conforme o resultado
 
 O teste de tamanho finito compara cilindro fino com cilindro gordo, **dentro da

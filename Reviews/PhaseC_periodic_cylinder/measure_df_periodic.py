@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Mede D_f de um cilindro periódico pelo mesmo método do manuscrito.
 
-Lê:      um .dat compacto de cilindro periódico (dla_per<P>_...)
+Lê:      um .dat compacto: cilindro periódico (dla_per<P>_...), ou
+         fibrila livre com a opção --free (seções em |y|<=90, como o artigo)
 Escreve: relatório em stdout (D_f, alcance em décadas, R_max)
 Chamado: à mão, passo 2 da Fase C
 
@@ -46,10 +47,30 @@ def particulas_por_camada(mols, periodo):
     return {y: np.asarray(v, float) for y, v in cam.items()}
 
 
-def df_do_cilindro(caminho, periodo=216, passo=18, r_max_override=None):
+def particulas_por_camada_livre(mols):
+    """Mesma expansão, sem envolver: para a fibrila livre."""
+    cam = {}
+    for x, y, z in mols:
+        for k in range(H):
+            cam.setdefault(y + k, []).append((x, z))
+    return {y: np.asarray(v, float) for y, v in cam.items()}
+
+
+def df_do_cilindro(caminho, periodo=216, passo=18, r_max_override=None,
+                   livre=False, janela=90):
+    """periodo>0 -> anel; livre=True -> fibrila livre, seções em |y|<=janela.
+
+    Na fibrila livre as 11 seções ficam em y = -90, -72, ..., 90 — exatamente
+    a grade do manuscrito (paper_PRE.tex:162), para a comparação ser pelo
+    mesmo método e não por método parecido.
+    """
     mols = carregar(caminho)
-    cam = particulas_por_camada(mols, periodo)
-    secoes = [cam[y] for y in range(0, periodo, passo) if y in cam]
+    if livre:
+        cam = particulas_por_camada_livre(mols)
+        secoes = [cam[y] for y in range(-janela, janela + 1, passo) if y in cam]
+    else:
+        cam = particulas_por_camada(mols, periodo)
+        secoes = [cam[y] for y in range(0, periodo, passo) if y in cam]
     rmax_global = 0.0
     for s in secoes:
         c = s.mean(axis=0)
@@ -73,8 +94,9 @@ def df_do_cilindro(caminho, periodo=216, passo=18, r_max_override=None):
 
 
 if __name__ == "__main__":
-    for caminho in sys.argv[1:]:
-        r = df_do_cilindro(caminho)
+    livre = "--free" in sys.argv
+    for caminho in [a for a in sys.argv[1:] if a != "--free"]:
+        r = df_do_cilindro(caminho, livre=livre)
         print(f"{caminho.split('/')[-1]}")
         print(f"  moléculas={r['n_mol']}  partículas/seção={r['mol_por_secao']:.0f}  "
               f"R_max={r['R_max']:.1f}  alcance={r['decadas']:.2f} décadas")
