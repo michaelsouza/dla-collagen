@@ -391,8 +391,18 @@ década em $N$ e decidem.
 todos-os-pares por camada ($2{,}3\times10^8$ pares numa janela 41×41, horas
 numa seção inteira); foi trocado por *hash* espacial com resultado idêntico
 (commit `ab128dc`). O custo restante é a re-extração do backbone a cada passo de
-cascata (`filter_rids`, 93% do tempo no *profile*), que escala como $N^{2}$:
-5 s por realização em 17×17, 202 s em 41×41, ~1,5 h previstos na seção inteira.
+cascata (`filter_rids`, 93% do tempo no *profile*). Medido em uma realização
+sob *profiler*: 379 passos de cascata em 17×17 (2.372 hastes) e 1.686 em 41×41
+(12.023 hastes) — **o número de passos é linear em $N$**, e o custo de cada
+varredura também (30 ms → 149 ms por chamada). O algoritmo é portanto $N^{2}$:
+5 s por realização em 17×17, 202–309 s em 41×41. Acima disso a constante piora
+— o 81×81 (36.812 hastes) passou de 75 min na primeira realização, contra
+~40 min previstos por $N^{2}$ — por efeito de memória: 1–2 GB de objetos Python
+por processo, e `clear_rids`/`drop_rids` reconstroem o dicionário de hastes
+inteiro a cada passo. Uma seção inteira (58.783 hastes) deve levar de 3 a 6 h
+por realização com o código atual. Se a escada precisar de mais realizações
+nas janelas grandes, o caminho é uma extração incremental do backbone (só a
+vizinhança das hastes removidas), não mais núcleos.
 
 ## 5. Decisão conforme o resultado
 
