@@ -108,6 +108,18 @@ Trechos do `.tex` escritos por mais de um nó. Reconferir após qualquer ediçã
 
 Resolvidas ou superadas: I1, I2, I3, I5 (troca de protocolo). I4 é latente.
 
+## Precisa de dado novo? (auditado em 2026-09-02)
+
+**Não há campanha nova a gerar nem a fraturar.** Do que está aberto:
+
+| precisa de | nós |
+|:--|:--|
+| só texto, dados em mãos | N2, N10, N11, N13, N14, I7, I8 |
+| análise sobre dado existente, **local** | N15 (estrutura local: publicadas × campanha, em curso), I6 (tabela de Spearman), N12 (a associação do relatório §6; o confundimento de $N$ foi desfeito pela Fase C: 25× em $N$ não move a estatística) |
+| análise sobre dado existente, **no cluster** | **N9** — refit de $\varphi(F)$ e da Eq. (5) sobre as 10.000 saídas legadas da campanha (coluna `f` e fração removida acumulada já estão lá); e o *ensemble* completo de 200 fibrilas para §§3.1/3.3 do relatório (segundos de CPU) |
+
+O cluster está inacessível até a VPN ser religada (`sudo -E Code/cluster/sdumont2nd/vpn_connect.sh`).
+
 ## Próximo passo
 
 1. **N10 / N11** — redigir: a distribuição como ela é, com as três invariâncias medidas ($m$, $T_s$, tamanho); e a não-comparação com $5/2$ pelo mesmo motivo. Os dados estão todos em mãos.
