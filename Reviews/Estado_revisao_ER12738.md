@@ -29,7 +29,7 @@ Convenção: `A → B` significa "B não fecha antes de A, e reabrir A reabre B"
 | **N10** | Reanálise estatística da cauda | R1-2, R2-4 | aberto — **alvo confirmado**: descrever a distribuição (estável em $m$, $T_s\geq16$ e tamanho); não ajustar expoente. Só falta redigir |
 | **N11** | Expoente frente a $5/2$ | R1-3 | **encerra como não-afirmação** — uma década, invariante ao tamanho, não sustenta expoente nem a comparação. Falta só o texto |
 | **N12** | Estatuto de $D_f \leftrightarrow$ ruptura | R1-5 | aberto — **confundimento novo** ($N$ varia junto com $D_f$) |
-| **N17** | Fase C — o corte é físico ou de tamanho? | sustenta N10–N12 | **respondido** — o corte é do modelo: 15,8× em $N$ não move p99 (10→11) nem a fração terminal (0,88). Seções inteiras rodam como confirmação (registro de 2026-09-02) |
+| **N17** | Fase C — o corte é físico ou de tamanho? | sustenta N10–N12 | **fechado** — o corte é do modelo: 25× em $N$ (1,4 década) e duas arquiteturas ($T_s$ 128 e 8192) não movem p99, fração unitária nem fração terminal (registros de 2026-09-02) |
 | **N13** | Revisão integral do manuscrito | todas | aberto |
 | **N14** | Carta ponto a ponto verificada | todas | aberto |
 
@@ -39,7 +39,6 @@ Convenção: `A → B` significa "B não fecha antes de A, e reabrir A reabre B"
 graph TD
   N15["N15 · Validação do gerador<br/>não verificado"]
   N16["N16 · Campanha quenched<br/>CONCLUÍDA"]
-  N17["N17 · Fase C · cilindro periódico<br/>o corte é físico?"]
   N2["N2 · Protocolo de carga<br/>falta texto"]
   N9["N9 · alpha, beta de f(F)"]
   N10["N10 · Reanálise estatística<br/>alvo mudou"]
@@ -51,8 +50,6 @@ graph TD
   N15 --> N16
   N16 --> N9
   N16 --> N10
-  N17 --> N10
-  N17 --> N12
   N10 --> N11
   N10 --> N12
   N11 --> N12
@@ -66,11 +63,11 @@ graph TD
   classDef aberto fill:#ffe0b2,stroke:#e65100,color:#000;
   classDef critico fill:#ffcdd2,stroke:#b71c1c,color:#000;
   class N16 feito;
-  class N2,N9,N10,N11,N12,N13,N14,N17 aberto;
+  class N2,N9,N10,N11,N12,N13,N14 aberto;
   class N15 critico;
 ```
 
-Nós fechados (N0, N1, N3, N4, N5, N6, N7) e dissolvidos (N8) saíram do grafo: já não
+Nós fechados (N0, N1, N3, N4, N5, N6, N7, N17) e dissolvidos (N8) saíram do grafo: já não
 são portões. Ver `decision_log/`.
 
 ## Arestas — por que cada uma é um portão
