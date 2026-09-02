@@ -429,7 +429,7 @@ família periódica**. Ele não depende da validação contra a campanha:
 | Validação | Teste de tamanho | O que se pode afirmar |
 |:--|:--|:--|
 | passa | corte se move com a seção | explicação (A); os números do artigo são de tamanho finito e precisam ser requalificados |
-| passa | corte fica parado | explicação (B); o corte é dinâmico, e isso vira resultado positivo contra R1-2 / R2-4 |
+| passa | corte fica parado | explicação (B); o corte é dinâmico, e isso vira resultado positivo contra R1-2 / R2-4 — **← foi este o desfecho** (§4b: validação passou; §4d: corte parado sobre 1,2 década) |
 | falha | qualquer | a pergunta é respondida dentro de um modelo aparentado; a diferença em relação à campanha vira achado sobre o papel das pontas |
 
 Nos três casos sai resultado. É o que justifica rodar.
@@ -448,12 +448,19 @@ $n_b=300.000$, ~10× o custo atual por fibrila, 1 a 3 h cada.
 
 ## 7. Pendências de implementação
 
-1. Modo periódico em `fast_dla2.cpp`: fronteira em $y$, lançamento cilíndrico,
-   raio de morte radial. A CLI e o formato de saída devem permanecer.
-2. Escritor que abre o cilindro num plano e emite no esquema `extended`, para
-   que `worker_fracture.sh` consuma sem alteração.
-3. Verificação de que o padrão de encaixe (staggers 0D–4D) não quebra na emenda
-   com período 216.
+1. ~~Modo periódico em `fast_dla2.cpp`~~ — **feito** (`-period P`, commit
+   `17cfc1f`); CLI e formato preservados, modo livre byte-idêntico.
+2. ~~Escritor que abre o cilindro~~ — **feito** (`open_periodic_cylinder.py`:
+   desloca $y$ por $-P/2$; o `extend` e o corte da fratura fazem o resto sem
+   alteração). Atenção: o `extend` exige o nome no padrão da campanha, então o
+   arquivo aberto precisa ser renomeado sem o prefixo `per216_`.
+3. ~~Verificação do encaixe na emenda~~ — **feito** por duas vias: distribuição
+   uniforme de moléculas ao longo do anel (§4b) e distribuição 0D–4D igual à da
+   fibrila livre dentro de 2,4 pontos percentuais.
+4. **Novo, se a escada precisar de mais realizações nas janelas grandes:**
+   extração incremental do backbone em `filter_rids` (só a vizinhança das
+   hastes removidas), que derruba o custo de $N^{2}$ para perto de $N$. Não é
+   necessário para o que foi concluído.
 
 ## 8. Relação com a DAG
 
