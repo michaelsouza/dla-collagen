@@ -267,6 +267,13 @@ maior e 4,5σ, e quase virou "as pontas importam". Era a janela da fibrila
 livre sem margem — hastes na borda perdiam vizinhos logo fora, subestimando o
 $K$ livre. Documentado no cabeçalho do script.
 
+**O mesmo analisador fechou N15 (2026-09-02).** Aplicado a fibrilas
+publicadas (do zip) contra fibrilas geradas agora pelo gerador da campanha com
+seus aceleradores: $K$ difere −0,5% / −0,2% / +1,4% em $T_s$ = 2 / 128 / 8192
+(≤0,6σ), encaixes dentro de 0,5 ponto. Script
+`compare_published_vs_campaign.py`; registro em
+`decision_log/2026-09-02_N15_gerador_reproduz_as_publicadas.md`.
+
 **Escala do cilindro, medida:** $R \propto n_b^{0{,}55}$ (35,2 → 111,2 de
 `nb`=3.600 a 28.800). Para $R_{\max}=158$ bastam **~56.000 moléculas**, não as
 180.000 estimadas a partir da fibrila livre.

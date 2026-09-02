@@ -23,7 +23,7 @@ Convenção: `A → B` significa "B não fecha antes de A, e reabrir A reabre B"
 | **N16** | Campanha sob protocolo quenched | infraestrutura | **concluído** — 10.000 arquivos, 2.000 fibrilas |
 | **N5** | Sensibilidade ao módulo de Weibull $m$ | R1-3 | **fechado** — $m=2$ como caso ilustrativo da varredura $\{1,2,3,5,10\}$; forças normalizadas |
 | **N2** | Protocolo de carga | R2-1 | **dados prontos**; falta escrever o protocolo novo no manuscrito |
-| **N15** | Validação do gerador | infraestrutura | **alvo trocado** — o $D_f$ publicado é escolha de janela, não referência. Validar pela estrutura local (K, encaixes) e pelos $D_f$ sob regra uniforme do relatório. O gerador periódico já passou nisso (Fase C §4b) |
+| **N15** | Validação do gerador | infraestrutura | **fechado** — o gerador da campanha (com aceleradores) reproduz a estrutura local das fibrilas **publicadas**: $K$ dentro de 0,2–1,4%, encaixes 0D–4D dentro de 0,5 ponto, 3 sementes × 3 $T_s$ (registro de 2026-09-02) |
 | **N7** | $D_f$ 2D contra descritores do backbone 3D | R1-4 | **fechado** — `quenched_campaign_report` §4: o $D_f$ publicado depende da janela; é *crossover* DLA (1,68) → sólido (2,0), não dimensão variável. Corroborado em cilindros 17× mais gordos, 5 sementes (registro de 2026-09-01). Resta I6 |
 | **N9** | $\alpha,\beta$ da Eq. (5) | R1-7 | aberto — refit sobre a campanha |
 | **N10** | Reanálise estatística da cauda | R1-2, R2-4 | aberto — **alvo confirmado**: descrever a distribuição (estável em $m$, $T_s\geq16$ e tamanho); não ajustar expoente. Só falta redigir |
@@ -37,7 +37,6 @@ Convenção: `A → B` significa "B não fecha antes de A, e reabrir A reabre B"
 
 ```mermaid
 graph TD
-  N15["N15 · Validação do gerador<br/>não verificado"]
   N16["N16 · Campanha quenched<br/>CONCLUÍDA"]
   N2["N2 · Protocolo de carga<br/>falta texto"]
   N9["N9 · alpha, beta de f(F)"]
@@ -47,7 +46,6 @@ graph TD
   N13["N13 · Manuscrito"]
   N14["N14 · Carta"]
 
-  N15 --> N16
   N16 --> N9
   N16 --> N10
   N10 --> N11
@@ -64,17 +62,15 @@ graph TD
   classDef critico fill:#ffcdd2,stroke:#b71c1c,color:#000;
   class N16 feito;
   class N2,N9,N10,N11,N12,N13,N14 aberto;
-  class N15 critico;
 ```
 
-Nós fechados (N0, N1, N3, N4, N5, N6, N7, N17) e dissolvidos (N8) saíram do grafo: já não
+Nós fechados (N0, N1, N3, N4, N5, N6, N7, N15, N17) e dissolvidos (N8) saíram do grafo: já não
 são portões. Ver `decision_log/`.
 
 ## Arestas — por que cada uma é um portão
 
 | Aresta | Justificativa |
 |:--|:--|
-| **N15 → N16** | Se o gerador não reproduz o $D_f$ publicado, as fibrilas da campanha não são as do artigo. **A campanha já rodou sem essa confirmação** — é o risco aberto mais caro. |
 | **N16 → N10, N9** | A amostra estatística *é* a campanha; $\varphi(F)$ sai dela. |
 | **N17 → N10, N12** | Se o corte das avalanches for de tamanho finito, os números de N10 são artefato e a associação de N12 muda de objeto. |
 | **N7 → N9** | $\alpha,\beta$ são lidos em termos de $\langle N\rangle$ e $\langle K\rangle$. |
@@ -115,7 +111,7 @@ Resolvidas ou superadas: I1, I2, I3, I5 (troca de protocolo). I4 é latente.
 | precisa de | nós |
 |:--|:--|
 | só texto, dados em mãos | N2, N10, N11, N13, N14, I7, I8 |
-| análise sobre dado existente, **local** | N15 (estrutura local: publicadas × campanha, em curso), I6 (tabela de Spearman), N12 (a associação do relatório §6; o confundimento de $N$ foi desfeito pela Fase C: 25× em $N$ não move a estatística) |
+| análise sobre dado existente, **local** | ~~N15~~ (fechado), I6 (tabela de Spearman), N12 (a associação do relatório §6; o confundimento de $N$ foi desfeito pela Fase C: 25× em $N$ não move a estatística) |
 | análise sobre dado existente, **no cluster** | **N9** — refit de $\varphi(F)$ e da Eq. (5) sobre as 10.000 saídas legadas da campanha (coluna `f` e fração removida acumulada já estão lá); e o *ensemble* completo de 200 fibrilas para §§3.1/3.3 do relatório (segundos de CPU) |
 
 O cluster está inacessível até a VPN ser religada (`sudo -E Code/cluster/sdumont2nd/vpn_connect.sh`).
