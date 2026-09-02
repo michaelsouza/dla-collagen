@@ -337,6 +337,51 @@ largo de $T_s=128$ fraturado pela janela padrão 17×17 reproduz a campanha
 (frac. tam. 1 = 0,75; p99 = 9; terminal = 2.077 moléculas); a fratura pela
 seção inteira (181×181, 1,08 milhão de partículas) está em execução.
 
+## 4d. Passo 2b em curso — a escada de janelas e o que cada hipótese prevê (2026-09-01)
+
+**Desenho.** Um único cilindro periódico largo de $T_s=128$ (`nb`=60.000, semente
+900001), aberto e fraturado com o motor de produção sem alteração, por quatro
+janelas de corte. Só a janela muda; a arquitetura é a mesma. Script:
+`summarize_avalanche_ladder.py`.
+
+| janela | moléculas | fator sobre a base |
+|:--|---:|---:|
+| 17×17 (padrão da campanha) | 2.372 | 1× |
+| 41×41 | 12.023 | 5,1× |
+| 81×81 | 36.812 | 15,5× |
+| 181×181 (seção inteira) | 58.783 | 24,8× |
+
+**Previsões, registradas antes dos degraus grandes saírem.** Com uma ou duas
+realizações por janela, o *maior* evento não serve de estatística — os 91 da
+campanha são o máximo sobre 1.000 realizações. O que compara entre tamanhos é a
+forma da distribuição e a fração do sistema que vai no evento terminal:
+
+| | corte **dinâmico** (hipótese B, §2) | corte de **tamanho finito** (hipótese A) |
+|:--|:--|:--|
+| p99 das avalanches pré-terminais | fica em ~10 em todas as janelas | cresce com $N$ (com $s_c \propto N^{\alpha}$, $\alpha>0$) |
+| fração do sistema no evento terminal | fica em ~0,88 | cai, porque as cascatas pré-terminais absorvem mais |
+| fração de eventos de tamanho 1 | fica em ~0,75 | cai |
+
+**Observado até agora:**
+
+| janela | realizações | frac. tam. 1 | p90 | p99 | maior pré-terminal | terminal / $N$ |
+|:--|---:|---:|---:|---:|---:|---:|
+| campanha (referência) | 1000 | 0,72 | 3 | 12 | 91 | 0,88 |
+| 17×17 | 5 | 0,75 | 2 | 10 | 39 | 0,88 |
+| 41×41 | 2 | 0,75 | 3 | 10 | 32 | 0,88 |
+| 81×81 | em execução | | | | | |
+| 181×181 | em execução | | | | | |
+
+O primeiro degrau (5,1× em $N$) não move nenhuma das três colunas. Os dois
+seguintes cobrem mais de uma década em $N$ e decidem.
+
+**Nota operacional.** O carregador original construía vizinhanças por
+todos-os-pares por camada ($2{,}3\times10^8$ pares numa janela 41×41, horas
+numa seção inteira); foi trocado por *hash* espacial com resultado idêntico
+(commit `ab128dc`). O custo restante é a re-extração do backbone a cada passo de
+cascata (`filter_rids`, 93% do tempo no *profile*), que escala como $N^{2}$:
+5 s por realização em 17×17, 202 s em 41×41, ~1,5 h previstos na seção inteira.
+
 ## 5. Decisão conforme o resultado
 
 O teste de tamanho finito compara cilindro fino com cilindro gordo, **dentro da
