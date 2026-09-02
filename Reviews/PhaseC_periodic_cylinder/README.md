@@ -369,8 +369,8 @@ forma da distribuição e a fração do sistema que vai no evento terminal:
 | campanha (referência) | 1000 | 0,72 | 3 | 12 | 91 | 0,88 |
 | 17×17 | 5 | 0,75 | 2 | 10 | 39 | 0,88 |
 | 41×41 | 3 | 0,75 | 3 | 11 | 127 | 0,87 |
-| 81×81 | em execução | | | | | |
-| 181×181 | em execução | | | | | |
+| **81×81** | 2 | **0,76** | **3** | **11** | 121 | **0,88** |
+| 181×181 | em execução (confirmação) | | | | | |
 | *$T_s=8192$, mesmo desenho:* | | | | | | |
 | campanha 8192 (referência) | 1000 | 0,71 | 3 | 13 | 72 | 0,87 |
 | 17×17 no cilindro 8192 | 5 | 0,73 | 3 | 14 | 40 | 0,88 |
@@ -386,6 +386,23 @@ correta será: **o corte da distribuição é dinâmico, mas a maior cascata
 alcançável cresce com o sistema** — duas afirmações compatíveis, e a segunda
 importa para como N10 será escrito. Os dois degraus seguintes cobrem mais de uma
 década em $N$ e decidem.
+
+**Decidido no 81×81 (2026-09-02).** De 2.372 a 37.536 moléculas — 15,8×, 1,2
+década — a fração de eventos unitários vai de 0,75 a 0,76, o p90 de 2 a 3, o
+p99 de 10 a 11 e a fração do sistema no evento terminal fica em 0,88. **As três
+colunas pré-registradas não se movem: é o corte dinâmico.** A previsão de tamanho
+finito (p99 crescendo com $N$, terminal caindo) está refutada sobre 1,2 década.
+Até a cauda extrema saturou: a maior cascata pré-terminal foi 39 → 127 → 121,
+sem crescer de 41×41 para 81×81 apesar de 3× mais material. Por realização em
+81×81: p99 14 e 10, máximos 59 e 121 — a mesma faixa dos degraus menores.
+
+O que isso fecha: a faixa de ~1 década das avalanches (§1.2) é **propriedade do
+modelo**, não do corpo de prova. Engordar a fibrila conserta o alcance do $D_f$
+(§4c) e não muda nada nas avalanches — as duas metades da I9 têm causas
+diferentes e curas diferentes, como a §2 do plano antecipava como hipótese B.
+Dados: `avalanche_ladder_ts128.csv` (fonte: saída legada de cada janela). As
+seções inteiras 181×181 e 141×141 (8192), de 3 a 6 h cada, seguem em execução
+como confirmação; o resultado não depende delas.
 
 **Nota operacional.** O carregador original construía vizinhanças por
 todos-os-pares por camada ($2{,}3\times10^8$ pares numa janela 41×41, horas
