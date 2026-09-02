@@ -23,6 +23,15 @@
 //                the reachable bound component has been visited; additional
 //                steps can change neither the argmin nor the first-reached
 //                tie-break, so the placement law is exactly the original one.
+//   -period P    periodic boundary along y with period P (0 = free growth,
+//                the default, bit-identical to the original).  The aggregate
+//                becomes an infinite cylinder: no tips, no taper, and every
+//                molecule goes into the cross-section instead of the length.
+//                P must be a multiple of 4 (the stagger step) and of the rod
+//                height 18, so that the seam preserves both the attachment
+//                rule and the seed tiling; 216 = 12*18 = 54*4 is the design
+//                value.  Walkers are launched on a cylinder instead of a
+//                sphere, and only the radial distance kills them.
 //
 #include "fast_dla.h"
 #include <chrono>
@@ -30,6 +39,37 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <deque>
+
+// ------------------------------------------------------------ periodic mode
+// 0 = free growth (original).  P > 0 = periodic along y with period P; every
+// stored and queried y lives in [0, P).
+static int g_period = 0;
+
+static inline int wrapy(int y) {
+  if (g_period <= 0) return y;
+  int r = y % g_period;
+  return r < 0 ? r + g_period : r;
+}
+
+// Circular distance from b to a on the ring of length P.
+static inline int ydist(int a, int b) { return wrapy(a - b); }
+
+// True when two rods of height h, at wrapped positions ya and yb, share at
+// least one layer.  On the ring the intervals [y, y+h) overlap iff the forward
+// distance is shorter than h in either direction.
+static inline bool yoverlap(int ya, int yb, int h) {
+  const int d = ydist(ya, yb);
+  return d < h || d > g_period - h;
+}
+
+// Neighbour position expressed in the frame of the reference rod, so that the
+// existing face-sharing geometry (which assumes unwrapped coordinates) applies
+// unchanged across the seam.
+static inline int yshift_to_frame(int y_ref, int y_other) {
+  int d = ydist(y_other, y_ref);
+  if (d > g_period / 2) d -= g_period;
+  return y_ref + d;
+}
 
 // ---------------------------------------------------------------- RNG layer
 static int g_rng_fast = 0;
@@ -83,6 +123,7 @@ static inline void walk_volume(fiber_t &f) {
   else if (imove == 7) { --x; ++z; }
   else if (imove == 8) --y;
   else if (imove == 9) ++y;
+  if (g_period > 0) y = wrapy(y);
 }
 static inline void walk_rolling(fiber_t &f) {
   int &x = f.m_x[0]; int &z = f.m_x[2];
@@ -115,6 +156,26 @@ static inline void launch_on_sphere(fiber_t &f, double radius) {
   f.m_state = fiber_state_t::FREE;
 }
 
+// Periodic launch: the aggregate spans the whole period, so the walker starts
+// on a cylinder of the given radius at a uniformly random height instead of on
+// a sphere.  Uses the fast RNG unconditionally: the periodic mode is a new
+// object, so there is no libc stream to reproduce.
+static inline void launch_on_cylinder(fiber_t &f, double radius) {
+  const double theta = rnd_unit() * 2.0 * M_PI;
+  f.m_x[0] = (int)std::lround(radius * cos(theta));
+  f.m_x[2] = (int)std::lround(radius * sin(theta));
+  f.m_x[1] = (int)(rnd_unit() * g_period) % g_period;
+  f.m_state = fiber_state_t::FREE;
+}
+
+// Radial kill test.  In periodic mode y never leaves the ring, so only the
+// distance in the x-z plane can take the walker out of the simulation.
+static inline bool out_of_cylinder(const fiber_t &f, int max_dist, int radius) {
+  const double r2 = (double)f.m_x[0] * f.m_x[0] + (double)f.m_x[2] * f.m_x[2];
+  const double lim = (double)max_dist * radius;
+  return r2 > lim * lim;
+}
+
 // ------------------------------------------------------------- column store
 class colmap_t {
 public:
@@ -130,6 +191,7 @@ public:
     return ((uint64_t)(uint32_t)x << 32) | (uint32_t)z;
   }
   void add(int uid, std::vector<fiber_t> &fibers) {
+    if (g_period > 0) fibers[uid].m_x[1] = wrapy(fibers[uid].m_x[1]);
     const fiber_t &f = fibers[uid];
     const int dx[3] = {1, m_height, 1};
     if (m_empty) {
@@ -150,11 +212,24 @@ public:
     for (int i = 0; i < 3; ++i) { int d = m_xmax[i] - m_xmin[i]; diam += d * d; }
     return int(std::sqrt((double)diam)) + 1;
   }
+  // Launch radius for the periodic cylinder: the y extent is the period and
+  // must not inflate it, so only the x-z footprint counts.  The floor keeps
+  // the seed column from producing a degenerate radius.
+  int radius_xz() const {
+    const int dx = m_xmax[0] - m_xmin[0], dz = m_xmax[2] - m_xmin[2];
+    const int r = int(std::sqrt((double)(dx * dx + dz * dz))) + 1;
+    return r < 8 ? 8 : r;
+  }
   // uids in column (x,z) whose y-range shares at least one level with [y, y+h)
   inline void column_hits(int x, int z, int y, std::vector<int> &out) const {
     auto it = m_cols.find(key(x, z));
     if (it == m_cols.end()) return;
     const auto &v = it->second;
+    if (g_period > 0) {
+      for (const auto &e : v)
+        if (yoverlap(y, e.first, m_height)) out.push_back(e.second);
+      return;
+    }
     const int lo = y - (m_height - 1);
     auto p = std::lower_bound(v.begin(), v.end(), std::make_pair(lo, INT32_MIN));
     for (; p != v.end() && p->first <= y + (m_height - 1); ++p)
@@ -169,15 +244,22 @@ public:
     // same O(1) rejection the kdt root performed: a walker outside the global
     // bounding box (with the contact margins) can touch nothing.
     const int dx[3] = {1, m_height, 1};
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 3; ++i) {
+      if (g_period > 0 && i == 1) continue;      // y wraps: no bound to reject on
       if (f.m_x[i] < m_xmin[i] - dx[i] || m_xmax[i] < f.m_x[i]) return;
+    }
     const int x = f.m_x[0], y = f.m_x[1], z = f.m_x[2];
     auto it = m_cols.find(key(x, z));
     if (it != m_cols.end()) {
       const auto &v = it->second;
-      const int lo = y - (m_height - 1);
-      auto p = std::lower_bound(v.begin(), v.end(), std::make_pair(lo, INT32_MIN));
-      if (p != v.end() && p->first <= y + (m_height - 1)) { overlap = true; return; }
+      if (g_period > 0) {
+        for (const auto &e : v)
+          if (yoverlap(y, e.first, m_height)) { overlap = true; return; }
+      } else {
+        const int lo = y - (m_height - 1);
+        auto p = std::lower_bound(v.begin(), v.end(), std::make_pair(lo, INT32_MIN));
+        if (p != v.end() && p->first <= y + (m_height - 1)) { overlap = true; return; }
+      }
     }
     column_hits(x - 1, z, y, neighs);
     column_hits(x + 1, z, y, neighs);
@@ -190,8 +272,14 @@ static inline bool bind_registry(const fiber_t &f, const std::vector<int> &neigh
                                  std::vector<fiber_t> &fibers, char mode) {
   if (neighs.empty()) return false;
   if (mode == 's') {
-    for (int uid : neighs)
-      if ((f.m_x[1] - fibers[uid].m_x[1]) % 4 == 0) return true;
+    for (int uid : neighs) {
+      // On the ring the stagger must be measured modulo the period.  P is a
+      // multiple of 4 by construction, so the rule is preserved across the
+      // seam; using the raw difference would break it there.
+      const int d = (g_period > 0) ? ydist(f.m_x[1], fibers[uid].m_x[1])
+                                   : (f.m_x[1] - fibers[uid].m_x[1]);
+      if (d % 4 == 0) return true;
+    }
     return false;
   }
   // mode 'n': any face-sharing contact binds (the y-overlap condition of the
@@ -202,6 +290,17 @@ static inline bool bind_registry(const fiber_t &f, const std::vector<int> &neigh
 static inline int energy2(fiber_t &f, const std::vector<int> &neighs,
                           std::vector<fiber_t> &fibers) {
   int energy = 4 * f.m_height;
+  if (g_period > 0) {
+    // num_shared_faces compares raw y intervals, so a neighbour on the far
+    // side of the seam would look infinitely distant.  Move a copy into f's
+    // frame first; the geometry is then the ordinary unwrapped one.
+    for (int uid : neighs) {
+      fiber_t u = fibers[uid];
+      u.m_x[1] = yshift_to_frame(f.m_x[1], u.m_x[1]);
+      energy -= f.num_shared_faces(u);
+    }
+    return energy;
+  }
   for (int uid : neighs) energy -= f.num_shared_faces(fibers[uid]);
   return energy;
 }
@@ -337,6 +436,10 @@ static const int JUMP_TRIGGER = 24;   // minimum axis gap before jumping
 static inline int bbox_gap(const fiber_t &f, const colmap_t &cm) {
   int gap = 0;
   for (int i = 0; i < 3; ++i) {
+    // In periodic mode the cluster spans every y, so a y gap does not exist
+    // and must not be allowed to authorise a jump: the walker could cross the
+    // aggregate through the seam.  Only the radial gap is a real clearance.
+    if (g_period > 0 && i == 1) continue;
     const int lo = cm.m_xmin[i] - cm.m_height;
     const int hi = cm.m_xmax[i] + cm.m_height;
     int g = 0;
@@ -373,16 +476,26 @@ static void run_dla2(int tmax, int num_bind, char mode, unsigned int seed,
   printf("rng ........ %s\n", g_rng_fast ? "fast(xoshiro256++)" : "libc");
   printf("jumps ...... %d\n", jumps);
   printf("coverstop .. %d\n", coverstop);
+  printf("period ..... %d%s\n", g_period, g_period > 0 ? "" : " (free growth)");
 
   const unsigned int active_seed = resume ? continuation_seed : seed;
   printf("rng seed ... %d%s\n", active_seed, resume ? " (continuation)" : "");
   rng_seed(active_seed);
 
   const int height = 18;
+  if (g_period > 0 && (g_period % 4 != 0 || g_period % height != 0)) {
+    printf("The period must be a multiple of 4 and of %d (got %d).\n",
+           height, g_period);
+    exit(EXIT_FAILURE);
+  }
   char arquivo[1024];
-  const int len = snprintf(arquivo, sizeof(arquivo),
-                           "%s/dla_mode_%c_ts_%d_nb_%d_seed_%d_.dat",
-                           output_dir, mode, tmax, num_bind, seed);
+  const int len = g_period > 0
+      ? snprintf(arquivo, sizeof(arquivo),
+                 "%s/dla_per%d_mode_%c_ts_%d_nb_%d_seed_%d_.dat",
+                 output_dir, g_period, mode, tmax, num_bind, seed)
+      : snprintf(arquivo, sizeof(arquivo),
+                 "%s/dla_mode_%c_ts_%d_nb_%d_seed_%d_.dat",
+                 output_dir, mode, tmax, num_bind, seed);
   if (len < 0 || len >= (int)sizeof(arquivo)) {
     printf("The output filename is too long.\n");
     exit(EXIT_FAILURE);
@@ -408,29 +521,46 @@ static void run_dla2(int tmax, int num_bind, char mode, unsigned int seed,
     fid = fopen(arquivo, "w");
     if (!fid) { printf("The file %s could not be opened.\n", arquivo); exit(EXIT_FAILURE); }
     uid = 0;
-    fibers.push_back(fiber_t(uid, height, 0, -height / 2, 0));
-    cm.add(uid, fibers);
-    fprintf(fid, "uid: %d %d %d %d\n", uid, 0, -height / 2, 0);
+    if (g_period > 0) {
+      // Seed a full column so the aggregate starts as a thin cylinder that
+      // already wraps: no tips, hence no tip-growth transient to discard.
+      // P is a multiple of height, so the seed tiles the ring exactly.
+      for (int y = 0; y < g_period; y += height) {
+        if (y > 0) ++uid;
+        fibers.push_back(fiber_t(uid, height, 0, y, 0));
+        cm.add(uid, fibers);
+        fprintf(fid, "uid: %d %d %d %d\n", uid, 0, y, 0);
+      }
+    } else {
+      fibers.push_back(fiber_t(uid, height, 0, -height / 2, 0));
+      cm.add(uid, fibers);
+      fprintf(fid, "uid: %d %d %d %d\n", uid, 0, -height / 2, 0);
+    }
   }
 
   std::vector<int> neighs;
   int xold[3];
 
   while (uid < num_bind) {
-    const int radius = cm.diameter();
+    const int radius = (g_period > 0) ? cm.radius_xz() : cm.diameter();
     fibers.push_back(fiber_t(++uid, height, 0, 0, 0));
     fiber_t &f = fibers[uid];
-    launch_on_sphere(f, radius);
+    if (g_period > 0) launch_on_cylinder(f, radius); else launch_on_sphere(f, radius);
     bool reset_fiber = false;
 
     while (true) {
-      if (reset_fiber) { launch_on_sphere(f, radius); reset_fiber = false; }
+      if (reset_fiber) {
+        if (g_period > 0) launch_on_cylinder(f, radius); else launch_on_sphere(f, radius);
+        reset_fiber = false;
+      }
 
       if (jumps) {
         const int gap = bbox_gap(f, cm);
         if (gap >= JUMP_TRIGGER) {
           long_jump(f, gap - 1);
-          if (check_out_sim(f, max_dist, radius)) reset_fiber = true;
+          if (g_period > 0) f.m_x[1] = wrapy(f.m_x[1]);
+          if (g_period > 0 ? out_of_cylinder(f, max_dist, radius)
+                           : check_out_sim(f, max_dist, radius)) reset_fiber = true;
           continue;
         }
       }
@@ -438,7 +568,8 @@ static void run_dla2(int tmax, int num_bind, char mode, unsigned int seed,
       for (int i = 0; i < 3; ++i) xold[i] = f.m_x[i];
       walk_volume(f);
 
-      if (check_out_sim(f, max_dist, radius)) { reset_fiber = true; continue; }
+      if (g_period > 0 ? out_of_cylinder(f, max_dist, radius)
+                       : check_out_sim(f, max_dist, radius)) { reset_fiber = true; continue; }
 
       bool ovl;
       cm.query(f, neighs, ovl);
@@ -482,6 +613,7 @@ int main(int argc, char const *argv[]) {
     else if (!strcmp(argv[i], "-rng")) g_rng_fast = !strcmp(argv[++i], "fast");
     else if (!strcmp(argv[i], "-jumps")) jumps = atoi(argv[++i]);
     else if (!strcmp(argv[i], "-coverstop")) coverstop = atoi(argv[++i]);
+    else if (!strcmp(argv[i], "-period")) g_period = atoi(argv[++i]);
   }
   if (seed < 1) { printf("The parameter seed must greater than zero.\n"); return EXIT_FAILURE; }
 
