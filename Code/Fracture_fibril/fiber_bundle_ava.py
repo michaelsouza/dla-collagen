@@ -344,8 +344,9 @@ def legacy_output_path(fn_dat, m, output_dir=None):
 
 
 # ---------------------------------------------------------------------- main
-def run_realizations(fn_dat, n, m=2, seed=1, legacy_path=None, start=0):
-    ssd0 = S.read_or_create_ssd(fn_dat)
+def run_realizations(fn_dat, n, m=2, seed=1, legacy_path=None, start=0,
+                     half_width=8, half_length=100):
+    ssd0 = S.read_or_create_ssd(fn_dat, half_width, half_length)
     ssd0.set_rods_exponent(m)
     out = []
     for k in range(start, n):
@@ -373,6 +374,10 @@ def main():
     ap.add_argument('-file', required=True)
     ap.add_argument('-n', type=int, default=5)
     ap.add_argument('-m', type=int, default=2)
+    ap.add_argument('-half-width', dest='half_width', type=int, default=8,
+                    help='trunk half-width in x and z (default 8 -> 17x17)')
+    ap.add_argument('-half-length', dest='half_length', type=int, default=100,
+                    help='trunk half-length in y (default 100 -> 201 layers)')
     ap.add_argument('-seed', type=int, default=1)
     ap.add_argument('-out', help='optional JSON summary')
     ap.add_argument('-legacy-dir', dest='legacy_dir',
@@ -388,6 +393,7 @@ def main():
         print('legacy output:', legacy_path)
 
     runs = run_realizations(a.file, a.n, m=a.m, seed=a.seed,
+                            half_width=a.half_width, half_length=a.half_length,
                             legacy_path=legacy_path, start=a.start)
     if a.out:
         with open(a.out, 'w') as fh:

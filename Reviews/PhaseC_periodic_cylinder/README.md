@@ -236,6 +236,46 @@ Depois da validação no tamanho atual, dois passos:
    enxerga a si mesmo pela imagem periódica.
 2. **Engordar** a seção até ~65 l.u. e medir se o corte das avalanches se move.
 
+## 4b. Passo 1 executado — o cilindro reproduz a estrutura local (2026-09-01)
+
+Gerador com `-period 216` (commit `17cfc1f`). Modo livre verificado
+**byte-idêntico** ao anterior nos dois caminhos (libc sem aceleradores; RNG
+rápido com `-jumps -coverstop`). Sem artefato na emenda: 12 faixas de 18
+camadas com média 299 moléculas, desvio 32, a faixa da costura a +1,06 desvio.
+
+Cinco sementes por célula, `nb`=3.600 no cilindro (300 moléculas/seção, a
+densidade da fibrila livre). Análise em `compare_local_structure.py`.
+
+| $T_s$ | $K$ livre | $K$ periódica | diferença | tolerância |
+|---:|---:|---:|---:|---:|
+| 2 | 2,770 ± 0,024 | 2,790 ± 0,017 | +0,7% (0,7σ) | 5% ✓ |
+| 128 | 4,716 ± 0,054 | 4,825 ± 0,022 | +2,3% (1,9σ) | 5% ✓ |
+| 8192 | 4,870 ± 0,060 | 4,940 ± 0,034 | +1,4% (1,0σ) | 5% ✓ |
+
+Encaixes 0D–4D coincidem dentro de 2,4 pontos percentuais e reproduzem a
+migração para 0D/1D em $T_s$ alto que Parkinson1995 descreve (11/23/22/22/22
+em $T_s=2$; 22/28/19/16/15 em $T_s=8192$).
+
+**Viés pequeno e consistente:** $K$ periódico é maior nas três condições e o
+0D é sempre menor. Nenhum passa de 2σ isolado, mas o sinal repetido sugere
+efeito real — provavelmente a ausência da franja externa mal-conectada que a
+fibrila livre carrega. Dentro da tolerância; registrado como primeira hipótese
+caso o $D_f$ do cilindro largo divirja do publicado.
+
+**Um erro de análise pego no caminho:** a primeira comparação deu $K$ 5,5%
+maior e 4,5σ, e quase virou "as pontas importam". Era a janela da fibrila
+livre sem margem — hastes na borda perdiam vizinhos logo fora, subestimando o
+$K$ livre. Documentado no cabeçalho do script.
+
+**Escala do cilindro, medida:** $R \propto n_b^{0{,}55}$ (35,2 → 111,2 de
+`nb`=3.600 a 28.800). Para $R_{\max}=158$ bastam **~56.000 moléculas**, não as
+180.000 estimadas a partir da fibrila livre.
+
+**Perda operacional:** os 30 arquivos da comparação e o analisador original
+estavam em `/tmp` e foram apagados pelo sistema. Os números acima sobreviveram
+na conversa; o script foi reescrito no repositório. Tudo passou a ir para o
+scratchpad da sessão, como o `AGENTS.md` já mandava.
+
 ## 5. Decisão conforme o resultado
 
 O teste de tamanho finito compara cilindro fino com cilindro gordo, **dentro da

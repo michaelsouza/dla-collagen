@@ -367,8 +367,15 @@ def create_neighs(layers: dict, particles: dict):
                 particle_B.add_neigh_rid(particle_A.rid)
 
 
-def read_or_create_ssd(fn_dat: str):
-    fn_db = fn_dat.replace('.dat','.db')
+def read_or_create_ssd(fn_dat: str, half_width: int = 8, half_length: int = 100):
+    """Load a fibril, keeping the trunk |x|,|z| <= half_width, |y| <= half_length.
+
+    Defaults reproduce the published 17x201x17 trunk exactly.  The .db cache
+    is keyed by the crop whenever it differs from the default, because a cache
+    built with one crop silently answers for another otherwise.
+    """
+    suffix = '' if (half_width, half_length) == (8, 100) else f'_w{half_width}_l{half_length}'
+    fn_db = fn_dat.replace('.dat', suffix + '.db')
     ssd = StressStrainData()
 
     if os.path.exists(fn_db):
@@ -395,7 +402,7 @@ def read_or_create_ssd(fn_dat: str):
         except (json.JSONDecodeError, ValueError) as e:
             print(f"Warning: Could not read {fn_db} properly ({e}). Recreating from .dat file.")
             # Se a leitura falhar, força a recriação a partir do .dat se ele existir
-            return read_or_create_ssd(fn_db.replace('.db', '.dat'))
+            return read_or_create_ssd(fn_dat, half_width, half_length)
         toc = time.time() - tic
         print(f'   tElapsed {fn_db} in {toc:.2f} s')
         return ssd
@@ -409,7 +416,7 @@ def read_or_create_ssd(fn_dat: str):
                 continue
             
             x = int(row[2]); y = int(row[3]); z = int(row[4])
-            if np.abs(x) > 8 or np.abs(y) > 100 or np.abs(z) > 8:
+            if np.abs(x) > half_width or np.abs(y) > half_length or np.abs(z) > half_width:
                 continue
                 
             rid = int(row[1]); lid = y
