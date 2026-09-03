@@ -470,10 +470,26 @@ em geometria fixa, o expoente efetivo vai de $2{,}83$ ($m=1$) a $1{,}91$
 nenhum valor dele identifica uma classe de universalidade. O $5/2$ cai entre
 $m=1$ e $m=2$, e escolher o $m$ que o cruza seria ajuste a posteriori.
 **N11 encerra como não-afirmação**: a comparação com $5/2$ sai do manuscrito.
-O que fica em $m$: a literatura de fibrila única dá $m$ entre 2 e 7
-(Quigley2018 $5{,}5$/$4{,}4$; Svensson2013 $2{,}2$–$5{,}4$; Yang2012 $7{,}2$);
-reportamos a grade inteira e usamos $m=2$ como caso ilustrativo, para
-comparação com Parkinson1997.
+O que fica em $m$: reportamos a grade inteira e usamos $m=2$ como caso
+ilustrativo, para comparação com Parkinson1997.
+
+**Correção de atribuição (2026-09-03).** A versão anterior deste bloco dizia
+que "a literatura de fibrila única dá $m$ entre 2 e 7", listando Yang2012 com
+$7{,}2$ e Svensson2013 com $2{,}2$–$5{,}4$ como se as fontes reportassem
+módulos de Weibull. **Nenhuma das duas reporta.** Conferido no PDF: Yang2012
+não contém a palavra *Weibull* uma única vez; o que ele traz é *"stress at
+break of 60 ± 10 MPa"* para $n=11$ fibrilas nativas (seção 3.2), e o $7{,}2$
+sai de $m \approx 1{,}2/\mathrm{CV}$ aplicado por nós em
+`estimate_m_from_literature.py`. Svensson2013 vem pela mesma rota, das médias e
+desvios da Tabela 3. Só Quigley2018 dá $m$ por máxima verossimilhança, porque só
+dele temos os valores individuais ($4{,}4$–$5{,}5$, $n=38$). O script sempre
+separou os dois estimadores; foi a prosa que os fundiu. Corrigido também no
+registro, por entrada nova, já que `decision_log/` é append-only.
+
+E há a ressalva que decide o escopo: **nenhuma dessas medições é de fibrila
+reconstituída in vitro**, que é a procedência do modelo. Para esse objeto não
+existe medida de dispersão de resistência, então $m$ é parâmetro varrido, não
+calibrado.
 
 ### 5.3 A resposta
 
@@ -493,7 +509,7 @@ Following the Referee's recommendations, we expanded the ensemble from 10 to 200
 
 This result settles the interpretation. Narrower disorder (larger $m$) yields heavier tails because thresholds lie closer together and fail in larger cascades. An exponent that varies by nearly a full unit with microscopic disorder at fixed geometry cannot identify a load-sharing universality class. The value $5/2$ falls between $m = 1$ and $m = 2$ in the compact regime, but choosing $m$ to reproduce a theoretical exponent would be an arbitrary a posteriori calibration. Moreover, while our cascade engine recovers the exact $5/2$ exponent when fed an idealized ELS bundle (Point 1 of the Second Referee), the fibril model itself couples global cross-sectional load sharing ($a_i$) with local coordination-dependent thresholds ($K_i$), departing from idealized ELS behavior.
 
-Because the preterminal cascade range spans less than one decade in all conditions and exhibits an intrinsic cutoff (Point 2 of the First Referee), we no longer report fitted exponents as physical findings; the revised manuscript reports the empirical distributions and their invariances instead. Finally, because literature estimates of the Weibull modulus in single collagen fibrils range between 2 and 7 (Svensson et al. 2013; Yang et al. 2012; Quigley et al. 2018), our grid covers the experimental span; we retain $m = 2$ solely as an illustrative case for figures and display the complete parametric dependence in the revised Fig. 8.
+Because the preterminal cascade range spans less than one decade in all conditions and exhibits an intrinsic cutoff (Point 2 of the First Referee), we no longer report fitted exponents as physical findings; the revised manuscript reports the empirical distributions and their invariances instead. Finally, on the plausible range of $m$ itself. To our knowledge no Weibull modulus has been reported for single collagen fibrils, so we estimated one from published strength measurements. For Quigley et al. (2018), whose individual fibril data are available, a maximum-likelihood Weibull fit gives $m = 4.4$–$5.5$ ($n = 38$). Svensson et al. (2013) and Yang et al. (2012) report only means and standard deviations; through the approximation $m \approx 1.2/\mathrm{CV}$ their dispersions correspond to moduli between 2.2 and 7.2. Our grid of $m \in \{1,2,3,5,10\}$ therefore spans the range these measurements suggest. We note, however, that none of them was made on reconstituted fibrils, which is the object our model represents; for that object no strength dispersion has been measured, which is why we sweep $m$ rather than calibrate it. We retain $m = 2$ solely as an illustrative case for the figures and display the complete parametric dependence in the revised Fig. 8.
 
 ### 5.4 Rastreabilidade
 
@@ -501,7 +517,9 @@ Because the preterminal cascade range spans less than one decade in all conditio
 |:--|:--|
 | $\gamma$ por $(T_s, m)$: $2{,}830 \pm 0{,}005$ … $1{,}912 \pm 0{,}013$ em 8192; $1{,}874$–$2{,}055$ em 2 | relatório §5.4, tabela de $\gamma$; `fig5-1_araujo_ajustes.csv` |
 | motor reproduz $5/2$ em ELS uniforme | `Code/Fracture_fibril/test_fiber_bundle_ava.py`; `2026-08-24_adocao_protocolo_quenched.md` |
-| $m$ na literatura: $5{,}5$/$4{,}4$ (Quigley2018, MLE nosso), $2{,}2$–$5{,}4$ (Svensson2013, Tab. 3), $7{,}2$ (Yang2012) | `2026-08-30_N5_modulo_de_weibull.md`; `Reviews/N5_weibull_modulus/estimate_m_from_literature.py` — **conferir Yang2012 no PDF**: o registro avisa que houve erro de segunda mão nesse artigo |
+| $m$ **por máxima verossimilhança**, único caso com valores individuais: $5{,}5$ (flexor, $n=17$), $4{,}4$ (extensor, $n=21$), $4{,}6$ (todos, $n=38$) | Quigley2018, dados brutos em `Reviews/N5_weibull_modulus/quigley2018_tensile_data.xlsx`; ajuste em `estimate_m_from_literature.py` |
+| $m$ **derivado da dispersão** por $m \approx 1{,}2/\mathrm{CV}$, não reportado pelas fontes: $2{,}2$–$5{,}4$ (Svensson2013, médias e desvios da Tab. 3) e $7{,}2$ (Yang2012, "stress at break of 60 ± 10 MPa", $n=11$, seção 3.2) | idem — **conferido no PDF em 2026-09-03: Yang2012 não contém a palavra "Weibull"**; ver `decision_log/2026-09-03_correcao_atribuicao_weibull_literatura.md` |
+| nenhuma medida em fibrila **reconstituída in vitro**, que é a procedência do modelo | `2026-08-30_N5_modulo_de_weibull.md`; é a razão de $m$ ser varrido e não calibrado |
 | fator 25 em $N$ | `2026-09-02_confirmacao_secoes_inteiras.md` |
 
 : Origem dos números da resposta a R1-3. {#tbl-r13-fontes tbl-colwidths="[42,58]"}
@@ -1079,21 +1097,32 @@ a geometric damage diagnostic and do not imply a local-load-sharing mechanism.
 
 ## 13. Estado do documento
 
-| Crítica | Nó | Resposta | Pendência antes da carta |
-|:--|:--|:--|:--|
-| R2-1 | N2 | rascunho | localizar o CSV da varredura em $\Delta F$ ou retirar $92{,}6 \to 188{,}0$ |
-| R2-3 | N2/N8 | rascunho | — |
-| R1-2 | N4, N10 | rascunho | figura nova (sobrevivência + escada) |
-| R1-3 | N5, N11 | rascunho | conferir Yang2012 no PDF |
-| R2-4 | N4 | rascunho | — |
-| R1-4 | N7 | rascunho | harmonizar o critério de "décadas" ($0{,}4$–$0{,}7$ contra $0{,}57$–$0{,}90$); Fig. 3 nova |
-| R1-5 | N12 | rascunho | — (teste por fibrila é extensão) |
-| R1-7 | N9 | rascunho | Fig. 7 nova |
-| R1-1 | N1 | rascunho | — (o critério $L_s$ contra perímetro fica reconsiderável se N7 medir o perímetro por $T_s$) |
-| R1-6 | N6 | rascunho | **atualizar o trecho citado na carta**: está na versão anterior à auditoria N1 |
-| R2-2 | N3 | rascunho | reescrever os dois canais em vocabulário de limiar, junto com R2-1 |
+| Crítica | Seção | Nó | Palavras da resposta |
+|:--|--:|:--|--:|
+| R2-1 | 2 | N2 | 487 |
+| R2-3 | 3 | N2, N8 | 368 |
+| R1-2 | 4 | N4, N10 | 1301 |
+| R1-3 | 5 | N5, N11 | 441 |
+| R2-4 | 6 | N4 | 109 |
+| R1-4 | 7 | N7 | 216 |
+| R1-5 | 8 | N12 | 245 |
+| R1-7 | 9 | N9 | 259 |
+| R1-1 | 10 | N1 | 441 |
+| R1-6 | 11 | N6 | 259 |
+| R2-2 | 12 | N3 | 388 |
+| **total** | | | **4514** |
 
-: Estado das onze respostas e o que falta antes de cada uma entrar na carta. {#tbl-estado tbl-colwidths="[12,14,16,58]"}
+: Índice das onze respostas. A contagem é só da prosa do bloco *A resposta*, que é o texto destinado à carta; exclui tabelas e trechos do manuscrito citados em bloco. {#tbl-estado tbl-colwidths="[14,10,24,22]"}
+
+**Este documento não guarda estado de ticket.** O que falta em cada nó, e as
+inconsistências abertas entre manuscrito, carta e dados, moram em
+`Reviews/Estado_revisao_ER12738.md` — a tabela de nós de lá **é** a lista de
+tickets, e `validate_review_state.py` a confere. Duplicar aqui criaria um
+segundo lugar para o estado apodrecer, que é o que a §2 do `AGENTS.md`
+proíbe. As pendências que antes viviam nesta seção viraram I11 (a carta cita,
+em R1-6, um parágrafo anterior à auditoria N1), I13 (as duas contagens de
+"décadas" do ajuste de $D_f$ discordam) e I14 (o CSV da varredura em
+$\Delta F$ não está no repositório).
 
 Figuras do manuscrito revisado, em numeração provisória: 1–2 inalteradas;
 **3** $D_f$ sob regra uniforme mais a inclinação local; 4–6 inalteradas
