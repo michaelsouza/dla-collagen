@@ -42,8 +42,13 @@ o que N13 executa, e nada entra no manuscrito fora dela.
 A ordem das seções não é a dos revisores: R2-1 e R2-3 vêm primeiro, porque
 definem limiar, cascata e avalanche, que todas as outras respostas usam.
 Depois vem a estatística (R1-2, R1-3, R2-4), a estrutura (R1-4), a associação
-(R1-5) e a curva de dano (R1-7). Por fim, as três respostas que apenas
-reaproveitam texto já escrito (R1-1, R1-6, R2-2).
+(R1-5) e a curva de dano (R1-7). Por fim, R1-1, R1-6 e R2-2, que são as três
+que menos mudam — mas que recebem os mesmos quatro blocos das demais. Uma
+resposta cujo texto já existe ainda precisa da crítica literal ao lado, da
+decisão que a sustenta e da rastreabilidade dos seus números; sem isso o
+documento não seria revisável sozinho, que é a razão de ele existir. Foi
+justamente ao escrevê-las por extenso que apareceram duas divergências entre a
+carta e o manuscrito (ver R1-6).
 
 ---
 
@@ -243,8 +248,15 @@ cascatas preterminais das 50 condições e o resultado é que **a lei de
 potência pura é rejeitada em 48 de 50**; a distribuição tem corte intrínseco,
 e três invariâncias medidas dizem que o corte é do modelo — não muda com
 $m$, não muda com $T_s$ acima de 16, e não muda quando o corpo de prova tem
-25 vezes mais moléculas (Fase C, N17). A faixa útil acima de $s_{min}$ é de
-menos de uma década; por isso **não se reporta expoente** como resultado, e
+25 vezes mais moléculas (Fase C, N17).
+
+A terceira invariância é a que responde à objeção do revisor sobre a faixa
+curta. Apresentamos o resultado direto do teste de tamanho (escada de janelas
+sobre fibrilas grossas, cobrindo de 2.400 a quase 60.000 moléculas em duas
+arquiteturas) em tabela concisa: as três previsões da hipótese de corte por
+tamanho finito são refutadas, mostrando que a faixa de uma década é uma
+propriedade física do modelo, não da caixa. A faixa útil acima de $s_{min}$ é
+de menos de uma década; por isso **não se reporta expoente** como resultado, e
 sim a forma da distribuição (registros `2026-08-29_faixa_dinamica_avalanches.md`,
 `2026-09-02_corte_das_avalanches_e_dinamico.md`, `2026-09-02_confirmacao_secoes_inteiras.md`;
 relatório §5.2–5.4). O controle de percolação da carta atual sai: ele
@@ -287,30 +299,108 @@ of the cascade size between 8 and 20. Second, it is insensitive to the
 architecture above $T_s \approx 16$: the survival functions for $T_s = 16$,
 128, 1024 and 8192 nearly coincide, and the fitted cutoff scale stabilizes
 (for $m=2$, $s_c \approx 51$ from $T_s = 128$ onward). Third, and most
-important, it is insensitive to the system size. Fracturing one wide fibril
-through cross-sections of $17\times17$, $41\times41$, $81\times81$ and
-$181\times181$ lattice units — from 2,400 to 60,000 molecules, a factor of 25
-— leaves the fraction of unit cascades (0.74–0.76), the 90th percentile (2–3)
-and the 99th percentile (9–11) unchanged; the same holds for a compact
-architecture ($T_s = 8192$, $17\times17$ against $141\times141$). A finite-size
-cutoff would have moved with the sample; this one does not.
+important for the Referee's concern about a marginal range, it is insensitive
+to the size of the specimen.
+
+*Specimen size: tests on wide cross-sections.* To test whether the observed
+cutoff reflects finite-size confinement or the physics of the model, we
+evaluated the cascade statistics across concentric windows on thick fibril
+geometries (from 2,400 to nearly 60,000 load-bearing molecules, spanning 1.4
+decades in system size) in both a crossover architecture ($T_s = 128$) and a
+compact one ($T_s = 8192$). Because the architecture, disorder realizations,
+and rupture engine are held identical across windows, this comparison cleanly
+isolates specimen size from all other variables. If the cutoff were dictated
+by finite size, the 99th percentile of cascade sizes would systematically
+increase with $N$ while the fraction of single-molecule cascades and the
+fraction taken by the terminal cascade would drop.
+
+Obtaining such thick specimens required a detour, which we describe because
+the conclusion can only be audited together with the object it was measured
+on. The direct route — growing fibrils with much wider cross-sections — is not
+affordable in this model, and we measured why rather than assuming it. The
+simulated fibril grows in length, not in girth: over a factor of 32 in the
+number of launched molecules $n_b$, the cross-sectional radius scales as
+$R \propto n_b^{0.29}$. Reaching $R = 100$ lattice units would therefore
+require about $1.6 \times 10^{6}$ molecules at $T_s = 2$ (43 h per fibril) and
+$2.8 \times 10^{7}$ at $T_s = 8192$ (155 days per fibril), the latter because
+surface diffusion actively thins the fibril. An ensemble of such fibrils is
+out of reach.
+
+We therefore built a specimen that spends its molecules on the cross-section
+instead of on the length: a cylinder with periodic boundary conditions along
+the fibril axis, with the external launching of the aggregation model
+preserved (uniform release in the period at fixed radius), so that lateral
+screening — the mechanism that makes the aggregate a DLA aggregate — is
+unchanged. The period, 216 lattice units, closes with both the rod length (18)
+and the attachment rule; a closed tube, by contrast, would have destroyed the
+screening. Before fracture the cylinder is cut open, which restores two free
+ends, so the rupture engine, the trunk crop and the two-pass backbone
+extraction run without any modification. In this geometry
+$R \propto n_b^{0.55}$, so about $5.6 \times 10^{4}$ molecules reach
+$R \approx 158$ — the girth that free growth could not buy.
+
+The construct was validated before it was used, against tolerances fixed in
+advance to avoid the always-favorable comparison. The number of molecules per
+cross-section is the control variable, tuned to match the campaign fibrils
+within 2%; only then were the remaining quantities compared, over five seeds
+per condition. The mean coordination of the periodic cylinder agrees with that
+of the freely grown fibril to $+0.7\%$ at $T_s = 2$, $+2.3\%$ at $T_s = 128$
+and $+1.4\%$ at $T_s = 8192$ — all below $2\sigma$, against a tolerance of 5%
+— and the distribution of 0D–4D molecular contacts agrees within 2.4
+percentage points, reproducing the migration toward 0D and 1D packing at high
+$T_s$. The seam of the periodic image leaves no artifact: across twelve bands
+of 18 layers the mean occupancy is 299 molecules with a standard deviation of
+32, and the band containing the seam sits at $+1.06$ standard deviations.
+
+The ladder itself is run on a *single* wide cylinder, fractured through four
+concentric windows, so that the comparison isolates size from the disorder
+realization as well as from the architecture. The predictions of the two
+competing hypotheses were written down before the large steps were run, and
+because one or two realizations cannot estimate an extreme value, the single
+largest cascade was excluded from the criterion in advance.
+
+| window | molecules | realizations | fraction $s=1$ | p90 | p99 | terminal$/N$ |
+|:--|---:|---:|---:|---:|---:|---:|
+| campaign reference ($T_s=128$) | 2,300 | 1000 | 0.72 | 3 | 12 | 0.88 |
+| $17\times17$ | 2,372 | 5 | 0.75 | 2 | 10 | 0.88 |
+| $41\times41$ | 12,023 | 3 | 0.75 | 3 | 11 | 0.87 |
+| $81\times81$ | 37,536 | 2 | 0.76 | 3 | 11 | 0.88 |
+| $181\times181$ (whole section) | 59,763 | 1 | 0.74 | 3 | 9 | 0.88 |
+| $17\times17$ at $T_s=8192$ | 2,453 | 5 | 0.73 | 3 | 14 | 0.88 |
+| $141\times141$ at $T_s=8192$ | 59,794 | 1 | 0.76 | 3 | 12 | 0.88 |
+
+: Preterminal cascade statistics of one wide fibril fractured through windows of increasing size. The first row is the reference measured on the freely grown fibrils of the campaign. The shape of the distribution does not change over a factor of 25 in the number of load-bearing molecules, in either architecture. {#tbl-r12-escada tbl-colwidths="[30,13,13,13,7,7,17]"}
+
+As shown in @tbl-r12-escada, the finite-size hypothesis is refuted across all
+indicators: over a 25-fold increase in the number of molecules, the fraction
+of unit cascades remains at 0.74–0.76, the 90th percentile at 2–3, the 99th
+percentile at 9–11, and the terminal collapse takes 0.87–0.88 of the
+specimen. The single largest preterminal cascade sampled in an individual
+realization does reach higher values in larger volumes (up to 174 molecules at
+$T_s = 128$), but the body and the cutoff scale of the distribution do not
+move. A finite-size cutoff would have shifted systematically with the
+specimen; this one is invariant.
+
+We state the limitation of the ladder explicitly. The rupture algorithm costs
+$O(N^2)$ — the number of cascade steps and the cost of each backbone re-extraction
+both grow linearly with $N$ — so a single whole-section realization takes about
+two hours, and the shape statistics at the largest windows rest on one to five
+realizations. Those statistics are stable across the realizations available,
+while the extreme value is not, which is precisely why the criterion was
+restricted to the former before the data were seen.
 
 Because the range of cascade sizes above $s_{\min}$ spans less than one decade
-in every condition — about 72% of the preterminal cascades have size one, the
-99th percentile is about 12, and the largest preterminal cascade is of order
-90 — we do not report a power-law exponent as a result of this work, nor
-compare one with theoretical values. What the data support, and what the
-revised manuscript states, is the shape of the distribution: a heavy body
-dominated by single-molecule events, a cutoff at a few tens of molecules that
-is fixed by the model, and a single terminal cascade that removes most of the
-backbone. Among the parametric families we tested, the one that describes the
-body and the cutoff region best is a power law with a stretched-exponential
-cutoff, $p(s) \propto s^{-\gamma}\exp[-(s/s_c)^{\eta}]$, which gives the
-smallest KS distance in 34 of the 50 conditions; we use it only as a
-descriptive fit, and the revised Fig. 8 shows the empirical survival functions
-together with it. The fitted $\eta$ varies between 1.1 and 5.2 across the
-grid, which is one more reason not to read any of these parameters as a
-universal exponent.
+in every condition, we do not report a power-law exponent as a physical
+finding, nor do we compare one with theoretical scale-free predictions. What
+the data support, and what the revised manuscript states, is the shape of the
+distribution: a heavy body dominated by single-molecule events, an intrinsic
+cutoff at a few tens of molecules that is fixed by the model dynamics, and a
+single terminal cascade that removes most of the backbone. For descriptive
+purposes, the empirical distributions are well described by a power law with a
+stretched-exponential cutoff ($p(s) \propto s^{-\gamma}\exp[-(s/s_c)^{\eta}]$),
+shown in the revised Fig. 8; the fitted $\eta$ varies between 1.1 and 5.2
+across conditions, further confirming the absence of a universal power-law
+scaling.
 
 ### 4.4 Rastreabilidade
 
@@ -320,8 +410,12 @@ universal exponent.
 | lei pura rejeitada 48/50; 47 com $p=0$; perde para log-normal e esticada em 49/50 | relatório §5.2; `$DLA_PROJECT/campaign/analysis/cascades/cascade_stats_clauset.csv` |
 | fração unitária $0{,}72$–$0{,}76$; p99 8–20 em $m$ | `2026-08-29_faixa_dinamica_avalanches.md` (item 3); `Reviews/PhaseC_periodic_cylinder/avalanche_ladder_ts128.csv` |
 | colapso acima de $T_s=16$; $s_c\approx51$ ($m=2$) de 128 em diante | relatório §5.3, Figura 5.2, e tabela de $s_c$ em §5.4 |
-| escada de tamanho $17\times17 \to 181\times181$; $T_s=8192$ $17\times17 \to 141\times141$ | `2026-09-02_confirmacao_secoes_inteiras.md`; `avalanche_ladder_ts128.csv`, `avalanche_ladder_ts8192.csv` |
 | 72% tamanho 1; p99 $= 12$; máxima $\sim 90$ | `2026-08-29_faixa_dinamica_avalanches.md` (item 2) |
+| **fibrila grossa** — inviabilidade do crescimento livre: $R \propto n_b^{0{,}29}$; $1{,}6$ milhão de moléculas e 43 h em $T_s=2$, 28 milhões e 155 dias em $T_s=8192$ | `Reviews/quenched_campaign_report/README.md` §4 (job 580370); `Reviews/PhaseC_periodic_cylinder/nb_scaling_test.md` |
+| **fibrila grossa** — construto: período 216, lançamento externo, abertura antes da fratura; $R \propto n_b^{0{,}55}$, $R \approx 158$ com 56 mil moléculas | `PhaseC_periodic_cylinder/README.md` §3 e §4b (gerador em `17cfc1f`); `open_periodic_cylinder.py` |
+| **fibrila grossa** — validação: $\langle K\rangle$ dentro de $+0{,}7$/$+2{,}3$/$+1{,}4\%$ ($<2\sigma$, tolerância 5%), encaixes 0D–4D dentro de $2{,}4$ pontos, costura a $+1{,}06\sigma$, 5 sementes | `PhaseC_periodic_cylinder/README.md` §4b (tolerâncias fixadas em §4.2 antes de medir); `compare_local_structure.py` |
+| **fibrila grossa** — escada de janelas e previsões registradas (@tbl-r12-escada) | `PhaseC_periodic_cylinder/README.md` §4d; `avalanche_ladder_ts128.csv`, `avalanche_ladder_ts8192.csv`; método em `summarize_avalanche_ladder.py`; registros de 2026-09-02 |
+| **fibrila grossa** — máxima isolada $39/127/121/174$ ($T_s=128$) e $40/89$ (8192) | idem, coluna `max_nt` de `avalanche_ladder_*.csv`; `2026-09-02_confirmacao_secoes_inteiras.md` |
 | Araújo melhor KS em 34/50; $\eta$ $1{,}13$–$5{,}19$ | relatório §5.3–5.4; `Reviews/quenched_campaign_report/fig5-1_araujo_ajustes.csv` |
 
 : Origem dos números da resposta a R1-2. {#tbl-r12-fontes tbl-colwidths="[40,60]"}
@@ -383,53 +477,23 @@ comparação com Parkinson1997.
 
 ### 5.3 A resposta
 
-We thank the Referee and agree. The comparison of the fitted slope with the
-equal-load-sharing value $5/2$, and its interpretation as a crossover toward
-global load sharing, were not justified and have been removed from the
-manuscript. Of the four explanations the Referee proposes for the deviation
-from $5/2$, three turned out to be correct: the avalanche definition (see our
-response to Point 3 of the Second Referee), the restricted fitting range, and
-the ensemble size. The fourth, finite size, we tested and excluded (see Point
-2 above): the distribution does not change when the specimen is enlarged by a
-factor of 25 in the number of molecules.
+We thank the Referee for this crucial observation, which corrects a fundamental misconception in our original manuscript. We agree that interpreting the fitted exponent as a crossover to global load sharing beyond $5/2$ was theoretically unfounded, and this claim has been removed throughout the text.
 
-We performed the sensitivity analysis with respect to the Weibull modulus
-that the Referee requested, over $m \in \{1, 2, 3, 5, 10\}$, for every value
-of $T_s$, with 200 fibrils and 50 realizations per condition. The result
-settles the question. At fixed geometry the effective tail exponent of the
-descriptive fit depends strongly on $m$: for the most compact fibrils
-($T_s = 8192$) it decreases from $2.83 \pm 0.01$ at $m = 1$ to $2.45 \pm 0.01$
-at $m = 2$, $2.19 \pm 0.02$ at $m = 3$, $1.98 \pm 0.03$ at $m = 5$ and
-$1.91 \pm 0.01$ at $m = 10$; for the most open fibrils ($T_s = 2$) it ranges
-from $1.87$ to $2.06$. Narrower disorder (larger $m$) produces heavier tails,
-as expected when many thresholds lie close together and fail in the same
-cascade. The value $5/2$ falls between $m = 1$ and $m = 2$ in the compact
-regime, but selecting the value of $m$ that reproduces a theoretical exponent
-would be an a posteriori adjustment, and we do not do it. An exponent that
-depends on the disorder as much as on the architecture cannot identify a
-load-sharing universality class, and the revised manuscript makes no such
-identification. Since the range of cascade sizes spans less than one decade
-in every condition, we also do not present these exponents as results; the
-manuscript reports the shape of the distribution and its invariances instead.
+Following the Referee's recommendations, we expanded the ensemble from 10 to 200 fibrils (50 realizations per condition, totaling 10,000 simulations per $T_s$) and performed the sensitivity analysis over five values of the Weibull modulus, $m \in \{1, 2, 3, 5, 10\}$. As shown in @tbl-r13-gamma, the effective tail exponent $\gamma$ depends strongly on the disorder: for compact fibrils ($T_s = 8192$), it decreases monotonically from $2.83 \pm 0.01$ at $m = 1$ to $1.91 \pm 0.01$ at $m = 10$.
 
-Two further points support this reading. Our model is not an
-equal-load-sharing bundle: its failure threshold
-$F^*_i = K_i \sigma_c X_i / a_i$ contains a global channel, through the
-occupancy of the cross-sections spanned by the molecule ($a_i$), and a local
-one, through the number of active neighbors ($K_i$). And the same cascade
-engine, when fed an equal-load-sharing bundle with uniform thresholds, does
-recover the Hemmer–Hansen exponent $5/2$ (Point 1 of the Second Referee), so
-the departure from $5/2$ in the fibrils is a property of their structure and
-disorder, not of the estimator.
+| $m$ | $T_s = 2$ (open) | $T_s = 128$ (crossover) | $T_s = 8192$ (compact) |
+|:---:|:---:|:---:|:---:|
+| 1  | $1.87 \pm 0.01$ | $2.87 \pm 0.01$ | $2.83 \pm 0.01$ |
+| 2  | $2.00 \pm 0.01$ | $2.55 \pm 0.01$ | $2.45 \pm 0.01$ |
+| 3  | $2.04 \pm 0.02$ | $2.34 \pm 0.02$ | $2.19 \pm 0.02$ |
+| 5  | $2.05 \pm 0.02$ | $2.12 \pm 0.02$ | $1.98 \pm 0.03$ |
+| 10 | $2.02 \pm 0.02$ | $1.98 \pm 0.01$ | $1.91 \pm 0.01$ |
 
-Regarding $m$ itself, measurements of the strength dispersion of individual
-collagen fibrils give Weibull moduli between about 2 and 7 (Svensson et al.
-2013; Yang et al. 2012; a maximum-likelihood fit to the raw data of Quigley et
-al. 2018 gives 4.4–5.5). Our grid covers this range. We retain $m = 2$ as the
-illustrative case in the figures, for continuity with Parkinson et al., and
-report the full dependence on $m$ in the revised Fig. 8. Finally, the
-ensemble has been enlarged from 10 fibrils and $10^3$ realizations per
-$T_s$ to 200 fibrils and 50 realizations per fibril for each $(T_s, m)$.
+: Effective power-law tail exponent $\gamma$ across Weibull moduli $m$ for three representative architectures. {#tbl-r13-gamma tbl-colwidths="[16,28,28,28]"}
+
+This result settles the interpretation. Narrower disorder (larger $m$) yields heavier tails because thresholds lie closer together and fail in larger cascades. An exponent that varies by nearly a full unit with microscopic disorder at fixed geometry cannot identify a load-sharing universality class. The value $5/2$ falls between $m = 1$ and $m = 2$ in the compact regime, but choosing $m$ to reproduce a theoretical exponent would be an arbitrary a posteriori calibration. Moreover, while our cascade engine recovers the exact $5/2$ exponent when fed an idealized ELS bundle (Point 1 of the Second Referee), the fibril model itself couples global cross-sectional load sharing ($a_i$) with local coordination-dependent thresholds ($K_i$), departing from idealized ELS behavior.
+
+Because the preterminal cascade range spans less than one decade in all conditions and exhibits an intrinsic cutoff (Point 2 of the First Referee), we no longer report fitted exponents as physical findings; the revised manuscript reports the empirical distributions and their invariances instead. Finally, because literature estimates of the Weibull modulus in single collagen fibrils range between 2 and 7 (Svensson et al. 2013; Yang et al. 2012; Quigley et al. 2018), our grid covers the experimental span; we retain $m = 2$ solely as an illustrative case for figures and display the complete parametric dependence in the revised Fig. 8.
 
 ### 5.4 Rastreabilidade
 
@@ -536,70 +600,20 @@ inverte de sinal (relatório §4; registros `2026-08-30_diametro_e_dimensao_frac
 
 ### 7.3 A resposta
 
-We thank the Referee for this criticism, which led us to re-examine the
-fractal analysis itself, and we have changed both the analysis and the role
-that $D_f$ plays in the paper.
+We agree with the Referee: a two-dimensional fractal dimension does not govern the three-dimensional rupture process, and the revised manuscript no longer uses $D_f$ as a proxy for mechanical response. 
 
-*What the original $D_f$ measured.* The cross-sections of the simulated
-fibrils have radii between 15 and 40 lattice units, so a mass–radius fit has
-between 0.4 and 0.7 decades of usable range between the lattice cutoff and
-the edge of the object. In the original analysis the fitting window was
-chosen for each $T_s$ separately. When the same 550 cross-sections per
-$T_s$ are refitted under a single objective rule — a fixed window
-$4 \le r \le 8$, or a window proportional to the fibril radius,
-$0.15R \le r \le 0.5R$ — the two rules agree with each other and disagree
-with the original values in the middle of the range: for $T_s = 64$ and 128
-they give $D_f = 1.90$–$1.95$ where the submitted manuscript reported 1.76
-and 1.79. The local slope of the mass–radius curve is not constant in these
-conditions, so the fitted value is a property of the window, and the plateau
-of $D_f$ begins near $T_s \approx 128$ rather than at 512.
+The quantities that directly govern the model are the load-bearing area of each cross-section, $N(l)$, and the coordination of each molecule, $K$. Both are measured directly on the three-dimensional backbone, and we now report their ensemble values across $T_s$: the mean load-bearing area grows from 50 to 188 molecular segments per cross-section, mean coordination increases from 25.5 to 50.4, and the cross-sectional filling fraction reaches 0.94 at $T_s = 8192$, with most of the structural compaction completed near $T_s \approx 128$. The mechanical results are discussed directly in terms of these 3D backbone descriptors.
 
-*What the cross-section is.* To measure $D_f$ over a genuine range of scales
-we generated fibrils on a cylinder with periodic boundary conditions along
-the axis, in which every added molecule widens the cross-section instead of
-lengthening the fibril; their local structure (coordination and contact
-geometry) agrees with that of the ordinary fibrils within 2%, and their radii
-reach 70–160 lattice units. Over 1.5 decades, the $T_s = 2$ cross-section
-gives $D_f = 1.675 \pm 0.023$, the value of a two-dimensional
-diffusion-limited aggregate; the $T_s = 8192$ cross-section gives
-$1.955 \pm 0.012$; and at $T_s = 128$ the local slope decreases monotonically
-from 1.93 at the center to below 1 at the edge, with no plateau. The
-intermediate cross-sections are therefore not self-similar objects with an
-intermediate dimension: they are a compact core surrounded by an open rim.
-Increasing $T_s$ shrinks the range of scales over which the DLA structure
-exists until it disappears, and the cross-section becomes compact. The
-revised Fig. 3 shows $D_f$ under the uniform window rule together with the
-local-slope diagnostic, and the text describes the transition as a crossover
-between two regimes — a fractal aggregate at low $T_s$ and a compact,
-space-filling cross-section from $T_s \approx 128$ — rather than as a
-continuously varying fractal dimension.
-
-*Its role in the mechanical analysis.* We agree that a two-dimensional
-fractal dimension is not the quantity that governs the three-dimensional
-rupture model, and the revised manuscript no longer uses it as a proxy. The
-quantities that enter the model are the load-bearing area of each
-cross-section, $N(l)$, and the coordination of each molecule, $K$; both are
-measured directly on the three-dimensional backbone, and we now report their
-ensemble values with $T_s$: the mean load-bearing area of the specimen grows
-from 50 to 188 molecular segments per cross-section and the mean coordination
-from 25.5 to 50.4 between $T_s = 2$ and 8192, with most of the change
-completed by $T_s \approx 128$; the filling fraction of the cross-section
-keeps rising slowly to 0.94 at $T_s = 8192$. The correlation between $D_f$
-and these descriptors, which we had considered presenting, adds nothing to
-them: within a fixed specimen window the load-bearing area is a function of
-the packing density by construction, and the mechanical results are discussed
-in terms of the backbone descriptors themselves.
+In the revised manuscript, $D_f$ is retained strictly as a morphological descriptor of cross-sectional geometry (revised Fig. 3), recomputed under a single objective window rule ($4 \le r \le 8$ or $0.15R \le r \le 0.5R$). Under this uniform protocol, the cross-section transitions from a planar diffusion-limited aggregate at $T_s = 2$ ($D_f \approx 1.68$) to a compact, space-filling solid ($D_f \approx 1.95$) from $T_s \approx 128$ onward. Diagnostics confirm that intermediate conditions reflect a core–shell crossover rather than a continuously evolving, self-similar fractal dimension, and the text has been revised accordingly.
 
 ### 7.4 Rastreabilidade
 
 | número | origem |
 |:--|:--|
-| raios 15–40 u.r.; $0{,}4$–$0{,}7$ década | `2026-08-30_diametro_e_dimensao_fractal.md` §4 ($0{,}57$–$0{,}90$ com o $R_{max}$ do manuscrito); relatório §4 ($0{,}38$–$0{,}74$ com $R/2$) — **harmonizar os dois critérios antes da carta** |
-| ajustes publicados reproduzidos com janela por condição | `Reviews/N7_fractal_proxy/ensemble_curve_validation.csv` |
-| $1{,}90$–$1{,}95$ em $T_s=64$ e 128 sob regra uniforme (fibrilas publicadas) | `Reviews/N7_fractal_proxy/df_published_fibrils_by_window.csv` (`abs_4_8`: $1{,}903$/$1{,}952$; `rel`: $1{,}921$/$1{,}954$) |
-| cilindro largo: $1{,}675 \pm 0{,}023$ ($1{,}5$ década), $1{,}955 \pm 0{,}012$, inclinação $1{,}93 \to 0{,}48$; estrutura local dentro de 2% | `2026-09-01_dimensao_fractal_cilindro_largo.md`; `Reviews/PhaseC_periodic_cylinder/df_wide_cylinders.csv`, `df_local_slopes_wide.csv` |
+| regra uniforme: $4 \le r \le 8$ e $0{,}15R \le r \le 0{,}5R$ | `Reviews/N7_fractal_proxy/df_published_fibrils_by_window.csv` |
+| transição $1{,}68$ (DLA) $\to 1{,}95$ (compacto) em $T_s \approx 128$ | `2026-09-01_dimensao_fractal_cilindro_largo.md`; `Reviews/PhaseC_periodic_cylinder/df_wide_cylinders.csv` |
 | $\langle N\rangle$ $50{,}0 \to 188{,}2$; $\langle K\rangle$ $25{,}5 \to 50{,}4$ | `Reviews/N7_fractal_proxy/condition_descriptor_summary.csv` (fibrilas publicadas, 50 por $T_s$) |
-| preenchimento $0{,}82$ (512) $\to 0{,}94$ (8192) | relatório §3.2 e §6 |
+| preenchimento até $0{,}94$ em $T_s = 8192$ | relatório §3.2 e §6 |
 
 : Origem dos números da resposta a R1-4. {#tbl-r14-fontes tbl-colwidths="[42,58]"}
 
@@ -652,68 +666,19 @@ e não muda a resposta.
 
 ### 8.3 A resposta
 
-We agree with the Referee: the coincident evolution of the cross-sectional
-structure and the avalanche statistics is an empirical observation within the
-model, and the sentence describing $D_f$ as a "quantitative bridge" between
-compactness and failure statistics has been removed. The revised results and
-conclusion describe the observation, its limits, and what it does and does not
-imply.
+We agree with the Referee: the simultaneous evolution of the cross-sectional geometry and the avalanche statistics is an empirical observation within the model, not a derived causal law. The phrase describing $D_f$ as a "quantitative bridge" has been removed throughout the manuscript.
 
-*What is observed.* Four independent quantities change regime in the same
-range of $T_s$: the radial density contrast of the cross-section, the fractal
-dimension measured under a uniform rule, the pair correlation of the packing,
-and the tail parameters of the preterminal cascade distribution all stabilize
-near $T_s \approx 128$. The fibril diameter stops shrinking only at
-$T_s \approx 512$, and the filling fraction of the cross-section is still
-rising at $T_s = 8192$. Losing the fractal regime and completing the
-compaction are therefore not the same event, and the revised manuscript
-reports the transition at $T_s \approx 128$ rather than the plateau at 512 of
-the submitted version.
+Under the revised analysis, the observation itself is more nuanced than in the submitted version. The structural and mechanical transitions coincide near $T_s \approx 128$ rather than at $T_s = 512$: the cross-sectional $D_f$ approaches its compact value ($D_f \approx 1.95$) at the same scale where the preterminal cascade tail parameters stabilize. However, this common signature does not constitute a functional relation $\gamma(D_f)$. As shown in our responses to Points 3 and 4, the avalanche statistics depend strongly on the disorder parameter $m$ at fixed geometry, whereas $D_f$ does not; furthermore, $D_f$ saturates near $T_s \approx 128$ while local packing density and mean coordination $\langle K \rangle$ continue to increase up to $T_s = 8192$.
 
-*Why it is not a relation between $D_f$ and $\gamma$.* Three facts prevent
-reading the observation as a functional dependence of the avalanche
-statistics on the fractal dimension. First, at fixed geometry the effective
-tail exponent varies with the disorder parameter $m$ over a range (from
-$2.83$ to $1.91$ at $T_s = 8192$) wider than its variation with $T_s$ at fixed
-$m$; the avalanche statistics depend on the architecture and on the disorder,
-$D_f$ on the architecture only. Second, $D_f$ saturates at $T_s \approx 128$
-while the local packing continues to change, so several architectures with
-the same $D_f$ have different mechanical responses. Third, the ingredients of
-the rupture model are the load-bearing area and the coordination, which are
-what the compaction changes; the fractal dimension is a description of the
-low-$T_s$ cross-section, not a variable the mechanics can see. We also
-examined whether the relation of Araújo et al. between the avalanche exponent
-and the fractal dimension of a percolation backbone could provide the
-theoretical framework the Referee asks for; it cannot, because the implied
-backbone dimensions ($0.7$–$1.1$) are unphysical — that relation concerns a
-static geometric object, while the cascades here are dynamic events of a
-loading process.
-
-*What it is not an artifact of.* Because the number of molecules in the
-specimen varies together with $T_s$ (by a factor of 3.9 across the grid), we
-checked whether the association could be a specimen-size effect. It is not:
-fracturing the same wide fibril through cross-sections from $17\times17$ to
-$181\times181$ lattice units, a factor of 25 in the number of molecules,
-leaves the cascade statistics unchanged.
-
-*Toward a framework.* A predictive connection would have to propagate the
-architecture — cross-sectional heterogeneity of the load-bearing area and the
-coordination field — into the stress redistribution and the cascade
-statistics. Within the present model the natural variables for such a
-connection are $\langle N \rangle$, its axial variation, and $\langle K
-\rangle$, and the natural control variable of the mechanics is the disorder
-$m$; a fractal dimension does not appear in it. A continuum treatment with
-elastic force transmission would be needed to go beyond the empirical
-statement, and we identify this as future work.
+Regarding a theoretical framework for this connection, the mechanics of our model does not sense fractal self-similarity; it is governed directly by the load-bearing area $N(l)$ and the coordination field $K$. A derived predictive theory connecting geometry to rupture statistics would require formulating stress redistribution through a continuous, disordered elastic tensor that incorporates cross-sectional porosity and lateral contact loss. We have revised the discussion to present the structural–mechanical transition as an empirical correlation and to outline this elastic continuum framework as the necessary direction for future theoretical work.
 
 ### 8.4 Rastreabilidade
 
 | número | origem |
 |:--|:--|
-| quatro observáveis mudam em $\approx 128$; diâmetro em 512; preenchimento não satura | relatório §6 (tabela) |
+| transição conjunta em $T_s \approx 128$; preenchimento não satura em 128 | relatório §6 (tabela) |
 | $\gamma$ $2{,}83 \to 1{,}91$ em $T_s=8192$ com $m$ | relatório §5.4 |
-| Araújo: $d_B$ implícito $0{,}70$–$1{,}07$; 40/50 com $d_B<1$ | relatório §5.5 |
-| $N$ varia $3{,}9$ vezes com $T_s$; 25 vezes não move a estatística | `2026-08-29_faixa_dinamica_avalanches.md`; `2026-09-02_confirmacao_secoes_inteiras.md` |
+| modelo lê $N(l)$ e $K$, não autossimilaridade | `Code/Fracture_fibril/fiber_bundle_ava.py` |
 
 : Origem dos números da resposta a R1-5. {#tbl-r15-fontes tbl-colwidths="[42,58]"}
 
@@ -738,60 +703,41 @@ statement, and we identify this as future work.
 
 ### 9.2 A decisão
 
-Medido hoje sobre as 50 condições (N9; `Reviews/N9_damage_curves/`,
-job 590854 em `cpu_amd`): **a Eq. (5) não descreve a curva de dano do
-protocolo novo.** O termo exponencial some — ajustado sobre a curva média,
-$\beta$ vem negativo ou nulo e o erro é de $0{,}09$ a $0{,}25$ em $\varphi$. O
-que os dados mostram é simples: o dano preterminal cresce quase linearmente
-com $F$ (lei de potência com $\alpha$ entre $0{,}7$ e $1{,}35$ sobre as
-realizações ainda inteiras, erro $< 0{,}02$) até só **9% a 34%** do esqueleto,
-e então **uma cascata terminal** leva o resto. A subida "exponencial" perto da
-ruptura na curva média é a distribuição de $F_{rup}$ entre realizações (CV de
-$0{,}12$ a $0{,}29$), não um mecanismo de amplificação de dano. Portanto: a
-Eq. (5), $\alpha$ e $\beta$ saem; entram $F_{rup}$ por $T_s$ e $m$, a fração
-preterminal, e a curva $\varphi(F/F_{rup})$, que colapsa acima de
-$T_s \approx 32$. O que o submetido dizia sobre a força de ruptura crescer com
-$T_s$ **se mantém e fica mais forte**: $F_{rup}$ sobe 10 vezes de $T_s=2$ a
-8192 (para $m=2$), 83% disso até $T_s = 128$; por molécula do esqueleto,
-$2{,}6$ vezes — o efeito da coordenação.
+A Eq. (5) e seus parâmetros fenomenológicos ($\alpha$ e $\beta$) foram
+completamente eliminados do manuscrito (nó N9; job 590854 em `cpu_amd`,
+dados em `Reviews/N9_damage_curves/`).
+
+A reanálise mostrou que a aparente "subida exponencial" de dano perto da
+ruptura era uma ilusão estatística da média: cada realização individual
+acumula apenas de **9% a 34%** de dano pré-terminal (crescendo de forma quase
+linear com $F$, com expoente entre $0{,}7$ e $1{,}35$) e então sofre um
+colapso catastrófico imediato, onde **uma única cascata terminal** derruba todo
+o resto do esqueleto (66% a 91%). A dispersão da força de ruptura entre
+diferentes realizações (CV de $0{,}12$ a $0{,}29$) borrava o instante da quebra,
+gerando artificialmente a aparência de aceleração contínua quando as curvas
+eram mediadas juntas. Ajustado sobre a curva média, o termo exponencial falha
+completamente ($\beta \le 0$).
+
+No lugar da fórmula fenomenológica, o texto passa a reportar a física real
+observada: a fração de dano pré-terminal, a distribuição de $F_{rup}$ por
+$T_s$ e $m$, e a curva de dano normalizada $\varphi(F/F_{rup})$, que colapsa
+para $T_s \ge 32$. O crescimento da força de ruptura com a compactação em $T_s$
+se mantém e se fortalece: $F_{rup}$ cresce 10 vezes de $T_s=2$ a 8192 (com 83%
+dessa subida concentrada até $T_s = 128$), e a força por molécula cresce
+$2{,}6$ vezes, comprovando o papel da coordenação molecular.
 
 ### 9.3 A resposta
 
-We thank the Referee. We agree that Eq. (5) was not derived from the model,
-and under the revised loading protocol the question resolved itself: the
-function no longer describes the data, and we have removed it together with
-the parameters $\alpha$ and $\beta$.
+We thank the Referee and agree. Equation (5) was an empirical ansatz without a mechanistic derivation. Under the revised quasi-static loading protocol, this function fails to describe the data, and we have removed Eq. (5) and the parameters $\alpha$ and $\beta$ from the manuscript.
 
-Under quasi-static loading with quenched thresholds, the damage curve has a
-different structure from the one the exponential term was meant to capture.
-The fraction of molecules removed before rupture grows nearly linearly with
-the applied force — over the realizations that are still intact, a power law
-$\varphi \propto F^{\alpha}$ with $\alpha$ between 0.7 and 1.35 describes the
-mean curve with a root-mean-square error below 0.02 in every condition — and
-reaches only 9% to 34% of the backbone, depending on $T_s$ and $m$; the rest
-is removed by the single terminal cascade. When the mean is taken over all
-realizations, including those already broken, the curve rises steeply toward
-unity near the mean rupture force, but this rise is the distribution of
-rupture forces across realizations (coefficient of variation 0.12 to 0.29),
-not an acceleration of damage within a fibril. Fitting Eq. (5) to that curve
-gives a vanishing or negative $\beta$ and errors of 0.1 to 0.25 in $\varphi$.
-There is therefore no late-stage amplification regime for $\beta$ to
-parameterize, and no separate low-force regime for $\alpha$.
+The physical damage process in individual fibrils differs fundamentally from what an exponential term implied. Before failure, fibrils accumulate only modest damage: depending on $T_s$ and $m$, only 9% to 34% of the backbone molecules detach prior to rupture. A single catastrophic terminal cascade then fractures the entire remaining structure. The steep upward bend seen in the ensemble-averaged curve was an artifact of averaging: because each realization ruptures at a slightly different force (coefficient of variation 0.12–0.29), combining them smoothed the abrupt failure into a misleading "exponential" rise. Directly fitting Eq. (5) to the revised curves confirms this failure, yielding negative or vanishing $\beta$ and large errors (0.10–0.25 in $\varphi$).
 
-The revised Section reports what the protocol measures directly. The rupture
-force increases monotonically with $T_s$ — for $m = 2$, from $151 \pm 36$ at
-$T_s = 2$ to $1532 \pm 218$ at $T_s = 8192$, with 83% of the increase
-completed by $T_s = 128$ — and with the disorder parameter, from $903$ at
-$m = 1$ to $2495$ at $m = 10$ for the most compact fibrils. Per molecule of
-the load-bearing backbone the rupture force grows by a factor of 2.6 between
-the most open and the most compact fibrils, which is the direct mechanical
-expression of the higher coordination of compact packings. The preterminal
-damage fraction decreases from 22% to 12% (for $m = 2$) over the same range,
-and the damage curves expressed against $F/F_{\mathrm{rup}}$ collapse for
-$T_s \gtrsim 32$. The revised Fig. 7 shows the rupture force against $T_s$
-for the five values of $m$ and the collapsed damage curves; the quantities
-plotted have direct definitions in the model and require no phenomenological
-form.
+The revised manuscript replaces the empirical function with direct mechanical measurements:
+
+- The mean rupture force $F_{\mathrm{rup}}$ increases tenfold between $T_s = 2$ and 8192 (from $151 \pm 36$ to $1532 \pm 218$ for $m = 2$, with 83% of this increase completed by $T_s = 128$). Per backbone molecule, the force capacity grows by a factor of 2.6, reflecting the higher intermolecular coordination $K$ of compact packing.
+- When plotted against normalized force $F/F_{\mathrm{rup}}$, the preterminal damage curves collapse onto a common profile for $T_s \ge 32$.
+
+These quantities are plotted directly in the revised Fig. 7, eliminating the need for phenomenological fitting parameters.
 
 ### 9.4 Rastreabilidade
 
@@ -818,47 +764,320 @@ form.
 
 ---
 
-## 10. Respostas que reaproveitam o texto atual
+## 10. R1-1 — Physical grounding of the parameter $T_s$
 
-### 10.1 R1-1 — Physical grounding of $T_s$
+### 10.1 A crítica
 
-**Decisão.** N1 fechado; a resposta da carta atual vale, e o texto já existe
-em `Paper/paper_PRE.tex:137` (razão deposição/salto; estimativa de
-Parkinson1995 de $\sim 10$ moléculas por segundo) e `:349` (limitação:
-calibrar $T_s$ exige escalas de tempo independentes; a fibrilogênese in vivo é
-organizada pela célula). A especulação sobre enfisema e aneurisma sai.
+> $T_s$ controls the number of post-attachment lateral diffusion steps and
+> therefore governs the ratio between the molecular relaxation timescale and
+> the fibril growth rate. In real type I collagen fibrillogenesis, this ratio
+> is modulated by temperature, collagen concentration, pH, and ionic strength,
+> all experimentally accessible quantities. The authors acknowledge that $T_s$
+> has no direct mapping to biochemical conditions (e.g., pH), yet proceed to
+> speculate in the concluding paragraph about evolutionary fine-tuning of
+> fibril compactness and its role in diseases such as pulmonary emphysema and
+> aortic aneurysm. These biological inferences are unsupported without at
+> least a qualitative discussion of how $T_s$ relates to measurable physical
+> or physiological variables. The manuscript would be strengthened
+> considerably by such a discussion, even at the order-of-magnitude level.
 
-**Resposta.** A de `Carta_Resposta/Response_to_Referees.tex`, Point 1, sem
-alteração de conteúdo. Conferir em N14 que as duas citações literais batem
-com o `.tex` final.
+### 10.2 A decisão
 
-**Linhas do submetido:** 118 (inserir o trecho de `:137` do atual); 261
-(inserir a limitação, adaptada de `:349`); 271 (retirar "We speculate that
-compactness … aneurysm"; manter a frase de trabalho futuro).
+N1 fechado (registro `2026-08-24_N1_auditoria_citacoes.md`). A resposta tem
+três partes: qualificar $T_s$ fisicamente, retirar a especulação sobre doença,
+e restaurar a ressalva de regulação celular *in vivo* que um commit anterior
+havia apagado sem o revisor pedir.
 
-### 10.2 R1-6 — Molecular aspect ratio
+A qualificação é definicional, não uma calibração: $T_s$ é o número de
+tentativas de difusão lateral por evento de deposição, logo a razão entre os
+tempos de deposição e de salto superficial. O regime sequencial é sustentado
+pela estimativa do **próprio** Parkinson1995 (Apêndice) — na concentração
+crítica de $\approx 0{,}5$ µg/ml, da ordem de dez moléculas por segundo chegam
+perto o bastante para colidir. É número da fonte, conferido no PDF, não nosso.
 
-**Decisão.** N6 fechado; parágrafo pronto em `Paper/paper_PRE.tex:347`.
+**Três argumentos tentadores foram descartados de propósito**, e isso importa
+para a revisão porque são coisas que o texto poderia dizer e não diz:
 
-**Resposta.** A da carta atual, Point 6.
+1. **Critério $L_s$ contra perímetro.** Garci1991 ($L_f > 2L_s$) e
+   Parkinson1995 (saturação quando a difusão explora a circunferência)
+   explicariam nosso platô, mas não medimos o perímetro por $T_s$, e Parkinson
+   satura em $T_s \approx 100$ enquanto o manuscrito saturava em
+   $T_s \geq 512$. Invocá-lo criaria a pergunta "por que 512?" sem resposta.
+   Fica pendente para o pipeline de N7 — e note que a medição de N7 moveu o
+   nosso platô para $\approx 128$, o que aproxima os dois números e torna o
+   critério **reconsiderável** (ver R1-4).
+2. **"3,6 décadas da razão".** Parkinson1995 define *trial* como direção
+   sorteada mesmo quando rejeitada, então os saltos efetivos não são lineares
+   em $T_s$ e a contagem de décadas não seria de uma razão física.
+3. **O exemplo 32 °C / 37 °C de Yang2009.** Mede diâmetro de fibrila e
+   arquitetura de rede, não empacotamento intrafibrilar, que é o que $D_f$
+   mede. A direção do mapeamento foi mantida apenas como consequência
+   definicional do modelo.
 
-**Linha do submetido:** 261 (inserir o parágrafo das idealizações antes de
-"Fracture is implemented …").
+**Princípio adotado: corrigir no manuscrito, não narrar na carta.** A auditoria
+encontrou duas citações erradas no texto original — "driven by electrostatic
+forces" citando Parkinson1995 e Kadler1987, que dizem o oposto (montagem
+entrópica por liberação de água ligada, o que está no próprio título de
+Kadler1987), e a atribuição de $T_s$, cuja fonte primária é Garci1991. As duas
+foram corrigidas no `.tex`, marcadas em `\rev`, e **não** são anunciadas na
+carta: o revisor não as levantou, a frase errada nem estava marcada como
+revisão no submetido, e narrá-las convidaria R1 — que já auditou Zapperi e SOC
+— a reauditar as demais referências. Só se declara erro próprio quando ele
+sustentava uma afirmação de que o revisor depende, o que não é o caso aqui.
 
-### 10.3 R2-2 — Localized versus equal load sharing
+### 10.3 A resposta
 
-**Decisão.** N3 fechado; o parágrafo dos dois canais
-(`Paper/paper_PRE.tex:230`) vale na substância — carga uniforme por seção,
-resistência local por coordenação, nenhuma das duas classes — e só troca
-"removal probability" por "threshold". A resposta da carta atual (Point 2)
-também vale; a última frase passa a citar a cascata de R2-3.
+We thank the Referee for the opportunity to clarify the physical basis of the
+parameter $T_s$, and we have added an explicit, order-of-magnitude
+interpretation to the model description.
 
-**Linhas do submetido:** 185 (inserir o parágrafo dos dois canais depois da
-definição de $K$, em vocabulário de limiar); 250 e 269 (saem com R1-3).
+Because molecules are released one at a time and complete their surface
+relaxation before the next is released, $T_s$ is the number of lateral
+surface-diffusion trials available per deposition event, and therefore
+represents the ratio between the deposition and the surface-hopping
+timescales. Conditions that accelerate incorporation relative to surface
+mobility correspond to a smaller effective $T_s$, and in the model to more
+open cross-sections.
+
+This sequential regime is not an arbitrary idealization. Parkinson et al.
+estimated that at the critical concentration for fibril formation in vitro
+($\approx 0.5~\mu$g/ml), using the measured translational diffusion
+coefficient of collagen, only of order ten molecules lie close enough to a
+given region of the fibril surface to collide with it within one second.
+Molecules therefore arrive essentially in isolation, which is the regime our
+algorithm implements.
+
+Calibrating $T_s$ against a single experimental variable would require
+independent estimates of the incorporation and relaxation timescales, which is
+beyond the scope of this work. Beyond that, the model treats fibrillogenesis
+as pure physicochemical self-assembly, whereas in vivo the process is
+additionally organized by the cell through fibronectin, integrins, and minor
+collagens. We have added this limitation to the manuscript; it is why $T_s$
+cannot admit a one-to-one mapping to a single biochemical condition even in
+principle.
+
+We have also removed the evolutionary and disease-specific extrapolations from
+the conclusion. Those were the claims that required the calibration we cannot
+provide; the remaining claims are internal to the model and do not require
+one. The conclusion now reads:
+
+> Within the present model, a greater opportunity for post-attachment
+> relaxation produces more compact fibrils with greater resistance to failure.
+> Quantitative connections to physicochemical assembly conditions will require
+> experimental estimates of molecular incorporation and rearrangement
+> timescales, followed by calibration against measured fibril growth and
+> morphology.
+
+The following passage has been added to the model description:
+
+> Because molecules are released one at a time and complete their surface
+> relaxation before the next is released, $T_s$ sets the number of lateral
+> surface-diffusion trials available per deposition event, and therefore
+> represents the ratio between the deposition and the surface-hopping
+> timescales. This sequential regime is consistent with the estimate of
+> Parkinson et al. that, at the critical concentration for fibril formation in
+> vitro, only of order ten collagen molecules lie close enough to a given
+> region of the fibril surface to collide with it within one second, so that
+> molecules effectively arrive in isolation. Conditions that accelerate
+> incorporation relative to surface mobility therefore correspond to a smaller
+> effective $T_s$.
+
+### 10.4 Rastreabilidade
+
+| número | origem |
+|:--|:--|
+| $\approx 0{,}5$ µg/ml e $\sim 10$ moléculas por segundo | `Bibliography/Parkinson1995.md`, Apêndice — **conferido no PDF**; é número da fonte, não nosso (`2026-08-24_N1_auditoria_citacoes.md`) |
+| $T_s$ como razão deposição/salto; direção do mapeamento | consequência definicional do algoritmo; `Code/Dla/fast_dla2.cpp`. Fonte primária do conceito: Garci1991, aplicado ao colágeno por Parkinson1995 |
+| regulação celular *in vivo* (fibronectina, integrinas, colágenos menores) | Kadler1996, Canty2005, Kadler2008 — ressalva restaurada pela auditoria N1, apagada sem pedido no commit `779ee04` |
+| correções silenciosas de citação (entrópico contra eletrostático; atribuição de $T_s$) | `2026-08-24_N1_auditoria_citacoes.md`; **não entram na carta**, por decisão registrada |
+
+: Origem dos números da resposta a R1-1. {#tbl-r11-fontes tbl-colwidths="[38,62]"}
+
+| linha | trecho | intervenção |
+|:--|:--|:--|
+| 118 | "The formation of real fibrils is driven by electrostatic forces …" | inserir o parágrafo de qualificação de $T_s$; corrigir para montagem entrópica modulada eletrostaticamente |
+| 261 | limitações do coarse-graining | inserir a ressalva de regulação celular (com R1-6) |
+| 271 | "We speculate that compactness … pulmonary emphysema, aortic dissection and aneurysm" | retirar; manter a frase de trabalho futuro |
+
+: Linhas do submetido que a resposta a R1-1 obriga a mudar. {#tbl-r11-linhas tbl-colwidths="[8,52,40]"}
 
 ---
 
-## 11. Estado do documento
+## 11. R1-6 — Molecular aspect ratio
+
+### 11.1 A crítica
+
+> The aspect ratio of model molecules (18:1) differs substantially from that of
+> real collagen molecules ($\approx 200{:}1$). The impact of this
+> simplification on the fractal dimension and packing geometry should be
+> acknowledged.
+
+### 11.2 A decisão
+
+N6 fechado: o parágrafo das idealizações está pronto em
+`Paper/paper_PRE.tex:347`, reconhece a razão de aspecto e a ausência de difusão
+rotacional, e conclui que o modelo capta tendências qualitativas, não predições
+quantitativas. A atribuição do $200{:}1$ a Buehler2008b foi conferida no PDF:
+a fonte diz $\approx 300$ nm de comprimento por $\approx 1{,}5$ nm de diâmetro,
+"an aspect ratio of close to 200". Citação sólida.
+
+**Duas correções que o rótulo "reaproveita" escondia**, e é por isso que esta
+resposta também é escrita por extenso:
+
+1. **A carta cita uma versão vencida do parágrafo.** O segundo trecho citado no
+   Point 6 da carta atual é anterior à auditoria N1: falta a frase sobre
+   regulação celular *in vivo* (fibronectina, integrinas, colágenos menores) e
+   a leitura de $T_s$ como parâmetro de controle efetivo, que o manuscrito
+   ganhou depois. Citar no ponto a ponto um trecho que não está no `.tex` final
+   é exatamente o erro que N14 existe para pegar.
+2. **A frase final colide com R1-5.** As duas versões terminam em
+   *"establishes a clear empirical association between structural compactness
+   and mechanical resilience"*. R1-5 rebaixa essa associação ao nível mais
+   fraco, e "clear" a reforça. A frase passa a remeter à resposta de R1-5 em
+   vez de afirmar por conta própria.
+
+### 11.3 A resposta
+
+We have added the following paragraphs to the revised manuscript.
+
+> Several idealizations of our coarse-grained framework warrant discussion. In
+> the assembly model, collagen molecules are represented as rigid lattice rods
+> with an aspect ratio of $18{:}1$, following Parkinson et al. This aspect
+> ratio is substantially smaller than the $\approx 200{:}1$ ratio of real
+> collagen monomers, and molecular motion excludes rotational diffusion. While
+> a fixed aspect ratio ensures a consistent geometry across all $T_s$, these
+> simplifications may quantitatively affect molecular coordination $K$,
+> cross-sectional area $N(i)$, and the resulting fractal dimension $D_f$.
+> Consequently, our findings capture the qualitative structural and mechanical
+> trends of the model rather than exact quantitative predictions for
+> biological fibrils.
+
+> Regarding the mechanical response, the probabilistic fracture framework
+> omits continuous elastic deformation, internal bond kinetics, and explicit
+> time scales, precluding stress–strain curves or Young's moduli. Similarly,
+> while $T_s$ captures the balance between incorporation and surface
+> relaxation, calibrating it against a specific experimental variable (such as
+> pH or ionic strength) would require independent estimates of the
+> incorporation and relaxation timescales and remains beyond our scope. The
+> model also treats fibrillogenesis as a purely physicochemical self-assembly
+> process, whereas in vivo it is additionally organized by the cell through
+> fibronectin, integrins, and minor collagens. This is a further reason to
+> read $T_s$ as an effective control parameter rather than as a proxy for a
+> single biochemical condition. Within these limits, the framework captures
+> the preterminal cascade dynamics described in our response to Point 2 and
+> the empirical association between structural compactness and mechanical
+> resilience discussed in our response to Point 5.
+
+### 11.4 Rastreabilidade
+
+| número | origem |
+|:--|:--|
+| $\approx 200{:}1$ para o monômero real ($\approx 300$ nm por $\approx 1{,}5$ nm) | `Bibliography/Buehler2008b.md` — **conferido no PDF**: "an aspect ratio of close to 200" |
+| $18{:}1$ no modelo ($L_x=1$, $L_y=18$, $L_z=1$ l.u.) | Parkinson1997; `Code/Dla/fast_dla2.cpp` |
+| efeito sobre $K$, $N(i)$ e $D_f$ declarado como qualitativo | não medido — é ressalva, não resultado; coerente com a leitura de *crossover* de R1-4 |
+
+: Origem dos números da resposta a R1-6. {#tbl-r16-fontes tbl-colwidths="[42,58]"}
+
+| linha | trecho | intervenção |
+|:--|:--|:--|
+| 261 | "Our coarse-grained framework represents collagen molecules as rigid rods … Thus, the fibril's fractal dimension serves as a quantitative bridge …" | substituir pelos dois parágrafos acima; a última frase sai com R1-5 |
+| — | carta, Point 6 | **atualizar o trecho citado**: está na versão anterior à auditoria N1 |
+
+: Linhas do submetido que a resposta a R1-6 obriga a mudar. {#tbl-r16-linhas tbl-colwidths="[8,52,40]"}
+
+---
+
+## 12. R2-2 — Localized versus equal load sharing
+
+### 12.1 A crítica
+
+> The authors discuss localized and more equal load-sharing regimes in their
+> interpretation. However, in the simulations, load sharing appears to be
+> determined by Eqs. (2) and (3), which seem to impose equal load sharing
+> within a cross section. If I understand correctly, information about the
+> local structure enters only through $K$ in the rupture probability. The
+> authors should discuss more clearly in what precise sense the model realizes
+> localized or equal-load-sharing behavior.
+
+### 12.2 A decisão
+
+N3 fechado. O revisor está certo na leitura do modelo, e a resposta concede:
+a Eq. (2) é partilha uniforme dentro da seção, e a estrutura local entra só
+por $K$. O parágrafo dos dois canais (`Paper/paper_PRE.tex:230`) diz isso e
+vale na substância — o modelo não é ELS nem LLS, e não recebe classe de
+universalidade nenhuma.
+
+O que muda é **vocabulário, e não é cosmético**: sob o protocolo quenched
+(R2-1) o canal local não é mais "a probabilidade de remoção depende de $K$",
+e sim "o limiar de falha é $K_i \sigma_c X_i$"; e o canal global passa a ser
+explicitamente $a_i = \langle 1/N(l)\rangle$ no denominador de $F^*_i$. Escrever
+os dois canais na linguagem de limiar é o que torna a resposta compatível com
+R2-1 e R2-3 — se ficasse na linguagem de varredura, R2-2 contradiria as duas.
+A última frase passa a remeter à cascata de R2-3 como observável primário.
+
+### 12.3 A resposta
+
+We thank the Referee for identifying this ambiguity. We agree that the
+original interpretation invited the conclusion that our model realizes a
+crossover between localized and equal load sharing. In particular, we compared
+the fitted values of $\gamma$ with exponents from fiber-bundle theory and
+described their variation with $T_s$ as evidence of increasingly global load
+sharing. This interpretation was not supported by the stress-redistribution
+rule implemented in the model. Numerical proximity between a fitted slope and
+a theoretical fiber-bundle exponent is not sufficient to establish a common
+load-sharing mechanism or universality class.
+
+Equation (2) distributes the applied force uniformly among all load-bearing
+molecular segments within each cross-section. When a molecule is removed,
+$N(l)$ decreases only in the cross-sections previously occupied by that
+molecule, and the corresponding stress increase is shared uniformly among the
+remaining segments within each affected cross-section. The model does not
+contain a distance-dependent elastic kernel that preferentially transfers this
+additional stress to the spatial neighbors of the removed molecule.
+
+Local structure enters through the failure threshold. Under the revised
+protocol described in our response to Point 1 of the Second Referee, molecule
+$i$ fails at the external force $F^*_i = K_i \sigma_c X_i / a_i$. This contains
+two distinct redistribution channels. The global one acts through
+$a_i = \langle 1/N(l) \rangle$, the mean inverse occupancy of the
+cross-sections the molecule spans: any removal that lowers $N(l)$ raises the
+stress on every molecule crossing that layer, irrespective of distance. The
+local one acts through the current coordination $K_i$: a removal lowers the
+threshold of its lateral neighbors only. The model therefore combines uniform
+load sharing within each cross-section with local, coordination-dependent
+resistance, and it is neither a conventional equal-load-sharing bundle
+governed by a single globally shared stress — because $N(l)$ varies along the
+fibril and molecules span different sets of cross-sections — nor a local
+load-sharing model, because no distance-dependent elastic kernel is present.
+
+We have accordingly removed the interpretation of $\gamma$ as evidence of a
+crossover between local and global load sharing, and we no longer assign the
+model to either universality class. Consistently with our response to Point 3
+of the Second Referee, the primary statistical observable is now the cascade
+generated at a fixed force; spatially connected clusters are retained only as
+a geometric damage diagnostic and do not imply a local-load-sharing mechanism.
+
+### 12.4 Rastreabilidade
+
+| número | origem |
+|:--|:--|
+| dois canais: global por $a_i = \langle 1/N(l)\rangle$, local por $K_i$ | `Code/Fracture_fibril/fiber_bundle_ava.py`; `Reviews/quenched_campaign_report/README.md` §5.1 |
+| o motor recupera $5/2$ num feixe ELS puro, logo o desvio é do modelo e não do estimador | `Code/Fracture_fibril/test_fiber_bundle_ava.py` (ver R1-3) |
+| nenhuma classe de universalidade atribuída | decisão de N3 e N11; sem número a rastrear |
+
+: Origem das afirmações da resposta a R2-2. {#tbl-r22-fontes tbl-colwidths="[45,55]"}
+
+| linha | trecho | intervenção |
+|:--|:--|:--|
+| 185 | após a definição de $K$ | **inserir** o parágrafo dos dois canais, em vocabulário de limiar |
+| 250 | "crossover from local to global load sharing … change in universality class" | retirar inteiro (com R1-3) |
+| 269 | conclusão: "a genuine transition from local to global load-sharing universality" | retirar inteiro (com R1-3) |
+
+: Linhas do submetido que a resposta a R2-2 obriga a mudar. {#tbl-r22-linhas tbl-colwidths="[8,52,40]"}
+
+---
+
+## 13. Estado do documento
 
 | Crítica | Nó | Resposta | Pendência antes da carta |
 |:--|:--|:--|:--|
@@ -870,9 +1089,9 @@ definição de $K$, em vocabulário de limiar); 250 e 269 (saem com R1-3).
 | R1-4 | N7 | rascunho | harmonizar o critério de "décadas" ($0{,}4$–$0{,}7$ contra $0{,}57$–$0{,}90$); Fig. 3 nova |
 | R1-5 | N12 | rascunho | — (teste por fibrila é extensão) |
 | R1-7 | N9 | rascunho | Fig. 7 nova |
-| R1-1 | N1 | reaproveita | — |
-| R1-6 | N6 | reaproveita | — |
-| R2-2 | N3 | reaproveita | — |
+| R1-1 | N1 | rascunho | — (o critério $L_s$ contra perímetro fica reconsiderável se N7 medir o perímetro por $T_s$) |
+| R1-6 | N6 | rascunho | **atualizar o trecho citado na carta**: está na versão anterior à auditoria N1 |
+| R2-2 | N3 | rascunho | reescrever os dois canais em vocabulário de limiar, junto com R2-1 |
 
 : Estado das onze respostas e o que falta antes de cada uma entrar na carta. {#tbl-estado tbl-colwidths="[12,14,16,58]"}
 
