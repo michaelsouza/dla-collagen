@@ -103,6 +103,20 @@ quatro trechos e duas figuras ainda dizem o contrário. Ver `decision_log/`.
 
 Reconferir as linhas após qualquer edição.
 
+## Figuras do manuscrito revisado (numeração provisória, N13)
+
+| # | O quê | Nó |
+|:--|:--|:--|
+| 1–2 | inalteradas | — |
+| **3** | $D_f$ sob regra uniforme, mais a inclinação local | N7t |
+| 4–6 | inalteradas; só a legenda da 6 se adapta ao protocolo quenched | N2 |
+| **7** | $F_{rup}$ e $\varphi(F/F_{rup})$ | N9 |
+| **8** | sobrevivência das cascatas por $T_s$ e escada de tamanho | N10, N11 |
+| **9** | parâmetros do ajuste descritivo por $m$ — ou fundida na 8 | N11 |
+
+Saem a Fig. 7 (correlações) e a Fig. 8 ($\Psi$) do submetido. Os `.dat` e o
+`.agr` de cada figura seguem a regra do `AGENTS.md` §8.
+
 ## Inconsistências abertas
 
 | # | O quê | Estado |
