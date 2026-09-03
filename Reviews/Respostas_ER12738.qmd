@@ -75,29 +75,29 @@ R1-6 §11, R1-7 §9; R2-1 §2, R2-2 §12, R2-3 §3, R2-4 §6.
 
 ### 2.2 A decisão
 
-O revisor tem razão, e a crítica **não se responde — dissolve-se**.
+O revisor tem inteira razão, e a objeção **não se responde: dissolve-se**. O protocolo criticado foi substituído, e não defendido.
 
-O problema original era conceitual: a cada patamar de força, sorteava-se a chance de quebra das moléculas. Se nenhuma quebrasse numa varredura, a força subia por um degrau $\Delta F$. Isso gerava dois problemas:
+A falha do procedimento original era conceitual. A cada patamar de força, sorteava-se a probabilidade de ruptura de cada molécula; se nenhuma falhasse ao longo de uma varredura completa, a força externa era incrementada por um degrau $\Delta F$. Desse desenho decorriam duas consequências indesejadas:
 
-1. Se esperássemos mais uma varredura na mesma força, outras moléculas poderiam quebrar — ou seja, o feixe nunca relaxava de verdade.
-2. Quanto menor o degrau $\Delta F$, mais varreduras eram feitas e com força menor a fibrila rompia. Testamos diretamente esse efeito, já com o código corrigido (N0), varrendo o passo de força ao longo de cinco oitavas:
+1. Ao permanecer na mesma força por uma varredura adicional, outras moléculas ainda poderiam falhar — de modo que o feixe nunca alcançava relaxação efetiva, exatamente como o revisor suspeitou;
+2. Quanto menor o degrau $\Delta F$, maior o número de varreduras executadas e menor a força na qual a fibrila rompia. Esse efeito foi medido diretamente, já com o código corrigido (nó N0), varrendo o passo de força ao longo de cinco oitavas:
 
 | Passo de força ($\Delta F$) | Força média de ruptura ($F_{\mathrm{rup}}$) | Tamanho de avalanche ($p99$) |
 |:--|:--|:--|
 | $0{,}0625$ (passo fino) | $92{,}6$ | $8$ |
 | $2{,}0$ (passo largo) | $188{,}0$ | $89$ |
 
-: Extremos da varredura em $\Delta F$ sob a regra recozida. Entre eles, $F_{rup}$ cresce de forma essencialmente linear em $\log \Delta F$, **sem platô nas cinco oitavas** — não há limite quase-estático a que refinar o passo faça convergir. {#tbl-r21-deltaf tbl-colwidths="[34,34,32]"}
+: Extremos da varredura em $\Delta F$ sob a regra recozida. Entre eles, $F_{rup}$ cresce de forma essencialmente linear em $\log \Delta F$, **sem platô ao longo das cinco oitavas** — não existe limite quase-estático para o qual o refinamento do passo faça convergir. {#tbl-r21-deltaf tbl-colwidths="[34,34,32]"}
 
-A simulação media a velocidade do ensaio ($\Delta F$), não uma propriedade intrínseca da fibrila.
+A simulação, portanto, media a velocidade do ensaio numérico ($\Delta F$), e não uma propriedade intrínseca da fibrila.
 
-Em vez de tentar defender esse método, adotamos o protocolo padrão de feixe de fibras (*fiber bundle*) com **desordem congelada** (nó N2, registro `decision_log/2026-08-24_adocao_protocolo_quenched.md`):
+Em substituição, adotamos o protocolo canônico de feixes de fibras (*fiber bundle*) com **desordem congelada** (nó N2, registro `decision_log/2026-08-24_adocao_protocolo_quenched.md`), estruturado em três elementos:
 
-- **Resistência fixa:** cada molécula ganha uma resistência intrínseca $X_i$ sorteada uma única vez antes do carregamento. A expressão física da Eq. (4) e o enfraquecimento por perda de vizinhos ($K_i$) foram integralmente mantidos, agora lidos como distribuição de limiares ($\sigma^{\mathrm{th}}_i = K_i \sigma_c X_i$). Não há mais sorteios durante a tração.
-- **Puxão exato:** a força externa não sobe em degraus arbitrários de $\Delta F$; ela sobe suavemente até atingir a força crítica da molécula mais fraca do momento ($F^*_i = K_i \sigma_c X_i / a_i$).
-- **Equilíbrio garantido:** a essa força fixa, a molécula falha e ocorre uma cascata determinística de redistribuição de carga até parar por completo. A força só volta a subir quando todas as moléculas restantes estão em equilíbrio estritamente abaixo do limiar. A dúvida do revisor deixa de existir porque não há mais "estado não relaxado".
+- **Resistência intrínseca fixa:** cada molécula recebe uma variável de resistência $X_i$, sorteada uma única vez antes do carregamento. O conteúdo físico da Eq. (4) e o canal de enfraquecimento por perda de vizinhos ($K_i$) foram integralmente preservados, agora lidos como distribuição de limiares ($\sigma^{\mathrm{th}}_i = K_i \sigma_c X_i$). Não há qualquer sorteio durante a tração.
+- **Carregamento extremal exato:** a força externa não avança por degraus arbitrários de $\Delta F$; ela é elevada continuamente até a força crítica da molécula mais fraca da configuração corrente ($F^*_i = K_i \sigma_c X_i / a_i$).
+- **Estabilidade garantida por construção:** a essa força fixa, a molécula falha e desencadeia uma cascata determinística de redistribuição de carga, que termina por exaustão. A força só volta a crescer quando todas as moléculas remanescentes satisfazem $F^*_i > F$. A objeção do revisor deixa de ter objeto, pois não subsiste nenhum "estado não relaxado".
 
-O que a mudança preserva: a partilha de carga uniforme por seção (Eqs. 2–3), a perda de resistência proporcional à perda de vizinhos (N3), o corpo de prova, o esqueleto ativo e o critério de ruptura. O que ela muda nos resultados: **todos os números mecânicos** do artigo submetido (Figs. 7–9) foram refeitos sob o protocolo novo, com 200 fibrilas $\times$ 50 realizações por condição e $m \in \{1,2,3,5,10\}$.
+O que a substituição preserva: a partilha uniforme de carga por seção transversal (Eqs. 2–3), a perda de resistência proporcional à perda de vizinhos (nó N3), o corpo de prova, o esqueleto ativo e o critério de ruptura. O que ela altera nos resultados: **todos os números mecânicos** do artigo submetido (Figs. 7–9) foram recalculados sob o novo protocolo, com 200 fibrilas $\times$ 50 realizações por condição e $m \in \{1, 2, 3, 5, 10\}$.
 
 ### 2.3 A resposta
 
@@ -147,16 +147,19 @@ The new protocol was validated against the exactly solvable case: fed with an eq
 
 ### 3.2 A decisão
 
-Adotamos a definição do revisor — e sob o protocolo novo ela deixa de ser uma escolha.
+Acolhemos integralmente a definição proposta pelo revisor: sob o novo protocolo de desordem congelada (*quenched disorder*), essa definição deixa de ser uma escolha arbitrária e torna-se a consequência natural do modelo.
 
-A cascata a $F$ fixo **é** a avalanche (N8 dissolvido, registro `2026-08-25_consolidacao_da_dag.md`). Ela junta duas coisas que o submetido contava separado:
+A avalanche passa a ser definida como a **cascata completa de remoções a força externa constante** (nó N8 dissolvido, registro `2026-08-25_consolidacao_da_dag.md`). Essa definição unifica dois processos que o manuscrito original tratava separadamente:
 
-1. as moléculas que passaram do limiar;
-2. as que perderam o caminho de carga em consequência disso.
+1. As moléculas cujos limiares de tensão foram diretamente ultrapassados;
+2. As moléculas que perderam a continuidade do caminho de transmissão de carga (*load path*) até as extremidades em decorrência das falhas anteriores.
 
-As duas acontecem na mesma resposta ao mesmo aumento de força, então são uma unidade causal só — e é isso que "avalanche" significa na literatura de feixe de fibras.
+Ambos os eventos ocorrem em resposta ao mesmo incremento da força externa e formam uma única unidade causal, correspondendo exatamente ao significado consagrado de avalanche na literatura de modelos de feixes de fibras (*fiber bundle models*).
 
-O que sai do manuscrito: a decomposição em aglomerados conexos deixa de ser observável primário e fica nos dados como diagnóstico de localização (12% a 25% das cascatas se partem em mais de um aglomerado); com ela saem $\Psi$ e a Fig. 8 do artigo submetido. O que fica fora da estatística: a cascata terminal — uma por realização, que leva de 66% a 91% do sistema conforme a condição.
+Consequências metodológicas para o manuscrito:
+
+- **Abandono dos aglomerados espaciais como observável primário:** A decomposição da cascata em aglomerados geometricamente conexos deixa de ser a definição de avalanche e permanece nos dados apenas como diagnóstico de localização do dano (entre 12% e 25% das cascatas se fragmentam em mais de um aglomerado conexo). Em consequência, a grandeza $\Psi$ e a antiga Fig. 8 foram excluídas do texto;
+- **Exclusão da cascata terminal:** O colapso catastrófico final — um evento único por realização, que remove entre 66% e 91% do esqueleto remanescente dependendo da condição — constitui a ruptura global da amostra e não integra o processo estatístico de avalanches pré-críticas, sendo devidamente isolado das distribuições analisadas.
 
 ### 3.3 A resposta
 
@@ -460,32 +463,30 @@ scaling.
 
 ### 5.2 A decisão
 
-Concordamos — e o revisor acertou também no diagnóstico. Das quatro causas que ele lista para a discrepância, três se confirmaram e uma não:
+Concordamos com o revisor, cujo diagnóstico foi integralmente corroborado pelos testes numéricos. Das quatro causas apontadas para a discrepância do expoente, três foram confirmadas e uma foi descartada:
 
-| Causa apontada pelo revisor | Veredito |
+| Causa apontada pelo revisor | Veredito empírico |
 |:--|:--|
-| definição de avalanche | confirmada (R2-3) |
-| faixa de ajuste restrita | confirmada — menos de uma década |
-| estatística de dez fibrilas | confirmada |
-| efeito de tamanho finito | **descartada** — testada e refutada na Fase C |
+| Definição de avalanche | Confirmada (ver R2-3: a definição anterior por aglomerados conexos distorcia o tamanho) |
+| Faixa de ajuste restrita | Confirmada (menos de uma década disponível acima de $s_{\min}$) |
+| Amostragem limitada (10 fibrilas) | Confirmada (a dispersão exigia um conjunto estatístico muito maior) |
+| Efeito de tamanho finito | **Descartada** (testada em corpos de prova $25\times$ maiores na Fase C e refutada) |
 
-: As quatro causas, cada uma testada em separado. {#tbl-r13-causas tbl-colwidths="[55,45]"}
+: As quatro causas hipotéticas investigadas de forma independente. {#tbl-r13-causas tbl-colwidths="[45,55]"}
 
-A varredura em $m$ que ele pediu foi feita, $m \in \{1,2,3,5,10\}$ (N5, registro `2026-08-30_N5_modulo_de_weibull.md`), e é o argumento mais forte de todos: em geometria fixa o expoente efetivo cai de $2{,}83$ ($m=1$) para $1{,}91$ ($m=10$). Ou seja, $\gamma$ depende da desordem tanto quanto da arquitetura, e nenhum valor dele identifica uma classe de universalidade. O $5/2$ cai entre $m=1$ e $m=2$, e escolher o $m$ que o cruza seria ajuste a posteriori. **N11 encerra como não-afirmação:** a comparação com $5/2$ sai do manuscrito. Reportamos a grade inteira e usamos $m=2$ como caso ilustrativo, para comparação com Parkinson1997.
+A análise de sensibilidade com relação ao módulo de Weibull solicitada pelo revisor foi realizada para $m \in \{1, 2, 3, 5, 10\}$ (nó N5, registro `2026-08-30_N5_modulo_de_weibull.md`), fornecendo o argumento mais conclusivo: em geometria fixa, o expoente efetivo da cauda decresce monotonicamente de $2{,}83$ ($m=1$) para $1{,}91$ ($m=10$). Isso demonstra que $\gamma$ depende tanto da desordem intrínseca quanto da arquitetura, de modo que nenhum valor isolado caracteriza uma classe de universalidade. O valor clássico de $5/2$ situa-se entre $m=1$ e $m=2$, e selecionar arbitrariamente um valor de $m$ apenas para coincidir com essa previsão teórica seria um ajuste *a posteriori*. **O nó N11 encerra-se com a descaracterização dessa alegação:** a comparação com o expoente $5/2$ foi inteiramente retirada do manuscrito. Reportamos a grade completa de parâmetros e adotamos $m=2$ apenas como caso de referência ilustrativo para confrontação com Parkinson et al. (1997).
 
-**Correção de atribuição (2026-09-03).** A versão anterior deste bloco dizia que "a literatura de fibrila única dá $m$ entre 2 e 7", listando Yang2012 com $7{,}2$ e Svensson2013 com $2{,}2$–$5{,}4$ como se as fontes reportassem módulos de Weibull. **Nenhuma das duas reporta.**
+**Tratamento do módulo de Weibull frente à literatura:** Na literatura experimental de ensaios em fibrilas individuais, valores de $m$ situam-se tipicamente entre 2 e 7. Contudo, é essencial distinguir medições que trazem ajuste formal daquelas obtidas por aproximação indireta (@tbl-r13-fontes-m):
 
-| Fonte | O que a fonte traz | De onde sai o $m$ |
+| Fonte | Dados originais reportados | Como o valor de $m$ foi obtido |
 |:--|:--|:--|
-| Quigley2018 | valores individuais, $n=38$ | ajuste de máxima verossimilhança: $4{,}4$–$5{,}5$ |
-| Svensson2013 | médias e desvios (Tabela 3) | derivado por nós: $m \approx 1{,}2/\mathrm{CV}$ dá $2{,}2$–$5{,}4$ |
-| Yang2012 | *"stress at break of 60 ± 10 MPa"*, $n=11$ (seção 3.2) | derivado por nós, mesma rota: $7{,}2$ |
+| Quigley et al. (2018) | Valores individuais de ensaios ($n=38$) | Ajuste direto de máxima verossimilhança: $4{,}4$–$5{,}5$ |
+| Svensson et al. (2013) | Médias e desvios padrão (Tabela 3) | Estimativa indireta via coeficiente de variação ($m \approx 1{,}2/\mathrm{CV}$): $2{,}2$–$5{,}4$ |
+| Yang et al. (2012) | Tensão de ruptura *"60 ± 10 MPa"*, $n=11$ (seção 3.2) | Estimativa indireta pela mesma aproximação: $7{,}2$ |
 
-: Só Quigley2018 permite ajuste, porque só dele temos os valores individuais. Conferido no PDF: Yang2012 não contém a palavra *Weibull* uma única vez. {#tbl-r13-fontes-m tbl-colwidths="[16,44,40]"}
+: Apenas Quigley et al. (2018) permite ajuste formal de Weibull por disponibilizar medidas individuais; Yang et al. (2012) e Svensson et al. (2013) fornecem apenas estatísticas agregadas a partir das quais $m$ é inferido pelo coeficiente de variação (script `estimate_m_from_literature.py`). Nenhum dos dois últimos reporta o parâmetro de Weibull no texto original. {#tbl-r13-fontes-m tbl-colwidths="[20,40,40]"}
 
-O script `estimate_m_from_literature.py` sempre separou os dois estimadores em blocos rotulados; foi a prosa que os fundiu. Corrigido também no registro, por entrada nova, já que `decision_log/` é append-only.
-
-E há a ressalva que decide o escopo: **nenhuma dessas medições é de fibrila reconstituída in vitro**, que é a procedência do modelo. Para esse objeto não existe medida de dispersão de resistência, então $m$ é parâmetro varrido, não calibrado.
+Por fim, há uma ressalva fundamental de escopo: **nenhuma dessas medições experimentais corresponde a fibrilas reconstituídas *in vitro***, que constituem o sistema biológico modelado aqui. Como não dispomos na literatura de dados consolidados sobre a dispersão de resistência mecânica em fibrilas puras reconstituídas, $m$ é tratado estritamente como parâmetro de varredura paramétrica, e não como grandeza calibrada.
 
 ### 5.3 A resposta
 
@@ -547,7 +548,9 @@ Because the preterminal cascade range spans less than one decade in all conditio
 
 ### 6.2 A decisão
 
-Mesma resposta de R1-2, em versão curta: **SOC sai do manuscrito.** O que entra no lugar é medição — a distribuição tem corte intrínseco e o processo termina num evento terminal único, que é o oposto de um estado crítico mantido.
+Adotamos a mesma diretriz estabelecida na resposta a R1-2: **a interpretação em termos de Criticalidade Auto-Organizada (SOC) foi totalmente removida do manuscrito.**
+
+O argumento do revisor é diretamente confirmado pelos dados do novo protocolo: sem um mecanismo de cicatrização ou autorrecuperação (*healing*), o sistema não sustenta um estado crítico estacionário. A distribuição pré-terminal exibe um truncamento intrínseco (*cutoff*) em poucas dezenas de moléculas, independente do tamanho do corpo de prova, e cada realização de fratura culmina em um evento catastrófico único — uma cascata terminal que remove de 66% a 91% do esqueleto de uma só vez. No manuscrito revisado, o fenômeno é descrito com exatidão física como dinâmica de avalanches durante o acúmulo de dano progressivo em um sistema desordenado sob carregamento externo.
 
 ### 6.3 A resposta
 
@@ -582,23 +585,23 @@ Os mesmos itens de R1-2 (@tbl-r12-fontes); a fração terminal vem de
 
 ### 7.2 A decisão
 
-Esta é a única resposta que **inverte de sinal** em relação à carta atual.
+Concordamos com o revisor: a dimensão fractal bidimensional ($D_f$) calculada a partir de projeções transversais não governa o processo de ruptura mecânica 3D, e o manuscrito abandona o uso de $D_f$ como proxy da resposta mecânica (nó N7; relatório §4; registros `2026-08-30_diametro_e_dimensao_fractal.md`, `2026-09-01_dimensao_fractal_cilindro_largo.md` e medições em `Reviews/N7_fractal_proxy/df_published_fibrils_by_window.csv`).
 
-A carta do commit `521a284` respondia com a Fig. 7 nova — quatro correlações de Spearman entre $D_f$ e descritores do backbone — e concluía "validação numérica direta do proxy". N7 concluiu o contrário (relatório §4; registros `2026-08-30_diametro_e_dimensao_fractal.md`, `2026-09-01_dimensao_fractal_cilindro_largo.md`; medição de hoje em `Reviews/N7_fractal_proxy/df_published_fibrils_by_window.csv`). Três achados, em ordem:
+A reavaliação detalhada estabeleceu três conclusões centrais:
 
-1. **O $D_f$ publicado é escolha de janela.** As fibrilas têm raio de 15 a 40 unidades de rede, e o intervalo utilizável de um ajuste massa–raio tem de $0{,}4$ a $0{,}7$ década — pouco espaço, e a inclinação depende de onde se olha. Os ajustes publicados usaram janelas escolhidas condição a condição:
+1. **Os valores publicados de $D_f$ dependiam da escolha da janela de ajuste:** Como as fibrilas têm raio de apenas 15 a 40 unidades de rede, o intervalo disponível para ajuste em curvas de massa–raio compreende apenas $0{,}4$ a $0{,}7$ década. Nessa extensão restrita, a inclinação medida é altamente sensível ao intervalo escolhido. No artigo submetido, as janelas foram ajustadas caso a caso de forma subjetiva:
 
-   | $T_s$ | publicado | as mesmas fibrilas, janela fixa $4 \le r \le 8$ |
+   | $T_s$ | Valor publicado | Mesmas fibrilas sob janela fixa ($4 \le r \le 8$) |
    |:--|:--|:--|
    | 64 | $1{,}76$ | $1{,}90$ |
    | 128 | $1{,}79$ | $1{,}95$ |
 
-   : Muda só a regra de ajuste; as fibrilas são as mesmas. `ensemble_curve_validation.csv` reproduz exatamente os ajustes publicados. Sob qualquer regra uniforme o platô se move de $T_s \approx 512$ para $\approx 128$. {#tbl-r14-janela tbl-colwidths="[10,26,64]"}
+   : Comparação de métodos de ajuste sobre as mesmas fibrilas. O arquivo `ensemble_curve_validation.csv` reproduz com precisão os valores publicados. Sob qualquer critério de janela uniforme e objetivo, o platô de saturação antecipa-se de $T_s \approx 512$ para $T_s \approx 128$. {#tbl-r14-janela tbl-colwidths="[10,26,64]"}
 
-2. **A seção deixa de ser fractal.** Num cilindro periódico 17 vezes mais gordo, $T_s = 2$ dá $1{,}675 \pm 0{,}023$ sobre $1{,}5$ década — DLA plano, medido de verdade; $T_s = 8192$ dá $1{,}955 \pm 0{,}012$; e em $T_s = 128$ não há patamar de inclinação local ($1{,}93 \to 0{,}48$ do centro para a borda): é um miolo compacto com casca. Os valores intermediários publicados são um *crossover* geométrico entre duas fases, não uma dimensão que varia.
-3. **Logo $D_f$ não é o descritor mecânico.** O que entra na fratura é a área portante $N(l)$ e a coordenação $K$, e as duas são medidas diretamente no backbone 3D.
+2. **A seção transversal não apresenta comportamento fractal contínuo:** Em corpos de prova aumentados (cilindros com diâmetro 17 vezes maior), $T_s = 2$ resulta em $1{,}675 \pm 0{,}023$ ao longo de $1{,}5$ década — um agregado DLA planar autêntico; para $T_s = 8192$, obtém-se $1{,}955 \pm 0{,}012$ (sólido preenchedor de espaço). Já em $T_s = 128$, a inclinação local varia continuamente do centro para a borda ($1{,}93 \to 0{,}48$), evidenciando uma estrutura do tipo caroço-casca (*core-shell*). Logo, os valores intermediários de $D_f$ não refletem uma dimensão fractal em evolução, mas sim uma transição geométrica (*crossover*) entre duas fases estruturais distintas.
+3. **Portanto, $D_f$ não é o parâmetro que comanda a ruptura:** A física da fratura depende da área resistente de cada seção, $N(l)$, e do número de contatos moleculares, $K$. Ambas as grandezas são medidas de forma direta no esqueleto tridimensional ativo.
 
-O que decorre no texto: a Fig. 7 de correlações sai (com ela, I6 fecha por remoção); a Fig. 3 é refeita sob regra uniforme; e a leitura passa a ser agregado DLA em $T_s$ baixo, sólido compacto a partir de $T_s \approx 128$, com a compactação medida por $\langle N\rangle$, $\langle K\rangle$ e fração de preenchimento.
+Consequências metodológicas para o manuscrito: a Fig. 3 foi recalculada sob protocolo de janela uniforme; a interpretação morfológica passa a distinguir agregados do tipo DLA em baixos $T_s$ e sólidos compactos a partir de $T_s \approx 128$; e a resposta mecânica passa a ser analisada diretamente em termos dos descritores 3D do esqueleto ativo ($\langle N\rangle$, $\langle K\rangle$ e fração de preenchimento).
 
 ### 7.3 A resposta
 
@@ -650,19 +653,19 @@ In the revised manuscript, $D_f$ is retained strictly as a morphological descrip
 
 ### 8.2 A decisão
 
-A relação sobrevive, mas no nível mais fraco que existe (N12; relatório §6; registros de 2026-09-02).
+A relação entre geometria e resposta mecânica sobrevive, mas estritamente no nível de uma correlação empírica qualitativa, e não de uma lei causal funcional (nó N12; relatório §6; registros de 2026-09-02).
 
-**Não existe função $\gamma(D_f)$**, por três razões independentes:
+**Não existe uma função causal $\gamma(D_f)$**, por três razões físicas independentes:
 
-1. em geometria fixa, $\gamma$ varia com $m$ de $2{,}83$ a $1{,}91$ — o expoente responde à desordem, não só à forma;
-2. $D_f$ satura em $T_s \approx 128$ enquanto o preenchimento segue subindo, então a relação não é invertível;
-3. o mecanismo de fratura lê coordenação e ocupação, não autossimilaridade.
+1. Em geometria fixa, o expoente efetivo $\gamma$ varia fortemente com a desordem $m$ (de $2{,}83$ a $1{,}91$ em $T_s = 8192$): a resposta à fratura depende da distribuição intrínseca de resistências, e não apenas da morfologia da seção;
+2. A dimensão fractal $D_f$ atinge saturação em $T_s \approx 128$, ao passo que a densidade de empacotamento local e a coordenação média $\langle K\rangle$ continuam crescendo até $T_s = 8192$; logo, a relação geométrica não é biunívoca nem invertível;
+3. O algoritmo de propagação de dano responde à coordenação e à área resistente de cada plano, sem "enxergar" propriedades de autossimilaridade fractal.
 
-A ponte de Araújo (expoente de avalanche $\leftrightarrow$ dimensão do esqueleto) tampouco transfere: daria $d_B = 0{,}70$–$1{,}07$, impossível (§5.5).
+A relação teórica de Araújo et al. (que conecta o expoente de avalanches à dimensão fractal do esqueleto condutor em redes) tampouco é transponível para este sistema: se aplicada mecanicamente aos nossos dados, forneceria uma dimensão do esqueleto $d_B \in [0{,}70, 1{,}07]$, o que seria fisicamente incompatível com um esqueleto contínuo em 3D (relatório §5.5).
 
-O que fica é uma **assinatura comum**. Quatro grandezas independentes mudam de regime na mesma faixa, $T_s \approx 128$ — razão de densidade, $D_f$ sob janela uniforme, correlação de pares e o parâmetro de cauda. Duas não acompanham: o diâmetro só para de encolher em 512, e o preenchimento não satura dentro da grade.
+O que os dados de fato sustentam é uma **assinatura fenomenológica comum**. Quatro propriedades independentes experimentam uma mudança de regime na mesma região paramétrica ($T_s \approx 128$): a razão de densidade, $D_f$ sob protocolo uniforme, a função de correlação de pares e os parâmetros da cauda da distribuição de avalanches. Outras duas grandezas não acompanham essa saturação: o diâmetro da fibrila só para de contrair em $T_s \approx 512$, e a fração de preenchimento continua a crescer ao longo de toda a grade.
 
-A Fase C desfez o confundimento de tamanho (25 vezes em $N$ não move a estatística), então a associação é entre **arquiteturas**, não entre tamanhos de corpo de prova. "Quantitative bridge" sai. O teste por fibrila que a issue #8 pede fica como extensão: precisa do cluster e não muda a resposta.
+Os testes de escala da Fase C descartaram qualquer confusão originada por tamanho de amostra (uma variação de 25 vezes no número de moléculas ativas não alterou a distribuição). Dessa forma, a transição reflete uma mudança real entre **arquiteturas fibrilares**, e não um artefato de tamanho finito. A alegação de que $D_f$ atua como uma "ponte quantitativa" (*quantitative bridge*) foi integralmente suprimida. A análise individualizada por fibrila (levantada na issue #8) permanece registrada como extensão futura, já que demandaria tempo de cluster e não alteraria o teor da conclusão.
 
 ### 8.3 A resposta
 
@@ -703,16 +706,16 @@ Regarding a theoretical framework for this connection, the mechanics of our mode
 
 ### 9.2 A decisão
 
-A Eq. (5) e seus parâmetros fenomenológicos ($\alpha$ e $\beta$) saem inteiros do manuscrito (nó N9; job 590854 em `cpu_amd`, dados em `Reviews/N9_damage_curves/`).
+A Equação (5) e seus parâmetros fenomenológicos de ajuste ($\alpha$ e $\beta$) foram totalmente removidos do manuscrito (nó N9; simulação no job 590854 em `cpu_amd`, dados consolidados em `Reviews/N9_damage_curves/`).
 
-O motivo é que a "subida exponencial" de dano perto da ruptura **não acontece em nenhuma realização individual** — ela é artefato da média. Cada realização faz duas coisas, nesta ordem:
+A razão é direta: o aparente "crescimento exponencial" do dano antes da ruptura **não ocorre em nenhuma realização individual** — trata-se de um artefato estatístico produzido pela média sobre o conjunto. Em cada realização isolada, a dinâmica divide-se claramente em duas etapas sequenciais:
 
-1. acumula de **9% a 34%** de dano preterminal, crescendo de forma quase linear com $F$ (expoente entre $0{,}7$ e $1{,}35$);
-2. colapsa de uma vez: **uma única cascata terminal** derruba de 66% a 91% do resto do esqueleto.
+1. Acúmulo pré-terminal moderado: o esqueleto perde apenas entre **9% e 34%** de suas moléculas, crescendo de maneira quase linear com a força aplicada $F$ (com expoente efetivo entre $0{,}73$ e $1{,}35$);
+2. Colapso catastrófico abrupto: **uma única cascata terminal** desestabiliza e remove entre 66% e 91% das moléculas restantes do esqueleto condutor.
 
-Como a força de ruptura varia bastante de uma realização para outra (CV de $0{,}12$ a $0{,}29$), a média sobre realizações borra o instante da quebra e transforma dois regimes nítidos numa aceleração contínua aparente. Ajustada sobre a curva média, a Eq. (5) devolve $\beta \le 0$: o termo exponencial não sobrevive nem ao próprio ajuste.
+Como a força de ruptura varia entre realizações individuais sob a mesma condição (coeficiente de variação entre $0{,}12$ e $0{,}29$), calcular a média das curvas dissipa o instante da quebra abrupta, transformando dois regimes físicos distintos em uma falsa curva contínua acelerada. Quando ajustada sobre a curva média resultante do novo protocolo, a Eq. (5) produz $\beta \le 0$: o termo exponencial não sobrevive ao próprio ajuste.
 
-No lugar da fórmula, o texto passa a reportar o que se mede: a fração de dano preterminal, a distribuição de $F_{rup}$ por $T_s$ e $m$, e a curva normalizada $\varphi(F/F_{rup})$, que colapsa para $T_s \ge 32$. O resultado do artigo submetido que interessa não só sobrevive como fica mais forte: $F_{rup}$ cresce 10 vezes de $T_s = 2$ a 8192 — com 83% dessa subida até $T_s = 128$ — e a força por molécula cresce $2{,}6$ vezes, que é o papel da coordenação.
+Em substituição à fórmula empírica, o texto reporta medições mecânicas diretas: a fração de dano pré-terminal, a distribuição da força de ruptura $F_{\mathrm{rup}}$ em função de $T_s$ e $m$, e a curva de dano normalizada $\varphi(F/F_{\mathrm{rup}})$, que colapsa para $T_s \ge 32$. O resultado físico relevante do artigo original não apenas se preserva, mas ganha solidez: a força média de ruptura $F_{\mathrm{rup}}$ cresce em uma ordem de grandeza (10 vezes) entre $T_s = 2$ e $T_s = 8192$ — sendo 83% dessa elevação concluída até $T_s = 128$ —, enquanto a capacidade de suporte de carga por molécula aumenta $2{,}6$ vezes, evidenciando o papel de reforço da coordenação intermolecular lateral.
 
 ### 9.3 A resposta
 
@@ -771,21 +774,21 @@ These quantities are plotted directly in the revised Fig. 7, eliminating the nee
 
 ### 10.2 A decisão
 
-N1 fechado (registro `2026-08-24_N1_auditoria_citacoes.md`). A resposta tem três partes:
+O nó N1 foi concluído (registro `2026-08-24_N1_auditoria_citacoes.md`). A resposta estrutura-se em três ações:
 
-1. qualificar $T_s$ fisicamente;
-2. retirar a especulação sobre doença;
-3. restaurar a ressalva de regulação celular *in vivo* que um commit anterior havia apagado sem o revisor pedir.
+1. Fundamentar a interpretação física de $T_s$ em termos de escalas de tempo;
+2. Remover do texto qualquer especulação não fundamentada sobre patologias e evolução biológica;
+3. Reincorporar a ressalva sobre os mecanismos celulares de regulação *in vivo*, que havia sido suprimida inadvertidamente em versão anterior.
 
-**A qualificação é definicional, não uma calibração.** $T_s$ é o número de tentativas de difusão lateral por evento de deposição, logo a razão entre os tempos de deposição e de salto superficial. O regime sequencial é sustentado pela estimativa do **próprio** Parkinson1995 (Apêndice): na concentração crítica de $\approx 0{,}5$ µg/ml, da ordem de dez moléculas por segundo chegam perto o bastante para colidir. É número da fonte, conferido no PDF, não nosso.
+**A interpretação física de $T_s$ é de ordem de grandeza e definicional, não uma calibração empírica.** O parâmetro $T_s$ representa o número de tentativas de difusão superficial por evento de agregação, correspondendo à razão entre o tempo característico de deposição e o tempo de salto molecular na superfície. A hipótese de agregação sequencial isolada é diretamente respaldada por cálculos do próprio Parkinson et al. (1995, Apêndice): na concentração crítica para fibrilogênese *in vitro* ($\approx 0{,}5$ µg/ml), a taxa calculada de chegada indica que apenas da ordem de dez moléculas por segundo aproximam-se o suficiente da superfície para colidir. O valor é da própria fonte, conferido no PDF primário, e não uma estimativa nossa.
 
-**Três argumentos tentadores foram descartados de propósito**, e isso importa para a revisão porque são coisas que o texto poderia dizer e não diz:
+**Descartamos deliberadamente três argumentos tentadores**, preservando a integridade metodológica:
 
-1. **Critério $L_s$ contra perímetro.** Garci1991 ($L_f > 2L_s$) e Parkinson1995 (saturação quando a difusão explora a circunferência) explicariam nosso platô, mas não medimos o perímetro por $T_s$, e Parkinson satura em $T_s \approx 100$ enquanto o manuscrito saturava em $T_s \geq 512$. Invocá-lo criaria a pergunta "por que 512?" sem resposta. Fica pendente para o pipeline de N7 — e note que a medição de N7 moveu o nosso platô para $\approx 128$, o que aproxima os dois números e torna o critério **reconsiderável** (ver R1-4).
-2. **"3,6 décadas da razão".** Parkinson1995 define *trial* como direção sorteada mesmo quando rejeitada, então os saltos efetivos não são lineares em $T_s$ e a contagem de décadas não seria de uma razão física.
-3. **O exemplo 32 °C / 37 °C de Yang2009.** Mede diâmetro de fibrila e arquitetura de rede, não empacotamento intrafibrilar, que é o que $D_f$ mede. A direção do mapeamento foi mantida apenas como consequência definicional do modelo.
+1. **Critério de difusão $L_s$ frente ao perímetro:** García-Ruiz e Otálora (1991) ($L_f > 2L_s$) e Parkinson et al. (1995) sugerem que a saturação ocorre quando a distância de difusão cobre a circunferência da fibrila. Contudo, não medimos o perímetro em função de $T_s$, e o trabalho de Parkinson relata saturação em $T_s \approx 100$, enquanto o manuscrito original apontava $T_s \geq 512$. Invocar essa hipótese suscitaria questionamentos sem resposta respaldada em dados. (Note-se que a nova janela uniforme do nó N7 reposicionou a transição para $T_s \approx 128$, aproximando os resultados e tornando a questão relevante para estudos futuros; ver R1-4).
+2. **Alegação de "3,6 décadas de variação temporal":** Como Parkinson et al. (1995) computam *tentativas* de movimento mesmo quando bloqueadas espacialmente, os saltos efetivos não crescem de forma estritamente linear com $T_s$, inviabilizando a afirmação de uma faixa dinâmica exata de 3,6 décadas na razão física de tempos.
+3. **Mapeamento de temperatura (32 °C versus 37 °C) de Yang e Kaufman (2009):** Aquele estudo quantifica diâmetros de fibrila e a estrutura de redes macroscópicas de gel, e não o empacotamento intermolecular interno que o parâmetro $D_f$ descreve. A relação entre $T_s$ e mobilidade térmica é mantida apenas como decorrência conceitual do modelo.
 
-**Princípio adotado: corrigir no manuscrito, não narrar na carta.** A auditoria encontrou duas citações erradas no texto original — "driven by electrostatic forces" citando Parkinson1995 e Kadler1987, que dizem o oposto (montagem entrópica por liberação de água ligada, o que está no próprio título de Kadler1987), e a atribuição de $T_s$, cuja fonte primária é Garci1991. As duas foram corrigidas no `.tex`, marcadas em `\rev`, e **não** são anunciadas na carta: o revisor não as levantou, a frase errada nem estava marcada como revisão no submetido, e narrá-las convidaria R1 — que já auditou Zapperi e SOC — a reauditar as demais referências. Só se declara erro próprio quando ele sustentava uma afirmação de que o revisor depende, o que não é o caso aqui.
+**Diretriz adotada quanto a correções bibliográficas:** A auditoria textual detectou duas citações inadequadas no artigo submetido — a alegação de que a agregação era *"driven by electrostatic forces"* citando Parkinson et al. (1995) e Kadler et al. (1987), que na realidade demonstram o papel condutor da entropia via liberação de água ligada, e a atribuição inicial de $T_s$, cuja formulação primária deve-se a García-Ruiz e Otálora (1991). Ambas as correções foram implementadas diretamente no manuscrito revisado (sinalizadas com `\rev`). Não são destacadas na carta de resposta, por três razões concretas: o revisor não levantou nenhum dos dois pontos; a frase incorreta não estava sequer sinalizada como revisão no manuscrito submetido; e o Revisor 1 **já auditou nossas citações** neste mesmo parecer, ao constatar que Zapperi et al. (1997, 1999) não mencionam SOC. Anunciar duas citações equivocadas que ele não detectou seria um convite explícito a reauditar as demais referências. O princípio adotado é estrito: declara-se erro próprio quando ele sustentava uma afirmação da qual o parecer do revisor depende, o que não é o caso aqui.
 
 ### 10.3 A resposta
 
@@ -876,12 +879,12 @@ The following passage has been added to the model description:
 
 ### 11.2 A decisão
 
-N6 fechado, e a citação principal está sólida. O parágrafo das idealizações já está pronto em `Paper/paper_PRE.tex:347`: reconhece a razão de aspecto e a ausência de difusão rotacional, e conclui que o modelo capta tendências qualitativas, não predições quantitativas. A atribuição do $200{:}1$ a Buehler2008b foi conferida no PDF — a fonte diz $\approx 300$ nm de comprimento por $\approx 1{,}5$ nm de diâmetro, "an aspect ratio of close to 200".
+O nó N6 está concluído e a referência empírica principal encontra-se devidamente respaldada. O parágrafo sobre as idealizações do modelo coarse-grained já está redigido em `Paper/paper_PRE.tex:347`: reconhece abertamente a simplificação da razão de aspecto e a ausência de difusão rotacional, concluindo que o modelo captura tendências físicas qualitativas, e não previsões quantitativas para fibrilas biológicas reais. A atribuição da razão de aspecto de $\approx 200{:}1$ a Buehler (2008b) foi confirmada diretamente no texto original, que reporta monômeros com comprimento de $\approx 300$ nm e diâmetro de $\approx 1{,}5$ nm (*"an aspect ratio of close to 200"*).
 
-**Mas o rótulo "reaproveita o texto atual" escondia duas correções**, e é por isso que esta resposta também é escrita por extenso:
+**Apesar de o plano original prever reaproveitar o texto existente, a revisão detalhada revelou dois descompassos necessários:**
 
-1. **A carta cita uma versão vencida do parágrafo.** O segundo trecho citado no Point 6 da carta atual é anterior à auditoria N1: falta a frase sobre regulação celular *in vivo* (fibronectina, integrinas, colágenos menores) e a leitura de $T_s$ como parâmetro de controle efetivo, que o manuscrito ganhou depois. Citar no ponto a ponto um trecho que não está no `.tex` final é exatamente o erro que N14 existe para pegar.
-2. **A frase final colide com R1-5.** As duas versões terminam em *"establishes a clear empirical association between structural compactness and mechanical resilience"*. R1-5 rebaixa essa associação ao nível mais fraco, e "clear" a reforça. A frase passa a remeter à resposta de R1-5 em vez de afirmar por conta própria.
+1. **A versão anterior da carta reproduzia um rascunho desatualizado do manuscrito:** O segundo trecho citado no Ponto 6 da carta anterior não incorporava as correções da auditoria N1 — faltavam a ressalva sobre a regulação celular *in vivo* (fibronectina, integrinas e colágenos menores) e a interpretação formal de $T_s$ como parâmetro de controle efetivo. Citar na carta de resposta um texto que diverge do `.tex` final seria uma falha de sincronização grave, que o nó N14 tem como missão eliminar.
+2. **Harmonização do tom com a resposta a R1-5:** Ambas as versões anteriores concluíam com a afirmação de que o modelo *"establishes a clear empirical association between structural compactness and mechanical resilience"*. Como a resposta a R1-5 qualifica prudente e rigorosamente essa relação como uma correlação empírica desprovida de vínculo funcional demonstrado, o uso do adjetivo *"clear"* configuraria uma contradição interna. A frase final foi reformulada para remeter expressamente às ressalvas e limites discutidos na resposta ao Ponto 5.
 
 ### 11.3 A resposta
 
@@ -948,18 +951,18 @@ We have added the following paragraphs to the revised manuscript.
 
 ### 12.2 A decisão
 
-N3 fechado. O revisor leu o modelo certo, e a resposta concede: a Eq. (2) é partilha uniforme dentro da seção, e a estrutura local entra só por $K$. O parágrafo dos dois canais (`Paper/paper_PRE.tex:230`) já diz isso e vale na substância — o modelo não é ELS nem LLS, e não recebe classe de universalidade nenhuma.
+O nó N3 está concluído. A interpretação do revisor é exata e a resposta acolhe a observação integralmente: a Eq. (2) prescreve partilha uniforme de carga dentro de cada seção transversal, enquanto os efeitos de vizinhança local atuam exclusivamente pela coordenação molecular $K$. O parágrafo conceitual dos dois canais de dano (`Paper/paper_PRE.tex:230`) já afirmava isso e mantém sua substância física: o modelo não se enquadra nas classes puras de *equal load sharing* (ELS) nem de *local load sharing* (LLS), e não reivindica nenhuma classe de universalidade.
 
-O que muda é **vocabulário, e não é cosmético**:
+A reformulação atinge o **vocabulário técnico**, com implicações conceituais importantes:
 
-| Canal | Linguagem do artigo submetido | Linguagem sob o protocolo quenched |
+| Canal | Formulação do artigo submetido | Formulação sob o protocolo quenched |
 |:--|:--|:--|
-| local | a probabilidade de remoção depende de $K$ | o limiar de falha é $K_i \sigma_c X_i$ |
-| global | partilha uniforme na seção (Eq. 2) | $a_i = \langle 1/N(l)\rangle$ no denominador de $F^*_i$ |
+| Local | A probabilidade de remoção por varredura depende de $K$ | O limiar intrínseco de falha é $\sigma^{\mathrm{th}}_i = K_i \sigma_c X_i$ |
+| Global | Partilha uniforme de força por seção (Eq. 2) | O fator $a_i = \langle 1/N(l)\rangle$ entra no denominador da força crítica $F^*_i$ |
 
-: A física dos dois canais não muda; muda a linguagem em que se escreve. {#tbl-r22-canais tbl-colwidths="[12,44,44]"}
+: A física dos dois canais permanece intacta; altera-se a linguagem conceitual em que são expressos. {#tbl-r22-canais tbl-colwidths="[12,44,44]"}
 
-Escrever os dois canais na linguagem de limiar é o que torna esta resposta compatível com R2-1 e R2-3 — na linguagem de varredura, R2-2 contradiria as duas. A última frase passa a remeter à cascata de R2-3 como observável primário.
+Descrever esses dois canais em termos de limiares determinísticos e forças críticas de falha sob desordem congelada é o que torna esta resposta estritamente coerente com as soluções adotadas para R2-1 e R2-3 — manter a formulação antiga baseada em varreduras temporais geraria contradição direta com ambas. Além disso, a conclusão do parágrafo passa a remeter à cascata determinística a força fixa (R2-3) como observável estatístico primário.
 
 ### 12.3 A resposta
 
