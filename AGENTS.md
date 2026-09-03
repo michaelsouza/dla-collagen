@@ -141,6 +141,12 @@ Conta `solverbrict`, partição `cpu_amd` (`cpu_amd_dev` para teste). Alias
 - Apagar do working tree **não** encolhe o `.git` (702 MB de 1,5 GB). O objetivo
   da limpeza é clareza, não espaço.
 - Ao remover um conjunto, registre o commit onde ele ainda existe.
+- **Figuras do manuscrito são feitas no xmgrace**, porque é o ambiente dos
+  coautores. Python só exporta as tabelas: um diretório por figura, arquivos
+  `.dat` já no formato que o xmgrace lê (`xy`, `xydy`, `xydxdy`; um bloco por
+  série), e um README que nomeia o CSV de origem e o script que os gerou. O
+  projeto `.agr` é versionado ao lado dos dados. Figura em Python fica só nos
+  relatórios internos de `Reviews/`. Exemplo: `Reviews/N7_fractal_proxy/xmgrace/`.
 - **Michael trabalha em várias sessões ao mesmo tempo neste repositório.**
   Rode `git fetch` e confira divergência antes de editar em lote ou commitar;
   nunca faça rebase ou force-push sobre trabalho que pode não ser seu.

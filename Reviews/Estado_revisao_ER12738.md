@@ -27,12 +27,12 @@ Convenção: `A → B` significa "B não fecha antes de A, e reabrir A reabre B"
 | **N7** | $D_f$ 2D contra descritores do backbone 3D | R1-4 | **fechado na decisão, aberto no texto** — *crossover* DLA (1,68) → sólido (2,0) em $T_s\approx128$, não dimensão variável. Muda a Fig. 3 **e** a Fig. 7, o resumo (`:86`), `:170-176`, `:255-287`, `:354`; a carta R1-4 inverte de sinal. Resta I6 |
 | **N17** | Fase C — o corte é físico ou de tamanho? | sustenta N10–N12 | **fechado** — 25× em $N$, duas arquiteturas, forma invariante (registros de 2026-09-02) |
 | **N2** | Protocolo de carga | R2-1, R2-3 | **aberto — o maior débito de texto.** `:240-242` e `:312` ainda descrevem varreduras e $\Delta F$; a carta R2-1 ainda os defende. Escrever: Eq. (4) como limiar $X_i\sim x^m$, $F^*_i$, cascata; Fig. 6; carta R2-1/R2-3 |
-| **N9** | $\alpha,\beta$ da Eq. (5) | R1-7 | aberto — refit no cluster; `:293-309` está em vocabulário recozido |
+| **N9** | $\alpha,\beta$ da Eq. (5) | R1-7 | **dados prontos** — curvas de dano das 50 condições extraídas (job 590854; `Reviews/N9_damage_curves/damage_condition_table.csv`): a Eq. (5) não descreve o protocolo novo ($\beta \le 0$); dano preterminal 9–34% e cascata terminal. Falta o texto e a Fig. 7 nova |
 | **N10** | Reanálise estatística da cauda | R1-2, R2-4 | aberto — **alvo confirmado**: descrever a distribuição (estável em $m$, $T_s\geq16$ e tamanho); não ajustar expoente. `:312-342` e Fig. 9 ainda trazem os números do recozido |
 | **N11** | Expoente frente a $5/2$ | R1-3 | **encerra como não-afirmação** — uma década, invariante ao tamanho, e $\gamma$ depende de $m$ tanto quanto de $T_s$. Falta o texto e a carta R1-3 |
 | **N12** | Estatuto de $D_f \leftrightarrow$ ruptura | R1-5 | aberto — **confundimento de $N$ desfeito** (N17). Conclusão: não existe $\gamma(D_f)$; sobrevive uma assinatura comum em $T_s\approx128$. Falta o texto (`:336`, conclusão), a carta R1-5, e decidir o teste por fibrila (precisa do cluster) |
 | **N13** | Revisão integral do manuscrito | todas | aberto — a lista de trechos está na tabela crítica a crítica do registro de 2026-09-03 |
-| **N14** | Carta ponto a ponto verificada | todas | aberto — **sete de onze respostas mudam de conteúdo** (R1-2, R1-3, R1-4, R1-5, R1-7, R2-1, R2-3); só R1-1, R1-6 e R2-2 ficam. Base congelada em `Paper/submitted_ER12738/` |
+| **N14** | Carta ponto a ponto verificada | todas | aberto — **onze respostas rascunhadas** em `Reviews/Respostas_ER12738.md` (2026-09-03), à espera da revisão de Michael. **sete de onze respostas mudam de conteúdo** (R1-2, R1-3, R1-4, R1-5, R1-7, R2-1, R2-3); só R1-1, R1-6 e R2-2 ficam. Base congelada em `Paper/submitted_ER12738/` |
 
 ## Grafo
 
@@ -118,11 +118,11 @@ Resolvidas ou superadas: I1, I2, I3, I5 (troca de protocolo); **I8** (decidido e
 
 | precisa de | nós |
 |:--|:--|
-| só texto, dados em mãos | N2, N10, N11, N12 (texto), N13, N14, I7 |
+| só texto, dados em mãos | N2, N9, N10, N11, N12 (texto), N13, N14, I7 — rascunhos das onze respostas em `Reviews/Respostas_ER12738.md` |
 | análise sobre dado existente, **local** | N7t (Fig. 3 sob regra uniforme — medido em `Reviews/N7_fractal_proxy/df_published_fibrils_by_window.csv`; Fig. 7 ou sua remoção; I6) |
-| análise sobre dado existente, **no cluster** | **N9** — refit de $\varphi(F)$ e da Eq. (5) sobre as 10.000 saídas da campanha; **N12, teste por fibrila** — os arquivos de avalanche por fibrila estão só em `$DLA_PROJECT`; *ensemble* completo de 200 fibrilas para §§3.1/3.3 do relatório |
+| análise sobre dado existente, **no cluster** | ~~N9~~ (feito em 2026-09-03); **N12, teste por fibrila** — os arquivos de avalanche por fibrila estão só em `$DLA_PROJECT`; *ensemble* completo de 200 fibrilas para §§3.1/3.3 do relatório |
 
-O cluster está inacessível até a VPN ser religada (`sudo -E Code/cluster/sdumont2nd/vpn_connect.sh`).
+O cluster ficou acessível em 2026-09-03 (VPN religada); o clone remoto está em dia com `origin/main`.
 
 ## Próximo passo
 
@@ -130,5 +130,5 @@ O cluster está inacessível até a VPN ser religada (`sudo -E Code/cluster/sdum
 2. **N10 / N11** — a distribuição como ela é, com as três invariâncias ($m$, $T_s$, tamanho); a não-comparação com $5/2$, agora também porque $\gamma$ depende de $m$; Fig. 9 da campanha; respostas R1-2, R1-3, R2-4.
 3. **N7t / I6** — em paralelo com 1 e 2: Fig. 3 sob regra uniforme, Fig. 7 na leitura de *crossover* (ou removida), resumo e conclusão; resposta R1-4.
 4. **N12** — depois de 2 e 3: a assinatura comum em $T_s\approx128$, sem $\gamma(D_f)$; resposta R1-5. O teste por fibrila fica para quando o cluster voltar, junto com N9.
-5. **N9** — quando a VPN voltar.
+5. **N9** — dados em mãos: escrever o texto de $F_{rup}$, fração preterminal e colapso; resposta R1-7 já rascunhada.
 6. **N13 → N14**, conferindo cada citação da carta contra o `.tex` final e contra `Paper/submitted_ER12738/`.
