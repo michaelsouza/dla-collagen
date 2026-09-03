@@ -6,7 +6,7 @@ Lê:      Reviews/N9_damage_curves/damage_summary.csv
          Reviews/N9_damage_curves/damage_ts<TS>_m<M>_curve_abs.csv
 Escreve: Reviews/N9_damage_curves/damage_condition_table.csv
 Chamado: à mão, para N9 (Estado_revisao_ER12738.md); a resposta R1-7 em
-         Reviews/Respostas_ER12738.md cita esta tabela
+         Reviews/Respostas_ER12738.qmd cita esta tabela
 
 O que se testa: se a forma fenomenológica do submetido,
     f(F) = 1e-3 [exp(beta F) - 1 + F^alpha],

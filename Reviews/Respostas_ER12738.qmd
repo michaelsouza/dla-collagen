@@ -1,10 +1,37 @@
-# Respostas aos revisores — ER12738
+---
+title: "Respostas aos revisores — ER12738"
+subtitle: "*Scaling behaviors in simulated collagen fibrils*"
+author: "Michael Souza"
+date: 2026-09-03
+date-format: "YYYY-MM-DD"
+lang: pt-BR
+abstract: |
+  Documento de trabalho que reúne, numa peça só, as respostas às onze críticas dos dois revisores do manuscrito ER12738. Cada crítica traz a decisão tomada em português, com o nó da revisão e o registro que a sustenta; a resposta em inglês, já no texto que vai para a carta; e a rastreabilidade de cada número até seu CSV de origem, junto das linhas do manuscrito submetido que a resposta obriga a mudar. Essa última lista é o que a revisão do manuscrito executa: nada entra no texto revisado fora dela.
+format:
+  html:
+    embed-resources: true
+    html-math-method: mathjax
+    toc: true
+    toc-depth: 3
+  pdf:
+    pdf-engine: pdflatex
+    toc: true
+    toc-depth: 2
+    geometry: margin=2.5cm
+    colorlinks: true
+execute:
+  enabled: false
+---
 
-**Base:** `Paper/submitted_ER12738/paper_PRE.tex` (o que os revisores leram; as
-linhas citadas abaixo são desse arquivo e não se movem).
-**Destino:** `Carta_Resposta/Response_to_Referees.tex` (N14) e as intervenções
-mínimas no manuscrito (N13).
-**Estado:** rascunho completo para revisão de Michael — ver a tabela no fim.
+## 1. Como ler este documento
+
+| campo | conteúdo |
+|:--|:--|
+| **Base** | `Paper/submitted_ER12738/paper_PRE.tex` — o que os revisores leram. As linhas citadas neste documento são desse arquivo e não se movem |
+| **Destino** | `Carta_Resposta/Response_to_Referees.tex` (nó N14) e as intervenções mínimas no manuscrito (nó N13) |
+| **Estado** | rascunho completo para revisão de Michael — ver a @tbl-estado |
+
+: Procedência e destino deste documento. {#tbl-procedencia tbl-colwidths="[15,85]"}
 
 Cada crítica tem quatro blocos. **A crítica**, literal. **A decisão**, em
 português, com o nó e o registro que a sustenta. **A resposta**, em inglês,
@@ -12,15 +39,17 @@ já no texto que vai para a carta. **Rastreabilidade**: cada número com sua
 origem, e as linhas do submetido que a resposta obriga a mudar — essa lista é
 o que N13 executa, e nada entra no manuscrito fora dela.
 
-Ordem: R2-1 e R2-3 primeiro, porque definem limiar, cascata e avalanche;
-depois a estatística (R1-2, R1-3, R2-4), a estrutura (R1-4), a associação
-(R1-5), a curva de dano (R1-7); por fim as três que só reaproveitam texto.
+A ordem das seções não é a dos revisores: R2-1 e R2-3 vêm primeiro, porque
+definem limiar, cascata e avalanche, que todas as outras respostas usam.
+Depois vem a estatística (R1-2, R1-3, R2-4), a estrutura (R1-4), a associação
+(R1-5) e a curva de dano (R1-7). Por fim, as três respostas que apenas
+reaproveitam texto já escrito (R1-1, R1-6, R2-2).
 
 ---
 
-## R2-1 — Loading protocol and stability of the system
+## 2. R2-1 — Loading protocol and stability of the system
 
-### A crítica
+### 2.1 A crítica
 
 > My main concern is the loading protocol. Equation (4) defines the probability
 > of failure. As long as fibers carry load, this probability remains finite.
@@ -36,13 +65,14 @@ depois a estatística (R1-2, R1-3, R2-4), a estrutura (R1-4), a associação
 > in a stable state when the external load is further increased. The authors
 > should clarify this point in the manuscript.
 
-### A decisão
+### 2.2 A decisão
 
 O revisor está certo, e a objeção **não se responde — dissolve-se**. Testamos
 a preocupação dele antes de decidir: com o código corrigido (N0), a regra
 recozida não tem limite quase-estático — $F_{rup}$ é linear em $\log\Delta F$
-(92,6 → 188,0 para $\Delta F$ de 0,0625 a 2,0) e o p99 das avalanches vai de
-8 a 89. A estatística era propriedade do $\Delta F$, não da fibrila.
+($92{,}6 \to 188{,}0$ para $\Delta F$ de $0{,}0625$ a $2{,}0$) e o p99 das
+avalanches vai de 8 a 89. A estatística era propriedade do $\Delta F$, não da
+fibrila.
 
 Adotamos o protocolo padrão de fiber bundle com desordem congelada (registro
 `decision_log/2026-08-24_adocao_protocolo_quenched.md`, nó N2): cada molécula
@@ -57,65 +87,27 @@ O que a mudança preserva: a regra de carga uniforme por seção (Eqs. 2–3), a
 resistência proporcional à coordenação (N3), o corpo de prova, o esqueleto
 ativo e o critério de ruptura. O que ela muda nos resultados: **todos os
 números mecânicos** do submetido (Figs. 7–9) foram refeitos sob o protocolo
-novo, com 200 fibrilas × 50 realizações por condição e $m \in \{1,2,3,5,10\}$.
+novo, com 200 fibrilas $\times$ 50 realizações por condição e
+$m \in \{1,2,3,5,10\}$.
 
-### A resposta
+### 2.3 A resposta
 
-We thank the Referee for this observation, which identifies a genuine defect
-of the original loading rule. We tested the concern directly. With the removal
-rule of Eq. (4) applied in sweeps at fixed force, the rupture force and the
-avalanche statistics depend on the force increment $\Delta F$ without
-approaching a limit: over five octaves of $\Delta F$ (0.0625 to 2.0), the mean
-rupture force grows approximately linearly with $\log \Delta F$ (from 92.6 to
-188.0) and the 99th percentile of the avalanche size grows from 8 to 89. The
-original protocol therefore measured a property of the loading schedule rather
-than of the fibril, exactly as the Referee suspected: a sweep with no removals
-does not establish a stable state, and further sweeps at the same force would
-continue to remove molecules.
+We thank the Referee for this observation, which identifies a genuine defect of the original loading rule. We tested the concern directly. With the removal rule of Eq. (4) applied in sweeps at fixed force, the rupture force and the avalanche statistics depend on the force increment $\Delta F$ without approaching a limit: over five octaves of $\Delta F$ (0.0625 to 2.0), the mean rupture force grows approximately linearly with $\log \Delta F$ (from 92.6 to 188.0) and the 99th percentile of the avalanche size grows from 8 to 89. The original protocol therefore measured a property of the loading schedule rather than of the fibril, exactly as the Referee suspected: a sweep with no removals does not establish a stable state, and further sweeps at the same force would continue to remove molecules.
 
-We have replaced the protocol by the standard quasi-static fiber-bundle
-scheme with quenched disorder, keeping the physical content of Eq. (4). Each
-molecule $i$ draws once, before loading, a strength variable $X_i \in [0,1]$
-with cumulative distribution $P(X \le x) = x^m$, and fails when its mean
-stress exceeds the threshold $\sigma^{\mathrm{th}}_i = K_i \sigma_c X_i$, where
-$K_i$ is its current coordination. Under this rule the probability that a
-molecule with coordination $K_i$ fails at stress $\sigma$ is
-$(\sigma / K_i \sigma_c)^m$, which is Eq. (4) reinterpreted as a strength
-distribution; the coordination-dependent weakening channel of the original
-model is preserved. Because $\sigma_{M,i} = F a_i$ with
-$a_i = \langle 1/N(l) \rangle$ over the cross-sections spanned by the molecule,
-each molecule has a well-defined failure force $F^*_i = K_i \sigma_c X_i / a_i$.
-The external force is raised continuously to the smallest $F^*_i$ in the
-system; at that fixed force, every molecule whose threshold is exceeded is
-removed, loads and coordinations are recomputed, molecules that lost their
-connection to both ends are removed, and the cascade is repeated until no
-molecule is above threshold. The cascade terminates deterministically. There
-is no force increment, no sweep, and no stopping criterion, so the state
-reached before each increase of the force is stable by construction: every
-remaining molecule satisfies $F^*_i > F$.
+We have replaced the protocol by the standard quasi-static fiber-bundle scheme with quenched disorder, keeping the physical content of Eq. (4). Each molecule $i$ draws once, before loading, a strength variable $X_i \in [0,1]$ with cumulative distribution $P(X \le x) = x^m$, and fails when its mean stress exceeds the threshold $\sigma^{\mathrm{th}}_i = K_i \sigma_c X_i$, where $K_i$ is its current coordination. Under this rule the probability that a molecule with coordination $K_i$ fails at stress $\sigma$ is $(\sigma / K_i \sigma_c)^m$, which is Eq. (4) reinterpreted as a strength distribution; the coordination-dependent weakening channel of the original model is preserved. Because $\sigma_{M,i} = F a_i$ with $a_i = \langle 1/N(l) \rangle$ over the cross-sections spanned by the molecule, each molecule has a well-defined failure force $F^*_i = K_i \sigma_c X_i / a_i$. The external force is raised continuously to the smallest $F^*_i$ in the system; at that fixed force, every molecule whose threshold is exceeded is removed, loads and coordinations are recomputed, molecules that lost their connection to both ends are removed, and the cascade is repeated until no molecule is above threshold. The cascade terminates deterministically. There is no force increment, no sweep, and no stopping criterion, so the state reached before each increase of the force is stable by construction: every remaining molecule satisfies $F^*_i > F$.
 
-The new protocol was validated against the exactly solvable case: fed with an
-equal-load-sharing bundle with uniformly distributed thresholds, the same
-cascade engine reproduces the burst distribution $D(s) \sim s^{-5/2}$ of
-Hemmer and Hansen, with deviations below 2% up to $s = 8$ in a run of 150
-bundles of 4000 fibers. The model description, Fig. 6, and all mechanical
-results (Figs. 7–9 and the associated text) have been rewritten and recomputed
-under this protocol, with 200 independent fibrils and 50 rupture realizations
-per fibril for each value of $T_s$, and for five values of the Weibull modulus,
-$m \in \{1, 2, 3, 5, 10\}$. The model no longer has a physical time or a dwell
-time at fixed load, and we do not interpret it as describing creep, fatigue,
-or delayed rupture.
+The new protocol was validated against the exactly solvable case: fed with an equal-load-sharing bundle with uniformly distributed thresholds, the same cascade engine reproduces the burst distribution $D(s) \sim s^{-5/2}$ of Hemmer and Hansen, with deviations below 2% up to $s = 8$ in a run of 150 bundles of 4000 fibers. The model description, Fig. 6, and all mechanical results (Figs. 7–9 and the associated text) have been rewritten and recomputed under this protocol, with 200 independent fibrils and 50 rupture realizations per fibril for each value of $T_s$, and for five values of the Weibull modulus, $m \in \{1, 2, 3, 5, 10\}$. The model no longer has a physical time or a dwell time at fixed load, and we do not interpret it as describing creep, fatigue, or delayed rupture.
 
-### Rastreabilidade
+### 2.4 Rastreabilidade
 
 | número | origem |
 |:--|:--|
-| $F_{rup}$ 92,6 → 188,0; p99 8 → 89 para $\Delta F$ 0,0625 → 2,0 | `decision_log/2026-08-24_adocao_protocolo_quenched.md` — **CSV da varredura não está no repositório; localizar ou retirar os números da carta** |
-| desvio < 2% até $s=8$, 150 × 4000, contra Hemmer & Hansen | idem; teste em `Code/Fracture_fibril/test_fiber_bundle_ava.py` |
-| 200 fibrilas × 50 realizações × 5 $m$ por $T_s$ | `Reviews/N9_damage_curves/damage_summary.csv` (10.000 realizações em cada uma das 50 condições) |
+| $F_{rup}$ $92{,}6 \to 188{,}0$; p99 $8 \to 89$ para $\Delta F$ $0{,}0625 \to 2{,}0$ | `decision_log/2026-08-24_adocao_protocolo_quenched.md` — **CSV da varredura não está no repositório; localizar ou retirar os números da carta** |
+| desvio $< 2\%$ até $s=8$, $150 \times 4000$, contra Hemmer & Hansen | idem; teste em `Code/Fracture_fibril/test_fiber_bundle_ava.py` |
+| 200 fibrilas $\times$ 50 realizações $\times$ 5 $m$ por $T_s$ | `Reviews/N9_damage_curves/damage_summary.csv` (10.000 realizações em cada uma das 50 condições) |
 | protocolo implementado | `Code/Fracture_fibril/fiber_bundle_ava.py` |
 
-Linhas do submetido que mudam:
+: Origem dos números da resposta a R2-1. {#tbl-r21-fontes tbl-colwidths="[38,62]"}
 
 | linha | trecho | intervenção |
 |:--|:--|:--|
@@ -123,13 +115,15 @@ Linhas do submetido que mudam:
 | 187–193 | Eq. (4) e "Here, we set $m=2$ …" | reescrever como distribuição de resistência; $m$ como parâmetro varrido (com R1-3) |
 | 202 | "For a given force $F$, we evaluate $P_R$ … increased by $\Delta F = 0.5$ …" | substituir pelo parágrafo de carga extremal e cascata |
 | 207 | legenda da Fig. 6 (a) "removal probability … random number $u$" | adaptar ao limiar |
-| 211 | "ensemble of $10$ distinct fibrils … $10^3$ independent rupture simulations" | 200 fibrilas × 50 realizações; cinco valores de $m$ |
+| 211 | "ensemble of $10$ distinct fibrils … $10^3$ independent rupture simulations" | 200 fibrilas $\times$ 50 realizações; cinco valores de $m$ |
+
+: Linhas do submetido que a resposta a R2-1 obriga a mudar. {#tbl-r21-linhas tbl-colwidths="[8,47,45]"}
 
 ---
 
-## R2-3 — Definition of avalanches
+## 3. R2-3 — Definition of avalanches
 
-### A crítica
+### 3.1 A crítica
 
 > Since load sharing according to Eq. (2) is global within a cross section, it
 > seems that no particular stress concentration can develop around failed
@@ -142,7 +136,7 @@ Linhas do submetido que mudam:
 > increments of the external force. The authors should make this aspect of the
 > work clearer.
 
-### A decisão
+### 3.2 A decisão
 
 Adotamos a definição do revisor, e sob o protocolo novo ela deixa de ser uma
 escolha: **a cascata a $F$ fixo é a avalanche** (N8 dissolvido, registro
@@ -156,7 +150,7 @@ sai do manuscrito como observável primário; com ela saem $\Psi$ e a Fig. 8 do
 submetido. A cascata terminal — uma por realização, que leva 66% a 91% do
 sistema conforme a condição — é excluída da distribuição.
 
-### A resposta
+### 3.3 A resposta
 
 We agree with the Referee, and we have adopted the definition suggested. Under
 the quasi-static protocol described in our response to Point 1, the external
@@ -192,27 +186,29 @@ and 91% of the molecules, depending on $T_s$ and $m$), is a single terminal
 event and not part of the preterminal avalanche process; it is excluded from
 the distributions analyzed in the revised Section on avalanche statistics.
 
-### Rastreabilidade
+### 3.4 Rastreabilidade
 
 | número | origem |
 |:--|:--|
 | 12% a 25% das cascatas com mais de um aglomerado | `Reviews/quenched_campaign_report/README.md` §5.1 |
-| cascata terminal leva 66% a 91% do sistema | `Reviews/N9_damage_curves/damage_summary.csv`, coluna `terminal_fraction_mean` (0,658 em $T_s=2$, $m=1$; 0,911 em $T_s=64$, $m=10$) |
+| cascata terminal leva 66% a 91% do sistema | `Reviews/N9_damage_curves/damage_summary.csv`, coluna `terminal_fraction_mean` ($0{,}658$ em $T_s=2$, $m=1$; $0{,}911$ em $T_s=64$, $m=10$) |
 | extração da cascata como observável | `Code/Data_analysis/extract_cascades.py` |
 
-Linhas do submetido que mudam:
+: Origem dos números da resposta a R2-3. {#tbl-r23-fontes tbl-colwidths="[35,65]"}
 
 | linha | trecho | intervenção |
 |:--|:--|:--|
 | 230 | "We define a cluster as any group of two or more adjacent molecules … $\Psi$ … Fig. 8" | substituir pela definição de cascata; retirar $\Psi$ |
-| 233–238 | Fig. 8 ($\Psi$ contra $F_n$) | retirar a figura; renumerar 9 → 8 |
+| 233–238 | Fig. 8 ($\Psi$ contra $F_n$) | retirar a figura; renumerar $9 \to 8$ |
 | 240 | "we define the avalanche size, $s$, as the cluster size" | tamanho da cascata; excluir a terminal |
+
+: Linhas do submetido que a resposta a R2-3 obriga a mudar. {#tbl-r23-linhas tbl-colwidths="[8,52,40]"}
 
 ---
 
-## R1-2 — Attribution of Self-Organized Criticality; statistical validation
+## 4. R1-2 — Attribution of Self-Organized Criticality; statistical validation
 
-### A crítica
+### 4.1 A crítica
 
 > The authors claim that the rupture process exhibits SOC on the basis that the
 > avalanche size distribution follows a power law. This reasoning is
@@ -238,7 +234,7 @@ Linhas do submetido que mudam:
 > 661, 2009). The claim of scale-free behavior therefore rests on
 > insufficiently rigorous grounds.
 
-### A decisão
+### 4.2 A decisão
 
 Duas metades. **SOC** (N4, fechado): o termo sai de todo o manuscrito, e a
 resposta é positiva, não concessiva — o que substitui SOC é uma medição, não
@@ -254,7 +250,7 @@ sim a forma da distribuição (registros `2026-08-29_faixa_dinamica_avalanches.m
 relatório §5.2–5.4). O controle de percolação da carta atual sai: ele
 defendia a recuperação de um expoente que já não afirmamos.
 
-### A resposta
+### 4.3 A resposta
 
 We agree with the Referee on both points and have revised the manuscript
 accordingly.
@@ -316,35 +312,37 @@ together with it. The fitted $\eta$ varies between 1.1 and 5.2 across the
 grid, which is one more reason not to read any of these parameters as a
 universal exponent.
 
-### Rastreabilidade
+### 4.4 Rastreabilidade
 
 | número | origem |
 |:--|:--|
 | $6{,}1\times10^7$ cascatas preterminais; 50 condições | relatório §5, Figura 5.1 (61 000 717) |
 | lei pura rejeitada 48/50; 47 com $p=0$; perde para log-normal e esticada em 49/50 | relatório §5.2; `$DLA_PROJECT/campaign/analysis/cascades/cascade_stats_clauset.csv` |
-| fração unitária 0,72–0,76; p99 8–20 em $m$ | `2026-08-29_faixa_dinamica_avalanches.md` (item 3); `Reviews/PhaseC_periodic_cylinder/avalanche_ladder_ts128.csv` |
+| fração unitária $0{,}72$–$0{,}76$; p99 8–20 em $m$ | `2026-08-29_faixa_dinamica_avalanches.md` (item 3); `Reviews/PhaseC_periodic_cylinder/avalanche_ladder_ts128.csv` |
 | colapso acima de $T_s=16$; $s_c\approx51$ ($m=2$) de 128 em diante | relatório §5.3, Figura 5.2, e tabela de $s_c$ em §5.4 |
-| escada de tamanho 17×17 → 181×181; $T_s=8192$ 17×17 → 141×141 | `2026-09-02_confirmacao_secoes_inteiras.md`; `avalanche_ladder_ts128.csv`, `avalanche_ladder_ts8192.csv` |
-| 72% tamanho 1; p99 = 12; máxima ~90 | `2026-08-29_faixa_dinamica_avalanches.md` (item 2) |
-| Araújo melhor KS em 34/50; $\eta$ 1,13–5,19 | relatório §5.3–5.4; `Reviews/quenched_campaign_report/fig5-1_araujo_ajustes.csv` |
+| escada de tamanho $17\times17 \to 181\times181$; $T_s=8192$ $17\times17 \to 141\times141$ | `2026-09-02_confirmacao_secoes_inteiras.md`; `avalanche_ladder_ts128.csv`, `avalanche_ladder_ts8192.csv` |
+| 72% tamanho 1; p99 $= 12$; máxima $\sim 90$ | `2026-08-29_faixa_dinamica_avalanches.md` (item 2) |
+| Araújo melhor KS em 34/50; $\eta$ $1{,}13$–$5{,}19$ | relatório §5.3–5.4; `Reviews/quenched_campaign_report/fig5-1_araujo_ajustes.csv` |
 
-Linhas do submetido que mudam:
+: Origem dos números da resposta a R1-2. {#tbl-r12-fontes tbl-colwidths="[40,60]"}
 
 | linha | trecho | intervenção |
 |:--|:--|:--|
 | 81 | resumo: "a hallmark of Self-Organized Criticality (SOC) … lacks a characteristic scale … crossing the mean-field … universality" | reescrever a segunda metade do resumo |
 | 100 | intro: "characteristic of Self-Organized Criticality (SOC)" | retirar |
-| 240 | "from the viewpoint of avalanche statistics~\cite{Bak1987}" | trocar a citação; definição de cascata (R2-3) |
+| 240 | `"from the viewpoint of avalanche statistics~\cite{Bak1987}"` | trocar a citação; definição de cascata (R2-3) |
 | 242–248 | Eq. (6) e "$\gamma = 2.31 \pm 0.05$ … $2.80 \pm 0.04$ … plateau for $T_s \geq 512$" | substituir pelo parágrafo da forma da distribuição e das três invariâncias |
 | 252–257 | Fig. 9 e legenda | figura nova: sobrevivência por $T_s$ ($m=2$) e a escada de tamanho |
 | 261 | "rupture follows scale-free avalanche dynamics" | retirar |
 | 265 | conclusão: "remains scale-free, $P(s)\sim s^{-\gamma}$ … $\gamma=2.31$ … $2.80$ … plateau" | reescrever |
 
+: Linhas do submetido que a resposta a R1-2 obriga a mudar. {#tbl-r12-linhas tbl-colwidths="[8,52,40]"}
+
 ---
 
-## R1-3 — Interpretation of $\gamma > 5/2$; Weibull modulus; ensemble size
+## 5. R1-3 — Interpretation of $\gamma > 5/2$; Weibull modulus; ensemble size
 
-### A crítica
+### 5.1 A crítica
 
 > The authors interpret their measured exponent $\gamma \approx 2.8$ (at high
 > $T_s$) as evidence of a regime beyond equal load sharing (ELS), signaling a
@@ -365,7 +363,7 @@ Linhas do submetido que mudam:
 > throughout, following ref. [35]) would also help assess the robustness of
 > the exponents.
 
-### A decisão
+### 5.2 A decisão
 
 Concordamos, e o revisor acertou também no diagnóstico: das quatro causas que
 ele lista, **três estão confirmadas** — a definição de avalanche (R2-3), a
@@ -373,16 +371,17 @@ faixa restrita de ajuste (menos de uma década) e a estatística de 10 fibrilas.
 Só o efeito de tamanho finito foi testado e descartado (Fase C). A varredura
 em $m$ que ele pediu foi feita, $m \in \{1,2,3,5,10\}$ (N5, registro
 `2026-08-30_N5_modulo_de_weibull.md`), e é o argumento mais forte de todos:
-em geometria fixa, o expoente efetivo vai de 2,83 ($m=1$) a 1,91 ($m=10$) —
-$\gamma$ depende da desordem tanto quanto da arquitetura, então nenhum valor
-dele identifica uma classe de universalidade. O 5/2 cai entre $m=1$ e $m=2$,
-e escolher o $m$ que o cruza seria ajuste a posteriori. **N11 encerra como
-não-afirmação**: a comparação com 5/2 sai do manuscrito. O que fica em
-$m$: a literatura de fibrila única dá $m$ entre 2 e 7 (Quigley2018 5,5/4,4;
-Svensson2013 2,2–5,4; Yang2012 7,2); reportamos a grade inteira e usamos
-$m=2$ como caso ilustrativo, para comparação com Parkinson1997.
+em geometria fixa, o expoente efetivo vai de $2{,}83$ ($m=1$) a $1{,}91$
+($m=10$) — $\gamma$ depende da desordem tanto quanto da arquitetura, então
+nenhum valor dele identifica uma classe de universalidade. O $5/2$ cai entre
+$m=1$ e $m=2$, e escolher o $m$ que o cruza seria ajuste a posteriori.
+**N11 encerra como não-afirmação**: a comparação com $5/2$ sai do manuscrito.
+O que fica em $m$: a literatura de fibrila única dá $m$ entre 2 e 7
+(Quigley2018 $5{,}5$/$4{,}4$; Svensson2013 $2{,}2$–$5{,}4$; Yang2012 $7{,}2$);
+reportamos a grade inteira e usamos $m=2$ como caso ilustrativo, para
+comparação com Parkinson1997.
 
-### A resposta
+### 5.3 A resposta
 
 We thank the Referee and agree. The comparison of the fitted slope with the
 equal-load-sharing value $5/2$, and its interpretation as a crossover toward
@@ -432,30 +431,32 @@ report the full dependence on $m$ in the revised Fig. 8. Finally, the
 ensemble has been enlarged from 10 fibrils and $10^3$ realizations per
 $T_s$ to 200 fibrils and 50 realizations per fibril for each $(T_s, m)$.
 
-### Rastreabilidade
+### 5.4 Rastreabilidade
 
 | número | origem |
 |:--|:--|
-| $\gamma$ por $(T_s, m)$: 2,830±0,005 … 1,912±0,013 em 8192; 1,874–2,055 em 2 | relatório §5.4, tabela de $\gamma$; `fig5-1_araujo_ajustes.csv` |
-| motor reproduz 5/2 em ELS uniforme | `Code/Fracture_fibril/test_fiber_bundle_ava.py`; `2026-08-24_adocao_protocolo_quenched.md` |
-| $m$ na literatura: 5,5/4,4 (Quigley2018, MLE nosso), 2,2–5,4 (Svensson2013, Tab. 3), 7,2 (Yang2012) | `2026-08-30_N5_modulo_de_weibull.md`; `Reviews/N5_weibull_modulus/estimate_m_from_literature.py` — **conferir Yang2012 no PDF**: o registro avisa que houve erro de segunda mão nesse artigo |
+| $\gamma$ por $(T_s, m)$: $2{,}830 \pm 0{,}005$ … $1{,}912 \pm 0{,}013$ em 8192; $1{,}874$–$2{,}055$ em 2 | relatório §5.4, tabela de $\gamma$; `fig5-1_araujo_ajustes.csv` |
+| motor reproduz $5/2$ em ELS uniforme | `Code/Fracture_fibril/test_fiber_bundle_ava.py`; `2026-08-24_adocao_protocolo_quenched.md` |
+| $m$ na literatura: $5{,}5$/$4{,}4$ (Quigley2018, MLE nosso), $2{,}2$–$5{,}4$ (Svensson2013, Tab. 3), $7{,}2$ (Yang2012) | `2026-08-30_N5_modulo_de_weibull.md`; `Reviews/N5_weibull_modulus/estimate_m_from_literature.py` — **conferir Yang2012 no PDF**: o registro avisa que houve erro de segunda mão nesse artigo |
 | fator 25 em $N$ | `2026-09-02_confirmacao_secoes_inteiras.md` |
 
-Linhas do submetido que mudam:
+: Origem dos números da resposta a R1-3. {#tbl-r13-fontes tbl-colwidths="[42,58]"}
 
 | linha | trecho | intervenção |
 |:--|:--|:--|
 | 193 | "Here, we set $m = 2$ following …" | $m$ varrido em $\{1,2,3,5,10\}$; $m=2$ ilustrativo |
-| 211 | "ensemble of $10$ distinct fibrils … $10^3$" | 200 × 50 por $(T_s,m)$ |
+| 211 | "ensemble of $10$ distinct fibrils … $10^3$" | $200 \times 50$ por $(T_s,m)$ |
 | 248 | valores de $\gamma$ e platô | sai (com R1-2) |
 | 250 | parágrafo "crossover from local to global load sharing … $\kappa_{\mathrm{eff}}$ … change in universality class" | retirar inteiro |
-| 269 | conclusão: parágrafo do 5/2, LLS→GLS | retirar inteiro |
+| 269 | conclusão: parágrafo do $5/2$, LLS $\to$ GLS | retirar inteiro |
+
+: Linhas do submetido que a resposta a R1-3 obriga a mudar. {#tbl-r13-linhas tbl-colwidths="[8,52,40]"}
 
 ---
 
-## R2-4 — Power-law statistics and SOC
+## 6. R2-4 — Power-law statistics and SOC
 
-### A crítica
+### 6.1 A crítica
 
 > The interpretation of power-law statistics in terms of self-organized
 > criticality should be treated with caution. In rupture processes the system
@@ -466,13 +467,13 @@ Linhas do submetido que mudam:
 > justification for this interpretation or reformulate the discussion in more
 > cautious terms.
 
-### A decisão
+### 6.2 A decisão
 
 Mesma resposta de R1-2, curta: SOC sai; o que entra é a medição de que a
 distribuição tem corte intrínseco e o processo termina num evento terminal
 único — o oposto de um estado crítico mantido.
 
-### A resposta
+### 6.3 A resposta
 
 We agree, and we have removed the interpretation in terms of self-organized
 criticality throughout. The Referee's argument is in fact borne out by the
@@ -484,16 +485,16 @@ once. The revised manuscript describes this as avalanche dynamics during
 progressive damage in a driven disordered system, with the statistical
 analysis detailed in our response to Point 2 of the First Referee.
 
-### Rastreabilidade
+### 6.4 Rastreabilidade
 
-Os mesmos itens de R1-2; a fração terminal vem de
-`Reviews/N9_damage_curves/damage_summary.csv`. Linhas: as de R1-2.
+Os mesmos itens de R1-2 (@tbl-r12-fontes); a fração terminal vem de
+`Reviews/N9_damage_curves/damage_summary.csv`. Linhas: as da @tbl-r12-linhas.
 
 ---
 
-## R1-4 — Cross-sectional fractal dimension and the 3D mechanical problem
+## 7. R1-4 — Cross-sectional fractal dimension and the 3D mechanical problem
 
-### A crítica
+### 7.1 A crítica
 
 > $D_f$ is estimated from 2D cross-sectional projections ($x$-$z$ plane), yet
 > the backbone identification and the entire fracture simulation are
@@ -503,7 +504,7 @@ Os mesmos itens de R1-2; a fração terminal vem de
 > compactness without justification. This connection should either be derived
 > or explicitly discussed as an assumption with its limitations.
 
-### A decisão
+### 7.2 A decisão
 
 A carta atual (commit `521a284`) respondia com a Fig. 7 nova — quatro
 correlações de Spearman entre $D_f$ e descritores do backbone — e concluía
@@ -513,18 +514,18 @@ inverte de sinal (relatório §4; registros `2026-08-30_diametro_e_dimensao_frac
 `Reviews/N7_fractal_proxy/df_published_fibrils_by_window.csv`):
 
 1. O $D_f$ publicado é **escolha de janela**. As fibrilas têm raio de 15 a 40
-   unidades de rede; o intervalo utilizável de um ajuste massa–raio tem 0,4 a
-   0,7 década. Os ajustes publicados usaram janelas escolhidas condição a
+   unidades de rede; o intervalo utilizável de um ajuste massa–raio tem $0{,}4$
+   a $0{,}7$ década. Os ajustes publicados usaram janelas escolhidas condição a
    condição (`ensemble_curve_validation.csv` os reproduz exatamente); sob
-   qualquer regra uniforme, as mesmas fibrilas dão 1,90–1,95 em $T_s = 64$ e
-   128, onde o artigo publicou 1,76 e 1,79. O platô vai de $T_s \approx 512$
-   para $\approx 128$.
-2. A seção **deixa de ser fractal**. Num cilindro periódico 17× mais gordo,
-   $T_s = 2$ dá $1{,}675 \pm 0{,}023$ sobre 1,5 década — DLA plano, medido de
-   verdade; $T_s = 8192$ dá $1{,}955 \pm 0{,}012$; e em $T_s = 128$ não há
-   patamar de inclinação local (1,93 → 0,48 do centro para a borda): é um
-   miolo compacto com casca. Os valores intermediários publicados são um
-   *crossover* geométrico entre duas fases, não uma dimensão que varia.
+   qualquer regra uniforme, as mesmas fibrilas dão $1{,}90$–$1{,}95$ em
+   $T_s = 64$ e 128, onde o artigo publicou $1{,}76$ e $1{,}79$. O platô vai de
+   $T_s \approx 512$ para $\approx 128$.
+2. A seção **deixa de ser fractal**. Num cilindro periódico 17 vezes mais
+   gordo, $T_s = 2$ dá $1{,}675 \pm 0{,}023$ sobre $1{,}5$ década — DLA plano,
+   medido de verdade; $T_s = 8192$ dá $1{,}955 \pm 0{,}012$; e em $T_s = 128$
+   não há patamar de inclinação local ($1{,}93 \to 0{,}48$ do centro para a
+   borda): é um miolo compacto com casca. Os valores intermediários publicados
+   são um *crossover* geométrico entre duas fases, não uma dimensão que varia.
 3. Logo $D_f$ **não é** o descritor mecânico. O que entra na fratura é a área
    portante $N(l)$ e a coordenação $K$ — e essas são medidas diretamente no
    backbone 3D. A Fig. 7 de correlações sai (com ela, I6 fecha por remoção); a
@@ -533,7 +534,7 @@ inverte de sinal (relatório §4; registros `2026-08-30_diametro_e_dimensao_frac
    compactação medida por $\langle N\rangle$, $\langle K\rangle$ e fração de
    preenchimento.
 
-### A resposta
+### 7.3 A resposta
 
 We thank the Referee for this criticism, which led us to re-examine the
 fractal analysis itself, and we have changed both the analysis and the role
@@ -589,34 +590,36 @@ them: within a fixed specimen window the load-bearing area is a function of
 the packing density by construction, and the mechanical results are discussed
 in terms of the backbone descriptors themselves.
 
-### Rastreabilidade
+### 7.4 Rastreabilidade
 
 | número | origem |
 |:--|:--|
-| raios 15–40 u.r.; 0,4–0,7 década | `2026-08-30_diametro_e_dimensao_fractal.md` §4 (0,57–0,90 com o $R_{max}$ do manuscrito); relatório §4 (0,38–0,74 com $R/2$) — **harmonizar os dois critérios antes da carta** |
+| raios 15–40 u.r.; $0{,}4$–$0{,}7$ década | `2026-08-30_diametro_e_dimensao_fractal.md` §4 ($0{,}57$–$0{,}90$ com o $R_{max}$ do manuscrito); relatório §4 ($0{,}38$–$0{,}74$ com $R/2$) — **harmonizar os dois critérios antes da carta** |
 | ajustes publicados reproduzidos com janela por condição | `Reviews/N7_fractal_proxy/ensemble_curve_validation.csv` |
-| 1,90–1,95 em $T_s=64$ e 128 sob regra uniforme (fibrilas publicadas) | `Reviews/N7_fractal_proxy/df_published_fibrils_by_window.csv` (abs_4_8: 1,903/1,952; rel: 1,921/1,954) |
-| cilindro largo: 1,675±0,023 (1,5 década), 1,955±0,012, inclinação 1,93→0,48; estrutura local dentro de 2% | `2026-09-01_dimensao_fractal_cilindro_largo.md`; `Reviews/PhaseC_periodic_cylinder/df_wide_cylinders.csv`, `df_local_slopes_wide.csv` |
-| $\langle N\rangle$ 50,0 → 188,2; $\langle K\rangle$ 25,5 → 50,4 | `Reviews/N7_fractal_proxy/condition_descriptor_summary.csv` (fibrilas publicadas, 50 por $T_s$) |
-| preenchimento 0,82 (512) → 0,94 (8192) | relatório §3.2 e §6 |
+| $1{,}90$–$1{,}95$ em $T_s=64$ e 128 sob regra uniforme (fibrilas publicadas) | `Reviews/N7_fractal_proxy/df_published_fibrils_by_window.csv` (`abs_4_8`: $1{,}903$/$1{,}952$; `rel`: $1{,}921$/$1{,}954$) |
+| cilindro largo: $1{,}675 \pm 0{,}023$ ($1{,}5$ década), $1{,}955 \pm 0{,}012$, inclinação $1{,}93 \to 0{,}48$; estrutura local dentro de 2% | `2026-09-01_dimensao_fractal_cilindro_largo.md`; `Reviews/PhaseC_periodic_cylinder/df_wide_cylinders.csv`, `df_local_slopes_wide.csv` |
+| $\langle N\rangle$ $50{,}0 \to 188{,}2$; $\langle K\rangle$ $25{,}5 \to 50{,}4$ | `Reviews/N7_fractal_proxy/condition_descriptor_summary.csv` (fibrilas publicadas, 50 por $T_s$) |
+| preenchimento $0{,}82$ (512) $\to 0{,}94$ (8192) | relatório §3.2 e §6 |
 
-Linhas do submetido que mudam:
+: Origem dos números da resposta a R1-4. {#tbl-r14-fontes tbl-colwidths="[42,58]"}
 
 | linha | trecho | intervenção |
 |:--|:--|:--|
 | 81 | resumo: "systematic evolution of the fibril's fractal dimension" | *crossover* de agregado fractal a seção compacta |
 | 129 | "higher local packing density implies a greater number of intermolecular contacts … enhanced connectivity" | manter; é o que se mede agora em $\langle K\rangle$ |
-| 138–146 | método de $D_f$ ("from $R_{min}=5$ to $R_{max}$") e "rises and saturates at $D_f=1.963$" | descrever a regra uniforme e a inclinação local; valores novos; platô em ≈128 |
+| 138–146 | método de $D_f$ ("from $R_{min}=5$ to $R_{max}$") e "rises and saturates at $D_f=1.963$" | descrever a regra uniforme e a inclinação local; valores novos; platô em $\approx 128$ |
 | 148–153 | Fig. 3 e legenda | figura nova a partir de `df_published_fibrils_by_window.csv` e `df_published_mass_radius_curves.csv` |
 | 250 | "$\rho(R)\sim R^{D_f-2}$ … approach $D_f\to2$" | sai com o parágrafo (R1-3) |
 | 265 | conclusão: "rises from $D_f=1.708$ … to $1.963$" | reescrever com a leitura de *crossover* |
 | — | descritores do backbone | **inserir** um parágrafo curto com $\langle N\rangle$, $\langle K\rangle$ e preenchimento por $T_s$, depois da definição de $K$ (linha 185) |
 
+: Linhas do submetido que a resposta a R1-4 obriga a mudar. {#tbl-r14-linhas tbl-colwidths="[8,52,40]"}
+
 ---
 
-## R1-5 — The structural–mechanical connection is purely empirical
+## 8. R1-5 — The structural–mechanical connection is purely empirical
 
-### A crítica
+### 8.1 A crítica
 
 > The key result of the paper, that $D_f$ and $\gamma$ saturate together at
 > $T_s \geq 512$, is presented as if it were a derived causal relationship. In
@@ -629,25 +632,25 @@ Linhas do submetido que mudam:
 > empirical observation and discuss what theoretical framework might, in the
 > future, explain such a connection.
 
-### A decisão
+### 8.2 A decisão
 
 A relação sobrevive, mas no nível mais fraco (N12; relatório §6; registros
 de 2026-09-02). Não existe função $\gamma(D_f)$: em geometria fixa $\gamma$
-varia com $m$ de 2,83 a 1,91; $D_f$ satura em $T_s \approx 128$ enquanto o
-preenchimento segue subindo, então a relação não é invertível; e o mecanismo
-de fratura lê coordenação e ocupação, não autossimilaridade. A ponte de Araújo
-(expoente de avalanche ↔ dimensão do esqueleto) não transfere: daria
-$d_B = 0{,}70$–$1{,}07$, impossível (§5.5). O que fica é uma **assinatura
-comum**: quatro grandezas independentes — razão de densidade, $D_f$ sob janela
-uniforme, correlação de pares e o parâmetro de cauda — mudam de regime na
-mesma faixa, $T_s \approx 128$; o diâmetro só para de encolher em 512 e o
-preenchimento não satura na grade. A Fase C desfez o confundimento de tamanho
-(25× em $N$ não move a estatística), então a associação é entre arquiteturas,
-não entre tamanhos de corpo de prova. "Quantitative bridge" sai. O teste por
-fibrila que a issue #8 pede fica como extensão: precisa do cluster e não muda
-a resposta.
+varia com $m$ de $2{,}83$ a $1{,}91$; $D_f$ satura em $T_s \approx 128$
+enquanto o preenchimento segue subindo, então a relação não é invertível; e o
+mecanismo de fratura lê coordenação e ocupação, não autossimilaridade. A ponte
+de Araújo (expoente de avalanche $\leftrightarrow$ dimensão do esqueleto) não
+transfere: daria $d_B = 0{,}70$–$1{,}07$, impossível (§5.5). O que fica é uma
+**assinatura comum**: quatro grandezas independentes — razão de densidade,
+$D_f$ sob janela uniforme, correlação de pares e o parâmetro de cauda — mudam
+de regime na mesma faixa, $T_s \approx 128$; o diâmetro só para de encolher em
+512 e o preenchimento não satura na grade. A Fase C desfez o confundimento de
+tamanho (25 vezes em $N$ não move a estatística), então a associação é entre
+arquiteturas, não entre tamanhos de corpo de prova. "Quantitative bridge" sai.
+O teste por fibrila que a issue #8 pede fica como extensão: precisa do cluster
+e não muda a resposta.
 
-### A resposta
+### 8.3 A resposta
 
 We agree with the Referee: the coincident evolution of the cross-sectional
 structure and the avalanche statistics is an empirical observation within the
@@ -703,54 +706,56 @@ $m$; a fractal dimension does not appear in it. A continuum treatment with
 elastic force transmission would be needed to go beyond the empirical
 statement, and we identify this as future work.
 
-### Rastreabilidade
+### 8.4 Rastreabilidade
 
 | número | origem |
 |:--|:--|
-| quatro observáveis mudam em ≈128; diâmetro em 512; preenchimento não satura | relatório §6 (tabela) |
-| $\gamma$ 2,83 → 1,91 em $T_s=8192$ com $m$ | relatório §5.4 |
-| Araújo: $d_B$ implícito 0,70–1,07; 40/50 com $d_B<1$ | relatório §5.5 |
-| $N$ varia 3,9× com $T_s$; 25× não move a estatística | `2026-08-29_faixa_dinamica_avalanches.md`; `2026-09-02_confirmacao_secoes_inteiras.md` |
+| quatro observáveis mudam em $\approx 128$; diâmetro em 512; preenchimento não satura | relatório §6 (tabela) |
+| $\gamma$ $2{,}83 \to 1{,}91$ em $T_s=8192$ com $m$ | relatório §5.4 |
+| Araújo: $d_B$ implícito $0{,}70$–$1{,}07$; 40/50 com $d_B<1$ | relatório §5.5 |
+| $N$ varia $3{,}9$ vezes com $T_s$; 25 vezes não move a estatística | `2026-08-29_faixa_dinamica_avalanches.md`; `2026-09-02_confirmacao_secoes_inteiras.md` |
 
-Linhas do submetido que mudam:
+: Origem dos números da resposta a R1-5. {#tbl-r15-fontes tbl-colwidths="[42,58]"}
 
 | linha | trecho | intervenção |
 |:--|:--|:--|
 | 250 | "the saturation of $\gamma$ for $T_s \ge 512$ coincides with $D_f \gtrsim 1.90$ …" | sai com o parágrafo |
 | 261 | "the fibril's fractal dimension serves as a quantitative bridge …" | retirar; frase de associação empírica |
-| 265–267 | conclusão: "plateau for $T_s\ge512$ that coincides with $D_f\gtrsim1.90$"; "joint increase of $D_f$ and $\gamma$ … crossover in the effective universality class" | reescrever: assinatura comum em ≈128, sem $\gamma(D_f)$ |
+| 265–267 | conclusão: "plateau for $T_s\ge512$ that coincides with $D_f\gtrsim1.90$"; "joint increase of $D_f$ and $\gamma$ … crossover in the effective universality class" | reescrever: assinatura comum em $\approx 128$, sem $\gamma(D_f)$ |
+
+: Linhas do submetido que a resposta a R1-5 obriga a mudar. {#tbl-r15-linhas tbl-colwidths="[8,52,40]"}
 
 ---
 
-## R1-7 — The phenomenological damage function $f(F)$
+## 9. R1-7 — The phenomenological damage function $f(F)$
 
-### A crítica
+### 9.1 A crítica
 
 > The phenomenological function $f(F)$ in Eq. (5) is purely empirical. Its
 > form is not derived from the model and the physical interpretation of the
 > parameters $\alpha$ and $\beta$, while discussed qualitatively, would benefit
 > from more precise justification.
 
-### A decisão
+### 9.2 A decisão
 
 Medido hoje sobre as 50 condições (N9; `Reviews/N9_damage_curves/`,
 job 590854 em `cpu_amd`): **a Eq. (5) não descreve a curva de dano do
 protocolo novo.** O termo exponencial some — ajustado sobre a curva média,
-$\beta$ vem negativo ou nulo e o erro é de 0,09 a 0,25 em $\varphi$. O que os
-dados mostram é simples: o dano preterminal cresce quase linearmente com $F$
-(lei de potência com $\alpha$ entre 0,7 e 1,35 sobre as realizações ainda
-inteiras, erro < 0,02) até só **9% a 34%** do esqueleto, e então **uma cascata
-terminal** leva o resto. A subida "exponencial" perto da ruptura na curva
-média é a distribuição de $F_{rup}$ entre realizações (CV de 0,12 a 0,29),
-não um mecanismo de amplificação de dano. Portanto: a Eq. (5), $\alpha$ e
-$\beta$ saem; entram $F_{rup}$ por $T_s$ e $m$, a fração preterminal, e a
-curva $\varphi(F/F_{rup})$, que colapsa acima de $T_s \approx 32$. O que o
-submetido dizia sobre a força de ruptura crescer com $T_s$ **se mantém e
-fica mais forte**: $F_{rup}$ sobe 10× de $T_s=2$ a 8192 (para $m=2$), 83%
-disso até $T_s = 128$; por molécula do esqueleto, 2,6× — o efeito da
-coordenação.
+$\beta$ vem negativo ou nulo e o erro é de $0{,}09$ a $0{,}25$ em $\varphi$. O
+que os dados mostram é simples: o dano preterminal cresce quase linearmente
+com $F$ (lei de potência com $\alpha$ entre $0{,}7$ e $1{,}35$ sobre as
+realizações ainda inteiras, erro $< 0{,}02$) até só **9% a 34%** do esqueleto,
+e então **uma cascata terminal** leva o resto. A subida "exponencial" perto da
+ruptura na curva média é a distribuição de $F_{rup}$ entre realizações (CV de
+$0{,}12$ a $0{,}29$), não um mecanismo de amplificação de dano. Portanto: a
+Eq. (5), $\alpha$ e $\beta$ saem; entram $F_{rup}$ por $T_s$ e $m$, a fração
+preterminal, e a curva $\varphi(F/F_{rup})$, que colapsa acima de
+$T_s \approx 32$. O que o submetido dizia sobre a força de ruptura crescer com
+$T_s$ **se mantém e fica mais forte**: $F_{rup}$ sobe 10 vezes de $T_s=2$ a
+8192 (para $m=2$), 83% disso até $T_s = 128$; por molécula do esqueleto,
+$2{,}6$ vezes — o efeito da coordenação.
 
-### A resposta
+### 9.3 A resposta
 
 We thank the Referee. We agree that Eq. (5) was not derived from the model,
 and under the revised loading protocol the question resolved itself: the
@@ -788,19 +793,19 @@ for the five values of $m$ and the collapsed damage curves; the quantities
 plotted have direct definitions in the model and require no phenomenological
 form.
 
-### Rastreabilidade
+### 9.4 Rastreabilidade
 
 | número | origem |
 |:--|:--|
-| $\beta \le 0$, erro 0,09–0,25; lei de potência $\alpha$ 0,73–1,35, erro < 0,02 | `Reviews/N9_damage_curves/damage_condition_table.csv` (colunas `eq5_all_*`, `power_intact_*`) |
-| fração preterminal 9%–34% | idem, `phi_preterminal` (0,342 em $T_s=2$, $m=1$; 0,089 em $T_s=64$, $m=10$) |
-| $F_{rup}$ 150,6±35,9 → 1532,4±217,5 ($m=2$); 903 → 2495 em 8192 com $m$; CV 0,12–0,29 | `damage_summary.csv` |
+| $\beta \le 0$, erro $0{,}09$–$0{,}25$; lei de potência $\alpha$ $0{,}73$–$1{,}35$, erro $< 0{,}02$ | `Reviews/N9_damage_curves/damage_condition_table.csv` (colunas `eq5_all_*`, `power_intact_*`) |
+| fração preterminal 9%–34% | idem, `phi_preterminal` ($0{,}342$ em $T_s=2$, $m=1$; $0{,}089$ em $T_s=64$, $m=10$) |
+| $F_{rup}$ $150{,}6 \pm 35{,}9 \to 1532{,}4 \pm 217{,}5$ ($m=2$); $903 \to 2495$ em 8192 com $m$; CV $0{,}12$–$0{,}29$ | `damage_summary.csv` |
 | 83% da subida até $T_s=128$: $(1299-151)/(1532-151)$ | idem |
-| por molécula 0,25 → 0,66 (2,6×) | `damage_condition_table.csv`, `f_rup_per_rod` |
-| colapso de $\varphi(F/F_{rup})$: $\varphi(0{,}9)$ = 0,178 (2), 0,102 (32), 0,098 (128), 0,100 (8192) | idem, `phi_u090`; curvas em `damage_ts<TS>_m<M>_curve_norm.csv` |
+| por molécula $0{,}25 \to 0{,}66$ ($2{,}6$ vezes) | `damage_condition_table.csv`, `f_rup_per_rod` |
+| colapso de $\varphi(F/F_{rup})$: $\varphi(0{,}9) = 0{,}178$ (2), $0{,}102$ (32), $0{,}098$ (128), $0{,}100$ (8192) | idem, `phi_u090`; curvas em `damage_ts<TS>_m<M>_curve_norm.csv` |
 | extração e tabela | `Code/Data_analysis/extract_damage_curves.py`, `summarize_damage_curves.py`; job 590854, SDumont2 `cpu_amd` |
 
-Linhas do submetido que mudam:
+: Origem dos números da resposta a R1-7. {#tbl-r17-fontes tbl-colwidths="[45,55]"}
 
 | linha | trecho | intervenção |
 |:--|:--|:--|
@@ -809,67 +814,75 @@ Linhas do submetido que mudam:
 | 250 | "stabilization of the fit parameters $\alpha$ and $\beta$" | sai com o parágrafo |
 | 265 | conclusão: "saturation of the damage-related parameters $\alpha$ and $\beta$" | retirar |
 
+: Linhas do submetido que a resposta a R1-7 obriga a mudar. {#tbl-r17-linhas tbl-colwidths="[8,52,40]"}
+
 ---
 
-## R1-1 — Physical grounding of $T_s$ (reaproveita)
+## 10. Respostas que reaproveitam o texto atual
 
-**Decisão:** N1 fechado; a resposta da carta atual vale, e o texto já existe
+### 10.1 R1-1 — Physical grounding of $T_s$
+
+**Decisão.** N1 fechado; a resposta da carta atual vale, e o texto já existe
 em `Paper/paper_PRE.tex:137` (razão deposição/salto; estimativa de
-Parkinson1995 de ~10 moléculas por segundo) e `:349` (limitação: calibrar
-$T_s$ exige escalas de tempo independentes; a fibrilogênese in vivo é
+Parkinson1995 de $\sim 10$ moléculas por segundo) e `:349` (limitação:
+calibrar $T_s$ exige escalas de tempo independentes; a fibrilogênese in vivo é
 organizada pela célula). A especulação sobre enfisema e aneurisma sai.
 
-**Resposta:** a de `Carta_Resposta/Response_to_Referees.tex`, Point 1, sem
+**Resposta.** A de `Carta_Resposta/Response_to_Referees.tex`, Point 1, sem
 alteração de conteúdo. Conferir em N14 que as duas citações literais batem
 com o `.tex` final.
 
-Linhas do submetido: 118 (inserir o trecho de `:137` do atual); 261 (inserir a
-limitação, adaptada de `:349`); 271 (retirar "We speculate that compactness …
-aneurysm"; manter a frase de trabalho futuro).
+**Linhas do submetido:** 118 (inserir o trecho de `:137` do atual); 261
+(inserir a limitação, adaptada de `:349`); 271 (retirar "We speculate that
+compactness … aneurysm"; manter a frase de trabalho futuro).
 
----
+### 10.2 R1-6 — Molecular aspect ratio
 
-## R1-6 — Molecular aspect ratio (reaproveita)
+**Decisão.** N6 fechado; parágrafo pronto em `Paper/paper_PRE.tex:347`.
 
-**Decisão:** N6 fechado; parágrafo pronto em `Paper/paper_PRE.tex:347`.
+**Resposta.** A da carta atual, Point 6.
 
-**Resposta:** a da carta atual, Point 6. Linha do submetido: 261 (inserir o
-parágrafo das idealizações antes de "Fracture is implemented …").
+**Linha do submetido:** 261 (inserir o parágrafo das idealizações antes de
+"Fracture is implemented …").
 
----
+### 10.3 R2-2 — Localized versus equal load sharing
 
-## R2-2 — Localized versus equal load sharing (reaproveita, vocabulário novo)
-
-**Decisão:** N3 fechado; o parágrafo dos dois canais
+**Decisão.** N3 fechado; o parágrafo dos dois canais
 (`Paper/paper_PRE.tex:230`) vale na substância — carga uniforme por seção,
 resistência local por coordenação, nenhuma das duas classes — e só troca
 "removal probability" por "threshold". A resposta da carta atual (Point 2)
 também vale; a última frase passa a citar a cascata de R2-3.
 
-Linhas do submetido: 185 (inserir o parágrafo dos dois canais depois da
+**Linhas do submetido:** 185 (inserir o parágrafo dos dois canais depois da
 definição de $K$, em vocabulário de limiar); 250 e 269 (saem com R1-3).
 
 ---
 
-## Estado do documento
+## 11. Estado do documento
 
 | Crítica | Nó | Resposta | Pendência antes da carta |
 |:--|:--|:--|:--|
-| R2-1 | N2 | rascunho | localizar o CSV da varredura em $\Delta F$ ou retirar 92,6 → 188,0 |
+| R2-1 | N2 | rascunho | localizar o CSV da varredura em $\Delta F$ ou retirar $92{,}6 \to 188{,}0$ |
 | R2-3 | N2/N8 | rascunho | — |
 | R1-2 | N4, N10 | rascunho | figura nova (sobrevivência + escada) |
 | R1-3 | N5, N11 | rascunho | conferir Yang2012 no PDF |
 | R2-4 | N4 | rascunho | — |
-| R1-4 | N7 | rascunho | harmonizar o critério de "décadas" (0,4–0,7 vs 0,57–0,90); Fig. 3 nova |
+| R1-4 | N7 | rascunho | harmonizar o critério de "décadas" ($0{,}4$–$0{,}7$ contra $0{,}57$–$0{,}90$); Fig. 3 nova |
 | R1-5 | N12 | rascunho | — (teste por fibrila é extensão) |
 | R1-7 | N9 | rascunho | Fig. 7 nova |
 | R1-1 | N1 | reaproveita | — |
 | R1-6 | N6 | reaproveita | — |
 | R2-2 | N3 | reaproveita | — |
 
-Figuras do manuscrito revisado (numeração provisória): 1–2 inalteradas; **3**
-$D_f$ sob regra uniforme + inclinação local; 4–6 inalteradas (legenda da 6
-adaptada); **7** $F_{rup}$ e $\varphi(F/F_{rup})$; **8** sobrevivência das
-cascatas por $T_s$ e escada de tamanho; **9** parâmetros do ajuste descritivo
-por $m$ — ou fundida na 8. A Fig. 7 (correlações) e a Fig. 8 ($\Psi$) do
-estado atual/submetido saem.
+: Estado das onze respostas e o que falta antes de cada uma entrar na carta. {#tbl-estado tbl-colwidths="[12,14,16,58]"}
+
+Figuras do manuscrito revisado, em numeração provisória: 1–2 inalteradas;
+**3** $D_f$ sob regra uniforme mais a inclinação local; 4–6 inalteradas
+(legenda da 6 adaptada); **7** $F_{rup}$ e $\varphi(F/F_{rup})$; **8**
+sobrevivência das cascatas por $T_s$ e escada de tamanho; **9** parâmetros do
+ajuste descritivo por $m$ — ou fundida na 8. A Fig. 7 (correlações) e a Fig. 8
+($\Psi$) do estado atual e do submetido saem.
+
+Conforme o `AGENTS.md` §8, as figuras são montadas no xmgrace: o Python
+exporta um diretório de `.dat` por figura, com README nomeando o CSV de origem
+e o script que os gerou, e o `.agr` é versionado ao lado dos dados.

@@ -154,7 +154,7 @@ def c4_caminhos_do_estado() -> None:
         falhou("Reviews/Estado_revisao_ER12738.md não existe")
         return
     texto = open(ESTADO).read()
-    padrao = re.compile(r"`([A-Za-z_][\w/.\-]*\.(?:tex|py|md|zip|sh|cpp))")
+    padrao = re.compile(r"`([A-Za-z_][\w/.\-]*\.(?:tex|qmd|py|md|zip|sh|cpp))")
     faltando = sorted({
         c for c in padrao.findall(texto)
         if "/" in c and not os.path.exists(os.path.join(RAIZ, c))

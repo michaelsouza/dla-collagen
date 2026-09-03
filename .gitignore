@@ -66,3 +66,11 @@ Carta_Resposta/Response_to_Referees.pdf
 # sessões paralelas), e o caminho absoluto em settings.local.json não vale no cluster.
 .claude/memory/
 .claude/settings.local.json
+
+# Saídas do Quarto: reconstruíveis com `quarto render`, e o HTML embute recursos
+# (1,4 MB) que mudam a cada renderização. O .qmd é a fonte. Um nome por
+# documento, e não `Reviews/*.pdf`, porque o glob sombrearia
+# Reviews/Response_to_Referees.pdf, que é versionado.
+Reviews/.quarto/
+Reviews/Respostas_ER12738.html
+Reviews/Respostas_ER12738.pdf
