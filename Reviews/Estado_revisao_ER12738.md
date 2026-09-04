@@ -3,7 +3,8 @@
 **Manuscrito:** *Scaling behaviors in simulated collagen fibrils*
 **Governa:** `Paper/paper_PRE.tex`, `Carta_Resposta/Response_to_Referees.tex`
 **Referência congelada:** `Paper/submitted_ER12738/paper_PRE.tex` — o que os revisores leram (commit `5d2d272`)
-**Base do manuscrito revisado:** `Paper/submitted_ER12738/paper_PRE.tex`, sob a regra de intervenção mínima (decisão de 2026-09-03). `Paper/paper_PRE.tex` foi reconstruído a partir dela em 2026-09-03 e está **90 linhas de diff** à frente (a revisão descartada tinha 187); compila em 20 páginas, sem referência nem citação indefinida. O texto de N1, N3 e N6 veio do commit `179f7ea`.
+**Base do manuscrito revisado:** `Paper/submitted_ER12738/paper_PRE.tex`, sob a regra de intervenção mínima (decisão de 2026-09-03). `Paper/paper_PRE.tex` foi reconstruído a partir dela em 2026-09-03 e está **93 linhas de diff** à frente (a revisão descartada tinha 187); compila em 20 páginas, sem referência nem citação indefinida. O texto de N1, N3 e N6 veio do commit `179f7ea`.
+**Repositório:** limpo em 2026-09-03 (`2b4d205`, `397004e`): figuras da carta antiga e checkpoint `Reviews/Response_to_Referees.*` removidos, export do protocolo recozido movido para `Reviews/annealed_protocol/`, `.gitignore` sem padrões mortos, `AGENTS.md` sem o `Issues/` inexistente — ver `Reviews/decision_log/2026-09-03_limpeza_pos_manuscrito.md`. Árvore limpa e `main` = `origin/main`.
 **Conferido em:** 2026-09-03
 
 > **Este arquivo é editado, nunca acrescido.** Ele diz o que é verdade agora.
@@ -138,5 +139,5 @@ O cluster ficou acessível em 2026-09-03 (VPN religada); o clone remoto está em
 ## Próximo passo
 
 1. **Ler o `.tex` revisado.** Os 22 blocos estão aplicados, em azul via `\rev`, e o PDF sai em 20 páginas. É a revisão de Michael que decide se o texto fica.
-2. **Rever as duas figuras.** Estão prontas — `.dat`, `.agr` e PDF —, montadas por `build_xmgrace_projects.py` e conferidas contra os CSVs de origem. O que falta é o olho de Michael sobre elas no xmgrace: escala, legenda e o que mais o gosto dos coautores pedir.
+2. **Rever as duas figuras.** Estão prontas — `.dat`, `.agr` e PDF —, montadas por `build_xmgrace_projects.py` e conferidas contra os CSVs de origem; já com símbolo por série (as cores da rampa eram próximas demais) e metade dos rótulos no eixo $y$, a pedido de Michael em 2026-09-03. O que falta é o olho dos coautores sobre elas no xmgrace.
 3. ~~**N14, a carta.**~~ Escrita em 2026-09-03. Falta a leitura de Michael e dos coautores, e a decisão de submeter.
