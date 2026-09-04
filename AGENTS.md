@@ -2,7 +2,7 @@
 
 **Este arquivo não contém objetivos, prioridades nem estado de tickets.** Só
 regras que sobrevivem à troca de assunto. O que está sendo feito agora está em
-`Reviews/Estado_revisao_ER12738.md`; os tickets estão em `Issues/`.
+`Reviews/Estado_revisao_ER12738.md`, cuja tabela de nós é a lista de tickets.
 
 ## 1. Como conversar comigo
 
