@@ -65,7 +65,7 @@
 \affiliation{Department of Biomedical Engineering, Boston University, Boston, MA, USA}
 
 \author{Ascânio Dias Araújo}
-\email{ascanio@fisica.ufc.br}
+ \email{ascanio@fisica.ufc.br}
 \affiliation{Departamento de Física, Universidade Federal do Ceará, Fortaleza, Ceará, Brasil}
 \affiliation{Departamento de Estatística e Matemática Aplicada, Universidade Federal do Ceará, Fortaleza, Ceará, Brasil}
 
@@ -79,13 +79,7 @@
 \date{\today}
 
 \begin{abstract}
-	Collagen fibrils are hierarchical protein assemblies that provide tensile strength and structural support to mammalian tissues.
-	Understanding the relationship between assembly kinetics, structural organization, and mechanical properties is fundamental to soft matter physics, biomechanics and biomaterials science.
-	Here, we investigate the formation of collagen fibrils using a modified diffusion-limited aggregation (DLA) model.
-	\rev{Rod-like molecules attach to an existing core and carry out up to a fixed number of surface-diffusion steps, $T_s$, to minimize the exposed surface area.}
-	Our findings indicate that increasing \rev{$T_s$} results in a morphological transition from fractal aggregates to compact structures, characterized by a systematic evolution of the fibril's fractal dimension.
-	We also develop a probabilistic fracture model to investigate the dependence of the fibril's mechanical failure on its architecture governed by $T_s$.
-	\rev{Our results show that rupture proceeds through stochastic avalanche events under progressively increasing external force and that the event-size distributions vary systematically with $T_s$, indicating an influence of fibril architecture on collective damage.}
+Collagen fibrils are hierarchical protein assemblies that provide tensile strength and structural support to mammalian tissues. Understanding the relationship between assembly kinetics, structural organization, and mechanical properties is fundamental to soft matter physics, biomechanics and biomaterials science. Here, we investigate the formation of collagen fibrils using a modified diffusion-limited aggregation (DLA) model. Rod-like molecules attach to an existing core and \rev{carry out up to a fixed number of surface-diffusion steps, $T_s$,} to minimize the exposed surface area. Our findings indicate that increasing $T_{s}$  results in a morphological transition from fractal aggregates to compact structures, characterized by a systematic evolution of the fibril's fractal dimension. We also develop a probabilistic fracture model to investigate the dependence of the fibril's mechanical failure on its architecture governed by $T_s$. \rev{Our results show that rupture proceeds through cascades of molecular failures at fixed external force, and that more compact fibrils are markedly stronger: the mean rupture force grows by an order of magnitude across the range of $T_s$. Preterminal damage is dominated by single-molecule events and is bounded by an intrinsic cutoff at a few tens of molecules, in every architecture and at every width of the molecular strength distribution, and above $T_s \approx 16$ the cascade distributions become nearly independent of the architecture. Failure then arrives as a single catastrophic cascade that severs the fibril, removing most of a backbone that is still largely intact.}
 \end{abstract}
 
 % insert suggested keywords - APS authors don't need to do this
@@ -102,24 +96,14 @@ Type I collagen is the principal structural protein of the mammalian extracellul
 
 Characterizing the mechanical behavior of collagen fibrils, particularly at the nanoscale, presents significant challenges \cite{Nalbach2022}. Experimental techniques such as atomic force microscopy (AFM) and micro-mechanical actuation have successfully probed the tensile properties of isolated fibrils. Van der Rijt et al. used AFM to measure the mechanical properties of tendon fibrils, evaluating their tensile behavior until failure \cite{vanderRijt2006}, while Svensson et al.~\cite{Svensson2018} developed a piezoelectric actuator-based technique to measure stress and strain during uniaxial stretching. However, resolving the collective molecular dynamics that govern failure remains difficult due to experimental resolution limits, particularly when characterizing small-scale forces and intermolecular interactions \cite{Andriotis2023}. Consequently, computational modeling has become indispensable for exploring the relationship between intrafibrillar organization and macroscopic mechanical response under a wider range of conditions.
 
-Several theoretical frameworks have been developed to address fibril mechanics.
-Buehler et al. introduced coarse-grained molecular dynamics to model large-scale deformation, while Depalle et al. investigated the role of mineralization in stabilizing fibril elasticity in bone \cite{Buehler2006a,Buehler2006b,Buehler2008a,Buehler2008b,Depalle2016}.
-Other stochastic approaches have examined how enzymatic degradation alters tissue mechanics \cite{Arau2011} and how morphological features like waviness influence fiber modulus \cite{Deng2024}.
-Despite these advances, the role fractal organization may play in the mechanical resilience and the statistical dynamics of rupture remains largely unexplored.
+Several theoretical frameworks have been developed to address fibril mechanics. Buehler et al. introduced coarse-grained molecular dynamics to model large-scale deformation, while Depalle et al. investigated the role of mineralization in stabilizing fibril elasticity in bone\cite{Buehler2006a,Buehler2006b,Buehler2008a,Buehler2008b,Depalle2016}. Other stochastic approaches have examined how enzymatic degradation alters tissue mechanics \cite{Arau2011} and how morphological features like waviness influence fiber modulus \cite{Deng2024}. Despite these advances, the role fractal organization may play in the mechanical resilience and the statistical dynamics of rupture remains largely unexplored.
 
-\rev{The formation of real fibrils is entropy-driven, by the release of water bound to the molecular surface, which favors lateral association and minimizes the exposed surface area \cite{Kadler1987,Parkinson1995}; electrostatic interactions modulate this association \cite{Jiang2004,Morozova2018}.
-	During collagen fibrillogenesis, the resulting molecular organization reflects the competition between the rate of molecular incorporation and the opportunity for local rearrangement during growth.
-	Experimental studies show that physicochemical conditions—such as temperature, collagen concentration, pH, ionic strength, and buffer composition—modify electrostatic interactions, lateral association, and assembly kinetics \cite{Kadler1988,Yang2009,Gobeaux2008,Kalbitzer2018,Morozova2018}, simultaneously altering incorporation and relaxation rates to shift this balance. Following Garc\'ia-Ruiz and Ot\'alora \cite{Garci1991} and Parkinson et al.~\cite{Parkinson1995}, this growth-to-relaxation balance is represented in a discrete, coarse-grained form through a dimensionless surface diffusion parameter $T_s$, where increasing $T_s$ provides greater opportunity for post-attachment relaxation relative to continued growth and leads to progressively more compact fibrils.}
-
-In this work, we investigate the interplay between fractal structure and failure mechanics of collagen fibrils. To explore the structural and mechanical consequences of this process, we employ a modified Diffusion-Limited Aggregation (DLA). By coupling this structural model with a probabilistic fracture simulation, we show that $T_s$ governs both the fractal dimension and the mechanical strength of the fibril.
-Although the fracture model is inherently stochastic, it captures the essential role that structural compactness plays in determining the fibril's mechanical response.
-This model reveals stochastic avalanche dynamics during progressive failure in a driven disordered fracture process \cite{Zapperi1997a,Zapperi1999}.
+In this work, we investigate the interplay between fractal structure and failure mechanics of collagen fibrils. We employ a modified Diffusion-Limited Aggregation (DLA) model incorporating a surface diffusion process, controlled by the number of diffusion steps $T_s$ that regulates the degree of lateral compaction and minimizes the exposed surface area \cite{Parkinson1995}. By coupling this structural model with a probabilistic fracture simulation, we show that $T_s$ governs both the fractal dimension and the mechanical strength of the fibril. Although the fracture model is inherently stochastic, it captures the essential role that stuctural compactness plays in determining the fibril's mechanical response. \rev{This model reveals stochastic avalanche dynamics during progressive failure in a driven disordered fracture process \cite{Zapperi1997a,Zapperi1999}.}
 
 \section{Model and Results}
 \subsection{Fibril Formation Model}
 
-We modeled collagen fibril formation using a three-dimensional diffusion-limited aggregation (DLA) algorithm on a cubic lattice.
-\rev{Collagen molecules were represented as rigid rods (rectangular bars) with dimensions $L_x = 1$, $L_y = 18$, and $L_z = 1$ in lattice units (l.u.), following the lattice-rod representation used by Parkinson et al.~\cite{Parkinson1997}, with $L_y$ defining the characteristic length scale of the model.}
+We modeled collagen fibril formation using a three-dimensional diffusion-limited aggregation (DLA) algorithm on a cubic lattice. Collagen molecules were represented as rigid rods (rectangular bars) with dimensions $L_x = 1$, $L_y = 18$, and $L_z = 1$ in lattice units (l.u.), with $L_y$ defining the characteristic length scale of the model.
 
 The aggregation begins by placing the first molecule at the lattice center. Subsequent molecules are released one at a time from random positions on a sphere of radius $R$ centered at the origin. The radius $R$ is updated to track the maximum extent of the growing aggregate along the $y$-axis. Each molecule then performs a random walk on the lattice until one of the following conditions is met:
 
@@ -132,25 +116,20 @@ After each attachment, $R$ is recalculated. For simplicity, molecular rotation d
 
 Diffusion is implemented as a three-dimensional random walk on the cubic lattice. In the $x$-$z$ plane, molecules can move to first-neighbor sites ($1~\text{l.u.}$) or second-neighbor sites ($\sqrt{2}~\text{l.u.}$, i.e., diagonal moves). Along the $y$-axis, movement is restricted to first-neighbor sites ($1~\text{l.u.}$). In real collagen fibrillogenesis, lateral aggregation occurs with a characteristic axial spacing of $67~\text{nm}$ \cite{Kadler1996}, which constrains the positions where new molecules can be incorporated. In our model, molecular attachment is restricted to multiples of $4~\text{l.u.}$ along the $y$-axis \cite{Parkinson1995}.
 
-After attachment, a newly incorporated molecule performs a random walk restricted to the $x$-$z$ plane, with no movement along the $y$-axis, using the same rules described above. The molecule is allowed up to $T_s$ lateral surface-diffusion attempts to search the local surface and is placed at the visited position that minimizes its exposed area; if multiple positions are equivalent, the first one encountered is retained \cite{Garci1991}. Using this algorithm, we generated ensembles of fibrils across ten values of the surface diffusion parameter, $T_s \in \{2, 8, 16, 32, 64, 128, 512, 1024, 4096, 8192\}$, to examine how post-attachment mobility controls fibril compactness, structure, and subsequent mechanical response.
+\rev{The formation of real fibrils is entropy-driven, by the release of water bound to the molecular surface, which favors lateral association and minimizes the exposed surface area \cite{Kadler1987,Parkinson1995}; electrostatic interactions modulate this association \cite{Jiang2004,Morozova2018}.} To mimic this relaxation, we implemented a lateral surface-diffusion step after attachment: a newly incorporated molecule performs a random walk restricted to the $x$-$z$ plane (no movement along the $y$-axis), using the same rules described above. The molecule is allowed up to $T_s$ diffusion attempts to search the local surface and is placed at the position that minimizes its exposed area; if multiple positions are equivalent, the first one encountered is retained \cite{Garci1991}. Using this algorithm, we generated ensembles of fibrils for different values of $T_s$ to examine how post-attachment mobility controls fibril compactness, structure, and subsequent mechanical response.
 
 \rev{Because molecules are released one at a time and complete their surface relaxation before the next is released, $T_s$ sets the number of lateral surface-diffusion trials available per deposition event, and therefore represents the ratio between the deposition and the surface-hopping timescales. This sequential regime is consistent with the estimate of Parkinson et al.~\cite{Parkinson1995} that, at the critical concentration for fibril formation in vitro, only of order ten collagen molecules lie close enough to a given region of the fibril surface to collide with it within one second, so that molecules effectively arrive in isolation. Conditions that accelerate incorporation relative to surface mobility therefore correspond to a smaller effective $T_s$.}
 
 \begin{figure}[!htb]
 	\centering
 	\includegraphics[width=0.7\textwidth]{figure_1.pdf}
-	\caption{Representative fibril segments generated with the DLA algorithm\rev{, each} containing 30,000 molecules.
-		\rev{Panels $(a)$ and $(b)$ show typical fibrils obtained with $T_s = 2$ (few post-attachment surface-diffusion attempts) and $T_s = 8192$ (many post-attachment surface-diffusion attempts), respectively.}
-		Colors indicate the relative time of attachment, from early (blue) to late (red).}
+	\caption{Representative fibril segments generated with the DLA algorithm containing 30,000 molecules. Panels $(a)$ and $(b)$ show typical fibrils obtained with $T_s = 2$ (short-term diffusion) and $T_s = 8192$ (long-term diffusion), respectively. Colors indicate the relative time of attachment, from early (blue) to late (red).}
 	\label{fig_1}
 \end{figure}
 
 The generated fibrils exhibit complex, heterogeneous packing with internal voids whose prevalence depends strongly on $T_s$ (Fig.~\ref{fig_1}). For $T_s = 2$, the fibril displays an open architecture with visible gaps between molecular clusters. In contrast, for $T_s = 8192$, the structure becomes more compact and homogeneous, with substantially reduced void space.
 
-Although fibril growth proceeds primarily along the longitudinal axis ($y$-direction), the influence of the surface diffusion parameter $T_s$ is most pronounced in the radial organization of the structure ($x$-$z$ plane), as illustrated in Fig.~\ref{fig_2}.
-At low $T_s$ (Fig.~\ref{fig_2}a), the projected cross-sections are open and branched.
-As $T_s$ increases, however, the packing becomes progressively more compact and regular, reaching a highly uniform configuration at $T_s = 8192$ (Fig.~\ref{fig_2}d).
-\rev{Because higher local packing density may increase intermolecular connectivity, this morphological transition motivates the mechanical analysis below, in which connectivity and load-bearing behavior are quantified directly.}
+Although fibril growth proceeds primarily along the longitudinal axis ($y$-direction), the influence of the surface diffusion parameter $T_s$ is most pronounced in the radial organization of the structure ($x$-$z$ plane), as illustrated in Fig.~\ref{fig_2}. At low $T_s$ (Fig.~\ref{fig_2}a), the projected cross-sections are open and branched. As $T_s$ increases, however, the packing becomes progressively more compact and regular, reaching a highly uniform configuration at $T_s = 8192$ (Fig.~\ref{fig_2}d). Since a higher local packing density implies a greater number of intermolecular contacts, this morphological transition suggests that fibrils formed at larger $T_s$ exhibit enhanced connectivity and mechanical stability \cite{Mohammadkhah2023}.
 
 \begin{figure}[!htb]
 	\centering
@@ -169,14 +148,15 @@ by performing a linear fit on a log-log plot of $\langle m(R) \rangle$ versus $R
 
 As shown in Fig.~\ref{fig_3}, $D_f$ depends strongly on $T_s$, providing a quantitative measure of the morphological transition observed in Fig.~\ref{fig_2}. For $T_s = 2$, we find that $D_f = 1.708 \pm 0.005$, close to the characteristic value of two-dimensional diffusion-limited aggregation ($D_f \approx 1.71$) \cite{Witten1983}. As $T_s$ increases, $D_f$ rises and saturates at $D_f = 1.963 \pm 0.001$ for $T_s = 8192$, approaching the Euclidean limit of $D_f = 2.0$ expected for a compact two-dimensional disk. Thus, increasing post-attachment mobility drives a crossover from diffusion-limited, fractal packing to nearly space-filling cross-sections.
 
+\rev{Here $D_f$ serves as an effective morphological descriptor of cross-sectional compaction, while the mechanics developed below is governed by two quantities measured directly on the three-dimensional backbone: the load-bearing area of each cross-section, $N(i)$, and the molecular coordination, $K$. Given the fibril radii accessible in simulation, $15$ to $40$ lattice units, the mass--radius scaling spans less than a decade, so the fitted slope tracks the structural transition toward compactness rather than an asymptotic scaling regime, and its value depends on the fitting window.}
+
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.7\textwidth]{figure_3.pdf}
 	\caption{Average fractal dimension $D_f$ as a function of the diffusion parameter $T_s$ on a log-linear plot. Error bars are shown in red. The fractal dimension increases from $D_f = 1.708 \pm 0.005$ at $T_s = 2$ to $D_f = 1.963 \pm 0.001$ for $T_s = 8192$.}
 	\label{fig_3}
-\end{figure}
+\end{figure}		
 
-\rev{The mechanical relevance of this cross-sectional descriptor is evaluated below by comparing $D_f$ with three-dimensional structural quantities entering the rupture model, after these quantities have been introduced.}
 
 \subsection{Mechanical Model for Fibril Rupture}
 
@@ -207,27 +187,17 @@ We assume that local failure occurs by rupturing intermolecular bonds so that mo
 	\label{eq3}
 \end{equation}
 
-\rev{Following Parkinson et al.~\cite{Parkinson1997}, a molecule's resistance to detachment is assumed to scale with the number of intermolecular contacts it forms within the backbone.}
-For each molecule, we count first-neighbor contacts for every segment in each intersected cross-section and sum these contributions to obtain the total coordination number $K$.
-The corresponding failure threshold is $K\sigma_c$, where $\sigma_c$ is the critical stress for bond rupture; we set $\sigma_c = 1$, assuming identical molecules.
-To simplify the model, both the applied force parameter $F$ and the critical stress $\sigma_c$ are treated as dimensionless quantities in arbitrary units.
-Hence, $\sigma_c = 1$ represents the normalized threshold for intermolecular bond rupture, which allows us to focus on relative mechanical behavior rather than absolute physical values.
+A molecule's resistance to detach is assumed to scale with the number of intermolecular contacts it forms within the backbone \cite{Vater1979}. For each molecule, we count first-neighbor contacts for every segment in each intersected cross-section and sum these contributions to obtain the total coordination number $K$. The corresponding failure threshold is \rev{$\sigma^{\mathrm{th}} = K\sigma_c X$, where $X$ is a quenched strength variable drawn once per molecule before loading (Eq.~\ref{eq4}) and} $\sigma_c$ is the critical stress for bond rupture; we set $\sigma_c = 1$, assuming identical molecules. To simplify the model, both the applied force parameter $F$ and the critical stress $\sigma_c$ are treated as dimensionless quantities in arbitrary units. Hence, $\sigma_c = 1$ represents the normalized threshold for intermolecular bond rupture, which allows us to focus on relative mechanical behavior rather than absolute physical values.
 
-The probability of removing a molecule is then given by:
+\rev{The strength of each molecule is fixed before loading rather than resampled during it. Molecule $i$ draws a variable $X_i \in [0,1]$ once, with cumulative distribution}
 
 \begin{equation}
-	{\color{blue}
-		P_{R} = \min\left\{1, \left( \dfrac{\sigma_{M}}{K\sigma_c} \right)^{m}\right\},
-		\label{eq4}
-	}
+	\rev{P(X_i \le x) = x^{m}, \qquad \sigma^{\mathrm{th}}_{i} = K_i \sigma_c X_i,}
+	\label{eq4}
 \end{equation}
-where $m$ is the Weibull modulus (dimensionless shape parameter) that controls the amount of statistical scatter in this stochastic removal rule~\cite{Parkinson1997,Jones2012}.
-\rev{The outer minimum ensures that $P_R$ remains a valid probability; values of the unbounded expression greater than or equal to unity correspond to certain removal during that assessment.}
-Larger $m$ yields a narrower distribution of effective rupture strengths (less variability), whereas smaller $m$ produces broader scatter.
-Here, we set $m = 2$ following the work of Parkinson et al.~\cite{Parkinson1997}.
-Fig.~\ref{fig_5} schematically illustrates the calculation of $\sigma(i)$, $\sigma_{M}$, and $K$ for a representative molecule.
+\rev{and fails when its mean stress $\sigma_{M,i}$ exceeds its threshold $\sigma^{\mathrm{th}}_{i}$. Under this rule the probability that a molecule of coordination $K$ has failed once its mean stress reaches $\sigma$ is $(\sigma/K\sigma_c)^{m}$, so Eq.~(\ref{eq4}) is the original removal probability of our model read as a distribution of strengths; the weakening of a molecule as it loses neighbors, through $K$, is preserved unchanged. Here $m$ is the Weibull modulus, a dimensionless shape parameter controlling the scatter of the strengths~\cite{Parkinson1997,Jones2012}: larger $m$ yields a narrower distribution of rupture strengths, smaller $m$ a broader one. No Weibull modulus has been reported for single collagen fibrils, so we sweep $m \in \{1,2,3,5,10\}$ and retain $m = 2$, the value used by Parkinson et al.~\cite{Parkinson1997}, as the illustrative case in the figures.} Fig.~\ref{fig_5} schematically illustrates the calculation of $\sigma(i)$, $\sigma_{M}$, and $K$ for a representative molecule.
 
-\rev{Equations~(\ref{eq2})--(\ref{eq4}) combine uniform load sharing within each cross-section with local coordination-dependent molecular resistance. When a molecule is removed, $N(i)$ decreases only in the cross-sections it previously occupied, and the corresponding stress increase is shared uniformly among the remaining segments within each affected cross-section. The removal also reduces $K$ for the molecule's nearest neighbors, lowering their resistance to subsequent removal. This local dependence of the rupture probability does not constitute local load sharing in the conventional fiber-bundle sense because the model contains no distance-dependent elastic stress-redistribution kernel. Conversely, because $N(i)$ varies along the fibril and molecules span different sets of cross-sections, the model is not a conventional equal-load-sharing fiber bundle governed by a single globally shared stress.}
+\rev{Equations~(\ref{eq2})--(\ref{eq4}) combine uniform load sharing within each cross-section with local, coordination-dependent molecular resistance. When a molecule is removed, $N(i)$ decreases only in the cross-sections it previously occupied, and the corresponding stress increase is shared uniformly among the remaining segments within each affected cross-section. The removal also reduces $K$ for the molecule's nearest neighbors, lowering their failure thresholds. Together these define a hybrid load-transfer mechanism: stress equilibrates uniformly among the active segments of each cross-section, while the failure thresholds respond to local coordination. Two features of the construction set it apart from the idealized limits. Stress is redistributed without any distance-dependent elastic kernel, so the coordination channel carries the only local information; and $N(i)$ varies along the fibril while molecules span different sets of cross-sections, so no single globally shared stress governs the bundle. The model therefore combines features of equal and local load sharing without mapping onto either limit.}
 
 \begin{figure}[ht!]
 	\centering
@@ -236,128 +206,64 @@ Fig.~\ref{fig_5} schematically illustrates the calculation of $\sigma(i)$, $\sig
 	\label{fig_5}
 \end{figure}
 
-\rev{For a given force level $F$, every molecule in the load-bearing backbone is assessed once by comparing its removal probability $P_R$ (Eq.~\ref{eq4}) with an independent random variable $u\in[0,1)$.}
-\rev{Here, $P_R$ is a dimensionless removal probability per assessment rather than a continuous-time failure rate.}
-\rev{If removals occur, the backbone is reassessed and another sweep is performed at the same $F$.}
-\rev{Following Parkinson et al.~\cite{Parkinson1997}, the first sweep with no new removals terminates that force step, after which the force is increased by $\Delta F=0.5$.}
-\rev{Because the model has no physical time scale, this criterion operationally separates the damage response at the current force from that produced by the next force increment; it is not interpreted as long-time stability under a sustained load.}
-\rev{Rupture occurs when a completely void cross-section eliminates the continuous load-bearing path.}
-The steps of this removal process are schematized in Fig.~\ref{fig_6}.
+\rev{Because $\sigma_{M,i} = F a_i$ with $a_i = \langle 1/N(i) \rangle$ averaged over the cross-sections that molecule $i$ spans, every molecule has a well-defined failure force $F^{*}_{i} = K_i \sigma_c X_i / a_i$. Loading is quasi-static and extremal: the external force is raised continuously to the smallest $F^{*}_{i}$ present in the current configuration. At that fixed force the corresponding molecule fails; stresses and coordinations are then recomputed, molecules that have lost their connection to both ends of the specimen are removed, and the update is repeated until no molecule is above its threshold. The cascade terminates deterministically, and the configuration reached before each subsequent increase of the force is stable by construction, since every surviving molecule satisfies $F^{*}_{i} > F$. There is no force increment, no repeated sweep at fixed force, and no stopping criterion, and the model contains no physical time: it describes neither creep nor delayed rupture. Rupture is defined as the appearance of a completely void cross-section, signaling failure of the backbone. The steps of this process are schematized in Fig.~\ref{fig_6}.}
 
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=0.9\textwidth]{figure_6.pdf}
-	\caption{Schematic view of the load-bearing backbone and the stages of the rupture process. (a) Two-dimensional view of the backbone subjected to an axial force $F$ along the $y$-axis.
-	Each molecule (gray) is assigned a removal probability $P_{R}$ (Eq.~\ref{eq4}); a molecule is removed when a random number \rev{$u\in[0,1)$} satisfies $u<P_{R}$. (b) Progressive damage after some molecules have been removed, represented by red dashed lines. (c) Rupture occurs when a cross-section becomes completely empty (solid lines), eliminating the continuous load path.}
+	\caption{Schematic view of the load-bearing backbone and the stages of the rupture process. (a) Two-dimensional view of the backbone subjected to an axial force $F$ along the $y$-axis. \rev{Each molecule (gray) carries a failure threshold $\sigma^{\mathrm{th}} = K\sigma_c X$ drawn once before loading (Eq.~\ref{eq4}); the external force is raised to the smallest failure force in the configuration, and the molecule that reaches it fails.} (b) Progressive damage after some molecules have been removed, represented by red dashed lines. (c) Rupture occurs when a cross-section becomes completely empty (solid lines), eliminating the continuous load path.}
 	\label{fig_6}
 \end{figure}
 
-\rev{Having defined the three-dimensional backbone and the quantities entering the rupture model, we assess whether the cross-sectional fractal dimension captures mechanically relevant transverse compactness. We therefore compare $D_f$ with structural properties of the three-dimensional backbone that directly determine load transmission and molecular resistance.}
+\rev{Because the molecular strengths are drawn at random, we sampled both the architecture and the disorder: for each value of $T_s$ and each value of $m$ we analyzed an ensemble of $200$ distinct fibrils, each containing $3\times 10^4$ molecules, and performed $50$ independent rupture realizations per fibril, that is, $10^4$ realizations for each of the fifty $(T_s, m)$ conditions. Realizations of the same fibril differ only in the drawn strengths. In each realization we recorded the molecules removed in every cascade and the external force at which the cascade occurred.}
 
-\rev{For each initial backbone, before any molecule was removed, we measured four structural descriptors. The mean load-bearing area was calculated over the $S_y=201$ axial layers as}
-\[
-	{\color{blue}
-			\langle N\rangle=\frac{1}{S_y}\sum_{i=1}^{S_y}N(i).
-		}
-\]
-\rev{The axial heterogeneity of the load-bearing area was quantified using its coefficient of variation,}
-\[
-	{\color{blue}
-			\mathrm{CV}(N)=
-			\frac{1}{\langle N\rangle}
-			\left[
-				\frac{1}{S_y-1}
-				\sum_{i=1}^{S_y}\left(N(i)-\langle N\rangle\right)^2
-				\right]^{1/2},
-		}
-\]
-\rev{where smaller values indicate a more uniform load-bearing area along the fibril. We also calculated the mean molecular coordination $\langle K\rangle$ over all molecules in the backbone and the mean molecular stress exposure $\langle\sigma_M\rangle_{F=1}$, obtained by evaluating Eq.~(\ref{eq3}) at $F=1$ and averaging over the backbone molecules.}
+\rev{To quantify the mechanical resistance of the fibrils we recorded, in each realization, the external force at which the backbone fails, $F_{\mathrm{rup}}$, and the fraction $\varphi$ of backbone molecules removed before the final cascade \cite{Parkinson1997}. Compact fibrils are markedly stronger. For $m = 2$ the mean rupture force grows from $151 \pm 36$ at $T_s = 2$ to $1532 \pm 218$ at $T_s = 8192$, an order of magnitude, with $83\%$ of the increase already attained at $T_s = 128$; per backbone molecule the force capacity grows by a factor of $2.6$, which follows from the higher coordination $K$ of compact packing (Fig.~\ref{fig_7}a). The rupture force varies between realizations of the same condition, with a coefficient of variation between $0.12$ and $0.29$.}
 
-\rev{For each $T_s$, these descriptors were averaged over 50 independent fibrils, and their uncertainties were calculated as standard errors of the mean. The corresponding uncertainty in $D_f$ is the standard error of the linear mass--radius fit. Because the relationships are monotonic and approach plateaus rather than remaining linear, associations were quantified using Spearman's rank correlation coefficient, $\rho$ \cite{Spearman1904,Schober2018}, across the ten ensemble-averaged $T_s$ conditions.}
+\rev{Damage before failure is modest, and it is not the gradual accumulation that the monotonic ensemble-averaged curve suggests. Depending on $T_s$ and $m$, only $9\%$ to $34\%$ of the backbone molecules are removed before the last cascade, and that cascade then removes $66\%$ to $91\%$ of what remains, in a single event at a single force. Rupture is therefore the sudden collapse of a still largely intact backbone rather than the endpoint of an accelerating loss of material; averaging over realizations that fail at different forces smooths the collapse into an apparent rapid rise. When the preterminal damage is plotted against the normalized force $F/F_{\mathrm{rup}}$, the curves collapse onto a common profile for $T_s \geq 32$ (Fig.~\ref{fig_7}b), so the dependence on architecture is carried almost entirely by $F_{\mathrm{rup}}$ itself.}
 
 \begin{figure}[ht!]
 	\centering
 	\includegraphics[width=\textwidth]{figure_7.pdf}
-	\caption{\rev{Relationship between the cross-sectional fractal dimension $D_f$ and structural descriptors of the three-dimensional load-bearing backbone: (a) mean load-bearing area $\langle N\rangle$; (b) mean molecular coordination $\langle K\rangle$; (c) axial coefficient of variation of the load-bearing area, $\mathrm{CV}(N)$; and (d) mean molecular stress exposure at unit force, $\langle\sigma_M\rangle_{F=1}$. Each point represents the ensemble average for one value of $T_s$, indicated by the color scale. Horizontal error bars are the standard errors of the mass--radius fits used to estimate $D_f$, while vertical error bars are standard errors of the mean across fibrils. The values of $\rho$ are Spearman correlations calculated across the ten $T_s$ conditions.}}
+	\caption{\rev{(a) Mean rupture force $F_{\mathrm{rup}}$ as a function of $T_s$, for the five values of the Weibull modulus $m$; error bars are standard deviations over the $10^4$ realizations of each condition. (b) Fraction $\varphi$ of backbone molecules removed before the final cascade, as a function of the normalized force $F/F_{\mathrm{rup}}$, for $T_s = 2, 32, 128$ and $8192$ at $m = 2$; the curves collapse for $T_s \geq 32$.}}
 	\label{fig_7}
 \end{figure}
 
-\rev{As shown in Fig.~\ref{fig_7}, $D_f$ is positively associated with the mean load-bearing area ($\rho=0.997$) and the mean molecular coordination ($\rho=0.997$). Conversely, $D_f$ is inversely associated with the axial variability of the load-bearing area ($\rho=-0.778$) and the mean molecular stress exposure at unit force ($\rho=-0.979$). Thus, increasing $D_f$ corresponds to backbones containing more load-bearing material, greater molecular coordination, and a more uniform axial distribution of the load-bearing area. Consistent with $\sigma(i)=F/N(i)$, these structural changes also reduce the mean molecular stress exposure for the same applied force.}
+\rev{During rupture, molecules fail in cascades at constant external force. We define the avalanche as the complete cascade released by one increase of the force: the molecules whose thresholds are exceeded, together with those that lose their continuous load path as a consequence, all removed before the force is raised again. This is the set of molecules that fail between two consecutive increases of the external force, and it is the standard avalanche of fiber-bundle models, a form of crackling dynamics in driven disordered systems \cite{Jaeger1992,Godano1993,Beggs2003,Baraba1996,Alencar2001,Suki1994}. It contains no free parameter: its extent is set by the model, not by a force increment or by a connectivity criterion. Because load sharing within a cross-section is uniform (Eq.~\ref{eq2}), removals that are spatially disconnected within one cascade are nonetheless causally linked, each triggered by the same force increase or by the redistribution that followed it, so we do not partition cascades into connected clusters. The final cascade of each realization, which eliminates the last continuous load path and removes most of the remaining backbone, is a single terminal event and is excluded from the preterminal statistics analyzed below.}
 
-\rev{Taken together, these results provide direct numerical validation that $D_f$ captures structural changes relevant to axial load bearing. Within its stated scope, which is the comparison of fibril ensembles generated at different $T_s$, $D_f$ therefore provides a compact and quantitatively supported proxy for mechanically relevant transverse compactness.}
 
-Since our rupture model is probabilistic, for each value of $T_s$ we analyzed an ensemble of $50$ distinct fibrils, each containing $3\times 10^4$ molecules, and performed $10^3$ independent rupture simulations per fibril, yielding $5\times10^4$ realizations per $T_s$. During each simulation, the force was increased gradually, and at each level we recorded the molecules removed from the backbone.
+% \rev{Figura do submetido com $\Psi$ retirada: o aglomerado conexo deixou de ser a definicao de avalanche.}
 
-To quantify the mechanical resistance of the fibrils, we analyzed the evolution of the average fraction of removed molecules, denoted by $\varphi$, as a function of the applied force $F$ \cite{Parkinson1997}. As shown in Fig.~\ref{fig_8}(a), $\varphi$ increases monotonically with $F$, reflecting progressive intermolecular bond ruptures and subsequent loss of load-bearing connectivity.
+\rev{We analyze this collective behavior from the viewpoint of avalanche statistics in driven disordered fracture~\cite{Zapperi1997a,Zapperi1999,Zapperi1997b}. The avalanche size $s$ is the number of molecules removed in one cascade, as defined above, and we compute the distribution of preterminal cascade sizes for each of the fifty $(T_s, m)$ conditions, $6.1 \times 10^{7}$ events in total.}
 
-The force threshold for complete fibril rupture increases with $T_s$, consistent with the enhanced connectivity of more compact fibrils.
-The simulated damage curves were fitted using the phenomenological form
+\rev{The distributions are heavy at small sizes and cut off at large ones. Single-molecule cascades dominate the preterminal dynamics: they account for between $0.55$ and $0.78$ of all events depending on the condition, and are the majority in every one of the fifty, while the $99$th percentile of the cascade size lies between $8$ and $43$ molecules. No condition sustains a power law over more than one decade above the smallest size at which one could be fitted, so we tested the hypothesis rather than assuming it. On the raw, integer-valued cascade sizes of every condition we followed Clauset et al.~\cite{Clauset2009}: the lower cutoff was selected by minimizing the discrete Kolmogorov--Smirnov distance, the exponent estimated by exact discrete maximum likelihood, the pure power law tested by a semiparametric goodness-of-fit against synthetic replicas, and the fit compared with alternative distributions by normalized likelihood ratios. The pure power law is rejected in $48$ of the $50$ conditions, and the lognormal and the stretched exponential win the likelihood comparison in $49$: the cascade distributions are bounded by an intrinsic upper cutoff.}
 
-\begin{equation}
-	f(F) = 10^{-3}\left[\exp(\beta F) -1 + F^{\alpha}\right].
-	\label{eq5}
-\end{equation}
-\rev{The two terms in Eq.~(\ref{eq5}) describe complementary stages of progressive failure rather than independent microscopic mechanisms. The power-law contribution $F^{\alpha}$ captures gradual damage accumulation at low and intermediate forces, where $\alpha$ serves as an effective force-sensitivity exponent. In more compact fibrils, larger load-bearing areas $N(i)$ and higher coordination numbers $K$ dilute local stresses and lower removal probabilities, buffering damage and decreasing $\alpha$ with increasing $T_s$.}
+\rev{The cutoff is a property of the model, not of the sampling. Above $T_s \approx 16$ it is insensitive to the architecture: at $m = 2$ the survival functions for $T_s = 16$, $128$, $1024$ and $8192$ nearly coincide, with $P(S>5)$ between $0.037$ and $0.042$ and the $99$th percentile of the cascade size at $12$ or $13$ molecules, while the most open architecture, $T_s = 2$, stands apart with $P(S>5) = 0.077$ and a $99$th percentile of $35$ (Fig.~\ref{fig_8}a). The width of the strength distribution does shift the balance between small and large events, in the direction expected: at $T_s = 128$, narrowing the disorder from $m = 1$ to $m = 10$ lowers the fraction of single-molecule cascades from $0.78$ to $0.59$ and raises the $99$th percentile from $8$ to $19$, because thresholds that lie closer together fail together (Fig.~\ref{fig_8}b). What does not change is the presence of the cutoff itself, which stays at a few tens of molecules over the whole grid. And each realization ends in one terminal cascade that removes most of the remaining backbone, so the process never settles into a stationary state with a diverging event scale: there is no healing mechanism by which a failed molecule could carry load again.}
 
-\rev{At higher forces, the exponential term accounts for late-stage damage amplification. Molecule removals locally reduce $N(i)$ and diminish neighboring coordination $K$, creating a positive-feedback cascade that accelerates failure. The parameter $\beta$ governs the force sensitivity of this instability, which is delayed to higher forces in better-connected fibrils (smaller $\beta$). Both $\alpha$ and $\beta$ stabilize for $T_s\geq 512$, paralleling the saturation of the structural backbone descriptors.}
+% \rev{Paragrafo do submetido sobre crossover LLS -> GLS e mudanca de classe de universalidade: retirado.}
 
 \begin{figure}[ht!]
 	\centering
+% Dados desta figura: Reviews/N10_cascade_survival/xmgrace/.
 	\includegraphics[width=\textwidth]{figure_8.pdf}
-	\caption{(a) Average fraction of removed molecules $\varphi$ versus applied force $F$ for $T_s = 8, 32, 128$, and $8192$.
-		\rev{Solid lines are fits to $f(F) = 10^{-3}[\exp(\beta F) -1 + F^{\alpha}]$. (b) and (c) Fitted parameters $\alpha$ and $\beta$, respectively, as a function of $T_s$; both decrease and approach a plateau for $T_s \geq 512$.}}
+	\caption{\rev{Survival function $P(S > s)$ of the preterminal cascade sizes, on logarithmic axes. (a) For $T_s = 2, 16, 128, 1024$ and $8192$ at $m = 2$: the curves for $T_s \geq 16$ nearly coincide, and only the most open architecture stands apart. (b) For the five values of the Weibull modulus $m$ at $T_s = 128$. The terminal cascade of each realization is excluded. No power law is fitted, because in every condition fewer than one decade of cascade sizes lies above the smallest size at which a fit could begin.}}
 	\label{fig_8}
 \end{figure}
 
-To better characterize the collective dynamics of the fracture process, we analyze the distribution of avalanche sizes. At each fixed force $F$, all molecules removed during the successive reassessment sweeps performed before the next force increment are grouped into a single avalanche of size $s$, irrespective of their spatial connectivity. Here, an avalanche denotes the complete damage response at one force step and does not imply spatial connectivity or system-spanning failure. A force step with no removals does not generate an avalanche. The terminal event that eliminates the continuous load-bearing path is excluded, so the statistical analysis is restricted to preterminal damage.
+A direct consequence of avalanche-like rupture is that sudden stress drops should exist in the stress--strain curve, since avalanches propagate faster than the imposed loading rate \cite{Noguchi2024}. Although our model does not predict strain and thus cannot generate stress--strain curves, experimental evidence strongly supports this prediction. Gutsmann et al. \cite{Gutsmann2004} used force spectroscopy on single microfibrils and directly observed force drops caused by intermolecular cross-link ruptures. Svensson et al. \cite{Svensson2013} found clear stress drops in tensile tests of individual collagen fibrils, while Deng et al. \cite{Deng2024} observed similar drops in the stress--strain curves.
 
-\rev{To characterize the avalanche-size distributions, we fitted their upper tails using a power law with an exponential cutoff~\cite{Zapperi1999,Klaus2011},}
+Our coarse-grained framework represents collagen molecules as rigid rods with restricted movement and no rotational diffusion. \rev{The rods have an aspect ratio of $18{:}1$, following Parkinson et al.~\cite{Parkinson1997}, substantially smaller than the $\approx 200{:}1$ ratio of real collagen monomers \cite{Buehler2008b}. While a fixed aspect ratio ensures a consistent geometry across all $T_s$, this simplification and the absence of rotational diffusion may quantitatively affect the coordination $K$, the load-bearing area $N(i)$, and the fractal dimension $D_f$. Our findings therefore capture the qualitative structural and mechanical trends of the model rather than exact quantitative predictions for biological fibrils.}
 
-\begin{equation}
-	{\color{blue}
-		P(s)\propto s^{-\gamma}\exp(-s/s_c),
-		\qquad s\geq s_{\min},
-		\label{eq6}
-	}
-\end{equation}
-\rev{where $\gamma$ is the power-law exponent and $s_c$ is the characteristic cutoff size. The parameters were estimated from the raw, integer-valued avalanche sizes by exact discrete maximum likelihood, without binning. For each $T_s$, the lower threshold $s_{\min}$ was selected by minimizing the discrete Kolmogorov--Smirnov distance after fitting the model~\cite{Clauset2009,Deluca2013}. The log-binned distributions in Fig.~\ref{fig_9}(a) are used only for visualization.}
-
-\rev{Figure~\ref{fig_9}(a) shows representative distributions for $T_s=2$, $32$, $128$, and $8192$. The systematic downward curvature at large $s$ is captured by the exponential cutoff and demonstrates that the distributions retain a characteristic avalanche-size scale rather than following a pure scale-free power law. Across the explored range, $\gamma$ rises overall from $1.019\pm0.010$ at $T_s=2$ to $2.253\pm0.009$ at $T_s=8192$, while $s_c$ changes from $44.3$ to $109.2$. The individual estimates of $\gamma$ and $s_c$ for all ten conditions are shown in Figs.~\ref{fig_9}(b) and \ref{fig_9}(c), respectively.}
-
-\rev{For compact fibrils with $T_s\geq512$, the independently fitted parameters stabilize at}
-
-\[
-	{\color{blue}
-			\gamma=2.204\pm0.034,
-			\qquad
-			s_c=101.0\pm5.6,
-		}
-\]
-\rev{where the quoted dispersions describe variation across the four compact conditions ($18\leq s_{\min}\leq21$, Kolmogorov--Smirnov distances $\leq 1.4\times10^{-3}$). The stabilization of $\gamma$ and $s_c$ mirrors the plateau in structural compactness ($D_f$), providing an empirical association between fibril architecture and avalanche statistics rather than a causal relationship or a specific universality class. The finite cutoff $s_c$ indicates cutoff avalanche dynamics rather than pure scale-free behavior.}
-
-\begin{figure}[ht!]
-	\centering
-	\includegraphics[width=\textwidth]{figure_9.pdf}
-	\caption{\rev{Preterminal avalanche-size distributions and fitted tail parameters. (a) Log-binned visualization of $P(s)$ for $T_s=2$, $32$, $128$, and $8192$. Symbols represent the empirical distributions and solid curves represent the power-law-with-exponential-cutoff model $P(s)\propto s^{-\gamma}\exp(-s/s_c)$. The models were fitted to the raw, integer-valued sizes with $s\geq s_{\min}$ by exact discrete maximum likelihood and are extended below $s_{\min}$ only for visual comparison. The distributions are vertically shifted for clarity. (b) Fitted exponent $\gamma$ and (c) cutoff scale $s_c$ plotted on linear vertical scales as functions of $\log_{10}T_s$. The standard errors of the individual $\gamma$ estimates are of the order of the symbol size. For $T_s\geq512$, both parameters stabilize around $\gamma=2.204\pm0.034$ and $s_c=101.0\pm5.6$, where the quoted dispersions describe variation among the four compact-regime conditions.}}
-	\label{fig_9}
-\end{figure}
-
-\rev{In physical fracture systems, avalanche dynamics typically manifest as intermittent drops in stress or force \cite{Noguchi2024}. Similar discrete force relaxations have been directly observed during tensile loading of individual collagen fibrils and microfibrils \cite{Gutsmann2004,Svensson2013,Deng2024}, supporting the physical relevance of intermittent molecular failure. Because our discrete model does not incorporate elastic deformation or continuous time, it does not generate full stress--strain curves or resolve rate-dependent propagation; nevertheless, it captures the underlying statistical distributions of these collective rupture events.}
-
-\rev{Several idealizations of our coarse-grained framework warrant discussion. In the assembly model, collagen molecules are represented as rigid lattice rods with an aspect ratio of $18{:}1$, following Parkinson et al.~\cite{Parkinson1997}. This aspect ratio is substantially smaller than the $\approx 200{:}1$ ratio of real collagen monomers \cite{Buehler2008b}, and molecular motion excludes rotational diffusion. While a fixed aspect ratio ensures a consistent geometry across all $T_s$, these simplifications may quantitatively affect molecular coordination $K$, cross-sectional area $N(i)$, and the resulting fractal dimension $D_f$. Consequently, our findings capture the qualitative structural and mechanical trends of the model rather than exact quantitative predictions for biological fibrils.}
-
-\rev{Regarding the mechanical response, the probabilistic fracture framework omits continuous elastic deformation, internal bond kinetics, and explicit time scales \cite{RuizFranco2022,Provenzano2006}, precluding stress--strain curves or Young's moduli \cite{Innocenti2022-lp}. Similarly, while $T_s$ captures the balance between incorporation and surface relaxation, calibrating it against a specific experimental variable (such as pH or ionic strength) would require independent estimates of the incorporation and relaxation timescales and remains beyond our scope \cite{Jiang2004,Yang2009,Kalbitzer2018}. The model also treats fibrillogenesis as a purely physicochemical self-assembly process, whereas in vivo it is additionally organized by the cell through fibronectin, integrins, and minor collagens \cite{Kadler1996,Canty2005,Kadler2008}. This is a further reason to read $T_s$ as an effective control parameter rather than as a proxy for a single biochemical condition. Nevertheless, this discrete framework successfully captures the broad preterminal avalanche dynamics and establishes a clear empirical association between structural compactness and mechanical resilience.}
+Intermolecular interactions are simplified via $T_s$, which lacks a direct mapping to interaction changes induced by biochemical conditions such as pH \cite{Jiang2004}. \rev{Calibrating $T_s$ against a specific experimental variable would require independent estimates of the incorporation and relaxation timescales, and remains beyond our scope \cite{Yang2009,Kalbitzer2018}.} Furthermore, while DLA captures the stochastic character of molecular accretion, biological fibrillogenesis is an actively regulated, energy-dependent process: collagen molecules first self-assemble into microfibrils---typically containing five molecules---which are then actively positioned and concatenated by the cell to form the growing fibril \cite{Kadler1996}\rev{, with fibronectin, integrins, and minor collagens organizing the process \cite{Canty2005,Kadler2008}. This is a further reason to read $T_s$ as an effective control parameter rather than as a proxy for a single biochemical condition}. Fracture is implemented as a probabilistic model, omitting detailed force transmission and internal bond-breaking mechanics \cite{RuizFranco2022,Provenzano2006}. Consequently, the model does not produce stress--strain curves or elastic moduli \cite{Innocenti2022-lp}. \rev{Within these limits, the framework captures the preterminal cascade dynamics reported above and an empirical association between structural compactness and mechanical resilience. Within the model that resilience is driven by the local load-bearing area $N(i)$ and the molecular coordination $K$, so structural compaction strengthens the fibril without requiring a self-similar load-transfer mechanism; consistently, the cascade statistics respond to the width of the strength distribution at fixed geometry.}
 
 \section{Conclusion}
 
-In this work, we combined a three-dimensional diffusion-limited aggregation model of collagen fibrillogenesis with a progressive probabilistic rupture model to connect assembly kinetics, fibril architecture, and failure statistics.
-Increasing the post-attachment surface diffusion parameter $T_s$ drives a clear morphological crossover from porous, fractal packing to nearly compact cross-sections: the measured fractal dimension rises from $D_f=1.708\pm0.005$ at $T_s=2$ to $D_f=1.963\pm0.001$ at $T_s=8192$.
-\rev{Mechanically, more compact fibrils exhibit higher rupture thresholds, while the distributions of preterminal avalanche sizes vary systematically with $T_s$ and develop stable cutoff-tail parameters in the compact regime.}
+In this work, we combined a three-dimensional diffusion-limited aggregation model of collagen fibrillogenesis with a progressive probabilistic rupture model to connect assembly kinetics, fibril architecture, and failure statistics. Increasing the post-attachment surface diffusion parameter $T_s$ drives a clear morphological crossover from porous, fractal packing to nearly compact cross-sections: the measured fractal dimension rises from $D_f=1.708\pm0.005$ at $T_s=2$ to $D_f=1.963\pm0.001$ at $T_s=8192$. \rev{Mechanically, more compact fibrils are markedly stronger: for $m = 2$ the mean rupture force grows by an order of magnitude between $T_s = 2$ and $T_s = 8192$, and the force carried per backbone molecule grows by a factor of $2.6$. Only $9\%$ to $34\%$ of the backbone is lost before failure, which then arrives as a single terminal cascade removing most of what remains. The preterminal cascade-size distributions are dominated by single-molecule events and are cut off at a few tens of molecules everywhere on the grid; above $T_s \approx 16$ they are nearly independent of the architecture, while narrowing the strength distribution shifts weight from the smallest events toward the cutoff without removing it. The preterminal statistics and the rupture event therefore describe two distinct regimes: bounded damage, dominated by single-molecule events, while the backbone holds; and one unbounded event when it gives way.}
 
-\rev{Within the present model, a greater opportunity for post-attachment relaxation produces more compact fibrils with greater resistance to failure.}
-\rev{Quantitative connections to physicochemical assembly conditions will require experimental estimates of molecular incorporation and rearrangement timescales, followed by calibration against measured fibril growth and morphology.}
-\rev{Future models could incorporate elastic or viscoelastic deformation, cross-link dynamics, degradation, and changes in stiffness.}
-\rev{These extensions would enable predictions of stress--strain behavior and the evolution of the fibril modulus under load.}
+\rev{From a physical perspective, the growth of the rupture force with $T_s$ follows from the growth of the load-bearing area and of the molecular coordination, both of which lower the stress carried by each molecule at a given external force, and from the higher thresholds that a larger $K$ confers. The cross-sectional geometry and the failure statistics thus vary together over part of the range of $T_s$, and we report that as an empirical association within the model. Turning that empirical connection into a predictive theory is the natural next step, and it would require formulating the stress redistribution through a continuous disordered elastic medium carrying the cross-sectional porosity and the loss of lateral contacts, which the present discrete framework leaves open.} 
+
+% \rev{Paragrafo do submetido comparando os expoentes medidos com 5/2 (ELS) e LLS: retirado.}
+
+From a biological standpoint, the model developed here provides a simple mechanism to tune mechanical resilience of collagen fibrils, fibers and tissues by controlling assembly conditions that regulate compactness. \rev{Within the present model, a greater opportunity for post-attachment relaxation produces more compact fibrils with greater resistance to failure. Quantitative connections to physicochemical assembly conditions will require experimental estimates of molecular incorporation and rearrangement timescales, followed by calibration against measured fibril growth and morphology.} Future work should incorporate more realistic mechanics and time dependence---including elastic or viscoelastic deformation and evolving stiffness (e.g., due to cross-link dynamics or degradation)---to predict stress--strain behavior and track how the fiber modulus changes over time under load.
 
 \section{Author Contributions}
 All authors contributed equally to this work.
