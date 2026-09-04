@@ -15,7 +15,7 @@ Escreve: Reviews/N10_cascade_survival/xmgrace/figure_8a_survival_by_ts_xy.dat
          Reviews/N10_cascade_survival/xmgrace/figure_8b_survival_by_m_xy.dat
 Chamado: à mão, para a Fig. 8 de N13 (Estado_revisao_ER12738.md), no cluster
          ou depois de copiar os .npz para cá:
-         python3 Code/Data_analysis/export_figure_9_xmgrace.py --cascades <dir>
+         python3 Code/Data_analysis/export_figure_8_xmgrace.py --cascades <dir>
 """
 import argparse
 import os

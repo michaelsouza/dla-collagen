@@ -1,12 +1,13 @@
+# Dados brutos: só o zip das fibrilas publicadas é versionado (adicionado com -f).
 Data_fibrils
-.env
-ai-tools
+*.zip
 
-# Python cache files
+# Python
 __pycache__/
 *.py[cod]
+.venv/
 
-# LaTeX temporary and build files
+# LaTeX: temporários, e os PDFs de Paper/, que saem do .tex
 *.aux
 *.bbl
 *.blg
@@ -23,43 +24,18 @@ __pycache__/
 *.out
 *.synctex.gz
 *Notes.bib
-
-# LaTeX output PDF in Paper directory
 Paper/*.pdf
+Carta_Resposta/Response_to_Referees.pdf
 
-# Local transfer bundles and extracted cluster workspaces
+# Pacotes locais de transferência para o cluster
 cluster_bundle*/
 cluster_bundle*.tar.gz
 
-# Generated referee-analysis outputs. A small curated subset of figure data,
-# decision records, and editable plotting projects is force-tracked from these
-# directories.
-Reviews/Figure7_damage_reproduction/
-Reviews/Issue5_avalanche_statistics/
-Reviews/Issue5_clauset_pooled_from_scratch/
-Reviews/Issue5_local_avalanche_reanalysis/
-Reviews/Issue7_fractal_proxy/
-Reviews/Research_Clauset2009_method_summary.md
-Reviews/Research_Issue5_avalanche_distribution_statistics.md
-Reviews/Issue14_araujo_validation/checkpoints/
-
-# Local visual-QA render of the Araújo source PDF
-tmp/pdfs/araujo-page-2.png
-
-# Data 
-Data/runs
-/Data_avalanches_all_fibrils.zip
-/Data_avalanches_all_fibrils/
-/Data_avalanches/figures/
-/Data_avalanches/results/
-/Reviews/Issue5_clauset_hierarchical_pilot/
-Paper/apssamp.bib
-Carta_Resposta.zip
-Paper_corrijido.zip
-Data/Data_avalanches_all_fibrils.zip
-Carta_Resposta/Response_to_Referees.pdf
-*.zip
-.venv/
+# Saídas do Quarto: reconstruíveis com `quarto render`, e o HTML embute recursos
+# (1,4 MB) que mudam a cada renderização. O .qmd é a fonte.
+Reviews/.quarto/
+Reviews/Respostas_ER12738.html
+Reviews/Respostas_ER12738.pdf
 
 # Memória automática do Claude: fica visível no projeto, mas não versionada.
 # É local à máquina por desenho, o Claude a reescreve sozinho (conflitaria entre
@@ -67,14 +43,6 @@ Carta_Resposta/Response_to_Referees.pdf
 .claude/memory/
 .claude/settings.local.json
 
-# Saídas do Quarto: reconstruíveis com `quarto render`, e o HTML embute recursos
-# (1,4 MB) que mudam a cada renderização. O .qmd é a fonte. Um nome por
-# documento, e não `Reviews/*.pdf`, porque o glob sombrearia
-# Reviews/Response_to_Referees.pdf, que é versionado.
-Reviews/.quarto/
-Reviews/Respostas_ER12738.html
-Reviews/Respostas_ER12738.pdf
-
 # Artefato do WSL ao baixar arquivos pelo Windows: guarda a URL de origem,
-# que pode conter token de sessao (o do Daniels1945 carrega um casa_token do JSTOR).
+# que pode conter token de sessão (o do Daniels1945 carrega um casa_token do JSTOR).
 *:Zone.Identifier
