@@ -1,0 +1,11 @@
+# Reference lines: uniform disc (2) and planar DLA (1.71)
+@type xy
+# disc
+1.4 2
+13000 2
+&
+@type xy
+# planar DLA
+1.4 1.71
+13000 1.71
+&

@@ -1,0 +1,19 @@
+# Fractal dimension D_f from the radius of gyration in attachment order versus T_s
+# Columns: T_s   D_f (gyration, N ~ R_g^D_f)   SE over seeds
+# Seeds per T_s: 2: 15, 8: 15, 16: 40, 32: 5, 64: 5, 128: 5, 512: 5, 1024: 5, 4096: 15, 8192: 15
+# Periodic cylinders (period 216, nb = 60000), 12 sections per cylinder, ~5000 molecules per section.
+# D_f = slope of log N vs log R_g(N) for the first N molecules of the section (uid order),
+# 40 <= N <= N_max/2 = 2500, 30 fit points per octave equally spaced in log N.
+# Source: Reviews/N18_df_ten_ts/df_periodic_summary.csv (gyr_primary_mean, _se). Use a logarithmic x axis.
+@type xydy
+2 1.6951 0.0107
+8 1.6838 0.0064
+16 1.6638 0.0092
+32 1.7019 0.0259
+64 1.7609 0.0056
+128 1.8159 0.0132
+512 1.9702 0.0104
+1024 1.9738 0.0103
+4096 1.9742 0.0059
+8192 1.9798 0.0054
+&
