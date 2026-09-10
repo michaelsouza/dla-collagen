@@ -345,3 +345,40 @@ Geradas por `plot_n18_figures.py` (`figuras_correlacao`), lendo só os CSVs:
 da janela), `corr_local_slope.png` ($d\log C/d\log r$ por meia década, barra sobre
 12 × $n$ seções, disco tracejado) e `corr_df_vs_ts.png` ($D_2$ bruta, disco e corrigida
 contra $T_s$).
+
+## 4. Candidatas a proxy geométrico de $F_{rup}$, semente a semente (2026-09-10, noite)
+
+Pergunta de Michael: dá para justificar $D_f$ como proxy das propriedades
+mecânicas? Teste que remove o confundidor $T_s$: nos 20 cilindros fraturados
+(4 $T_s$ × 5 sementes, recortes 17×17 e 41×41), cada candidata calculada no
+próprio tronco (cache `.db` do motor) contra $F_{rup}/R$ da mesma semente.
+Script `Code/Data_analysis/test_trunk_predictors_of_frup.py`; tabelas
+`trunk_predictors_by_seed.csv` e `trunk_predictors_correlations.csv`.
+
+Candidatas: $D_f$ da semente (correlação e giração), $\bar R$; ocupação das
+camadas $n(y)$ (média, mínimo, mínimo/média, CV, $\langle 1/n \rangle$);
+coordenação $N_i$ do bastão (média, mediana, harmônica, fração $\le 5$, fração
+0); e um proxy do próprio modelo, $F^* = [\langle (s_i/N_i)^m \rangle]^{-1/m}$
+com $s_i = \langle 1/n \rangle$ nas camadas do bastão e $m = 2$.
+
+**Resultado: nenhuma candidata prevê $F_{rup}/R$ dentro de $T_s$ nos dois
+recortes.** Pearson dos z-scores agrupados (20 pares por recorte):
+
+| candidata | 17×17 | 41×41 |
+|:--|--:|--:|
+| coordenação média | +0,51 ($p = 0{,}02$) | +0,09 |
+| $F^*$ por bastão | +0,41 ($p = 0{,}07$) | +0,03 |
+| $n_{\min}$ das camadas | +0,15 | +0,41 ($p = 0{,}07$) |
+| $D_f$ correlação | +0,26 | +0,13 |
+| $D_f$ giração | +0,04 | +0,01 |
+
+Com 16 candidatas × 2 recortes, um $p = 0{,}02$ isolado é o que se espera ao
+acaso, e o sinal não se repete no outro recorte. **Através de $T_s$** todas dão
+Spearman $\pm 0{,}8$–$1{,}0$, inclusive $\bar R$: é o eixo comum, não previsão.
+
+Dois fatos laterais medidos de passagem: (i) o $F^*$ do modelo superestima
+$F_{rup}/R$ por um fator quase constante, 2,8 em $T_s = 2$ e 2,2–2,4 nos
+demais, ou seja, a média de $p_i$ capta 85% da variação em $T_s$ mas não a
+dispersão entre sementes; (ii) no tronco DLA ($T_s = 2$) só 81% (17×17) e 63%
+(41×41) dos bastões chegam a romper — os demais não portam carga —, contra
+99% em $T_s \ge 32$ (`R_measured_over_R_db`).
