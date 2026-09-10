@@ -60,3 +60,31 @@ deslocados de 5 por série para que os símbolos de curvas sobrepostas se
 intercalem), e carregam a legenda. Os pontos de `S4`–`S7` são um subconjunto
 dos `.dat` acima, escolhido por `build_xmgrace_projects.py`; não há arquivo
 separado para eles.
+
+## Figura de colapso em $m$ (`frup_collapse.*`, 2026-09-10, interna)
+
+Une a Figura 7(a) sem barra de erro a dois insets. **Não substitui nada no
+manuscrito**: é a figura pedida por Michael para ver, num painel só, que $m$ sai
+de $F_{\mathrm{rup}}$ como fator.
+
+**Gerado por:** `Code/Data_analysis/build_frup_collapse_figure_xmgrace.py`, que
+escreve os `.dat`, o `.agr` e o `frup_collapse.pdf` de conferência.
+**Fonte:** `damage_summary.csv` (job 590854), a mesma da Figura 7(a).
+
+| arquivo | séries | tipo | conteúdo |
+|:--|:--|:--|:--|
+| `frup_collapse_main_xy.dat` | 5, $m = 1, 2, 3, 5, 10$ | `xy` | $\log_{10} T_s$, $\langle F_{\mathrm{rup}}\rangle$ |
+| `frup_collapse_ratio_xy.dat` | 5 | `xy` | $\log_{10} T_s$, $F_{\mathrm{rup}}/F_{\mathrm{sat}}$ |
+| `frup_collapse_fsat_vs_m_xy.dat` | 2 | `xy` | os cinco $F_{\mathrm{sat}}(m)$ medidos; a curva $a(1-e^{-m/b})$ amostrada |
+
+$F_{\mathrm{sat}}(m)$ é o valor **medido** em $T_s = 8192$, não o $a$ do ajuste
+($a = 2503 \pm 31$, $b = 2{,}18 \pm 0{,}07$; o ajuste erra 2–3% em $m = 1$ e 5 e
+fica só como guia no inset). Razão máx/mín de $F_{\mathrm{rup}}/F_{\mathrm{sat}}$
+entre os cinco $m$: 1,40 em $T_s = 2$, 1,12 em 8, 1,03 em 16, $\le 1{,}025$ de
+32 em diante — é o mesmo resultado de `../../N18_df_ten_ts/frup_m_separability.csv`,
+normalizado pelo plateau em vez de por $m = 2$.
+
+Estilo: um azul só (cor 4) com preenchimento azul-claro (cor 20), símbolos
+círculo, quadrado, diamante, triângulo, triângulo à esquerda, fonte 3 nos
+rótulos, como na Figura 7(a) de Michael. Página 720×600; gráfico principal G0,
+inset esquerdo G1, inset direito G2.
