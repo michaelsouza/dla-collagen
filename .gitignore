@@ -23,6 +23,9 @@ __pycache__/
 *.log
 *.out
 *.synctex.gz
+*.nav
+*.snm
+*.toc
 *Notes.bib
 Paper/*.pdf
 Carta_Resposta/Response_to_Referees.pdf
@@ -36,6 +39,8 @@ cluster_bundle*.tar.gz
 Reviews/.quarto/
 Reviews/Respostas_ER12738.html
 Reviews/Respostas_ER12738.pdf
+Reviews/N18_df_ten_ts/relatorio_N18.html
+Reviews/N18_df_ten_ts/relatorio_N18.pdf
 
 # Memória automática do Claude: fica visível no projeto, mas não versionada.
 # É local à máquina por desenho, o Claude a reescreve sozinho (conflitaria entre
