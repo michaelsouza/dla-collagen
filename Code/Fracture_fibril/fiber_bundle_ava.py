@@ -37,6 +37,7 @@ import numpy as np
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import stress_strain_ava as S  # noqa: E402
+from load_path_arrays import LoadPathArrays, load_path_from_ssd  # noqa: E402
 
 
 # --------------------------------------------------------------------- engine
@@ -121,11 +122,32 @@ class FibrilSystem:
     numpy arrays handle the F* recomputation.
     """
 
-    def __init__(self, ssd, m=2, sigma_c=1.0, rng=None):
-        self.ssd = ssd
+    def __init__(self, ssd=None, m=2, sigma_c=1.0, rng=None, arrays: LoadPathArrays | None = None):
+        """Either ``ssd`` (legacy object engine) or ``arrays`` (LoadPathArrays,
+        already filtered and compacted by load_path_from_ssd) must be given.
+        The two engines follow the same protocol; the only possible difference
+        is the intra-layer tie documented in load_path_arrays.py."""
         self.sigma_c = sigma_c
         rng = rng or np.random.default_rng()
+        self.lpa = arrays
+        if arrays is not None:
+            self.ssd = None
+            arrays.reset()
+            self.rids = arrays.rids
+            self.rid_index = {int(rid): k for k, rid in enumerate(self.rids)}
+            st = arrays.static_structures()
+            self.flat_lids, self.flat_rod = st["flat_lids"], st["flat_rod"]
+            self.n_parts, self.L = st["n_parts"], st["L"]
+            self.lid_off = -arrays.lid_min
+            self.C, self.adj = st["C"], st["adj"]
+            self.X = rng.random(arrays.R) ** (1.0 / m)
+            self.active = arrays.rod_active
+            self.log = []
+            self._cascade_idx = []
+            self._refresh()
+            return
 
+        self.ssd = ssd
         ssd.filter_rids(reverse=False)
         ssd.filter_rids(reverse=True)
 
@@ -273,11 +295,16 @@ class FibrilSystem:
             return 0
         before = self.num_active()
         was_active = self.active.copy()
-        self.ssd.drop_rids({int(self.rids[k]) for k in failing})
-        act1, _ = self.ssd.filter_rids(reverse=False)
-        if act1:
-            self.ssd.filter_rids(reverse=True)
-        self._sync_from_ssd()
+        if self.lpa is not None:
+            self.lpa.drop(failing)
+            self.lpa.filter()
+            self.active = self.lpa.rod_active
+        else:
+            self.ssd.drop_rids({int(self.rids[k]) for k in failing})
+            act1, _ = self.ssd.filter_rids(reverse=False)
+            if act1:
+                self.ssd.filter_rids(reverse=True)
+            self._sync_from_ssd()
         self._refresh()
         # every rod that went in this call: threshold failures plus the rods
         # that lost the load path as a consequence
@@ -345,20 +372,32 @@ def legacy_output_path(fn_dat, m, output_dir=None):
 
 # ---------------------------------------------------------------------- main
 def run_realizations(fn_dat, n, m=2, seed=1, legacy_path=None, start=0,
-                     half_width=8, half_length=100):
+                     half_width=8, half_length=100, engine='arrays'):
     ssd0 = S.read_or_create_ssd(fn_dat, half_width, half_length)
     ssd0.set_rods_exponent(m)
+    lpa0 = None
+    if engine == 'arrays':
+        t0 = time.time()
+        lpa0 = load_path_from_ssd(ssd0)
+        lpa0.static_structures()
+        del ssd0          # os objetos Python (1-2 GB na secao inteira) nao sao mais precisos
+        print(f'  arrays: {lpa0.R} load-bearing rods ({time.time() - t0:.1f}s)', flush=True)
     out = []
     for k in range(start, n):
         rng = np.random.default_rng(seed + k)
-        sys_k = FibrilSystem(ssd0.copy(), m=m, rng=rng)
+        if engine == 'arrays':
+            sys_k = FibrilSystem(m=m, rng=rng, arrays=lpa0)
+        else:
+            sys_k = FibrilSystem(ssd0.copy(), m=m, rng=rng)
         initial_particles = sys_k.active_particles()
+        initial_rods = sys_k.num_active()
         t0 = time.time()
         events, F_rup = quasistatic_rupture(sys_k)
         if legacy_path is not None:
             write_legacy(legacy_path, sys_k.log, initial_particles, k)
         out.append({
             'F_rupture': F_rup,
+            'initial_rods': int(initial_rods),
             'events': [(float(f), int(s)) for f, s in events],
             'secs': round(time.time() - t0, 2),
         })
@@ -385,6 +424,8 @@ def main():
                          'the schema read_avalanche_runs.py expects')
     ap.add_argument('-start', type=int, default=0,
                     help='zero-based realization to resume from')
+    ap.add_argument('-engine', choices=['arrays', 'legacy'], default='arrays',
+                    help='load-path engine: arrays (numba, default) or legacy objects')
     a = ap.parse_args()
 
     legacy_path = None
@@ -394,7 +435,7 @@ def main():
 
     runs = run_realizations(a.file, a.n, m=a.m, seed=a.seed,
                             half_width=a.half_width, half_length=a.half_length,
-                            legacy_path=legacy_path, start=a.start)
+                            legacy_path=legacy_path, start=a.start, engine=a.engine)
     if a.out:
         with open(a.out, 'w') as fh:
             json.dump({'file': os.path.basename(a.file), 'm': a.m,
