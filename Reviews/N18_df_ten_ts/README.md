@@ -382,3 +382,38 @@ demais, ou seja, a média de $p_i$ capta 85% da variação em $T_s$ mas não a
 dispersão entre sementes; (ii) no tronco DLA ($T_s = 2$) só 81% (17×17) e 63%
 (41×41) dos bastões chegam a romper — os demais não portam carga —, contra
 99% em $T_s \ge 32$ (`R_measured_over_R_db`).
+
+## 5. Geometria do tronco: inicial por $T_s$ e durante a fratura (2026-09-10, noite)
+
+Definições (as do motor de fratura): $K$ = número de moléculas que cruzam a
+camada $y$ (o denominador da tensão, partilha de carga); $N_i$ = número de
+partículas vizinhas do bastão $i$ (o $N$ de $p_i = (\sigma_i/N\sigma_c)^m$).
+
+**Inicial, recorte 41×41** (`measure_trunk_geometry_by_ts.py` →
+`trunk_geometry_by_{seed,ts}.csv`, `figures/trunk_geometry_vs_ts.png`), 5
+sementes por $T_s$, bastões que portam carga: $\langle K\rangle$ vai de 178
+($T_s = 2$) a 1150 ($\ge 512$); $\langle N_i\rangle$ de 25,8 a 52,1. As duas
+saturam em 512, como $D_f$. O filtro de caminho de carga descarta 37% dos
+bastões do recorte em $T_s = 2$, 16% em 8, 7% em 16, 1% em 32 e < 0,5% de 64 em
+diante: na estrutura aberta, uma boa parte do que está dentro do recorte não
+liga as duas extremidades.
+
+**Durante a fratura, recorte 17×17, $m = 2$, $T_s \in \{2, 8, 16, 32, 64, 128\}$**
+(`trace_geometry_during_fracture.py` → `geometry_during_fracture_{curves,by_realization}.csv`,
+`figures/geometry_during_fracture.png`; 10 realizações × 5 sementes, semente
+de fratura 101, mesmo protocolo de `fiber_bundle_ava.py`, instrumentado para
+gravar as médias após cada cascata). Normalizado pelo valor inicial:
+
+| $T_s$ | $K_0$ | $N_0$ | $K/K_0$ no último estado preterminal | $N/N_0$ idem |
+|--:|--:|--:|--:|--:|
+| 2 | 55 | 27,2 | 0,83 | 1,05 |
+| 64 | 182 | 46,1 | 0,92 | 1,01 |
+| 128 | 194 | 47,7 | 0,93 | 1,01 |
+
+$\langle K\rangle$ só cai: são as moléculas que saem. $\langle N_i\rangle$ dos
+sobreviventes **sobe** durante o carregamento, 5% em $T_s = 2$ e 1% nas
+compactas: os bastões que rompem primeiro são os de poucos vizinhos, e a
+população que resta fica mais coordenada que a inicial. Em $T_s = 2$ a queda
+de $K$ é quase linear em $F/F_{rup}$; nas compactas, quase nada acontece até
+$F/F_{rup} \approx 0{,}5$ e a perda se concentra no fim. Em $F$ absoluto,
+$T_s = 2$ termina em $F \approx 230$ enquanto 64 e 128 mal começaram.
