@@ -65,7 +65,7 @@
 \affiliation{Department of Biomedical Engineering, Boston University, Boston, MA, USA}
 
 \author{Ascânio Dias Araújo}
- \email{ascanio@fisica.ufc.br}
+\email{ascanio@fisica.ufc.br}
 \affiliation{Departamento de Física, Universidade Federal do Ceará, Fortaleza, Ceará, Brasil}
 \affiliation{Departamento de Estatística e Matemática Aplicada, Universidade Federal do Ceará, Fortaleza, Ceará, Brasil}
 
@@ -79,7 +79,7 @@
 \date{\today}
 
 \begin{abstract}
-Collagen fibrils are hierarchical protein assemblies that provide tensile strength and structural support to mammalian tissues. Understanding the relationship between assembly kinetics, structural organization, and mechanical properties is fundamental to soft matter physics, biomechanics and biomaterials science. Here, we investigate the formation of collagen fibrils using a modified diffusion-limited aggregation (DLA) model. Rod-like molecules attach to an existing core and \rev{carry out up to a fixed number of surface-diffusion steps, $T_s$,} to minimize the exposed surface area. Our findings indicate that increasing $T_{s}$  results in a morphological transition from fractal aggregates to compact structures, characterized by a systematic evolution of the fibril's fractal dimension. We also develop a probabilistic fracture model to investigate the dependence of the fibril's mechanical failure on its architecture governed by $T_s$. \rev{Our results show that rupture proceeds through cascades of molecular failures at fixed external force, and that more compact fibrils are markedly stronger: the mean rupture force grows by an order of magnitude across the range of $T_s$. Preterminal damage is dominated by single-molecule events and is bounded by an intrinsic cutoff at a few tens of molecules, in every architecture and at every width of the molecular strength distribution, and above $T_s \approx 16$ the cascade distributions become nearly independent of the architecture. Failure then arrives as a single catastrophic cascade that severs the fibril, removing most of a backbone that is still largely intact.}
+	Collagen fibrils are hierarchical protein assemblies that provide tensile strength and structural support to mammalian tissues. Understanding the relationship between assembly kinetics, structural organization, and mechanical properties is fundamental to soft matter physics, biomechanics and biomaterials science. Here, we investigate the formation of collagen fibrils using a modified diffusion-limited aggregation (DLA) model. Rod-like molecules attach to an existing core and \rev{carry out up to a fixed number of surface-diffusion steps, $T_s$,} to minimize the exposed surface area. Our findings indicate that increasing $T_{s}$  results in a morphological transition from fractal aggregates to compact structures, characterized by a systematic evolution of the fibril's fractal dimension. We also develop a probabilistic fracture model to investigate the dependence of the fibril's mechanical failure on its architecture governed by $T_s$. \rev{Our results show that rupture proceeds through cascades of molecular failures at fixed external force, and that more compact fibrils are markedly stronger: the mean rupture force grows by an order of magnitude across the range of $T_s$. Preterminal damage is dominated by single-molecule events and is bounded by an intrinsic cutoff at a few tens of molecules, in every architecture and at every width of the molecular strength distribution, and above $T_s \approx 16$ the cascade distributions become nearly independent of the architecture. Failure then arrives as a single catastrophic cascade that severs the fibril, removing most of a backbone that is still largely intact.}
 \end{abstract}
 
 % insert suggested keywords - APS authors don't need to do this
@@ -155,7 +155,7 @@ As shown in Fig.~\ref{fig_3}, $D_f$ depends strongly on $T_s$, providing a quant
 	\includegraphics[width=0.7\textwidth]{figure_3.pdf}
 	\caption{Average fractal dimension $D_f$ as a function of the diffusion parameter $T_s$ on a log-linear plot. Error bars are shown in red. The fractal dimension increases from $D_f = 1.708 \pm 0.005$ at $T_s = 2$ to $D_f = 1.963 \pm 0.001$ for $T_s = 8192$.}
 	\label{fig_3}
-\end{figure}		
+\end{figure}
 
 
 \subsection{Mechanical Model for Fibril Rupture}
@@ -243,7 +243,7 @@ A molecule's resistance to detach is assumed to scale with the number of intermo
 
 \begin{figure}[ht!]
 	\centering
-% Dados desta figura: Reviews/N10_cascade_survival/xmgrace/.
+	% Dados desta figura: Reviews/N10_cascade_survival/xmgrace/.
 	\includegraphics[width=\textwidth]{figure_8.pdf}
 	\caption{\rev{Survival function $P(S > s)$ of the preterminal cascade sizes, on logarithmic axes. (a) For $T_s = 2, 16, 128, 1024$ and $8192$ at $m = 2$: the curves for $T_s \geq 16$ nearly coincide, and only the most open architecture stands apart. (b) For the five values of the Weibull modulus $m$ at $T_s = 128$. The terminal cascade of each realization is excluded. No power law is fitted, because in every condition fewer than one decade of cascade sizes lies above the smallest size at which a fit could begin.}}
 	\label{fig_8}
@@ -259,7 +259,7 @@ Intermolecular interactions are simplified via $T_s$, which lacks a direct mappi
 
 In this work, we combined a three-dimensional diffusion-limited aggregation model of collagen fibrillogenesis with a progressive probabilistic rupture model to connect assembly kinetics, fibril architecture, and failure statistics. Increasing the post-attachment surface diffusion parameter $T_s$ drives a clear morphological crossover from porous, fractal packing to nearly compact cross-sections: the measured fractal dimension rises from $D_f=1.708\pm0.005$ at $T_s=2$ to $D_f=1.963\pm0.001$ at $T_s=8192$. \rev{Mechanically, more compact fibrils are markedly stronger: for $m = 2$ the mean rupture force grows by an order of magnitude between $T_s = 2$ and $T_s = 8192$, and the force carried per backbone molecule grows by a factor of $2.6$. Only $9\%$ to $34\%$ of the backbone is lost before failure, which then arrives as a single terminal cascade removing most of what remains. The preterminal cascade-size distributions are dominated by single-molecule events and are cut off at a few tens of molecules everywhere on the grid; above $T_s \approx 16$ they are nearly independent of the architecture, while narrowing the strength distribution shifts weight from the smallest events toward the cutoff without removing it. The preterminal statistics and the rupture event therefore describe two distinct regimes: bounded damage, dominated by single-molecule events, while the backbone holds; and one unbounded event when it gives way.}
 
-\rev{From a physical perspective, the growth of the rupture force with $T_s$ follows from the growth of the load-bearing area and of the molecular coordination, both of which lower the stress carried by each molecule at a given external force, and from the higher thresholds that a larger $K$ confers. The cross-sectional geometry and the failure statistics thus vary together over part of the range of $T_s$, and we report that as an empirical association within the model. Turning that empirical connection into a predictive theory is the natural next step, and it would require formulating the stress redistribution through a continuous disordered elastic medium carrying the cross-sectional porosity and the loss of lateral contacts, which the present discrete framework leaves open.} 
+\rev{From a physical perspective, the growth of the rupture force with $T_s$ follows from the growth of the load-bearing area and of the molecular coordination, both of which lower the stress carried by each molecule at a given external force, and from the higher thresholds that a larger $K$ confers. The cross-sectional geometry and the failure statistics thus vary together over part of the range of $T_s$, and we report that as an empirical association within the model. Turning that empirical connection into a predictive theory is the natural next step, and it would require formulating the stress redistribution through a continuous disordered elastic medium carrying the cross-sectional porosity and the loss of lateral contacts, which the present discrete framework leaves open.}
 
 % \rev{Paragrafo do submetido comparando os expoentes medidos com 5/2 (ELS) e LLS: retirado.}
 
