@@ -417,3 +417,8 @@ população que resta fica mais coordenada que a inicial. Em $T_s = 2$ a queda
 de $K$ é quase linear em $F/F_{rup}$; nas compactas, quase nada acontece até
 $F/F_{rup} \approx 0{,}5$ e a perda se concentra no fim. Em $F$ absoluto,
 $T_s = 2$ termina em $F \approx 230$ enquanto 64 e 128 mal começaram.
+
+Versões en-US, em três arquivos separados (`plot_trunk_geometry_figures_en.py`,
+lê só os CSVs): `figures/trunk_geometry_vs_ts_en.png`,
+`figures/geometry_during_fracture_F_en.png` (F absoluto) e
+`figures/geometry_during_fracture_Frup_en.png` (F/F_rup).

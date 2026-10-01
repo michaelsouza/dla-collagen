@@ -1,0 +1,30 @@
+# 41x41x201 trunk, initial geometry: <N> versus T_s, 5 seeds per T_s
+# Set 0: load-bearing rods (after the load-path filter), columns T_s  mean  SE over seeds
+# Set 1: all rods in the window, columns T_s  mean
+# neighbours per rod. Source: Reviews/N18_df_ten_ts/trunk_geometry_by_ts.csv. Log x axis.
+@type xydy
+# load-bearing
+2 25.7680 0.1779
+8 31.7740 0.1082
+16 36.6980 0.1651
+32 41.7630 0.1392
+64 46.1510 0.1850
+128 48.5970 0.1741
+512 51.2120 0.0813
+1024 51.7910 0.1890
+4096 52.2160 0.1034
+8192 52.1190 0.1267
+&
+@type xy
+# all rods in window
+2 24.1280
+8 30.7860
+16 36.0160
+32 41.5010
+64 46.0070
+128 48.5210
+512 51.1660
+1024 51.7650
+4096 52.1720
+8192 52.0850
+&

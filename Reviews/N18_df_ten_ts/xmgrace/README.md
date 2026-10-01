@@ -38,3 +38,19 @@ Escrito por `summarize_width_fracture.py`; ver `../README.md` §3.
 adesão ($40 \le N \le N_{\max}/2$, 30 pontos por oitava; coluna `gyr_primary`),
 mesmo estilo e mesmas referências, para comparar com a curva do artigo. Não vai
 para o manuscrito.
+
+## `trunk_geometry_vs_ts.*`, `geometry_during_fracture_{F,Frup}.*` — geometria do tronco (en-US, interno)
+
+`build_trunk_geometry_xmgrace.py`, a partir de `../trunk_geometry_by_ts.csv` e
+`../geometry_during_fracture_curves.csv`. Dois eixos y = dois gráficos na mesma
+VIEW: G0 (eixo esquerdo, $\langle K\rangle$, linha cheia) e G1 (eixo direito,
+$\langle N_i\rangle$, tracejada; sem moldura nem eixo x). Um `.dat` por eixo:
+
+| arquivo | séries | tipo |
+|:--|:--|:--|
+| `trunk_geometry_vs_ts_{K,N}_xydy.dat` | bastões que portam carga (`xydy`, EP entre sementes); todos os bastões (`xy`) | — |
+| `geometry_during_fracture_{F,Frup}_{K,N}_xydy.dat` | uma por $T_s$ (2, 8, 16, 32, 64, 128), valor/inicial e EP/inicial | `xydy` |
+
+Nas figuras da dinâmica as barras estão desligadas (`ERRORBAR OFF`); os `.dat`
+as carregam. Cores viridis mapeadas em 30–35; G0 azul (20) e vermelho (21) na
+figura inicial.
