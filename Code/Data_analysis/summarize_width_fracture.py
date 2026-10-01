@@ -2,11 +2,13 @@
 """F_rup contra a largura do recorte: resume as fraturas locais e a escada de 2026-09-02.
 
 Lê:      arquivos legados de fiber_bundle_ava.py, via --dirs ROTULO=DIR ...:
-         <dir>/ts_<TS>/ts_<TS>_seed_<SEED>_m_<M>.txt (fraturas locais, janela no rotulo)
+         <dir>/ts_<TS>/ts_<TS>_seed_<SEED>_m_<M>.txt[.gz] (fraturas locais, janela no rotulo:
+         w17, w41, ou wfull = secao inteira, -half-width 200)
          Reviews/PhaseC_periodic_cylinder/avalanche_ladder_raw/ts<TS>_w<W>.txt (escada)
-Escreve: Reviews/N18_df_ten_ts/width_fracture_by_realization.csv
-         Reviews/N18_df_ten_ts/width_fracture_summary.csv
-         Reviews/N18_df_ten_ts/xmgrace/frup_per_rod_by_width_xydy.dat
+         Reviews/N18_df_ten_ts/df_periodic_summary.csv (R_max por T_s, largura efetiva de wfull)
+Escreve: <out>/width_fracture_by_realization.csv          (out: Reviews/N18_df_ten_ts por
+         <out>/width_fracture_summary.csv                  padrao; Reviews/N19_full_section_fracture
+         <out>/xmgrace/frup_per_rod_by_width_xydy.dat      com --out)
 Chamado: Code/Data_analysis/run_local_width_fracture.sh (estagio D); à mão para so resumir
 
 Por realizacao: R = soma da coluna total_deleted_rods (todas as linhas, inclusive
@@ -21,6 +23,8 @@ from __future__ import annotations
 
 import argparse
 import csv
+import datetime
+import gzip
 import pathlib
 import re
 import sys
@@ -29,7 +33,8 @@ import numpy as np
 
 RAIZ = pathlib.Path(__file__).resolve().parents[2]
 OUT = RAIZ / "Reviews" / "N18_df_ten_ts"
-NOME_LOCAL = re.compile(r"ts_(\d+)_seed_(\d+)_m_(\d+)\.txt$")
+NOME_LOCAL = re.compile(r"ts_(\d+)_seed_(\d+)_m_(\d+)\.txt(\.gz)?$")
+DF_SUMMARY = RAIZ / "Reviews" / "N18_df_ten_ts" / "df_periodic_summary.csv"
 NOME_ESCADA = re.compile(r"ts(\d+)_w(\d+)\.txt$")
 SEMENTE_ESCADA, M_ESCADA, FRATURA_SEED_ESCADA = 900001, 2, 1
 
@@ -37,7 +42,8 @@ SEMENTE_ESCADA, M_ESCADA, FRATURA_SEED_ESCADA = 900001, 2, 1
 def realizacoes(caminho: pathlib.Path) -> list[dict]:
     """Uma entrada por realizacao: P0, R, F_rup, tamanhos preterminais."""
     out, atual = [], None
-    with open(caminho, encoding="utf-8") as fh:
+    abre = gzip.open if caminho.suffix == ".gz" else open
+    with abre(caminho, "rt", encoding="utf-8") as fh:
         for linha in fh:
             if linha.startswith("f,"):
                 continue
@@ -70,13 +76,23 @@ def coletar(dirs: dict[str, pathlib.Path]) -> list[dict]:
                     linhas.append(dict(source="ladder_2026-09-02", ts=ts, seed=SEMENTE_ESCADA, m=M_ESCADA,
                                        width=w, fracture_seed=FRATURA_SEED_ESCADA, realization=k, **_stats(r)))
         else:
-            w = int(re.sub(r"\D", "", rotulo))          # w17 -> 17, w41 -> 41
-            for f in sorted(d.glob("ts_*/ts_*_seed_*_m_*.txt")):
-                ts, seed, m = (int(g) for g in NOME_LOCAL.match(f.name).groups())
+            arquivos = sorted(list(d.glob("ts_*/ts_*_seed_*_m_*.txt")) + list(d.glob("ts_*/ts_*_seed_*_m_*.txt.gz")))
+            for f in arquivos:
+                ts, seed, m = (int(g) for g in NOME_LOCAL.match(f.name).groups()[:3])
+                # wfull: largura efetiva = diametro da secao, 2 R_max + 1, por T_s
+                w = largura_secao(ts) if rotulo == "wfull" else int(re.sub(r"\D", "", rotulo))
                 for k, r in enumerate(realizacoes(f)):
                     linhas.append(dict(source=f"local_{rotulo}", ts=ts, seed=seed, m=m, width=w,
                                        fracture_seed=101, realization=k, **_stats(r)))
     return linhas
+
+
+def largura_secao(ts: int) -> int:
+    with open(DF_SUMMARY, encoding="utf-8") as fh:
+        for row in csv.DictReader(l for l in fh if not l.startswith("#")):
+            if int(row["ts"]) == ts:
+                return int(round(2 * float(row["R_max"]) + 1))
+    raise KeyError(ts)
 
 
 def _stats(r: dict) -> dict:
@@ -109,7 +125,7 @@ def main() -> int:
     campos = list(linhas[0])
     with open(a.out / "width_fracture_by_realization.csv", "w", newline="", encoding="utf-8") as fh:
         fh.write("# Uma linha por realizacao. R = moleculas portantes (soma exata de total_deleted_rods). "
-                 "Gerado por summarize_width_fracture.py em 2026-09-10.\n")
+                 "Gerado por summarize_width_fracture.py em " + datetime.date.today().isoformat() + ".\n")
         w = csv.DictWriter(fh, fieldnames=campos); w.writeheader()
         for l in linhas:
             w.writerow({k: (f"{v:.6g}" if isinstance(v, float) else v) for k, v in l.items()})
@@ -134,7 +150,7 @@ def main() -> int:
                            p99_pre_mean=f"{np.nanmean([l['p99_pre'] for l in g]):.1f}",
                            max_pre=max(l["max_pre"] for l in g)))
     with open(a.out / "width_fracture_summary.csv", "w", newline="", encoding="utf-8") as fh:
-        fh.write("# F_rup por (T_s, largura do recorte, fonte). Gerado por summarize_width_fracture.py em 2026-09-10.\n")
+        fh.write("# F_rup por (T_s, largura do recorte, fonte). Gerado por summarize_width_fracture.py em " + datetime.date.today().isoformat() + ".\n")
         w = csv.DictWriter(fh, fieldnames=list(resumo[0])); w.writeheader(); w.writerows(resumo)
 
     with open(a.out / "xmgrace" / "frup_per_rod_by_width_xydy.dat", "w", encoding="utf-8") as fh:

@@ -1,0 +1,27 @@
+# F_rup per load-bearing molecule versus crop width, m = 2
+# Columns: width (lattice units)   F_rup/R   SE
+# One set per T_s (local runs pooled with the 2026-09-02 ladder where both exist)
+@type xydy
+# T_s = 2
+17 0.2617 0.0191
+41 0.2596 0.0123
+335 0.2309 0.0016
+&
+# T_s = 32
+17 0.5472 0.0366
+41 0.5238 0.0224
+218 0.5348 0.0040
+&
+# T_s = 128
+17 0.6489 0.0163
+41 0.6745 0.0102
+81 0.6485 nan
+178 0.6622 0.0056
+181 0.6375 nan
+&
+# T_s = 8192
+17 0.7026 0.0332
+41 0.7205 0.0079
+139 0.7136 0.0028
+141 0.7034 nan
+&

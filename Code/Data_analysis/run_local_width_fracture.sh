@@ -5,6 +5,7 @@
 #          Reviews/PhaseC_periodic_cylinder/open_periodic_cylinder.py, Code/Data_analysis/extend_fibrils_batch.py,
 #          Code/Fracture_fibril/fiber_bundle_ava.py
 # Escreve: $WORK/opened/, $WORK/extended/ (com os .db), $WORK/w17/ts_<TS>/..., $WORK/w41/ts_<TS>/...,
+#          com FULL=1 tambem $WORK/wfull/ts_<TS>/... (secao inteira, -half-width 200; N19),
 #          $WORK/json/, $WORK/logs/, $WORK/check/ (determinismo); depois copia w17/ e w41/ para
 #          Reviews/N18_df_ten_ts/width_fracture_raw/ e chama summarize_width_fracture.py
 # Chamado: à mão, para N18 (Estado_revisao_ER12738.md), depois de run_periodic_cylinder_grid.sh:
@@ -27,6 +28,9 @@ M="${M:-2}"
 FSEED="${FSEED:-101}"
 JOBS17="${JOBS17:-20}"
 JOBS41="${JOBS41:-12}"
+JOBSFULL="${JOBSFULL:-12}"      # secao inteira: pico de 1,4 GB por processo ao ler o .db
+FULL="${FULL:-0}"               # 1 = estagio F (secao inteira, motor em arrays)
+RUN_D="${RUN_D:-1}"             # 0 = nao copiar/resumir (N18) ao fim
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 PY="$ROOT/.venv/bin/python"
 mkdir -p "$WORK/opened" "$WORK/extended" "$WORK/w17" "$WORK/w41" "$WORK/json" "$WORK/logs" "$WORK/check"
@@ -84,7 +88,14 @@ if [ -s "$WORK/check/ts_128/ts_128_seed_900001_m_2.txt" ]; then
     fi
 fi
 
-# --- D: copiar o bruto e resumir
+# --- F: secao inteira (N19). O motor em arrays (fiber_bundle_ava -engine arrays,
+# default desde 2026-09-11) faz cada realizacao em 45-120 s; o legado levava 1 h 54.
+if [ "$FULL" = 1 ]; then
+    pares | xargs -P "$JOBSFULL" -L1 bash -c 'fratura "$0" "$1" 200 wfull'
+fi
+
+# --- D: copiar o bruto e resumir (N18)
+[ "$RUN_D" = 1 ] || exit 0
 DEST="$ROOT/Reviews/N18_df_ten_ts/width_fracture_raw"
 mkdir -p "$DEST"
 cp -r "$WORK/w17" "$WORK/w41" "$DEST/"
