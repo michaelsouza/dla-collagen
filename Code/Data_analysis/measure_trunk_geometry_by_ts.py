@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Geometria inicial do tronco por T_s: <K> (moleculas por camada) e <N_i> (vizinhos por bastao).
+"""Geometria inicial do tronco por T_s: <N> (moleculas por camada) e <K> (vizinhos por bastao).
 
 Recorte 41x41 (half_width 20) por padrao, |y| <= 100, no cache .db do motor de
-fratura (criado se faltar). K = ocupacao da camada y, media sobre as 201
-camadas; N_i = numero de particulas vizinhas do bastao i (o N da probabilidade
-de ruptura), media sobre os bastoes. Duas versoes: todos os bastoes do recorte
+fratura (criado se faltar). N = ocupacao da camada y (o N(i) do artigo), media
+sobre as 201 camadas; K = numero de particulas vizinhas do bastao (a coordenacao
+K do artigo), media sobre os bastoes. Ate 2026-10-01 as colunas K_* e N_*
+estavam com os nomes trocados. Duas versoes: todos os bastoes do recorte
 (all) e so os que portam carga depois de filter_rids (load), que e o conjunto
 que o motor fratura. Media sobre sementes; erro = erro-padrao entre sementes.
 
@@ -36,9 +37,9 @@ TS = [2, 8, 16, 32, 64, 128, 512, 1024, 4096, 8192]
 
 def geometria(ssd) -> dict:
     n_layer = np.array([len(l.pids) for l in ssd.layers.values()], float)
-    N = np.array([len(r.neigh_pids) for r in ssd.rods.values()], float)
-    return dict(R=len(N), K_mean=float(n_layer.mean()), K_min=float(n_layer.min()),
-                N_mean=float(N.mean()), N_median=float(np.median(N)), frac_N_le_5=float(np.mean(N <= 5)))
+    coord = np.array([len(r.neigh_pids) for r in ssd.rods.values()], float)
+    return dict(R=len(coord), N_mean=float(n_layer.mean()), N_min=float(n_layer.min()),
+                K_mean=float(coord.mean()), K_median=float(np.median(coord)), frac_K_le_5=float(np.mean(coord <= 5)))
 
 
 def medir(args) -> dict:
@@ -82,8 +83,8 @@ def main() -> int:
     fig, ax1 = plt.subplots(figsize=(6.2, 4.2))
     ax2 = ax1.twinx()
     w = 2 * a.half_width + 1
-    for ax, col, cor, mk, lab in [(ax1, "K_mean_load", "#1F5F8B", "o", r"$\langle K\rangle$, moléculas por camada"),
-                                  (ax2, "N_mean_load", "#C0392B", "s", r"$\langle N_i\rangle$, vizinhos por bastão")]:
+    for ax, col, cor, mk, lab in [(ax1, "N_mean_load", "#1F5F8B", "o", r"$\langle N\rangle$, moléculas por camada"),
+                                  (ax2, "K_mean_load", "#C0392B", "s", r"$\langle K\rangle$, vizinhos por bastão")]:
         ax.errorbar(agg.index, agg[col], yerr=agg[f"{col}_se"], fmt=mk + "-", color=cor, ms=5, lw=1.3, capsize=3, label=lab)
         ax.plot(agg.index, agg[col.replace("_load", "_all")], mk + ":", color=cor, ms=3, lw=0.8, mfc="none",
                 label=lab.split(",")[0] + ", todos os bastões do recorte")
@@ -93,7 +94,7 @@ def main() -> int:
     h1, l1 = ax1.get_legend_handles_labels(); h2, l2 = ax2.get_legend_handles_labels()
     ax1.legend(h1 + h2, l1 + l2, fontsize=6.5, frameon=False, loc="lower right")
     fig.tight_layout(); fig.savefig(N18 / "figures" / "trunk_geometry_vs_ts.png", dpi=200)
-    print(agg[["n_seeds", "R_all", "R_load", "K_mean_all", "K_mean_load", "N_mean_all", "N_mean_load"]].round(2).to_string())
+    print(agg[["n_seeds", "R_all", "R_load", "N_mean_all", "N_mean_load", "K_mean_all", "K_mean_load"]].round(2).to_string())
     return 0
 
 

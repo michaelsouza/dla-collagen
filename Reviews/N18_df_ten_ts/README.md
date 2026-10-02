@@ -357,8 +357,8 @@ Script `Code/Data_analysis/test_trunk_predictors_of_frup.py`; tabelas
 
 Candidatas: $D_f$ da semente (correlação e giração), $\bar R$; ocupação das
 camadas $n(y)$ (média, mínimo, mínimo/média, CV, $\langle 1/n \rangle$);
-coordenação $N_i$ do bastão (média, mediana, harmônica, fração $\le 5$, fração
-0); e um proxy do próprio modelo, $F^* = [\langle (s_i/N_i)^m \rangle]^{-1/m}$
+coordenação $K_i$ do bastão (média, mediana, harmônica, fração $\le 5$, fração
+0); e um proxy do próprio modelo, $F^* = [\langle (s_i/K_i)^m \rangle]^{-1/m}$
 com $s_i = \langle 1/n \rangle$ nas camadas do bastão e $m = 2$.
 
 **Resultado: nenhuma candidata prevê $F_{rup}/R$ dentro de $T_s$ nos dois
@@ -385,14 +385,17 @@ dispersão entre sementes; (ii) no tronco DLA ($T_s = 2$) só 81% (17×17) e 63%
 
 ## 5. Geometria do tronco: inicial por $T_s$ e durante a fratura (2026-09-10, noite)
 
-Definições (as do motor de fratura): $K$ = número de moléculas que cruzam a
-camada $y$ (o denominador da tensão, partilha de carga); $N_i$ = número de
-partículas vizinhas do bastão $i$ (o $N$ de $p_i = (\sigma_i/N\sigma_c)^m$).
+Definições, na notação do artigo: $N$ = número de segmentos de molécula na
+camada $y$ (o $N(i)$ de $\sigma(i) = F/N(i)$, partilha de carga); $K$ = número de
+partículas vizinhas do bastão (a coordenação $K$ de $\sigma^{th} = K\sigma_c X$).
+**Até 2026-10-01 as duas letras estavam trocadas** neste README, nos CSVs
+(colunas `K_*` ↔ `N_*`), nos `.dat` e nas figuras; o conteúdo não mudou, só
+os nomes (registro `../decision_log/2026-10-01_N18_notacao_K_N_trocada.md`).
 
 **Inicial, recorte 41×41** (`measure_trunk_geometry_by_ts.py` →
 `trunk_geometry_by_{seed,ts}.csv`, `figures/trunk_geometry_vs_ts.png`), 5
-sementes por $T_s$, bastões que portam carga: $\langle K\rangle$ vai de 178
-($T_s = 2$) a 1150 ($\ge 512$); $\langle N_i\rangle$ de 25,8 a 52,1. As duas
+sementes por $T_s$, bastões que portam carga: $\langle N\rangle$ vai de 178
+($T_s = 2$) a 1150 ($\ge 512$); $\langle K\rangle$ de 25,8 a 52,1. As duas
 saturam em 512, como $D_f$. O filtro de caminho de carga descarta 37% dos
 bastões do recorte em $T_s = 2$, 16% em 8, 7% em 16, 1% em 32 e < 0,5% de 64 em
 diante: na estrutura aberta, uma boa parte do que está dentro do recorte não
@@ -404,19 +407,27 @@ liga as duas extremidades.
 de fratura 101, mesmo protocolo de `fiber_bundle_ava.py`, instrumentado para
 gravar as médias após cada cascata). Normalizado pelo valor inicial:
 
-| $T_s$ | $K_0$ | $N_0$ | $K/K_0$ no último estado preterminal | $N/N_0$ idem |
+| $T_s$ | $N_0$ | $K_0$ | $N/N_0$ no último estado preterminal | $K/K_0$ idem |
 |--:|--:|--:|--:|--:|
 | 2 | 55 | 27,2 | 0,83 | 1,05 |
 | 64 | 182 | 46,1 | 0,92 | 1,01 |
 | 128 | 194 | 47,7 | 0,93 | 1,01 |
 
-$\langle K\rangle$ só cai: são as moléculas que saem. $\langle N_i\rangle$ dos
+$\langle N\rangle$ só cai: são as moléculas que saem. $\langle K\rangle$ dos
 sobreviventes **sobe** durante o carregamento, 5% em $T_s = 2$ e 1% nas
 compactas: os bastões que rompem primeiro são os de poucos vizinhos, e a
 população que resta fica mais coordenada que a inicial. Em $T_s = 2$ a queda
-de $K$ é quase linear em $F/F_{rup}$; nas compactas, quase nada acontece até
+de $N$ é quase linear em $F/F_{rup}$; nas compactas, quase nada acontece até
 $F/F_{rup} \approx 0{,}5$ e a perda se concentra no fim. Em $F$ absoluto,
 $T_s = 2$ termina em $F \approx 230$ enquanto 64 e 128 mal começaram.
+
+Em 2026-10-01 o CSV ganhou $T_s = 1024$ e $8192$ (pedido de coautor, para a
+saturação), e as linhas dos seis $T_s$ originais saíram idênticas. Em 1024 e
+8192, $N/N_0$ no fim fica em 0,93 e 0,92, igual a 128, e $K/K_0$ tem máximo de
+1,012. Os `.dat` de duas colunas dos oito $T_s$ estão em
+`xmgrace/geometry_during_fracture_two_column/`.
+`figures/geometry_during_fracture.png` agora traz os oito $T_s$; os `.agr` e as
+figuras en-US continuam com seis.
 
 Versões en-US, em três arquivos separados (`plot_trunk_geometry_figures_en.py`,
 lê só os CSVs): `figures/trunk_geometry_vs_ts_en.png`,

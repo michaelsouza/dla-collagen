@@ -98,7 +98,7 @@
 @timestamp rot 0
 @timestamp font 0
 @timestamp char size 1.000000
-@timestamp def "Thu Sep 10 23:14:10 2026"
+@timestamp def "Thu Oct  1 17:17:11 2026"
 @r0 off
 @link r0 to g0
 @r0 type above
@@ -219,7 +219,7 @@
 @    yaxis  bar color 1
 @    yaxis  bar linestyle 1
 @    yaxis  bar linewidth 2.0
-@    yaxis  label "\3\1<K(F)>/K\s0\N\3 (solid)"
+@    yaxis  label "\3\1<N(F)>/N\s0\N\3 (solid)"
 @    yaxis  label layout para
 @    yaxis  label place auto
 @    yaxis  label char size 2.400000
@@ -335,8 +335,8 @@
 @    s0 errorbar riser linestyle 1
 @    s0 errorbar riser clip off
 @    s0 errorbar riser clip length 0.100000
-@    s0 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_K_xydy.dat"
-@    s0 legend  "T\ss\N = 2: K\s0\N = 55, N\s0\N = 27.2"
+@    s0 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_N_xydy.dat"
+@    s0 legend  "T\ss\N = 2: N\s0\N = 55, K\s0\N = 27.2"
 @    s1 hidden false
 @    s1 type xydy
 @    s1 symbol 0
@@ -384,8 +384,8 @@
 @    s1 errorbar riser linestyle 1
 @    s1 errorbar riser clip off
 @    s1 errorbar riser clip length 0.100000
-@    s1 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_K_xydy.dat"
-@    s1 legend  "T\ss\N = 8: K\s0\N = 78, N\s0\N = 33.3"
+@    s1 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_N_xydy.dat"
+@    s1 legend  "T\ss\N = 8: N\s0\N = 78, K\s0\N = 33.3"
 @    s2 hidden false
 @    s2 type xydy
 @    s2 symbol 0
@@ -433,8 +433,8 @@
 @    s2 errorbar riser linestyle 1
 @    s2 errorbar riser clip off
 @    s2 errorbar riser clip length 0.100000
-@    s2 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_K_xydy.dat"
-@    s2 legend  "T\ss\N = 16: K\s0\N = 111, N\s0\N = 37.7"
+@    s2 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_N_xydy.dat"
+@    s2 legend  "T\ss\N = 16: N\s0\N = 111, K\s0\N = 37.7"
 @    s3 hidden false
 @    s3 type xydy
 @    s3 symbol 0
@@ -482,8 +482,8 @@
 @    s3 errorbar riser linestyle 1
 @    s3 errorbar riser clip off
 @    s3 errorbar riser clip length 0.100000
-@    s3 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_K_xydy.dat"
-@    s3 legend  "T\ss\N = 32: K\s0\N = 154, N\s0\N = 42.8"
+@    s3 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_N_xydy.dat"
+@    s3 legend  "T\ss\N = 32: N\s0\N = 154, K\s0\N = 42.8"
 @    s4 hidden false
 @    s4 type xydy
 @    s4 symbol 0
@@ -531,8 +531,8 @@
 @    s4 errorbar riser linestyle 1
 @    s4 errorbar riser clip off
 @    s4 errorbar riser clip length 0.100000
-@    s4 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_K_xydy.dat"
-@    s4 legend  "T\ss\N = 64: K\s0\N = 182, N\s0\N = 46.1"
+@    s4 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_N_xydy.dat"
+@    s4 legend  "T\ss\N = 64: N\s0\N = 182, K\s0\N = 46.1"
 @    s5 hidden false
 @    s5 type xydy
 @    s5 symbol 0
@@ -580,8 +580,8 @@
 @    s5 errorbar riser linestyle 1
 @    s5 errorbar riser clip off
 @    s5 errorbar riser clip length 0.100000
-@    s5 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_K_xydy.dat"
-@    s5 legend  "T\ss\N = 128: K\s0\N = 194, N\s0\N = 47.7"
+@    s5 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_N_xydy.dat"
+@    s5 legend  "T\ss\N = 128: N\s0\N = 194, K\s0\N = 47.7"
 @g1 on
 @g1 hidden false
 @g1 type XY
@@ -667,7 +667,7 @@
 @    yaxis  bar color 1
 @    yaxis  bar linestyle 1
 @    yaxis  bar linewidth 2.0
-@    yaxis  label "\3\1<N\si\N(F)>/N\s0\N\3 (dashed)"
+@    yaxis  label "\3\1<K(F)>/K\s0\N\3 (dashed)"
 @    yaxis  label layout para
 @    yaxis  label place auto
 @    yaxis  label char size 2.400000
@@ -783,7 +783,7 @@
 @    s0 errorbar riser linestyle 1
 @    s0 errorbar riser clip off
 @    s0 errorbar riser clip length 0.100000
-@    s0 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_N_xydy.dat"
+@    s0 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_K_xydy.dat"
 @    s0 legend  ""
 @    s1 hidden false
 @    s1 type xydy
@@ -832,7 +832,7 @@
 @    s1 errorbar riser linestyle 1
 @    s1 errorbar riser clip off
 @    s1 errorbar riser clip length 0.100000
-@    s1 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_N_xydy.dat"
+@    s1 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_K_xydy.dat"
 @    s1 legend  ""
 @    s2 hidden false
 @    s2 type xydy
@@ -881,7 +881,7 @@
 @    s2 errorbar riser linestyle 1
 @    s2 errorbar riser clip off
 @    s2 errorbar riser clip length 0.100000
-@    s2 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_N_xydy.dat"
+@    s2 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_K_xydy.dat"
 @    s2 legend  ""
 @    s3 hidden false
 @    s3 type xydy
@@ -930,7 +930,7 @@
 @    s3 errorbar riser linestyle 1
 @    s3 errorbar riser clip off
 @    s3 errorbar riser clip length 0.100000
-@    s3 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_N_xydy.dat"
+@    s3 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_K_xydy.dat"
 @    s3 legend  ""
 @    s4 hidden false
 @    s4 type xydy
@@ -979,7 +979,7 @@
 @    s4 errorbar riser linestyle 1
 @    s4 errorbar riser clip off
 @    s4 errorbar riser clip length 0.100000
-@    s4 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_N_xydy.dat"
+@    s4 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_K_xydy.dat"
 @    s4 legend  ""
 @    s5 hidden false
 @    s5 type xydy
@@ -1028,7 +1028,7 @@
 @    s5 errorbar riser linestyle 1
 @    s5 errorbar riser clip off
 @    s5 errorbar riser clip length 0.100000
-@    s5 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_N_xydy.dat"
+@    s5 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_Frup_K_xydy.dat"
 @    s5 legend  ""
 @target G0.S0
 @type xydy

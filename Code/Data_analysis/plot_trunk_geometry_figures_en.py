@@ -33,8 +33,8 @@ def inicial() -> None:
     fig, ax1 = plt.subplots(figsize=(6.2, 4.2))
     ax2 = ax1.twinx()
     for ax, col, cor, mk, lab, short in [
-            (ax1, "K_mean_load", AZUL, "o", r"$\langle K\rangle$, molecules per layer", r"$\langle K\rangle$"),
-            (ax2, "N_mean_load", VERMELHO, "s", r"$\langle N_i\rangle$, neighbours per rod", r"$\langle N_i\rangle$")]:
+            (ax1, "N_mean_load", AZUL, "o", r"$\langle N\rangle$, molecules per layer", r"$\langle N\rangle$"),
+            (ax2, "K_mean_load", VERMELHO, "s", r"$\langle K\rangle$, neighbours per rod", r"$\langle K\rangle$")]:
         ax.errorbar(agg.index, agg[col], yerr=agg[f"{col}_se"], fmt=mk + "-", color=cor, ms=5, lw=1.3, capsize=3,
                     label=lab + ", load-bearing rods")
         ax.plot(agg.index, agg[col.replace("_load", "_all")], mk + ":", color=cor, ms=3, lw=0.8, mfc="none",
@@ -56,15 +56,15 @@ def dinamica(kind: str, nome: str, xlab: str, titulo: str) -> None:
     ax2 = ax.twinx()
     for ts in ts_list:
         q = cv[cv.ts == ts].sort_values("x")
-        K0, N0 = q.K_mean.iloc[0], q.N_mean.iloc[0]
-        ax.plot(q.x, q.K_mean / K0, "-", color=cores[ts], lw=1.6,
-                label=f"$T_s={ts}$: $K_0$ = {K0:.0f}, $N_0$ = {N0:.1f}")
-        ax.fill_between(q.x, (q.K_mean - q.K_se) / K0, (q.K_mean + q.K_se) / K0, color=cores[ts], alpha=0.2, lw=0)
-        ax2.plot(q.x, q.N_mean / N0, "--", color=cores[ts], lw=1.6)
-        ax2.fill_between(q.x, (q.N_mean - q.N_se) / N0, (q.N_mean + q.N_se) / N0, color=cores[ts], alpha=0.15, lw=0)
+        N0, K0 = q.N_mean.iloc[0], q.K_mean.iloc[0]
+        ax.plot(q.x, q.N_mean / N0, "-", color=cores[ts], lw=1.6,
+                label=f"$T_s={ts}$: $N_0$ = {N0:.0f}, $K_0$ = {K0:.1f}")
+        ax.fill_between(q.x, (q.N_mean - q.N_se) / N0, (q.N_mean + q.N_se) / N0, color=cores[ts], alpha=0.2, lw=0)
+        ax2.plot(q.x, q.K_mean / K0, "--", color=cores[ts], lw=1.6)
+        ax2.fill_between(q.x, (q.K_mean - q.K_se) / K0, (q.K_mean + q.K_se) / K0, color=cores[ts], alpha=0.15, lw=0)
     ax.set_xlabel(xlab)
-    ax.set_ylabel(r"$\langle K(F)\rangle / K_0$, molecules per layer (solid)")
-    ax2.set_ylabel(r"$\langle N_i(F)\rangle / N_0$, neighbours per active rod (dashed)")
+    ax.set_ylabel(r"$\langle N(F)\rangle / N_0$, molecules per layer (solid)")
+    ax2.set_ylabel(r"$\langle K(F)\rangle / K_0$, neighbours per active rod (dashed)")
     ax.set_ylim(0.78, 1.02); ax2.set_ylim(0.98, 1.10)
     # legenda fora do grafico: dentro, ela cobre as curvas tracejadas de T_s baixo
     ax.legend(fontsize=7, frameon=False, loc="upper center", bbox_to_anchor=(0.5, -0.16), ncol=3)

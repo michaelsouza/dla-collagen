@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Dinamica da geometria durante a fratura: <K(F)> e <N_i(F)> sobre os bastoes ativos.
+"""Dinamica da geometria durante a fratura: <N(F)> e <K(F)> sobre os bastoes ativos.
 
 Mesmo motor e mesmo protocolo de fiber_bundle_ava.py (quase-estatico extremal,
 cascatas deterministicas, desordem X ~ x^m, semente 101 + k), so que apos cada
-cascata grava: F, bastoes ativos, <K> = ocupacao media das camadas ativas
-(moleculas por camada) e <N_i> = coordenacao media dos bastoes ativos (numero
-de particulas vizinhas em bastoes ainda ativos). Ponto inicial em F = 0 depois
+cascata grava: F, bastoes ativos, <N> = ocupacao media das camadas ativas
+(segmentos por camada, o N(i) do artigo) e <K> = coordenacao media dos bastoes
+ativos (particulas vizinhas em bastoes ainda ativos, o K do artigo). Ate
+2026-10-01 as colunas K_* e N_* estavam com os nomes trocados. Ponto inicial em F = 0 depois
 do filtro de caminho de carga. As curvas-escada de cada realizacao sao
 amostradas em F/F_rup numa grade uniforme e mediadas sobre realizacoes e
 sementes; tambem em F absoluto, numa grade comum por T_s.
@@ -78,7 +79,7 @@ def realizacoes(args) -> list[dict]:
         # a ultima cascata leva ativos a 0; a geometria "final" e a do ultimo estado com ativos > 0
         pre = tr[tr[:, 1] > 0]
         out.append(dict(ts=ts, seed=seed, realization=k, F_rup=F_rup, R0=int(tr[0, 1]),
-                        K0=tr[0, 2], N0=tr[0, 3], K_pre=pre[-1, 2], N_pre=pre[-1, 3], R_pre=int(pre[-1, 1]),
+                        N0=tr[0, 2], K0=tr[0, 3], N_pre=pre[-1, 2], K_pre=pre[-1, 3], R_pre=int(pre[-1, 1]),
                         trace=pre))
     return out
 
@@ -106,23 +107,23 @@ def main() -> int:
     for ts in a.ts:
         rs = [r for r in res if r["ts"] == ts]
         # em F/F_rup
-        Kn = np.array([escada(r["trace"], U * r["F_rup"], 2) for r in rs])
-        Nn = np.array([escada(r["trace"], U * r["F_rup"], 3) for r in rs])
+        Nn = np.array([escada(r["trace"], U * r["F_rup"], 2) for r in rs])
+        Kn = np.array([escada(r["trace"], U * r["F_rup"], 3) for r in rs])
         Rn = np.array([escada(r["trace"], U * r["F_rup"], 1) for r in rs])
         # em F absoluto, ate o maior F_rup do T_s
         Fg = np.linspace(0.0, max(r["F_rup"] for r in rs), 101)
-        Ka = np.array([np.where(Fg <= r["F_rup"], escada(r["trace"], Fg, 2), np.nan) for r in rs])
-        Na = np.array([np.where(Fg <= r["F_rup"], escada(r["trace"], Fg, 3), np.nan) for r in rs])
+        Na = np.array([np.where(Fg <= r["F_rup"], escada(r["trace"], Fg, 2), np.nan) for r in rs])
+        Ka = np.array([np.where(Fg <= r["F_rup"], escada(r["trace"], Fg, 3), np.nan) for r in rs])
         for i in range(len(U)):
             curvas.append(dict(ts=ts, x_kind="F_over_Frup", x=U[i], n=len(rs),
-                               K_mean=Kn[:, i].mean(), K_se=Kn[:, i].std(ddof=1) / np.sqrt(len(rs)),
                                N_mean=Nn[:, i].mean(), N_se=Nn[:, i].std(ddof=1) / np.sqrt(len(rs)),
+                               K_mean=Kn[:, i].mean(), K_se=Kn[:, i].std(ddof=1) / np.sqrt(len(rs)),
                                R_mean=Rn[:, i].mean()))
-            alive = np.isfinite(Ka[:, i])
+            alive = np.isfinite(Na[:, i])
             if alive.sum() >= 3:
                 curvas.append(dict(ts=ts, x_kind="F", x=Fg[i], n=int(alive.sum()),
-                                   K_mean=np.nanmean(Ka[:, i]), K_se=np.nanstd(Ka[:, i], ddof=1) / np.sqrt(alive.sum()),
                                    N_mean=np.nanmean(Na[:, i]), N_se=np.nanstd(Na[:, i], ddof=1) / np.sqrt(alive.sum()),
+                                   K_mean=np.nanmean(Ka[:, i]), K_se=np.nanstd(Ka[:, i], ddof=1) / np.sqrt(alive.sum()),
                                    R_mean=np.nan))
     cv = pd.DataFrame(curvas)
     cv.to_csv(N18 / "geometry_during_fracture_curves.csv", index=False, float_format="%.6g")
@@ -136,16 +137,16 @@ def main() -> int:
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.2))
     for ax, kind, xlab in [(axes[0], "F", "$F$"), (axes[1], "F_over_Frup", "$F / F_{rup}$")]:
         ax2 = ax.twinx()
-        # normalizado pelo valor inicial de cada T_s, senao T_s = 2 (K0 = 55) fica esmagado sob 128 (K0 = 194)
+        # normalizado pelo valor inicial de cada T_s, senao T_s = 2 (N0 = 55) fica esmagado sob 128 (N0 = 194)
         for ts in a.ts:
             q = cv[(cv.ts == ts) & (cv.x_kind == kind)]
-            K0, N0 = q.K_mean.iloc[0], q.N_mean.iloc[0]
-            ax.plot(q.x, q.K_mean / K0, "-", color=cores[ts], lw=1.6, label=f"$T_s={ts}$: $K_0$ = {K0:.0f}, $N_0$ = {N0:.1f}")
-            ax.fill_between(q.x, (q.K_mean - q.K_se) / K0, (q.K_mean + q.K_se) / K0, color=cores[ts], alpha=0.2, lw=0)
-            ax2.plot(q.x, q.N_mean / N0, "--", color=cores[ts], lw=1.6)
-            ax2.fill_between(q.x, (q.N_mean - q.N_se) / N0, (q.N_mean + q.N_se) / N0, color=cores[ts], alpha=0.15, lw=0)
-        ax.set_xlabel(xlab); ax.set_ylabel(r"$\langle K(F)\rangle / K_0$, moléculas por camada (cheia)")
-        ax2.set_ylabel(r"$\langle N_i(F)\rangle / N_0$, vizinhos por bastão ativo (tracejada)")
+            N0, K0 = q.N_mean.iloc[0], q.K_mean.iloc[0]
+            ax.plot(q.x, q.N_mean / N0, "-", color=cores[ts], lw=1.6, label=f"$T_s={ts}$: $N_0$ = {N0:.0f}, $K_0$ = {K0:.1f}")
+            ax.fill_between(q.x, (q.N_mean - q.N_se) / N0, (q.N_mean + q.N_se) / N0, color=cores[ts], alpha=0.2, lw=0)
+            ax2.plot(q.x, q.K_mean / K0, "--", color=cores[ts], lw=1.6)
+            ax2.fill_between(q.x, (q.K_mean - q.K_se) / K0, (q.K_mean + q.K_se) / K0, color=cores[ts], alpha=0.15, lw=0)
+        ax.set_xlabel(xlab); ax.set_ylabel(r"$\langle N(F)\rangle / N_0$, moléculas por camada (cheia)")
+        ax2.set_ylabel(r"$\langle K(F)\rangle / K_0$, vizinhos por bastão ativo (tracejada)")
         ax.set_ylim(0.78, 1.02); ax2.set_ylim(0.98, 1.10)
         ax.legend(fontsize=7, frameon=False, loc="lower left")
     w = 2 * a.half_width + 1
@@ -153,7 +154,7 @@ def main() -> int:
     axes[1].set_title("(b) mesmo dado, F normalizado por F_rup da realização", fontsize=9, loc="left")
     fig.tight_layout(); fig.savefig(N18 / "figures" / "geometry_during_fracture.png", dpi=200)
     df = pd.DataFrame(linhas)
-    print(df.groupby("ts")[["F_rup", "R0", "K0", "N0", "R_pre", "K_pre", "N_pre"]].mean().round(2).to_string())
+    print(df.groupby("ts")[["F_rup", "R0", "N0", "K0", "R_pre", "N_pre", "K_pre"]].mean().round(2).to_string())
     return 0
 
 

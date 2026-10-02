@@ -3,10 +3,10 @@
 
 Para cada tronco (T_s, semente, recorte 17x17 ou 41x41) le o cache .db do motor
 de fratura (particulas, bastoes com neigh_pids, camadas) e calcula grandezas
-do proprio modelo: ocupacao das camadas n(y), coordenacao N_i de cada bastao
+do proprio modelo: ocupacao das camadas n(y), coordenacao K_i de cada bastao
 (numero de particulas vizinhas, o K_i do modelo), fator de tensao
 s_i = <1/n>_camadas do bastao, e um proxy de forca do modelo,
-F* = [ media_i (s_i / N_i)^m ]^(-1/m) com m = 2 (forca em que a probabilidade
+F* = [ media_i (s_i / K_i)^m ]^(-1/m) com m = 2 (forca em que a probabilidade
 media de ruptura por bastao chega a 1). Tambem D_f da semente (correlacao e
 giracao, de df_periodic_by_seed.csv). Compara com F_rup/R medido na mesma
 semente (media das 10 realizacoes).

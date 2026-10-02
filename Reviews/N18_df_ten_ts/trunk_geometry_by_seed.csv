@@ -1,4 +1,4 @@
-ts,seed,half_width,R_all,K_mean_all,K_min_all,N_mean_all,N_median_all,frac_N_le_5_all,R_load,K_mean_load,K_min_load,N_mean_load,N_median_load,frac_N_le_5_load
+ts,seed,half_width,R_all,N_mean_all,N_min_all,K_mean_all,K_median_all,frac_K_le_5_all,R_load,N_mean_load,N_min_load,K_mean_load,K_median_load,frac_K_le_5_load
 2,900001,20,3449,291.55,169,23.892,24,0.067846,2429,207.71,121,25.713,25,0.035406
 2,900002,20,3224,271.48,150,23.941,24,0.070409,1769,149.22,97,25.44,24,0.040701
 2,900003,20,3327,282.36,133,24.575,24,0.059513,2209,188.38,71,25.89,26,0.04029

@@ -98,7 +98,7 @@
 @timestamp rot 0
 @timestamp font 0
 @timestamp char size 1.000000
-@timestamp def "Thu Sep 10 23:14:09 2026"
+@timestamp def "Thu Oct  1 17:17:11 2026"
 @r0 off
 @link r0 to g0
 @r0 type above
@@ -219,7 +219,7 @@
 @    yaxis  bar color 1
 @    yaxis  bar linestyle 1
 @    yaxis  bar linewidth 2.0
-@    yaxis  label "\3\1<K>\3, molecules per layer"
+@    yaxis  label "\3\1<N>\3, molecules per layer"
 @    yaxis  label layout para
 @    yaxis  label place auto
 @    yaxis  label char size 2.400000
@@ -335,8 +335,8 @@
 @    s0 errorbar riser linestyle 1
 @    s0 errorbar riser clip off
 @    s0 errorbar riser clip length 0.100000
-@    s0 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/trunk_geometry_vs_ts_K_xydy.dat"
-@    s0 legend  "<K>, load-bearing rods"
+@    s0 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/trunk_geometry_vs_ts_N_xydy.dat"
+@    s0 legend  "<N>, load-bearing rods"
 @    s1 hidden false
 @    s1 type xy
 @    s1 symbol 1
@@ -384,8 +384,8 @@
 @    s1 errorbar riser linestyle 1
 @    s1 errorbar riser clip off
 @    s1 errorbar riser clip length 0.100000
-@    s1 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/trunk_geometry_vs_ts_K_xydy.dat"
-@    s1 legend  "<K>, all rods"
+@    s1 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/trunk_geometry_vs_ts_N_xydy.dat"
+@    s1 legend  "<N>, all rods"
 @g1 on
 @g1 hidden false
 @g1 type XY
@@ -471,7 +471,7 @@
 @    yaxis  bar color 1
 @    yaxis  bar linestyle 1
 @    yaxis  bar linewidth 2.0
-@    yaxis  label "\3\1<N\si\N>\3, neighbours per rod"
+@    yaxis  label "\3\1<K>\3, neighbours per rod"
 @    yaxis  label layout para
 @    yaxis  label place auto
 @    yaxis  label char size 2.400000
@@ -587,8 +587,8 @@
 @    s0 errorbar riser linestyle 1
 @    s0 errorbar riser clip off
 @    s0 errorbar riser clip length 0.100000
-@    s0 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/trunk_geometry_vs_ts_N_xydy.dat"
-@    s0 legend  "<N_i>, load-bearing rods"
+@    s0 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/trunk_geometry_vs_ts_K_xydy.dat"
+@    s0 legend  "<K>, load-bearing rods"
 @    s1 hidden false
 @    s1 type xy
 @    s1 symbol 2
@@ -636,8 +636,8 @@
 @    s1 errorbar riser linestyle 1
 @    s1 errorbar riser clip off
 @    s1 errorbar riser clip length 0.100000
-@    s1 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/trunk_geometry_vs_ts_N_xydy.dat"
-@    s1 legend  "<N_i>, all rods"
+@    s1 comment "/home/michael/gitrepos/dla-collagen/Reviews/N18_df_ten_ts/xmgrace/trunk_geometry_vs_ts_K_xydy.dat"
+@    s1 legend  "<K>, all rods"
 @target G0.S0
 @type xydy
 2 178.3 9.6977

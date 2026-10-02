@@ -2,13 +2,15 @@
 """Projetos .agr (en-US) das tres figuras de geometria do tronco, com dois eixos y.
 
 Dois eixos y no xmgrace = dois graficos sobrepostos na mesma VIEW: G0 leva o
-eixo esquerdo (K) e a moldura; G1 leva o eixo direito (N_i), sem moldura nem
-eixo x. Series de G0 em linha cheia, de G1 tracejadas.
+eixo esquerdo (N, segmentos por camada = N(i) do artigo) e a moldura; G1 leva o
+eixo direito (K, coordenacao = K do artigo), sem moldura nem eixo x. Series de
+G0 em linha cheia, de G1 tracejadas. Ate 2026-10-01 as letras estavam trocadas
+em relacao ao artigo (K era a ocupacao da camada).
 
 Le:      Reviews/N18_df_ten_ts/trunk_geometry_by_ts.csv
          Reviews/N18_df_ten_ts/geometry_during_fracture_curves.csv
-Escreve: Reviews/N18_df_ten_ts/xmgrace/trunk_geometry_vs_ts_{K,N}_xydy.dat, .agr, .pdf
-         Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_{F,Frup}_{K,N}_xy.dat, .agr, .pdf
+Escreve: Reviews/N18_df_ten_ts/xmgrace/trunk_geometry_vs_ts_{N,K}_xydy.dat, .agr, .pdf
+         Reviews/N18_df_ten_ts/xmgrace/geometry_during_fracture_{F,Frup}_{N,K}_xydy.dat (seis T_s da Fig. 8), .agr, .pdf
 Chamado: à mão, depois de measure_trunk_geometry_by_ts.py e trace_geometry_during_fracture.py
 """
 from __future__ import annotations
@@ -25,6 +27,7 @@ RAIZ = pathlib.Path(__file__).resolve().parents[2]
 N18 = RAIZ / "Reviews" / "N18_df_ten_ts"
 SAIDA = N18 / "xmgrace"
 AZUL, VERMELHO = 20, 21
+TS_FIGURA = [2, 8, 16, 32, 64, 128]   # os da Fig. 8; 1024 e 8192 saem em export_geometry_saturation_xy.py
 VIRIDIS = [(68, 1, 84), (65, 68, 135), (42, 120, 142), (34, 168, 132), (122, 209, 81), (253, 231, 37)]
 
 
@@ -75,7 +78,7 @@ def serie(g, i, cor, simbolo, tracejada, legenda="", tamanho=1.1, largura=2.4) -
 def figura_inicial() -> None:
     agg = pd.read_csv(N18 / "trunk_geometry_by_ts.csv").set_index("ts")
     w = int(2 * agg.half_width.iloc[0] + 1)
-    for letra, col, lab in [("K", "K_mean", "molecules per layer"), ("N", "N_mean", "neighbours per rod")]:
+    for letra, col, lab in [("N", "N_mean", "molecules per layer"), ("K", "K_mean", "neighbours per rod")]:
         out = [f"# {w}x{w}x201 trunk, initial geometry: <{letra}> versus T_s, 5 seeds per T_s",
                f"# Set 0: load-bearing rods (after the load-path filter), columns T_s  mean  SE over seeds",
                f"# Set 1: all rods in the window, columns T_s  mean",
@@ -86,52 +89,52 @@ def figura_inicial() -> None:
         out += [f"{ts} {r[col + '_all']:.4f}" for ts, r in agg.iterrows()] + ["&"]
         (SAIDA / f"trunk_geometry_vs_ts_{letra}_xydy.dat").write_text("\n".join(out) + "\n", encoding="utf-8")
     b = ["PAGE SIZE 640, 460"] + cores()
-    b += eixos_duplos((0.24, 0.18, 1.18, 0.92), "T\\ss\\N", "\\1<K>\\3, molecules per layer",
-                      "\\1<N\\si\\N>\\3, neighbours per rod", AZUL, VERMELHO,
+    b += eixos_duplos((0.24, 0.18, 1.18, 0.92), "T\\ss\\N", "\\1<N>\\3, molecules per layer",
+                      "\\1<K>\\3, neighbours per rod", AZUL, VERMELHO,
                       (100, 1300), (22, 56), (1.4, 13000), 10, 200, 5, xlog=True)
-    b += serie(0, 0, AZUL, 1, False, "<K>, load-bearing rods") + serie(0, 1, AZUL, 1, False, "<K>, all rods", 0.6, 1.2)
+    b += serie(0, 0, AZUL, 1, False, "<N>, load-bearing rods") + serie(0, 1, AZUL, 1, False, "<N>, all rods", 0.6, 1.2)
     b += ["WITH G0", "S1 SYMBOL FILL PATTERN 0", "S1 LINE LINESTYLE 2"]
-    b += serie(1, 0, VERMELHO, 2, False, "<N_i>, load-bearing rods") + serie(1, 1, VERMELHO, 2, False, "<N_i>, all rods", 0.6, 1.2)
+    b += serie(1, 0, VERMELHO, 2, False, "<K>, load-bearing rods") + serie(1, 1, VERMELHO, 2, False, "<K>, all rods", 0.6, 1.2)
     b += ["WITH G1", "S1 SYMBOL FILL PATTERN 0", "S1 LINE LINESTYLE 2",
           "WITH G0", "LEGEND ON", "LEGEND BOX LINESTYLE 0", "LEGEND BOX FILL PATTERN 0", "LEGEND CHAR SIZE 1.1",
           "LEGEND LOCTYPE VIEW", "LEGEND 0.72, 0.42",
           "WITH G1", "LEGEND ON", "LEGEND BOX LINESTYLE 0", "LEGEND BOX FILL PATTERN 0", "LEGEND CHAR SIZE 1.1",
           "LEGEND LOCTYPE VIEW", "LEGEND 0.72, 0.32"]
-    roda(b, [[SAIDA / "trunk_geometry_vs_ts_K_xydy.dat"], [SAIDA / "trunk_geometry_vs_ts_N_xydy.dat"]],
+    roda(b, [[SAIDA / "trunk_geometry_vs_ts_N_xydy.dat"], [SAIDA / "trunk_geometry_vs_ts_K_xydy.dat"]],
          SAIDA / "trunk_geometry_vs_ts.agr", SAIDA / "trunk_geometry_vs_ts.pdf")
 
 
 def figura_dinamica(kind: str, tag: str, xlab: str, xmax: float, xmaj: float) -> None:
     cv = pd.read_csv(N18 / "geometry_during_fracture_curves.csv")
     cv = cv[cv.x_kind == kind]
-    ts_list = sorted(cv.ts.unique())
+    ts_list = [t for t in TS_FIGURA if t in set(cv.ts)]
     legendas = []
-    for letra, col in [("K", "K_mean"), ("N", "N_mean")]:
+    for letra, col in [("N", "N_mean"), ("K", "K_mean")]:
         out = [f"# 17x17 trunk, m = 2, 10 realizations x 5 seeds: <{letra}(F)>/{letra}_0 over active rods, x = {xlab}",
                f"# One set per T_s in the order {', '.join(map(str, ts_list))}; columns x  value/initial  SE/initial",
                "# Source: Reviews/N18_df_ten_ts/geometry_during_fracture_curves.csv"]
         for ts in ts_list:
             q = cv[cv.ts == ts].sort_values("x")
             v0 = q[col].iloc[0]
-            if letra == "K":
-                legendas.append(f"T\\ss\\N = {ts}: K\\s0\\N = {v0:.0f}")
+            if letra == "N":
+                legendas.append(f"T\\ss\\N = {ts}: N\\s0\\N = {v0:.0f}")
             else:
-                legendas[ts_list.index(ts)] += f", N\\s0\\N = {v0:.1f}"
+                legendas[ts_list.index(ts)] += f", K\\s0\\N = {v0:.1f}"
             out += ["@type xydy", f"# T_s = {ts}, {letra}_0 = {v0:.4f}"]
             out += [f"{x:.5f} {v / v0:.6f} {e / v0:.6f}" for x, v, e in zip(q.x, q[col], q[col.replace('mean', 'se')])]
             out.append("&")
         (SAIDA / f"geometry_during_fracture_{tag}_{letra}_xydy.dat").write_text("\n".join(out) + "\n", encoding="utf-8")
     # pagina mais alta: a legenda de seis entradas fica abaixo do eixo x, fora das curvas
     b = ["PAGE SIZE 640, 600"] + cores()
-    b += eixos_duplos((0.22, 0.36, 0.93, 0.95), xlab, "\\1<K(F)>/K\\s0\\N\\3 (solid)",
-                      "\\1<N\\si\\N(F)>/N\\s0\\N\\3 (dashed)", 1, 1,
+    b += eixos_duplos((0.22, 0.36, 0.93, 0.95), xlab, "\\1<N(F)>/N\\s0\\N\\3 (solid)",
+                      "\\1<K(F)>/K\\s0\\N\\3 (dashed)", 1, 1,
                       (0.78, 1.02), (0.98, 1.10), (0.0, xmax), xmaj, 0.05, 0.02)
     for i, ts in enumerate(ts_list):
         b += serie(0, i, 30 + i, 0, False, legendas[i], largura=2.4) + ["WITH G0", f"S{i} ERRORBAR OFF"]
         b += serie(1, i, 30 + i, 0, True, "", largura=2.4) + ["WITH G1", f"S{i} ERRORBAR OFF"]
     b += ["WITH G0", "LEGEND ON", "LEGEND BOX LINESTYLE 0", "LEGEND BOX FILL PATTERN 0", "LEGEND CHAR SIZE 0.95",
           "LEGEND LOCTYPE VIEW", "LEGEND 0.24, 0.215", "LEGEND VGAP 1", "LEGEND LENGTH 4"]
-    roda(b, [[SAIDA / f"geometry_during_fracture_{tag}_K_xydy.dat"], [SAIDA / f"geometry_during_fracture_{tag}_N_xydy.dat"]],
+    roda(b, [[SAIDA / f"geometry_during_fracture_{tag}_N_xydy.dat"], [SAIDA / f"geometry_during_fracture_{tag}_K_xydy.dat"]],
          SAIDA / f"geometry_during_fracture_{tag}.agr", SAIDA / f"geometry_during_fracture_{tag}.pdf")
 
 
@@ -139,7 +142,7 @@ def main() -> None:
     SAIDA.mkdir(exist_ok=True)
     figura_inicial()
     cv = pd.read_csv(N18 / "geometry_during_fracture_curves.csv")
-    fmax = float(cv[cv.x_kind == "F"].x.max())
+    fmax = float(cv[(cv.x_kind == "F") & cv.ts.isin(TS_FIGURA)].x.max())
     figura_dinamica("F", "F", "F", 100 * (int(fmax // 100) + 1), 500)
     figura_dinamica("F_over_Frup", "Frup", "F / F\\srup\\N", 1.0, 0.2)
 

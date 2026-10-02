@@ -43,13 +43,15 @@ para o manuscrito.
 
 `build_trunk_geometry_xmgrace.py`, a partir de `../trunk_geometry_by_ts.csv` e
 `../geometry_during_fracture_curves.csv`. Dois eixos y = dois gráficos na mesma
-VIEW: G0 (eixo esquerdo, $\langle K\rangle$, linha cheia) e G1 (eixo direito,
-$\langle N_i\rangle$, tracejada; sem moldura nem eixo x). Um `.dat` por eixo:
+VIEW: G0 (eixo esquerdo, $\langle N\rangle$, segmentos por camada, linha cheia) e
+G1 (eixo direito, $\langle K\rangle$, coordenação, tracejada; sem moldura nem eixo
+x), na notação do artigo. Até 2026-10-01 as letras estavam trocadas: o antigo
+`*_K_xydy.dat` é o atual `*_N_xydy.dat` e vice-versa. Um `.dat` por eixo:
 
 | arquivo | séries | tipo |
 |:--|:--|:--|
-| `trunk_geometry_vs_ts_{K,N}_xydy.dat` | bastões que portam carga (`xydy`, EP entre sementes); todos os bastões (`xy`) | — |
-| `geometry_during_fracture_{F,Frup}_{K,N}_xydy.dat` | uma por $T_s$ (2, 8, 16, 32, 64, 128), valor/inicial e EP/inicial | `xydy` |
+| `trunk_geometry_vs_ts_{N,K}_xydy.dat` | bastões que portam carga (`xydy`, EP entre sementes); todos os bastões (`xy`) | — |
+| `geometry_during_fracture_{F,Frup}_{N,K}_xydy.dat` | uma por $T_s$ (2, 8, 16, 32, 64, 128), valor/inicial e EP/inicial | `xydy` |
 
 Nas figuras da dinâmica as barras estão desligadas (`ERRORBAR OFF`); os `.dat`
 as carregam. Cores viridis mapeadas em 30–35; G0 azul (20) e vermelho (21) na
